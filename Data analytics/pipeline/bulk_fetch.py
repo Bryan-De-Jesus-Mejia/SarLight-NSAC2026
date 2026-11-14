@@ -18,6 +18,7 @@ import csv
 import json
 import math
 import os
+import sys
 import time
 import traceback
 from collections import Counter
@@ -143,6 +144,9 @@ class Progress:
 
 
 def main():
+    # Sin esto, con nohup/tee/ssh/IDE la salida queda en buffer y la consola parece colgada.
+    sys.stdout.reconfigure(line_buffering=True)
+    print(f"[{time.strftime('%H:%M:%S')}] bulk_fetch iniciado", flush=True)
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--name", required=True, help="Nombre de la colección (carpeta en data/collections/)")
     ap.add_argument("--source", nargs="+", choices=["opera", "nisar"], default=["opera", "nisar"])
@@ -177,7 +181,7 @@ def main():
     for source in args.source:
         t = time.time()
         print(f"Buscando {source} en ASF...", flush=True)
-        found = search(source, bbox, args.start, args.end, None, args.max)
+        found = search(source, bbox, args.start, args.end, None, args.max, verbose=True)
         print(f"  {len(found)} escenas en {time.time() - t:.0f}s", flush=True)
         if len(found) >= args.max:
             print(f"  Aviso: se alcanzó --max {args.max}; puede haber más escenas. Sube --max.")

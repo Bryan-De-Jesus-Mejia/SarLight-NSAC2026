@@ -80,14 +80,18 @@ def resolve_scene_url(scene: str, pol: str) -> str:
     return urls[pol.upper()]
 
 
-def search(source: str, bbox, start=None, end=None, pol=None, max_results=500):
+def search(source: str, bbox, start=None, end=None, pol=None, max_results=500, verbose=False):
     aoi = box(*bbox)
     kw = dict(intersectsWith=aoi.wkt, start=start, end=end, maxResults=max_results)
     if source == "nisar":
-        results = asf.search(dataset=asf.DATASET.NISAR, processingLevel="GCOV", **kw)
+        kw.update(dataset=asf.DATASET.NISAR, processingLevel="GCOV")
     else:
-        results = asf.search(dataset=asf.DATASET.OPERA_S1, processingLevel="RTC", **kw)
-    rows = [record(p, aoi) for p in results]
+        kw.update(dataset=asf.DATASET.OPERA_S1, processingLevel="RTC")
+    rows = []
+    for page_no, page in enumerate(asf.search_generator(**kw), 1):
+        rows += [record(p, aoi) for p in page]
+        if verbose:
+            print(f"  {source}: página {page_no}, {len(rows)} escenas acumuladas", flush=True)
     if pol:
         rows = [r for r in rows if pol.upper() in r["pols"]]
     return sorted(rows, key=lambda r: (r["group"], r["date"]))
