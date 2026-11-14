@@ -1,0 +1,38 @@
+{
+  "pre": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_pelempito\\opera\\T106_225636_IW1_ASCE\\20260910T225237_VH.tif",
+    "date": "2026-09-10T22:52:37Z",
+    "group": "OPERA T106_225636_IW1 ASCE",
+    "pol": "VH"
+  },
+  "post": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_pelempito\\opera\\T106_225636_IW1_ASCE\\20260922T225237_VH.tif",
+    "date": "2026-09-22T22:52:37Z",
+    "group": "OPERA T106_225636_IW1 ASCE",
+    "pol": "VH"
+  },
+  "crs": "EPSG:32619",
+  "pixel_size": [
+    30.0,
+    30.0
+  ],
+  "shape": [
+    940,
+    1156
+  ],
+  "threshold_db": 3.0,
+  "direction": "decrease",
+  "median_size": 5,
+  "overlap_pct": 99.61,
+  "valid_pixels": 657890,
+  "changed_pixels": 2684,
+  "valid_area_km2": 592.101,
+  "changed_area_km2": 2.416,
+  "changed_pct": 0.408,
+  "decrease_area_km2": 2.416,
+  "increase_area_km2": 1.311,
+  "mean_diff_db": 0.038,
+  "median_diff_db": 0.0,
+  "pre_mean_db": -13.441,
+  "post_mean_db": -13.407
+}

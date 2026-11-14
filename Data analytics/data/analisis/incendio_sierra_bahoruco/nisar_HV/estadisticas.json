@@ -1,0 +1,38 @@
+{
+  "pre": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_sierra_bahoruco\\nisar\\P083_F079_DESC\\20260619T231700_HV.tif",
+    "date": "2026-06-19T23:17:00Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HV"
+  },
+  "post": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_sierra_bahoruco\\nisar\\P083_F079_DESC\\20260713T231659_HV.tif",
+    "date": "2026-07-13T23:16:59Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HV"
+  },
+  "crs": "EPSG:32619",
+  "pixel_size": [
+    10.0,
+    10.0
+  ],
+  "shape": [
+    4511,
+    5885
+  ],
+  "threshold_db": 3.0,
+  "direction": "decrease",
+  "median_size": 5,
+  "overlap_pct": 95.87,
+  "valid_pixels": 25312681,
+  "changed_pixels": 53361,
+  "valid_area_km2": 2531.268,
+  "changed_area_km2": 5.336,
+  "changed_pct": 0.211,
+  "decrease_area_km2": 5.336,
+  "increase_area_km2": 1.894,
+  "mean_diff_db": -0.027,
+  "median_diff_db": -0.017,
+  "pre_mean_db": -13.528,
+  "post_mean_db": -13.186
+}

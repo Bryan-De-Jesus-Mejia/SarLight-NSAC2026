@@ -1,0 +1,38 @@
+{
+  "pre": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_pelempito\\nisar\\P083_F079_DESC\\20260911T231657_HV.tif",
+    "date": "2026-09-11T23:16:57Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HV"
+  },
+  "post": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_pelempito\\nisar\\P083_F079_DESC\\20260923T231657_HV.tif",
+    "date": "2026-09-23T23:16:57Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HV"
+  },
+  "crs": "EPSG:32619",
+  "pixel_size": [
+    10.0,
+    10.0
+  ],
+  "shape": [
+    2818,
+    3744
+  ],
+  "threshold_db": 3.0,
+  "direction": "decrease",
+  "median_size": 5,
+  "overlap_pct": 99.59,
+  "valid_pixels": 10406787,
+  "changed_pixels": 2099,
+  "valid_area_km2": 1040.679,
+  "changed_area_km2": 0.21,
+  "changed_pct": 0.02,
+  "decrease_area_km2": 0.21,
+  "increase_area_km2": 22.824,
+  "mean_diff_db": 0.522,
+  "median_diff_db": 0.411,
+  "pre_mean_db": -11.948,
+  "post_mean_db": -11.421
+}

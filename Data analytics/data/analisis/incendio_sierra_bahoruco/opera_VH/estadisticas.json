@@ -1,0 +1,38 @@
+{
+  "pre": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_sierra_bahoruco\\opera\\T106_225636_IW1_ASCE\\20260611T225314_VH.tif",
+    "date": "2026-06-11T22:53:14Z",
+    "group": "OPERA T106_225636_IW1 ASCE",
+    "pol": "VH"
+  },
+  "post": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\incendio_sierra_bahoruco\\opera\\T106_225636_IW1_ASCE\\20260724T225235_VH.tif",
+    "date": "2026-07-24T22:52:35Z",
+    "group": "OPERA T106_225636_IW1 ASCE",
+    "pol": "VH"
+  },
+  "crs": "EPSG:32619",
+  "pixel_size": [
+    30.0,
+    30.0
+  ],
+  "shape": [
+    1175,
+    1863
+  ],
+  "threshold_db": 3.0,
+  "direction": "decrease",
+  "median_size": 5,
+  "overlap_pct": 99.69,
+  "valid_pixels": 1139876,
+  "changed_pixels": 5325,
+  "valid_area_km2": 1025.888,
+  "changed_area_km2": 4.792,
+  "changed_pct": 0.467,
+  "decrease_area_km2": 4.792,
+  "increase_area_km2": 5.862,
+  "mean_diff_db": 0.215,
+  "median_diff_db": 0.288,
+  "pre_mean_db": -16.162,
+  "post_mean_db": -15.942
+}

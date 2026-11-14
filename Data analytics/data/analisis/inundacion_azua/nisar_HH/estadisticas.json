@@ -1,0 +1,38 @@
+{
+  "pre": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\inundacion_azua\\nisar\\P083_F079_DESC\\20261017T231657_HH.tif",
+    "date": "2026-10-17T23:16:57Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HH"
+  },
+  "post": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\inundacion_azua\\nisar\\P083_F079_DESC\\20261029T231657_HH.tif",
+    "date": "2026-10-29T23:16:57Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HH"
+  },
+  "crs": "EPSG:32619",
+  "pixel_size": [
+    10.0,
+    10.0
+  ],
+  "shape": [
+    3926,
+    5320
+  ],
+  "threshold_db": 3.0,
+  "direction": "both",
+  "median_size": 5,
+  "overlap_pct": 100.0,
+  "valid_pixels": 20884452,
+  "changed_pixels": 404996,
+  "valid_area_km2": 2088.445,
+  "changed_area_km2": 40.5,
+  "changed_pct": 1.939,
+  "decrease_area_km2": 16.713,
+  "increase_area_km2": 23.787,
+  "mean_diff_db": 0.273,
+  "median_diff_db": 0.332,
+  "pre_mean_db": -10.329,
+  "post_mean_db": -10.057
+}

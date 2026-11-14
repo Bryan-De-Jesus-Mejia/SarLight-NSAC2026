@@ -1,0 +1,38 @@
+{
+  "pre": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\inundacion_monte_plata\\nisar\\P083_F079_DESC\\20261017T231657_HH.tif",
+    "date": "2026-10-17T23:16:57Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HH"
+  },
+  "post": {
+    "source": "C:\\NasaSpaceApp\\Nasa-space-apps-2026\\Data analytics\\data\\collections\\inundacion_monte_plata\\nisar\\P083_F079_DESC\\20261029T231657_HH.tif",
+    "date": "2026-10-29T23:16:57Z",
+    "group": "NISAR P083 F079 DESC",
+    "pol": "HH"
+  },
+  "crs": "EPSG:32619",
+  "pixel_size": [
+    10.0,
+    10.0
+  ],
+  "shape": [
+    3337,
+    4229
+  ],
+  "threshold_db": 3.0,
+  "direction": "both",
+  "median_size": 5,
+  "overlap_pct": 100.0,
+  "valid_pixels": 14112054,
+  "changed_pixels": 71016,
+  "valid_area_km2": 1411.205,
+  "changed_area_km2": 7.102,
+  "changed_pct": 0.503,
+  "decrease_area_km2": 6.497,
+  "increase_area_km2": 0.605,
+  "mean_diff_db": -0.352,
+  "median_diff_db": -0.329,
+  "pre_mean_db": -7.079,
+  "post_mean_db": -7.43
+}
