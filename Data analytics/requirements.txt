@@ -9,5 +9,7 @@ requests
 python-dotenv
 matplotlib
 shapely
+onnxruntime
+onnx
 # Opcional, solo para SAR_ACCESS_MODE=s3 (dentro de AWS us-west-2):
 # s3fs
