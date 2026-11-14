@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Legend } from "@/components/Legend";
 import { SearchBox } from "@/components/SearchBox";
 import { Timeline } from "@/components/Timeline";
@@ -27,6 +28,16 @@ export function Hud() {
         </header>
 
         {hasEvents && <SearchBox className="w-full md:order-none md:w-72 max-md:order-last" />}
+
+        <Link
+          href="/methods"
+          className="pointer-events-auto flex h-10 shrink-0 items-center gap-2 rounded-full border border-line bg-[rgb(10_14_24/0.62)] px-3.5 text-sm text-ink backdrop-blur-md transition-colors hover:border-accent/60 hover:text-accent"
+        >
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M5 4.5h9.5a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h9.5M9 8.5h5" />
+          </svg>
+          Methods
+        </Link>
 
         {meta?.source === "mock" && (
           <p

@@ -3,9 +3,9 @@
 NASA Space Apps Challenge 2026 · Challenge: **"Dancing with the SARs"**
 Package name: `globalearth`
 
-> **Status: Phases 1–3 and 5 delivered** (tour mode skipped by decision) —
-> project, data layer, 3D globe, case panel, timeline, filters and search, all
-> running on simulated data. Everything else in this document is the
+> **Status: Phases 1–3, 5 and 6 delivered** (tour mode skipped by decision) —
+> project, data layer, 3D globe, case panel, timeline, filters, search and the
+> Methods page, all running on simulated data. Everything else in this document is the
 > plan for the next phases. See [Roadmap](#9-roadmap).
 
 ---
@@ -64,12 +64,18 @@ no public API, no data download.
 The app lives in the `ProyectoTal/` folder of the repository (run `npm`
 commands there). `.claude/launch.json` stays at the repository root.
 
+**Deploying to Vercel:** the repository root is not the app. In the Vercel
+project, set **Settings → Build and Deployment → Root Directory** to
+`ProyectoTal` (this cannot be set from `vercel.json`). `ProyectoTal/vercel.json`
+then pins the framework and the install/build commands.
+
 ```
 app/
   layout.tsx            fonts + metadata
   icon.svg              favicon (Earth + radar pulses)
   globals.css           tokens, .glass, tooltip, marker, loader
   page.tsx              renders <Explorer />
+  methods/page.tsx      /methods: how it works, what is simulated
   api/events/route.ts   GET /api/events
 components/
   Explorer.tsx          client: loads data, mounts globe (dynamic, ssr:false), HUD, error, loader
@@ -235,7 +241,7 @@ impact and metric; secondary signals use a per-type profile.
 | 3 | **Timeline**          | 3 ✅  | Scrubber across the data window with play/pause and a chart of how many signals are active each day. With a date set, the globe shows the signals active on that date (`startDate ≤ date ≤ endDate`); "Show all" returns to the whole period. Client-side only. |
 | 4 | **Tour mode**         | Skipped | Guided flight through the 8 featured cases, starting at Lake Enriquillo, with narration cards; pausable and skippable. |
 | 5 | **Filters & search**  | 5 ✅  | Multi-select change types and significance levels from the legend (nothing selected = everything shown), a featured-only switch, and a search box over name, region, country and type (accent-insensitive). Typing narrows the globe live; picking a result flies to that case and opens its panel. |
-| 6 | **Methods page**      | 6     | `/methods`: what SAR and NISAR are, each technique (backscatter, InSAR, coherence, polarimetry), how significance is computed, what is simulated and what is not, data sources. |
+| 6 | **Methods page**      | 6 ✅  | `/methods`: what SAR and NISAR are, each technique (backscatter, InSAR, coherence, polarimetry), how significance is computed, what is simulated and what is not, data sources. |
 | 7 | **Accessible event list & polish** | 7 | A keyboard- and screen-reader-friendly list equivalent to the globe, responsive pass, performance pass, final README. |
 
 ---
@@ -309,9 +315,9 @@ thin instrument layer over it.
 | 3     | Timeline with play (+ change-type filters from the legend) | ✅ Done |
 | 4     | Tour mode                                         | Skipped (team decision) |
 | 5     | Filters and search                                | ✅ Done |
-| 6     | `/methods` page                                   | Next |
-| 7     | Accessible event list, polish, final README       | Planned |
+| 6     | `/methods` page                                   | ✅ Done |
+| 7     | Accessible event list, polish, final README       | Next |
 
 ### Not built yet
 
-`/methods`, accessible event list, final README. (Tour mode: skipped.)
+Accessible event list, polish, final README. (Tour mode: skipped.)
