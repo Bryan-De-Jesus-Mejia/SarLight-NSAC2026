@@ -123,29 +123,36 @@ def gcov_terms(f: h5py.File) -> dict[str, list[str]]:
 def _read_gcov(source: str, bbox, pol) -> SarWindow:
     if not pol:
         raise SystemExit("Para NISAR GCOV indica --pol (HH, HV, VV o VH).")
-    pol = pol.upper()
-    term = pol * 2 if len(pol) == 2 else pol
+    return read_gcov(source, bbox, [pol])[pol.upper()]
+
+
+def read_gcov(source: str, bbox, pols: list[str]) -> dict[str, SarWindow]:
+    """Lee varias polarizaciones de un NISAR GCOV abriendo el HDF5 una sola vez."""
+    out = {}
     with _open_h5(source) as fobj, h5py.File(fobj, "r") as f:
         grids = f[GCOV_GRIDS]
-        freq = next((k for k in sorted(grids) if term in grids[k]), None)
-        if freq is None:
-            raise SystemExit(f"{term} no está en {source}. Disponibles: {gcov_terms(f)}")
-        grp = grids[freq]
-        x, y = grp["xCoordinates"][()], grp["yCoordinates"][()]
-        crs = CRS.from_epsg(int(np.asarray(grp["projection"][()]).item()))
-        dx, dy = float(x[1] - x[0]), float(y[1] - y[0])
-        x_edge, y_edge = float(x[0]) - dx / 2, float(y[0]) - dy / 2
-        r0, r1, c0, c1 = 0, len(y), 0, len(x)
-        if bbox:
-            left, bottom, right, top = transform_bounds("EPSG:4326", crs, *bbox, densify_pts=21)
-            c0, c1 = _index_range(left, right, x_edge, dx, len(x))
-            r0, r1 = _index_range(bottom, top, y_edge, dy, len(y))
-            if r1 <= r0 or c1 <= c0:
-                raise SystemExit(f"El bbox {bbox} no se solapa con {source}")
-        _check_size(r1 - r0, c1 - c0)
-        data = grp[term][r0:r1, c0:c1]
-    transform = Affine(dx, 0, x_edge + c0 * dx, 0, dy, y_edge + r0 * dy)
-    return SarWindow(to_db(data), transform, crs, source, pol)
+        for pol in (p.upper() for p in pols):
+            term = pol * 2 if len(pol) == 2 else pol
+            freq = next((k for k in sorted(grids) if term in grids[k]), None)
+            if freq is None:
+                raise SystemExit(f"{term} no está en {source}. Disponibles: {gcov_terms(f)}")
+            grp = grids[freq]
+            x, y = grp["xCoordinates"][()], grp["yCoordinates"][()]
+            crs = CRS.from_epsg(int(np.asarray(grp["projection"][()]).item()))
+            dx, dy = float(x[1] - x[0]), float(y[1] - y[0])
+            x_edge, y_edge = float(x[0]) - dx / 2, float(y[0]) - dy / 2
+            r0, r1, c0, c1 = 0, len(y), 0, len(x)
+            if bbox:
+                left, bottom, right, top = transform_bounds("EPSG:4326", crs, *bbox, densify_pts=21)
+                c0, c1 = _index_range(left, right, x_edge, dx, len(x))
+                r0, r1 = _index_range(bottom, top, y_edge, dy, len(y))
+                if r1 <= r0 or c1 <= c0:
+                    raise SystemExit(f"El bbox {bbox} no se solapa con {source}")
+            _check_size(r1 - r0, c1 - c0)
+            data = grp[term][r0:r1, c0:c1]
+            transform = Affine(dx, 0, x_edge + c0 * dx, 0, dy, y_edge + r0 * dy)
+            out[pol] = SarWindow(to_db(data), transform, crs, source, pol)
+    return out
 
 
 def write_geotiff(path, array: np.ndarray, transform, crs, nodata=np.nan, **tags):
