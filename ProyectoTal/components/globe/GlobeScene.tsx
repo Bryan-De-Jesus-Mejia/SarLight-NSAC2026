@@ -7,6 +7,7 @@ import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { EventSummary } from "@/data/types";
 import { useElementSize } from "@/hooks/useElementSize";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useVisibleEvents } from "@/hooks/useVisibleEvents";
 import { escapeHtml, isWebGLAvailable } from "@/lib/dom";
 import { createStarfieldDataUrl } from "@/lib/starfield";
 import { useAppStore } from "@/store/useAppStore";
@@ -101,6 +102,23 @@ interface MarkerHandlers {
 const markerHandlers: { current: MarkerHandlers | null } = { current: null };
 
 /**
+ * Markers are created once for every featured case and never removed: the
+ * timeline and the filters only switch them off through a data attribute
+ * (see .ge-marker-anchor[data-off] in globals.css).
+ */
+const markerElements = new Map<string, HTMLElement>();
+const markersOff = new Set<string>();
+
+function syncMarkers(visibleIds: ReadonlySet<string>): void {
+  markersOff.clear();
+  for (const [id, element] of markerElements) {
+    const off = !visibleIds.has(id);
+    if (off) markersOff.add(id);
+    element.toggleAttribute("data-off", off);
+  }
+}
+
+/**
  * Known trap: the globe overwrites `transform` on the element it is given.
  * So we hand it a zero-size anchor and let the real button offset itself
  * inside (see .ge-marker in globals.css).
@@ -142,6 +160,8 @@ const htmlElement = (d: object): HTMLElement => {
   });
 
   anchor.appendChild(button);
+  anchor.toggleAttribute("data-off", markersOff.has(e.id));
+  markerElements.set(e.id, anchor);
   return anchor;
 };
 
@@ -160,7 +180,10 @@ export default function GlobeScene() {
   const [containerRef, size] = useElementSize<HTMLDivElement>();
   const reducedMotion = usePrefersReducedMotion();
 
-  const events = useAppStore((s) => s.events);
+  // Timeline + type filters are already applied here.
+  const { visible: events } = useVisibleEvents();
+  const allEvents = useAppStore((s) => s.events);
+  const timelineOn = useAppStore((s) => s.timelineDay !== null);
   const selectedId = useAppStore((s) => s.selectedId);
   const select = useAppStore((s) => s.select);
   const setGlobeReady = useAppStore((s) => s.setGlobeReady);
@@ -170,6 +193,11 @@ export default function GlobeScene() {
   const [sceneReady, setSceneReady] = useState(false);
 
   const featured = useMemo(() => events.filter((e) => e.featured), [events]);
+  const allFeatured = useMemo(() => allEvents.filter((e) => e.featured), [allEvents]);
+
+  useEffect(() => {
+    syncMarkers(new Set(featured.map((e) => e.id)));
+  }, [featured]);
 
   const flyTo = useCallback(
     (event: EventSummary, altitude: number) => {
@@ -317,7 +345,9 @@ export default function GlobeScene() {
           pointRadius={pointRadius}
           pointResolution={10}
           pointsMerge={false}
-          pointsTransitionDuration={reducedMotion ? 0 : POINT_TRANSITION_MS}
+          // While the timeline runs the data changes every few frames: a grow-in
+          // tween would be restarted before it could finish.
+          pointsTransitionDuration={reducedMotion || timelineOn ? 0 : POINT_TRANSITION_MS}
           pointLabel={pointLabel}
           onPointClick={handlePointClick}
           // Pulsing rings: featured cases only
@@ -329,7 +359,7 @@ export default function GlobeScene() {
           ringPropagationSpeed={1.6}
           ringRepeatPeriod={1500}
           // Focusable DOM markers: featured cases only
-          htmlElementsData={featured}
+          htmlElementsData={allFeatured}
           htmlLat={pointLat}
           htmlLng={pointLng}
           htmlAltitude={htmlAltitude}

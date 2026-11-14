@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { Hud } from "@/components/Hud";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { CasePanel } from "@/components/panel/CasePanel";
 import { useAppStore } from "@/store/useAppStore";
 
 // The globe needs WebGL and `window`: client only.
@@ -30,6 +31,7 @@ export function Explorer() {
       <div className="ge-vignette" aria-hidden="true" />
 
       <Hud />
+      <CasePanel />
 
       {failed && (
         <div className="absolute inset-0 z-20 flex items-center justify-center p-6">

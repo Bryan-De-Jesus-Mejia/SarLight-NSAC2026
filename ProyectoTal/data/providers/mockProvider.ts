@@ -1,3 +1,4 @@
+import { buildEventDetail } from "../mock/details";
 import { FEATURED_EVENTS } from "../mock/featured";
 import { MOCK_TIME_RANGE, generateSecondaryEvents } from "../mock/generate";
 import type {
@@ -17,6 +18,7 @@ export class MockProvider implements DataProvider {
   readonly source = "mock" as const;
 
   private cache: EventSummary[] | null = null;
+  private details = new Map<string, EventDetail>();
 
   private all(): EventSummary[] {
     if (!this.cache) {
@@ -38,10 +40,15 @@ export class MockProvider implements DataProvider {
   }
 
   async getEventById(id: string): Promise<EventDetail | null> {
-    // Event detail (metric series, SAR explanation, imagery) arrives in Phase 2
-    // together with the case panel.
-    void id;
-    return null;
+    const cached = this.details.get(id);
+    if (cached) return cached;
+
+    const summary = this.all().find((event) => event.id === id);
+    if (!summary) return null;
+
+    const detail = buildEventDetail(summary);
+    this.details.set(id, detail);
+    return detail;
   }
 
   async getTimeRange(): Promise<TimeRange> {

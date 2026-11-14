@@ -3,9 +3,9 @@
 NASA Space Apps Challenge 2026 · Challenge: **"Dancing with the SARs"**
 Package name: `globalearth`
 
-> **Status: Phase 1 delivered** — project, data layer and 3D globe running on
-> simulated data. Everything else in this document is the plan for the next
-> phases. See [Roadmap](#9-roadmap).
+> **Status: Phases 1–3 delivered** — project, data layer, 3D globe, case panel,
+> timeline and change-type filters, all running on simulated data. Everything else in this document is the
+> plan for the next phases. See [Roadmap](#9-roadmap).
 
 ---
 
@@ -60,17 +60,26 @@ no public API, no data download.
 
 ## 3. Architecture
 
+The app lives in the `ProyectoTal/` folder of the repository (run `npm`
+commands there). `.claude/launch.json` stays at the repository root.
+
 ```
 app/
   layout.tsx            fonts + metadata
+  icon.svg              favicon (Earth + radar pulses)
   globals.css           tokens, .glass, tooltip, marker, loader
   page.tsx              renders <Explorer />
   api/events/route.ts   GET /api/events
 components/
   Explorer.tsx          client: loads data, mounts globe (dynamic, ssr:false), HUD, error, loader
-  Hud.tsx               title, "Simulated data" badge, legend
+  Hud.tsx               title, "Simulated data" badge, bottom row layout
+  Legend.tsx            legend that doubles as the change-type filter
+  Timeline.tsx          date scrubber with play/pause and activity chart
   LoadingScreen.tsx     loading cover
   globe/GlobeScene.tsx  the globe (client)
+  panel/CasePanel.tsx   case panel (opens on selection)
+  panel/BeforeAfter.tsx before/after slider
+  panel/MetricChart.tsx time series with baseline and uncertainty
   icons/ChangeTypeIcon.tsx
 data/
   types.ts              types and the DataProvider interface
@@ -79,10 +88,11 @@ data/
   mock/generate.ts      320 secondary signals
   providers/index.ts    picks the provider (env DATA_SOURCE)
   providers/mockProvider.ts
+  mock/details.ts       EventDetail builder (series, statistics, texts)
   providers/nisarProvider.ts   empty skeleton with TODOs
 store/useAppStore.ts    Zustand store
-hooks/                  useElementSize, usePrefersReducedMotion
-lib/                    prng, starfield, dom
+hooks/                  useElementSize, usePrefersReducedMotion, useVisibleEvents
+lib/                    prng, starfield, dom, format, syntheticSar, time
 public/textures/        earth-blue-marble.jpg, earth-topology.png
 ```
 
@@ -96,6 +106,9 @@ DataProvider (server)  →  GET /api/events  →  Zustand store  →  Globe + HU
 - The interface consumes **only** the API route, never a provider directly.
 - The list is requested **once**. Filters and the timeline are applied on the
   client, so scrubbing time never hits the network.
+- `hooks/useVisibleEvents.ts` is the single place where the timeline date and
+  the selected change types are applied; the globe, legend and timeline all
+  read from it.
 - `DATA_SOURCE=nisar` switches the provider; any other value uses the mock.
   The route resolves at request time, so the variable is read from the running
   server.
@@ -135,7 +148,8 @@ interface DataProvider {
 | `GET /api/events/[id]` | 2     | `EventDetail`                                                   |
 
 Provider failure → HTTP 503 with
-`{ error: { code: "DATA_SOURCE_UNAVAILABLE", message } }`.
+`{ error: { code: "DATA_SOURCE_UNAVAILABLE", message } }`. Unknown id → HTTP 404
+with code `EVENT_NOT_FOUND`.
 
 ### 3.4 Connecting real NISAR data (`NisarProvider`)
 
@@ -189,6 +203,25 @@ latitudes, earthquakes on plate boundaries, nothing in the open ocean.
 - `id` `sig-0001…`, `name` `"<cluster> <type phrase>"`, lat/lon and magnitude
   rounded to 3 decimals.
 
+### 4.3 Event detail (`data/mock/details.ts`)
+
+`buildEventDetail(summary)` derives the full `EventDetail` for any event, seeded
+from a hash of its id. The 8 featured cases have hand-written summaries, drivers,
+impact and metric; secondary signals use a per-type profile.
+
+- **Series** — 8 baseline passes before the event start, then one pass every
+  12 days (NISAR's repeat cycle) to the event end. Change develops gradually
+  (smoothstep), or as a step for earthquakes.
+- **Statistics are real arithmetic on the plotted points.** Noise is scaled so
+  the baseline's sample σ puts the change at the event's significance level;
+  `change`, `zScore` and `pValue` are then computed from the series itself
+  (mean of the last 3 passes vs the 8 baseline passes, two-sided z-test).
+  Levels: |z| ≥ 3 high, ≥ 2 medium, otherwise low.
+- **Imagery** — `{ kind: "synthetic", seed, style }`, rendered on canvas by
+  `lib/syntheticSar.ts`: speckled backscatter scenes (water, ice, burn scars,
+  field patchworks) or wrapped-phase interferograms (one bowl for subsidence,
+  two opposite lobes for earthquakes). Always tagged "Simulated imagery".
+
 ---
 
 ## 5. The seven features
@@ -196,10 +229,10 @@ latitudes, earthquakes on plate boundaries, nothing in the open ocean.
 | # | Feature               | Phase | Summary |
 | - | --------------------- | ----- | ------- |
 | 1 | **3D globe**          | 1 ✅  | All signals as coloured columns (height and radius by magnitude), pulsing rings and focusable markers on the 8 featured cases, tooltip, click-to-fly camera, auto-rotation. |
-| 2 | **Case panel**        | 2     | Opens on selection. Before/after slider (synthetic backscatter or interferogram imagery), metric time series with baseline and uncertainty band, change value, significance (p-value, z-score, method), "how radar saw this" explainer, hypothesised drivers and impact. |
-| 3 | **Timeline**          | 3     | Scrubber across the data window with play/pause; signals appear and fade by their start/end dates. Client-side only. |
+| 2 | **Case panel**        | 2 ✅  | Opens on selection. Before/after slider (synthetic backscatter or interferogram imagery), metric time series with baseline and uncertainty band, change value, significance (p-value, z-score, method), "how radar saw this" explainer, hypothesised drivers and impact. |
+| 3 | **Timeline**          | 3 ✅  | Scrubber across the data window with play/pause and a chart of how many signals are active each day. With a date set, the globe shows the signals active on that date (`startDate ≤ date ≤ endDate`); "Show all" returns to the whole period. Client-side only. |
 | 4 | **Tour mode**         | 4     | Guided flight through the 8 featured cases, starting at Lake Enriquillo, with narration cards; pausable and skippable. |
-| 5 | **Filters & search**  | 5     | Toggle change types from the legend, featured-only switch, significance filter, search by name/region/country. |
+| 5 | **Filters & search**  | 5 (part ✅) | Done: multi-select change types from the legend (nothing selected = everything shown). Pending: featured-only switch, significance filter, search by name/region/country. |
 | 6 | **Methods page**      | 6     | `/methods`: what SAR and NISAR are, each technique (backscatter, InSAR, coherence, polarimetry), how significance is computed, what is simulated and what is not, data sources. |
 | 7 | **Accessible event list & polish** | 7 | A keyboard- and screen-reader-friendly list equivalent to the globe, responsive pass, performance pass, final README. |
 
@@ -270,14 +303,14 @@ thin instrument layer over it.
 | Phase | Scope                                             | Status |
 | ----- | ------------------------------------------------- | ------ |
 | 1     | Project, data layer, globe with simulated data    | ✅ Done |
-| 2     | Case panel (`EventDetail`, `/api/events/[id]`, before/after slider, charts) | Next |
-| 3     | Timeline with play                                | Planned |
-| 4     | Tour mode                                         | Planned |
-| 5     | Filters and search                                | Planned |
+| 2     | Case panel (`EventDetail`, `/api/events/[id]`, before/after slider, charts) | ✅ Done |
+| 3     | Timeline with play (+ change-type filters from the legend) | ✅ Done |
+| 4     | Tour mode                                         | Next |
+| 5     | Remaining filters and search                      | Planned |
 | 6     | `/methods` page                                   | Planned |
 | 7     | Accessible event list, polish, final README       | Planned |
 
-### Out of scope for Phase 1
+### Not built yet
 
-Case panel, timeline, tour, filters and search, `/methods`,
-`/api/events/[id]`, accessible event list, final README.
+Tour, remaining filters and search, `/methods`, accessible event list, final
+README.
