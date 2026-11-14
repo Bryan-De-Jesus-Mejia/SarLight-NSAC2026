@@ -5,6 +5,7 @@ Formatos soportados:
 - HDF5 NISAR L2 GCOV (`.h5`): se lee solo el bloque de píxeles del bbox vía rangos HTTP.
 """
 import sys
+import time
 from dataclasses import dataclass
 
 import fsspec
@@ -30,6 +31,63 @@ GDAL_REMOTE_OPTS = dict(
 H5_BLOCK = 4 * 2**20
 GCOV_GRIDS = "science/LSAR/GCOV/grids"
 LARGE_WINDOW_PX = 100_000_000
+# True = imprime el % de lectura de cada capa HDF5 con MB descargados (fetch_quake, fetch_subset...).
+# bulk_fetch lo deja en False para no mezclar la salida de varios procesos.
+VERBOSE = False
+
+
+def _vlog(msg: str):
+    if VERBOSE:
+        print(f"[{time.strftime('%H:%M:%S')}]      {msg}", flush=True)
+
+
+class _CountingFile:
+    """Envuelve el archivo remoto para contar los bytes descargados."""
+
+    def __init__(self, f):
+        self._f = f
+        self.bytes = 0
+        self.t0 = time.time()
+
+    def read(self, n=-1):
+        b = self._f.read(n)
+        self.bytes += len(b)
+        return b
+
+    def readinto(self, buf):
+        data = self.read(len(buf))
+        memoryview(buf).cast("B")[:len(data)] = data
+        return len(data)
+
+    def rate(self) -> str:
+        mb = self.bytes / 2**20
+        return f"{mb:.0f} MB descargados, {mb / max(time.time() - self.t0, 1e-6):.1f} MB/s"
+
+    def __getattr__(self, name):
+        return getattr(self._f, name)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self._f.close()
+        return False
+
+
+def _read_strips(ds, r0: int, r1: int, c0: int, c1: int, label: str, fobj) -> np.ndarray:
+    """Lee ds[r0:r1, c0:c1] por franjas alineadas a los chunks, imprimiendo el % si VERBOSE."""
+    rows = r1 - r0
+    chunk_rows = ds.chunks[0] if ds.chunks else 512
+    step = chunk_rows * max(1, round(rows / 10 / chunk_rows))
+    bounds = [r0] + list(range((r0 // step + 1) * step, r1, step)) + [r1]
+    out = np.empty((rows, c1 - c0), ds.dtype)
+    t0 = time.time()
+    _vlog(f"{label}: leyendo {rows}x{c1 - c0} px ...")
+    for a, b in zip(bounds[:-1], bounds[1:]):
+        out[a - r0:b - r0] = ds[a:b, c0:c1]
+        rate = fobj.rate() if isinstance(fobj, _CountingFile) else ""
+        _vlog(f"{label}: {100 * (b - r0) / rows:5.1f}% ({b - r0}/{rows} filas) | {rate} | {time.time() - t0:.0f}s")
+    return out
 
 
 @dataclass
@@ -92,7 +150,7 @@ def _read_raster(source: str, bbox, pol) -> SarWindow:
     return SarWindow(db, transform, crs, source, pol or tags.get("pol"))
 
 
-def _open_h5(source: str):
+def _open_h5(source: str) -> _CountingFile:
     if source.startswith("s3://"):
         import s3fs  # opcional: solo para SAR_ACCESS_MODE=s3
 
@@ -101,13 +159,15 @@ def _open_h5(source: str):
             key=c["AWS_ACCESS_KEY_ID"], secret=c["AWS_SECRET_ACCESS_KEY"],
             token=c["AWS_SESSION_TOKEN"], client_kwargs={"region_name": c["AWS_REGION"]},
         )
-        return fs.open(source, "rb", block_size=H5_BLOCK, cache_type="blockcache")
+        return _CountingFile(fs.open(source, "rb", block_size=H5_BLOCK, cache_type="blockcache"))
     if is_remote(source):
+        _vlog("Autenticando y firmando URL en ASF ...")
         signed, size = sign_url(source)
-        return fsspec.filesystem("http").open(
+        _vlog(f"Archivo remoto de {size / 2**20:.0f} MB; se leerán solo los bloques del bbox")
+        return _CountingFile(fsspec.filesystem("http").open(
             signed, "rb", size=size, block_size=H5_BLOCK, cache_type="blockcache"
-        )
-    return open(source, "rb")
+        ))
+    return _CountingFile(open(source, "rb"))
 
 
 def _index_range(lo: float, hi: float, edge: float, step: float, n: int) -> tuple[int, int]:
@@ -153,7 +213,7 @@ def read_gcov(source: str, bbox, pols: list[str], freq: str | None = None) -> di
                 if r1 <= r0 or c1 <= c0:
                     raise SystemExit(f"El bbox {bbox} no se solapa con {source}")
             _check_size(r1 - r0, c1 - c0)
-            data = grp[term][r0:r1, c0:c1]
+            data = _read_strips(grp[term], r0, r1, c0, c1, f"{term} ({freq_key})", fobj)
             transform = Affine(dx, 0, x_edge + c0 * dx, 0, dy, y_edge + r0 * dy)
             out[pol] = SarWindow(to_db(data), transform, crs, source, pol)
     return out
@@ -167,14 +227,17 @@ def read_h5_layers(source: str, layers: dict[str, str], bbox, meta: dict[str, st
     """
     out, values = {}, {}
     with _open_h5(source) as fobj, h5py.File(fobj, "r") as f:
+        _vlog("Leyendo metadatos del producto ...")
         for key, path in (meta or {}).items():
             if path in f:
                 v = f[path][()]
                 values[key] = v.decode() if isinstance(v, bytes) else (v.item() if hasattr(v, "item") else v)
-        for name, path in layers.items():
+        _vlog(f"Metadatos listos | {fobj.rate()}")
+        for i, (name, path) in enumerate(layers.items(), 1):
             if path not in f:
                 print(f"   Aviso: {path} no está en el producto; se omite '{name}'", file=sys.stderr)
                 continue
+            _vlog(f"Capa {i}/{len(layers)}: {name}")
             grp = f[path.rsplit("/", 1)[0]]
             x, y = grp["xCoordinates"][()], grp["yCoordinates"][()]
             crs = CRS.from_epsg(int(np.asarray(grp["projection"][()]).item()))
@@ -186,7 +249,7 @@ def read_h5_layers(source: str, layers: dict[str, str], bbox, meta: dict[str, st
             if r1 <= r0 or c1 <= c0:
                 raise SystemExit(f"El bbox {bbox} no se solapa con {source}")
             _check_size(r1 - r0, c1 - c0)
-            data = f[path][r0:r1, c0:c1]
+            data = _read_strips(f[path], r0, r1, c0, c1, f"capa {i}/{len(layers)} {name}", fobj)
             out[name] = (data, Affine(dx, 0, x_edge + c0 * dx, 0, dy, y_edge + r0 * dy), crs)
     return out, values
 

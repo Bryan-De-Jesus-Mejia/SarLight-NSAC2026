@@ -29,6 +29,7 @@ import asf_search as asf
 import numpy as np
 from shapely.geometry import box, shape
 
+import sar_io
 from progress import Heartbeat, Progress, log, setup_stdout
 from sar_io import read_h5_layers, write_geotiff
 from search_scenes import DATA_DIR
@@ -65,10 +66,17 @@ def parse_pair(file_id: str) -> dict:
 
 def find_pairs(bbox, event: date, max_days: int, min_cov: float, per_group: int) -> list[dict]:
     aoi = box(*bbox)
-    log(f"Buscando GUNW en ASF alrededor de {event} (±{max_days} días) ...")
-    results = asf.search(dataset=asf.DATASET.NISAR, processingLevel="GUNW", intersectsWith=aoi.wkt,
-                         start=(event - timedelta(days=max_days)).isoformat(),
-                         end=(event + timedelta(days=max_days)).isoformat(), maxResults=2000)
+    log(f"Buscando GUNW en ASF alrededor de {event} (±{max_days} días) ... "
+        f"(el servidor de la NASA puede tardar varios minutos)")
+    t0 = time.time()
+    results = []
+    with Heartbeat("Búsqueda en ASF/CMR"):
+        for page_no, page in enumerate(asf.search_generator(
+                dataset=asf.DATASET.NISAR, processingLevel="GUNW", intersectsWith=aoi.wkt,
+                start=(event - timedelta(days=max_days)).isoformat(),
+                end=(event + timedelta(days=max_days)).isoformat(), maxResults=2000), 1):
+            results += list(page)
+            log(f"   página {page_no}: {len(results)} productos GUNW acumulados ({time.time() - t0:.0f}s)")
     ev = event.strftime("%Y%m%d")
     best = {}
     for p in results:
@@ -132,6 +140,8 @@ def fetch_pair(rec: dict, bbox, root, catalog) -> str:
 
 def main():
     setup_stdout()
+    sar_io.VERBOSE = True
+    log("fetch_quake iniciado")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--name", required=True, help="Nombre de la colección (p.ej. terremoto_venezuela)")
     ap.add_argument("--event-date", required=True, help="Fecha del sismo (UTC), YYYY-MM-DD")

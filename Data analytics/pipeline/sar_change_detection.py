@@ -32,6 +32,7 @@ import rasterio
 from rasterio.warp import Resampling, reproject
 from scipy.ndimage import median_filter
 
+import sar_io
 from progress import Heartbeat, log, setup_stdout
 from sar_io import SarWindow, is_remote, read_window, write_geotiff
 from search_scenes import DATA_DIR, ROOT, resolve_scene_url
@@ -182,6 +183,7 @@ def plot(pre_db, post_db, diff, mask, stats, path):
 
 def main():
     setup_stdout()
+    sar_io.VERBOSE = True
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--pre", required=True)
     ap.add_argument("--post", required=True)

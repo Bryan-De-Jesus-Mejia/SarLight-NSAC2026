@@ -111,7 +111,8 @@ def main():
     args = ap.parse_args()
 
     bbox = args.bbox or default_bbox()
-    rows = search(args.source, bbox, args.start, args.end, args.pol, args.max)
+    print(f"Buscando {args.source} en ASF ...", flush=True)
+    rows = search(args.source, bbox, args.start, args.end, args.pol, args.max, verbose=True)
     rows = [r for r in rows if r["aoi_coverage_pct"] >= args.min_coverage]
 
     groups = defaultdict(list)

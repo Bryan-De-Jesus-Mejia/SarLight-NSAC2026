@@ -9,11 +9,14 @@ import argparse
 import time
 from pathlib import Path
 
+import sar_io
+from progress import Progress, log, setup_stdout
 from sar_io import read_window, write_geotiff
 from search_scenes import DATA_DIR, default_bbox, resolve_scene_url
 
 
-def fetch(scene: str, pol: str, bbox, out_dir: Path) -> Path:
+def fetch(scene: str, pol: str, bbox, out_dir: Path) -> str:
+    log(f"   {scene} {pol}: resolviendo URL en ASF ...")
     url = resolve_scene_url(scene, pol)
     t0 = time.time()
     win = read_window(url, bbox, pol)
@@ -21,8 +24,7 @@ def fetch(scene: str, pol: str, bbox, out_dir: Path) -> Path:
     write_geotiff(out, win.db, win.transform, win.crs, units="dB", pol=pol.upper(),
                   scene=scene, source_url=url, bbox_lonlat=",".join(map(str, bbox)))
     h, w = win.db.shape
-    print(f"  {pol}: {h}x{w} px en {time.time() - t0:.1f}s -> {out}")
-    return out
+    return f"{h}x{w} px en {time.time() - t0:.1f}s -> {out}"
 
 
 def main():
@@ -34,12 +36,18 @@ def main():
     ap.add_argument("--out", type=Path, default=DATA_DIR / "subsets")
     args = ap.parse_args()
 
+    setup_stdout()
+    sar_io.VERBOSE = True
     bbox = args.bbox or default_bbox()
     args.out.mkdir(parents=True, exist_ok=True)
+    prog = Progress(len(args.scene) * len(args.pol), "Descarga de recortes", unit="imágenes")
     for scene in args.scene:
-        print(scene)
         for pol in args.pol:
-            fetch(scene, pol, bbox, args.out)
+            try:
+                prog.step(f"{scene} {pol}: {fetch(scene, pol, bbox, args.out)}")
+            except (Exception, SystemExit) as e:
+                prog.step(f"{scene} {pol}: {e}", status="ERROR")
+    prog.summary(final=True)
 
 
 if __name__ == "__main__":
