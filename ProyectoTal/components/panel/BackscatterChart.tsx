@@ -1,20 +1,20 @@
 "use client";
 
 import { useMemo, useState, type PointerEvent } from "react";
-import type { EventDetail } from "@/data/types";
+import type { SensorAnalysis } from "@/data/types";
 import { useElementSize } from "@/hooks/useElementSize";
-import { formatDate, formatMonth, formatValue } from "@/lib/format";
+import { formatDate, formatMonth } from "@/lib/format";
 
-interface MetricChartProps {
-  detail: EventDetail;
+interface BackscatterChartProps {
+  analysis: SensorAnalysis;
   /** Series colour (the change type's colour). */
   color: string;
 }
 
-const HEIGHT = 196;
-const MARGIN = { top: 14, right: 12, bottom: 24, left: 44 };
+const HEIGHT = 190;
+const MARGIN = { top: 16, right: 14, bottom: 24, left: 46 };
 
-const toMs = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
+const toMs = (iso: string): number => Date.parse(`${iso.slice(0, 10)}T00:00:00Z`);
 
 /** Round tick positions (1, 2 or 5 × 10ⁿ apart) covering [min, max]. */
 function niceTicks(min: number, max: number, target = 4): number[] {
@@ -25,70 +25,68 @@ function niceTicks(min: number, max: number, target = 4): number[] {
   const step = (unit >= 5 ? 5 : unit >= 2 ? 2 : 1) * pow;
   const ticks: number[] = [];
   for (let v = Math.ceil(min / step) * step; v <= max + step * 1e-6; v += step) {
-    ticks.push(Math.abs(v) < step * 1e-6 ? 0 : v);
+    ticks.push(Math.abs(v) < step * 1e-6 ? 0 : Number(v.toFixed(6)));
   }
   return ticks;
 }
 
 /**
- * Change over time for one case: a single series with its uncertainty band,
- * the baseline period shaded, and the baseline mean as a dashed reference.
+ * Median radar backscatter of the whole area on every pass of the same track
+ * and polarisation. The two passes that were compared are marked. This is the
+ * area-wide level, so it moves little when only a small patch changes.
  */
-export function MetricChart({ detail, color }: MetricChartProps) {
+export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   const [wrapRef, size] = useElementSize<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
 
-  const { series, unit, label, baselineEndDate } = detail.metric;
+  const series = analysis.series;
+  const usable = useMemo(() => series.filter((p) => p.usable), [series]);
   const width = size.width;
+  const preDay = analysis.pre.date.slice(0, 10);
+  const postDay = analysis.post.date.slice(0, 10);
 
   const model = useMemo(() => {
-    const times = series.map((p) => toMs(p.date));
-    const lows = series.map((p) => p.value - (p.uncertainty ?? 0));
-    const highs = series.map((p) => p.value + (p.uncertainty ?? 0));
-    const rawMin = Math.min(...lows);
-    const rawMax = Math.max(...highs);
-    const pad = (rawMax - rawMin || 1) * 0.08;
+    if (usable.length < 2) return null;
+    const times = usable.map((p) => toMs(p.date));
+    const values = usable.map((p) => p.medianDb);
+    const rawMin = Math.min(...values);
+    const rawMax = Math.max(...values);
+    const pad = Math.max((rawMax - rawMin) * 0.25, 0.4);
     const yMin = rawMin - pad;
     const yMax = rawMax + pad;
+    return { times, yMin, yMax, ticks: niceTicks(yMin, yMax) };
+  }, [usable]);
 
-    const baselineCount = series.filter((p) => p.date <= baselineEndDate).length;
-    const baselineMean =
-      series.slice(0, baselineCount).reduce((sum, p) => sum + p.value, 0) / Math.max(baselineCount, 1);
-
-    return { times, yMin, yMax, baselineCount, baselineMean, ticks: niceTicks(yMin, yMax) };
-  }, [series, baselineEndDate]);
+  if (!model) {
+    return (
+      <p className="rounded-lg border border-line bg-white/[0.03] px-3 py-2.5 text-xs leading-relaxed text-muted">
+        Only {usable.length} pass{usable.length === 1 ? "" : "es"} of this track cover the area well enough, so
+        there is no time series to draw.
+      </p>
+    );
+  }
 
   const plotW = Math.max(width - MARGIN.left - MARGIN.right, 0);
   const plotH = HEIGHT - MARGIN.top - MARGIN.bottom;
   const t0 = model.times[0];
   const t1 = model.times[model.times.length - 1];
-
   const x = (ms: number): number => MARGIN.left + ((ms - t0) / (t1 - t0 || 1)) * plotW;
   const y = (v: number): number =>
     MARGIN.top + (1 - (v - model.yMin) / (model.yMax - model.yMin)) * plotH;
 
-  const points = series.map((p, i) => ({ px: x(model.times[i]), py: y(p.value), p }));
+  const points = usable.map((p, i) => ({ px: x(model.times[i]), py: y(p.medianDb), p }));
   const linePath = points.map((pt, i) => `${i === 0 ? "M" : "L"}${pt.px.toFixed(1)} ${pt.py.toFixed(1)}`).join(" ");
-  const bandPath =
-    points
-      .map((pt, i) => `${i === 0 ? "M" : "L"}${pt.px.toFixed(1)} ${y(pt.p.value + (pt.p.uncertainty ?? 0)).toFixed(1)}`)
-      .join(" ") +
-    " " +
-    [...points]
-      .reverse()
-      .map((pt) => `L${pt.px.toFixed(1)} ${y(pt.p.value - (pt.p.uncertainty ?? 0)).toFixed(1)}`)
-      .join(" ") +
-    " Z";
 
-  // The baseline period ends halfway between the last baseline pass and the first event pass.
-  const lastBaseline = points[model.baselineCount - 1];
-  const firstEvent = points[model.baselineCount];
-  const baselineEndX = firstEvent ? (lastBaseline.px + firstEvent.px) / 2 : lastBaseline.px;
-  const baselineY = y(model.baselineMean);
-  const last = points[points.length - 1];
+  const marks = [
+    { day: preDay, label: "Before" },
+    { day: postDay, label: "After" },
+  ].filter((m) => {
+    const ms = toMs(m.day);
+    return ms >= t0 && ms <= t1;
+  });
 
-  const xTicks = [0, model.baselineCount, points.length - 1]
-    .filter((i, n, all) => i < points.length && all.indexOf(i) === n)
+  const xTicks = [0, Math.floor((points.length - 1) / 2), points.length - 1]
+    .filter((i, n, all) => all.indexOf(i) === n)
     .map((i) => ({ px: points[i].px, text: formatMonth(points[i].p.date) }));
 
   const handleMove = (event: PointerEvent<SVGRectElement>) => {
@@ -102,7 +100,7 @@ export function MetricChart({ detail, color }: MetricChartProps) {
   };
 
   const active = hover !== null ? points[hover] : null;
-  const tooltipLeft = active ? Math.min(Math.max(active.px, 76), Math.max(width - 76, 76)) : 0;
+  const tooltipLeft = active ? Math.min(Math.max(active.px, 70), Math.max(width - 70, 70)) : 0;
 
   return (
     <div>
@@ -112,29 +110,9 @@ export function MetricChart({ detail, color }: MetricChartProps) {
             width={width}
             height={HEIGHT}
             role="img"
-            aria-label={`${label} over time, in ${unit}. Simulated data. A table of the values follows.`}
+            aria-label={`Median radar backscatter of the area on each pass, in dB, from ${formatDate(usable[0].date)} to ${formatDate(usable[usable.length - 1].date)}. A table of the values follows.`}
             className="block overflow-visible"
           >
-            {/* Baseline period */}
-            <rect
-              x={MARGIN.left}
-              y={MARGIN.top}
-              width={Math.max(baselineEndX - MARGIN.left, 0)}
-              height={plotH}
-              fill="rgb(255 255 255 / 0.045)"
-            />
-            <text x={MARGIN.left + 6} y={MARGIN.top + 13} className="ge-chart-note">
-              Baseline
-            </text>
-            <text
-              x={Math.max(baselineEndX + 6, MARGIN.left + 70)}
-              y={MARGIN.top + 13}
-              className="ge-chart-note"
-            >
-              Event
-            </text>
-
-            {/* Grid + y axis */}
             {model.ticks.map((tick) => (
               <g key={tick}>
                 <line
@@ -145,12 +123,11 @@ export function MetricChart({ detail, color }: MetricChartProps) {
                   stroke="rgb(255 255 255 / 0.08)"
                 />
                 <text x={MARGIN.left - 8} y={y(tick)} dy="0.32em" textAnchor="end" className="ge-chart-tick">
-                  {formatValue(tick)}
+                  {tick}
                 </text>
               </g>
             ))}
 
-            {/* x axis */}
             {xTicks.map((tick, i) => (
               <text
                 key={tick.px}
@@ -163,22 +140,51 @@ export function MetricChart({ detail, color }: MetricChartProps) {
               </text>
             ))}
 
-            {/* Baseline mean reference */}
-            <line
-              x1={MARGIN.left}
-              x2={MARGIN.left + plotW}
-              y1={baselineY}
-              y2={baselineY}
-              stroke="rgb(233 237 245 / 0.55)"
-              strokeDasharray="4 4"
-            />
+            {/* The two compared passes */}
+            {marks.map((m, i) => {
+              const mx = x(toMs(m.day));
+              // "Before" sits left of its line. "After" sits right of its line, or
+              // below the first label and left of its line when the edge is near.
+              const nearEdge = mx > MARGIN.left + plotW - 56;
+              const anchorEnd = i === 0 || nearEdge;
+              return (
+                <g key={m.label}>
+                  <line
+                    x1={mx}
+                    x2={mx}
+                    y1={MARGIN.top}
+                    y2={MARGIN.top + plotH}
+                    stroke="rgb(242 184 102 / 0.75)"
+                    strokeDasharray="3 4"
+                  />
+                  <text
+                    x={mx + (anchorEnd ? -5 : 5)}
+                    y={MARGIN.top + 10 + (i === 1 && nearEdge ? 14 : 0)}
+                    textAnchor={anchorEnd ? "end" : "start"}
+                    className="ge-chart-note"
+                  >
+                    {m.label}
+                  </text>
+                </g>
+              );
+            })}
 
-            {/* Uncertainty band + series */}
-            <path d={bandPath} fill={color} fillOpacity={0.16} />
             <path d={linePath} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-            <circle cx={last.px} cy={last.py} r={4.5} fill={color} stroke="#0a0e18" strokeWidth={2} />
+            {points.map((pt) => {
+              const compared = pt.p.date === preDay || pt.p.date === postDay;
+              return (
+                <circle
+                  key={pt.p.date}
+                  cx={pt.px}
+                  cy={pt.py}
+                  r={compared ? 4.5 : 3}
+                  fill={compared ? color : "#0a0e18"}
+                  stroke={color}
+                  strokeWidth={compared ? 2 : 1.5}
+                />
+              );
+            })}
 
-            {/* Hover layer */}
             {active && (
               <g pointerEvents="none">
                 <line
@@ -188,7 +194,7 @@ export function MetricChart({ detail, color }: MetricChartProps) {
                   y2={MARGIN.top + plotH}
                   stroke="rgb(233 237 245 / 0.4)"
                 />
-                <circle cx={active.px} cy={active.py} r={4.5} fill={color} stroke="#0a0e18" strokeWidth={2} />
+                <circle cx={active.px} cy={active.py} r={5} fill={color} stroke="#0a0e18" strokeWidth={2} />
               </g>
             )}
             <rect
@@ -211,10 +217,8 @@ export function MetricChart({ detail, color }: MetricChartProps) {
           >
             <div className="text-muted">{formatDate(active.p.date)}</div>
             <div className="text-ink">
-              <span className="font-medium">{formatValue(active.p.value)}</span> {unit}
-              {active.p.uncertainty !== undefined && (
-                <span className="text-muted"> ± {formatValue(active.p.uncertainty)}</span>
-              )}
+              <span className="font-medium">{active.p.medianDb.toFixed(2)}</span> dB
+              <span className="text-muted"> · {active.p.validPct.toFixed(0)}% covered</span>
             </div>
           </div>
         )}
@@ -222,40 +226,34 @@ export function MetricChart({ detail, color }: MetricChartProps) {
 
       <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: color, opacity: 0.3 }} />
-          ±1σ uncertainty
+          <span className="inline-block h-2.5 w-2.5 rounded-full border-2" style={{ borderColor: color, background: color }} />
+          Passes compared
         </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block w-4 border-t border-dashed border-ink/60" />
-          Baseline mean
-        </span>
-        <span>One point per 12-day pass</span>
+        <span>{analysis.group} · {analysis.pol} · {usable.length} passes</span>
       </p>
 
       <details className="mt-2 text-xs text-muted">
         <summary className="cursor-pointer select-none rounded hover:text-ink">View data table</summary>
         <div className="mt-2 max-h-44 overflow-y-auto rounded-lg border border-line">
           <table className="w-full border-collapse text-left font-mono text-[11px] tabular-nums">
-            <caption className="sr-only">
-              {label} per satellite pass ({unit}). Simulated data.
-            </caption>
+            <caption className="sr-only">Median backscatter of the area on each pass, in dB.</caption>
             <thead className="sticky top-0 bg-[#0d121d] text-muted">
               <tr>
                 <th scope="col" className="px-2.5 py-1.5 font-normal">Date</th>
-                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Value ({unit})</th>
-                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">± 1σ</th>
-                <th scope="col" className="px-2.5 py-1.5 font-normal">Period</th>
+                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Median (dB)</th>
+                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Covered</th>
+                <th scope="col" className="px-2.5 py-1.5 font-normal">Note</th>
               </tr>
             </thead>
             <tbody className="text-ink">
-              {series.map((p, i) => (
+              {series.map((p) => (
                 <tr key={p.date} className="border-t border-line">
                   <td className="px-2.5 py-1">{p.date}</td>
-                  <td className="px-2.5 py-1 text-right">{formatValue(p.value)}</td>
-                  <td className="px-2.5 py-1 text-right">
-                    {p.uncertainty !== undefined ? formatValue(p.uncertainty) : "—"}
+                  <td className="px-2.5 py-1 text-right">{p.medianDb.toFixed(2)}</td>
+                  <td className="px-2.5 py-1 text-right">{p.validPct.toFixed(0)}%</td>
+                  <td className="px-2.5 py-1 text-muted">
+                    {p.date === preDay ? "Before" : p.date === postDay ? "After" : p.usable ? "" : "Partial pass"}
                   </td>
-                  <td className="px-2.5 py-1 text-muted">{i < model.baselineCount ? "Baseline" : "Event"}</td>
                 </tr>
               ))}
             </tbody>

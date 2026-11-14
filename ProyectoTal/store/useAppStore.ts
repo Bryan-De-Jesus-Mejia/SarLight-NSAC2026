@@ -6,7 +6,6 @@ import type {
   EventSummary,
   EventsMeta,
   EventsResponse,
-  SignificanceLevel,
 } from "@/data/types";
 
 import { DEFAULT_RADAR_DATE, type OverlayKind } from "@/lib/imagery";
@@ -41,9 +40,6 @@ interface AppState {
   detailError: string | null;
   /** Change types to show. Empty means "all": no filter applied. */
   activeTypes: ChangeType[];
-  /** Significance levels to show. Empty means "all". */
-  activeLevels: SignificanceLevel[];
-  featuredOnly: boolean;
   /** Free-text search over name, place and type. */
   query: string;
   /** Day index within meta.timeRange, or null to show the whole period. */
@@ -93,10 +89,8 @@ interface AppState {
   /** Re-request the detail of the selected event after a failure. */
   retryDetail: () => void;
   toggleType: (type: ChangeType) => void;
-  toggleLevel: (level: SignificanceLevel) => void;
-  setFeaturedOnly: (value: boolean) => void;
   setQuery: (query: string) => void;
-  /** Reset type, significance and featured filters (the search has its own clear button). */
+  /** Reset the type filter (the search has its own clear button). */
   clearFilters: () => void;
   setTimelineDay: (day: number | null) => void;
   setTimelinePlaying: (playing: boolean) => void;
@@ -119,7 +113,7 @@ function isApiError(body: unknown): body is ApiErrorResponse {
 }
 
 function isEventDetail(body: unknown): body is EventDetail {
-  return typeof body === "object" && body !== null && "id" in body && "metric" in body && "sar" in body;
+  return typeof body === "object" && body !== null && "id" in body && "analyses" in body;
 }
 
 function isEventsResponse(body: unknown): body is EventsResponse {
@@ -143,8 +137,6 @@ export const useAppStore = create<AppState>((set, get) => ({
   detailStatus: "idle",
   detailError: null,
   activeTypes: [],
-  activeLevels: [],
-  featuredOnly: false,
   query: "",
   timelineDay: null,
   timelinePlaying: false,
@@ -246,15 +238,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         ? state.activeTypes.filter((t) => t !== type)
         : [...state.activeTypes, type],
     })),
-  toggleLevel: (level) =>
-    set((state) => ({
-      activeLevels: state.activeLevels.includes(level)
-        ? state.activeLevels.filter((l) => l !== level)
-        : [...state.activeLevels, level],
-    })),
-  setFeaturedOnly: (value) => set({ featuredOnly: value }),
   setQuery: (query) => set({ query }),
-  clearFilters: () => set({ activeTypes: [], activeLevels: [], featuredOnly: false }),
+  clearFilters: () => set({ activeTypes: [] }),
 
   setTimelineDay: (day) =>
     set(day === null ? { timelineDay: null, timelinePlaying: false } : { timelineDay: day }),

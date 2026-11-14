@@ -1,16 +1,14 @@
 import type { DataProvider } from "../types";
-import { MockProvider } from "./mockProvider";
-import { NisarProvider } from "./nisarProvider";
+import { AnalysisProvider } from "./analysisProvider";
 
-let instance: DataProvider | null = null;
+let instance: AnalysisProvider | null = null;
 
 /**
- * Server-side only. Picks the provider from the DATA_SOURCE env variable:
- * "nisar" → NisarProvider, anything else → MockProvider.
+ * Server-side only. The app reads the radar analyses produced by the data
+ * pipeline. Live feeds (earthquakes, fires, storms…) would be added here by
+ * composing more DataProvider implementations.
  */
-export function getDataProvider(): DataProvider {
-  if (!instance) {
-    instance = process.env.DATA_SOURCE === "nisar" ? new NisarProvider() : new MockProvider();
-  }
+export function getDataProvider(): DataProvider & { generatedAt(): string } {
+  instance ??= new AnalysisProvider();
   return instance;
 }

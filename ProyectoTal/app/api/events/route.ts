@@ -4,11 +4,10 @@ import type { ApiErrorResponse, EventsResponse } from "@/data/types";
 
 /**
  * GET /api/events — the only door between the interface and the data layer.
- * Returns every signal once; filters and the timeline are applied client-side.
+ * Returns every event once; filters and the timeline are applied client-side.
  */
 export async function GET(): Promise<Response> {
-  // Resolve at request time so DATA_SOURCE is read from the running server's
-  // environment instead of being frozen into a build-time prerender.
+  // Resolve at request time, so a redeploy with newer analyses is never served stale.
   await connection();
 
   try {
@@ -19,7 +18,7 @@ export async function GET(): Promise<Response> {
     ]);
 
     const body: EventsResponse = {
-      meta: { source: provider.source, count: events.length, timeRange },
+      meta: { source: provider.source, count: events.length, timeRange, generatedAt: provider.generatedAt() },
       events,
     };
     return Response.json(body);

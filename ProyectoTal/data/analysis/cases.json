@@ -1,0 +1,918 @@
+{
+ "generatedAt": "2026-11-14T17:27:20",
+ "cases": [
+  {
+   "id": "pelempito-fire",
+   "type": "wildfire",
+   "name": "Pelempito fire analysis",
+   "region": "Sierra de Bahoruco, Pedernales",
+   "country": "Dominican Republic",
+   "source": "incendio_pelempito",
+   "lat": 18.07501,
+   "lon": -71.47514,
+   "startDate": "2026-09-10",
+   "endDate": "2026-09-23",
+   "sensors": [
+    {
+     "key": "nisar-hv",
+     "sensor": "nisar",
+     "pol": "HV",
+     "label": "NISAR",
+     "band": "L",
+     "resolution_m": 10,
+     "group": "NISAR P083 F079 DESC",
+     "collection": "incendio_pelempito",
+     "pre": {
+      "date": "2026-09-11T23:16:57Z"
+     },
+     "post": {
+      "date": "2026-09-23T23:16:57Z"
+     },
+     "method": {
+      "thresholdDb": 3.0,
+      "direction": "decrease",
+      "medianFilterPx": 5,
+      "waterDb": -22.0
+     },
+     "grid": {
+      "rows": 2818,
+      "cols": 3744,
+      "pixelSizeM": 10.0,
+      "crs": "EPSG:32619",
+      "overlapPct": 99.59
+     },
+     "stats": {
+      "validAreaKm2": 1040.679,
+      "changedAreaKm2": 0.21,
+      "changedPct": 0.02,
+      "decreaseAreaKm2": 0.21,
+      "increaseAreaKm2": 22.824,
+      "meanDiffDb": 0.522,
+      "medianDiffDb": 0.411,
+      "preMeanDb": -11.948,
+      "postMeanDb": -11.421
+     },
+     "land": {
+      "validAreaKm2": 1036.65,
+      "waterAreaKm2": 4.029,
+      "changedAreaKm2": 0.207,
+      "changedPct": 0.02,
+      "decreaseAreaKm2": 0.207,
+      "increaseAreaKm2": 22.559,
+      "changedOnWaterKm2": 0.003
+     },
+     "images": {
+      "pre": "/analysis/pelempito-fire/nisar-hv_pre.webp",
+      "post": "/analysis/pelempito-fire/nisar-hv_post.webp",
+      "diff": "/analysis/pelempito-fire/nisar-hv_diff.webp",
+      "change": "/analysis/pelempito-fire/nisar-hv_change.webp"
+     },
+     "imageSize": [
+      1248,
+      939
+     ],
+     "footprint": {
+      "polygon": [
+       [
+        -71.65379,
+        18.19996
+       ],
+       [
+        -71.30005,
+        18.20453
+       ],
+       [
+        -71.29674,
+        17.95003
+       ],
+       [
+        -71.64997,
+        17.94553
+       ]
+      ],
+      "bbox": [
+       -71.65378851052259,
+       17.945527553724105,
+       -71.29673582307183,
+       18.204528582694653
+      ],
+      "center": [
+       -71.47514,
+       18.07501
+      ]
+     },
+     "dbRange": [
+      -18.65,
+      -6.26
+     ],
+     "series": [
+      {
+       "date": "2026-08-18",
+       "medianDb": -11.559,
+       "meanDb": -11.753,
+       "validPct": 94.0,
+       "usable": true
+      },
+      {
+       "date": "2026-08-18",
+       "medianDb": -11.559,
+       "meanDb": -11.753,
+       "validPct": 94.0,
+       "usable": true
+      },
+      {
+       "date": "2026-08-30",
+       "medianDb": -11.783,
+       "meanDb": -11.999,
+       "validPct": 97.5,
+       "usable": true
+      },
+      {
+       "date": "2026-08-30",
+       "medianDb": -11.783,
+       "meanDb": -11.999,
+       "validPct": 97.5,
+       "usable": true
+      },
+      {
+       "date": "2026-09-11",
+       "medianDb": -11.73,
+       "meanDb": -11.948,
+       "validPct": 99.0,
+       "usable": true
+      },
+      {
+       "date": "2026-09-11",
+       "medianDb": -11.73,
+       "meanDb": -11.948,
+       "validPct": 99.0,
+       "usable": true
+      },
+      {
+       "date": "2026-09-23",
+       "medianDb": -11.233,
+       "meanDb": -11.421,
+       "validPct": 98.6,
+       "usable": true
+      },
+      {
+       "date": "2026-10-05",
+       "medianDb": -11.269,
+       "meanDb": -11.444,
+       "validPct": 96.3,
+       "usable": true
+      },
+      {
+       "date": "2026-10-05",
+       "medianDb": -11.269,
+       "meanDb": -11.444,
+       "validPct": 96.3,
+       "usable": true
+      },
+      {
+       "date": "2026-10-17",
+       "medianDb": -11.673,
+       "meanDb": -11.857,
+       "validPct": 92.5,
+       "usable": true
+      },
+      {
+       "date": "2026-10-17",
+       "medianDb": -11.673,
+       "meanDb": -11.857,
+       "validPct": 92.5,
+       "usable": true
+      },
+      {
+       "date": "2026-10-29",
+       "medianDb": -11.204,
+       "meanDb": -11.35,
+       "validPct": 99.0,
+       "usable": true
+      },
+      {
+       "date": "2026-10-29",
+       "medianDb": -11.204,
+       "meanDb": -11.35,
+       "validPct": 99.0,
+       "usable": true
+      }
+     ]
+    },
+    {
+     "key": "opera-vh",
+     "sensor": "opera",
+     "pol": "VH",
+     "label": "Sentinel-1 (OPERA RTC)",
+     "band": "C",
+     "resolution_m": 30,
+     "group": "OPERA T106_225636_IW1 ASCE",
+     "collection": "incendio_pelempito",
+     "pre": {
+      "date": "2026-09-10T22:52:37Z"
+     },
+     "post": {
+      "date": "2026-09-22T22:52:37Z"
+     },
+     "method": {
+      "thresholdDb": 3.0,
+      "direction": "decrease",
+      "medianFilterPx": 5,
+      "waterDb": -22.0
+     },
+     "grid": {
+      "rows": 940,
+      "cols": 1156,
+      "pixelSizeM": 30.0,
+      "crs": "EPSG:32619",
+      "overlapPct": 99.61
+     },
+     "stats": {
+      "validAreaKm2": 592.101,
+      "changedAreaKm2": 2.416,
+      "changedPct": 0.408,
+      "decreaseAreaKm2": 2.416,
+      "increaseAreaKm2": 1.311,
+      "meanDiffDb": 0.038,
+      "medianDiffDb": 0.0,
+      "preMeanDb": -13.441,
+      "postMeanDb": -13.407
+     },
+     "land": {
+      "validAreaKm2": 591.787,
+      "waterAreaKm2": 0.314,
+      "changedAreaKm2": 2.416,
+      "changedPct": 0.408,
+      "decreaseAreaKm2": 2.416,
+      "increaseAreaKm2": 1.31,
+      "changedOnWaterKm2": 0.0
+     },
+     "images": {
+      "pre": "/analysis/pelempito-fire/opera-vh_pre.webp",
+      "post": "/analysis/pelempito-fire/opera-vh_post.webp",
+      "diff": "/analysis/pelempito-fire/opera-vh_diff.webp",
+      "change": "/analysis/pelempito-fire/opera-vh_change.webp"
+     },
+     "imageSize": [
+      1156,
+      940
+     ],
+     "footprint": {
+      "polygon": [
+       [
+        -71.65379,
+        18.20005
+       ],
+       [
+        -71.32613,
+        18.2043
+       ],
+       [
+        -71.32278,
+        17.94963
+       ],
+       [
+        -71.64996,
+        17.94544
+       ]
+      ],
+      "bbox": [
+       -71.65378987813052,
+       17.945437264010078,
+       -71.32277752149469,
+       18.20430435064013
+      ],
+      "center": [
+       -71.48817,
+       18.07485
+      ]
+     },
+     "dbRange": [
+      -17.81,
+      -9.54
+     ],
+     "series": [
+      {
+       "date": "2026-08-17",
+       "medianDb": -13.226,
+       "meanDb": -13.28,
+       "validPct": 60.7,
+       "usable": true
+      },
+      {
+       "date": "2026-08-29",
+       "medianDb": -13.226,
+       "meanDb": -13.264,
+       "validPct": 60.7,
+       "usable": true
+      },
+      {
+       "date": "2026-08-29",
+       "medianDb": -13.226,
+       "meanDb": -13.264,
+       "validPct": 60.7,
+       "usable": true
+      },
+      {
+       "date": "2026-09-10",
+       "medianDb": -13.365,
+       "meanDb": -13.441,
+       "validPct": 60.8,
+       "usable": true
+      },
+      {
+       "date": "2026-09-10",
+       "medianDb": -13.365,
+       "meanDb": -13.441,
+       "validPct": 60.8,
+       "usable": true
+      },
+      {
+       "date": "2026-09-22",
+       "medianDb": -13.329,
+       "meanDb": -13.407,
+       "validPct": 60.7,
+       "usable": true
+      },
+      {
+       "date": "2026-10-04",
+       "medianDb": -13.302,
+       "meanDb": -13.366,
+       "validPct": 60.5,
+       "usable": true
+      },
+      {
+       "date": "2026-10-04",
+       "medianDb": -13.302,
+       "meanDb": -13.366,
+       "validPct": 60.5,
+       "usable": true
+      },
+      {
+       "date": "2026-10-16",
+       "medianDb": -13.481,
+       "meanDb": -13.557,
+       "validPct": 60.6,
+       "usable": true
+      },
+      {
+       "date": "2026-10-16",
+       "medianDb": -13.481,
+       "meanDb": -13.557,
+       "validPct": 60.6,
+       "usable": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bahoruco-fire",
+   "type": "wildfire",
+   "name": "Sierra de Bahoruco fire analysis",
+   "region": "Sierra de Bahoruco",
+   "country": "Dominican Republic",
+   "source": "incendio_sierra_bahoruco",
+   "lat": 18.15003,
+   "lon": -71.57533,
+   "startDate": "2026-06-11",
+   "endDate": "2026-07-24",
+   "sensors": [
+    {
+     "key": "nisar-hv",
+     "sensor": "nisar",
+     "pol": "HV",
+     "label": "NISAR",
+     "band": "L",
+     "resolution_m": 10,
+     "group": "NISAR P083 F079 DESC",
+     "collection": "incendio_sierra_bahoruco",
+     "pre": {
+      "date": "2026-06-19T23:17:00Z"
+     },
+     "post": {
+      "date": "2026-07-13T23:16:59Z"
+     },
+     "method": {
+      "thresholdDb": 3.0,
+      "direction": "decrease",
+      "medianFilterPx": 5,
+      "waterDb": -22.0
+     },
+     "grid": {
+      "rows": 4511,
+      "cols": 5885,
+      "pixelSizeM": 10.0,
+      "crs": "EPSG:32619",
+      "overlapPct": 95.87
+     },
+     "stats": {
+      "validAreaKm2": 2531.268,
+      "changedAreaKm2": 5.336,
+      "changedPct": 0.211,
+      "decreaseAreaKm2": 5.336,
+      "increaseAreaKm2": 1.894,
+      "meanDiffDb": -0.027,
+      "medianDiffDb": -0.017,
+      "preMeanDb": -13.528,
+      "postMeanDb": -13.186
+     },
+     "land": {
+      "validAreaKm2": 2426.62,
+      "waterAreaKm2": 104.648,
+      "changedAreaKm2": 5.045,
+      "changedPct": 0.208,
+      "decreaseAreaKm2": 5.045,
+      "increaseAreaKm2": 1.644,
+      "changedOnWaterKm2": 0.291
+     },
+     "images": {
+      "pre": "/analysis/bahoruco-fire/nisar-hv_pre.webp",
+      "post": "/analysis/bahoruco-fire/nisar-hv_post.webp",
+      "diff": "/analysis/bahoruco-fire/nisar-hv_diff.webp",
+      "change": "/analysis/bahoruco-fire/nisar-hv_change.webp"
+     },
+     "imageSize": [
+      1177,
+      902
+     ],
+     "footprint": {
+      "polygon": [
+       [
+        -71.85654,
+        18.34991
+       ],
+       [
+        -71.30008,
+        18.35745
+       ],
+       [
+        -71.29475,
+        17.95005
+       ],
+       [
+        -71.84993,
+        17.9427
+       ]
+      ],
+      "bbox": [
+       -71.85654249354425,
+       17.94269514405694,
+       -71.29475427828504,
+       18.357448229410394
+      ],
+      "center": [
+       -71.57533,
+       18.15003
+      ]
+     },
+     "dbRange": [
+      -24.51,
+      -6.69
+     ],
+     "series": [
+      {
+       "date": "2026-06-19",
+       "medianDb": -12.733,
+       "meanDb": -13.528,
+       "validPct": 99.5,
+       "usable": true
+      },
+      {
+       "date": "2026-07-01",
+       "medianDb": -12.559,
+       "meanDb": -13.275,
+       "validPct": 98.2,
+       "usable": true
+      },
+      {
+       "date": "2026-07-13",
+       "medianDb": -12.587,
+       "meanDb": -13.186,
+       "validPct": 95.3,
+       "usable": true
+      },
+      {
+       "date": "2026-07-25",
+       "medianDb": -12.674,
+       "meanDb": -13.49,
+       "validPct": 98.8,
+       "usable": true
+      }
+     ]
+    },
+    {
+     "key": "opera-vh",
+     "sensor": "opera",
+     "pol": "VH",
+     "label": "Sentinel-1 (OPERA RTC)",
+     "band": "C",
+     "resolution_m": 30,
+     "group": "OPERA T106_225636_IW1 ASCE",
+     "collection": "incendio_sierra_bahoruco",
+     "pre": {
+      "date": "2026-06-11T22:53:14Z"
+     },
+     "post": {
+      "date": "2026-07-24T22:52:35Z"
+     },
+     "method": {
+      "thresholdDb": 3.0,
+      "direction": "decrease",
+      "medianFilterPx": 5,
+      "waterDb": -22.0
+     },
+     "grid": {
+      "rows": 1175,
+      "cols": 1863,
+      "pixelSizeM": 30.0,
+      "crs": "EPSG:32619",
+      "overlapPct": 99.69
+     },
+     "stats": {
+      "validAreaKm2": 1025.888,
+      "changedAreaKm2": 4.792,
+      "changedPct": 0.467,
+      "decreaseAreaKm2": 4.792,
+      "increaseAreaKm2": 5.862,
+      "meanDiffDb": 0.215,
+      "medianDiffDb": 0.288,
+      "preMeanDb": -16.162,
+      "postMeanDb": -15.942
+     },
+     "land": {
+      "validAreaKm2": 833.596,
+      "waterAreaKm2": 192.292,
+      "changedAreaKm2": 0.207,
+      "changedPct": 0.025,
+      "decreaseAreaKm2": 0.207,
+      "increaseAreaKm2": 5.8,
+      "changedOnWaterKm2": 4.585
+     },
+     "images": {
+      "pre": "/analysis/bahoruco-fire/opera-vh_pre.webp",
+      "post": "/analysis/bahoruco-fire/opera-vh_post.webp",
+      "diff": "/analysis/bahoruco-fire/opera-vh_diff.webp",
+      "change": "/analysis/bahoruco-fire/opera-vh_change.webp"
+     },
+     "imageSize": [
+      931,
+      587
+     ],
+     "footprint": {
+      "polygon": [
+       [
+        -71.85518,
+        18.26082
+       ],
+       [
+        -71.32698,
+        18.26797
+       ],
+       [
+        -71.32278,
+        17.94963
+       ],
+       [
+        -71.85002,
+        17.9426
+       ]
+      ],
+      "bbox": [
+       -71.85517546971624,
+       17.94260348504652,
+       -71.32277752149469,
+       18.26797238699601
+      ],
+      "center": [
+       -71.58874,
+       18.10525
+      ]
+     },
+     "dbRange": [
+      -30.77,
+      -9.54
+     ],
+     "series": [
+      {
+       "date": "2026-06-11",
+       "medianDb": -14.134,
+       "meanDb": -16.162,
+       "validPct": 52.2,
+       "usable": true
+      },
+      {
+       "date": "2026-06-23",
+       "medianDb": -14.05,
+       "meanDb": -16.137,
+       "validPct": 52.3,
+       "usable": true
+      },
+      {
+       "date": "2026-06-30",
+       "medianDb": -14.008,
+       "meanDb": -16.47,
+       "validPct": 52.2,
+       "usable": true
+      },
+      {
+       "date": "2026-07-12",
+       "medianDb": -13.873,
+       "meanDb": -16.283,
+       "validPct": 52.1,
+       "usable": true
+      },
+      {
+       "date": "2026-07-24",
+       "medianDb": -13.692,
+       "meanDb": -15.942,
+       "validPct": 52.1,
+       "usable": true
+      },
+      {
+       "date": "2026-08-05",
+       "medianDb": -13.895,
+       "meanDb": -16.278,
+       "validPct": 52.2,
+       "usable": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "azua-flood",
+   "type": "flood",
+   "name": "Azua flood analysis",
+   "region": "Azua",
+   "country": "Dominican Republic",
+   "source": "inundacion_azua",
+   "lat": 18.42502,
+   "lon": -70.75024,
+   "startDate": "2026-10-17",
+   "endDate": "2026-10-29",
+   "sensors": [
+    {
+     "key": "nisar-hh",
+     "sensor": "nisar",
+     "pol": "HH",
+     "label": "NISAR",
+     "band": "L",
+     "resolution_m": 10,
+     "group": "NISAR P083 F079 DESC",
+     "collection": "inundacion_azua",
+     "pre": {
+      "date": "2026-10-17T23:16:57Z"
+     },
+     "post": {
+      "date": "2026-10-29T23:16:57Z"
+     },
+     "method": {
+      "thresholdDb": 3.0,
+      "direction": "both",
+      "medianFilterPx": 5,
+      "waterDb": -17.0
+     },
+     "grid": {
+      "rows": 3926,
+      "cols": 5320,
+      "pixelSizeM": 10.0,
+      "crs": "EPSG:32619",
+      "overlapPct": 100.0
+     },
+     "stats": {
+      "validAreaKm2": 2088.445,
+      "changedAreaKm2": 40.5,
+      "changedPct": 1.939,
+      "decreaseAreaKm2": 16.713,
+      "increaseAreaKm2": 23.787,
+      "meanDiffDb": 0.273,
+      "medianDiffDb": 0.332,
+      "preMeanDb": -10.329,
+      "postMeanDb": -10.057
+     },
+     "land": {
+      "validAreaKm2": 1736.35,
+      "waterAreaKm2": 352.096,
+      "changedAreaKm2": 32.047,
+      "changedPct": 1.846,
+      "decreaseAreaKm2": 9.908,
+      "increaseAreaKm2": 22.139,
+      "changedOnWaterKm2": 8.452
+     },
+     "images": {
+      "pre": "/analysis/azua-flood/nisar-hh_pre.webp",
+      "post": "/analysis/azua-flood/nisar-hh_post.webp",
+      "diff": "/analysis/azua-flood/nisar-hh_diff.webp",
+      "change": "/analysis/azua-flood/nisar-hh_change.webp"
+     },
+     "imageSize": [
+      1330,
+      981
+     ],
+     "footprint": {
+      "polygon": [
+       [
+        -71.00405,
+        18.60001
+       ],
+       [
+        -70.50002,
+        18.6047
+       ],
+       [
+        -70.49694,
+        18.24998
+       ],
+       [
+        -70.99995,
+        18.24538
+       ]
+      ],
+      "bbox": [
+       -71.004054809367,
+       18.245383751254227,
+       -70.49694212046884,
+       18.604696893822048
+      ],
+      "center": [
+       -70.75024,
+       18.42502
+      ]
+     },
+     "dbRange": [
+      -21.51,
+      -1.26
+     ],
+     "series": [
+      {
+       "date": "2026-09-23",
+       "medianDb": -8.518,
+       "meanDb": -9.921,
+       "validPct": 100.0,
+       "usable": true
+      },
+      {
+       "date": "2026-10-05",
+       "medianDb": -8.812,
+       "meanDb": -10.211,
+       "validPct": 100.0,
+       "usable": true
+      },
+      {
+       "date": "2026-10-17",
+       "medianDb": -9.002,
+       "meanDb": -10.329,
+       "validPct": 100.0,
+       "usable": true
+      },
+      {
+       "date": "2026-10-29",
+       "medianDb": -8.351,
+       "meanDb": -10.057,
+       "validPct": 100.0,
+       "usable": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "monte-plata-flood",
+   "type": "flood",
+   "name": "Monte Plata flood analysis",
+   "region": "Monte Plata",
+   "country": "Dominican Republic",
+   "source": "inundacion_monte_plata",
+   "lat": 18.8,
+   "lon": -69.7002,
+   "startDate": "2026-10-17",
+   "endDate": "2026-10-29",
+   "sensors": [
+    {
+     "key": "nisar-hh",
+     "sensor": "nisar",
+     "pol": "HH",
+     "label": "NISAR",
+     "band": "L",
+     "resolution_m": 10,
+     "group": "NISAR P083 F079 DESC",
+     "collection": "inundacion_monte_plata",
+     "pre": {
+      "date": "2026-10-17T23:16:57Z"
+     },
+     "post": {
+      "date": "2026-10-29T23:16:57Z"
+     },
+     "method": {
+      "thresholdDb": 3.0,
+      "direction": "both",
+      "medianFilterPx": 5,
+      "waterDb": -17.0
+     },
+     "grid": {
+      "rows": 3337,
+      "cols": 4229,
+      "pixelSizeM": 10.0,
+      "crs": "EPSG:32619",
+      "overlapPct": 100.0
+     },
+     "stats": {
+      "validAreaKm2": 1411.205,
+      "changedAreaKm2": 7.102,
+      "changedPct": 0.503,
+      "decreaseAreaKm2": 6.497,
+      "increaseAreaKm2": 0.605,
+      "meanDiffDb": -0.352,
+      "medianDiffDb": -0.329,
+      "preMeanDb": -7.079,
+      "postMeanDb": -7.43
+     },
+     "land": {
+      "validAreaKm2": 1408.299,
+      "waterAreaKm2": 2.907,
+      "changedAreaKm2": 7.068,
+      "changedPct": 0.502,
+      "decreaseAreaKm2": 6.477,
+      "increaseAreaKm2": 0.591,
+      "changedOnWaterKm2": 0.034
+     },
+     "images": {
+      "pre": "/analysis/monte-plata-flood/nisar-hh_pre.webp",
+      "post": "/analysis/monte-plata-flood/nisar-hh_post.webp",
+      "diff": "/analysis/monte-plata-flood/nisar-hh_diff.webp",
+      "change": "/analysis/monte-plata-flood/nisar-hh_change.webp"
+     },
+     "imageSize": [
+      1057,
+      834
+     ],
+     "footprint": {
+      "polygon": [
+       [
+        -69.90165,
+        18.95002
+       ],
+       [
+        -69.49999,
+        18.95154
+       ],
+       [
+        -69.4991,
+        18.64996
+       ],
+       [
+        -69.90005,
+        18.64846
+       ]
+      ],
+      "bbox": [
+       -69.90165023980032,
+       18.64846457613373,
+       -69.49910360435645,
+       18.95153937979583
+      ],
+      "center": [
+       -69.7002,
+       18.8
+      ]
+     },
+     "dbRange": [
+      -14.21,
+      -1.06
+     ],
+     "series": [
+      {
+       "date": "2026-09-23",
+       "medianDb": -7.165,
+       "meanDb": -7.315,
+       "validPct": 100.0,
+       "usable": true
+      },
+      {
+       "date": "2026-10-05",
+       "medianDb": -7.151,
+       "meanDb": -7.301,
+       "validPct": 100.0,
+       "usable": true
+      },
+      {
+       "date": "2026-10-17",
+       "medianDb": -6.952,
+       "meanDb": -7.079,
+       "validPct": 100.0,
+       "usable": true
+      },
+      {
+       "date": "2026-10-29",
+       "medianDb": -7.284,
+       "meanDb": -7.43,
+       "validPct": 100.0,
+       "usable": true
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -18,11 +18,11 @@ import { useGeoData } from "@/hooks/useGeoData";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useVisibleEvents } from "@/hooks/useVisibleEvents";
 import { flyCamera, jumpCamera, type Flight } from "@/lib/camera";
+import { sizeIndex } from "@/lib/events";
 import { escapeHtml, isWebGLAvailable } from "@/lib/dom";
 import {
   LOD_MARKER_SCALE,
   greatCircleDeg,
-  circlePoints,
   lodFromAltitude,
   panelShift,
   pointInRegion,
@@ -163,7 +163,7 @@ interface HexBinLike {
   points: object[];
   sumWeight: number;
 }
-const hexWeight = (d: object): number => 0.4 + asEvent(d).magnitude;
+const hexWeight = (d: object): number => 0.4 + sizeIndex(asEvent(d));
 
 function hexColor(hex: HexBinLike, alpha: number): string {
   // Cool blue → amber → coral as the cell gets busier.
@@ -225,8 +225,9 @@ export default function GlobeScene() {
   const aspect = size.height > 0 ? size.width / size.height : 1.6;
   const desktop = size.width >= DESKTOP_MIN_WIDTH;
 
-  const featured = useMemo(() => events.filter((e) => e.featured), [events]);
-  const allFeatured = useMemo(() => allEvents.filter((e) => e.featured), [allEvents]);
+  // Every analysed area is a case: all of them get a marker and a pulsing ring.
+  const featured = events;
+  const allFeatured = allEvents;
   const selectedEvent = useMemo(
     () => allEvents.find((e) => e.id === selectedId) ?? null,
     [allEvents, selectedId],
@@ -860,7 +861,7 @@ export default function GlobeScene() {
   const pointAltitude = useCallback(
     (d: object): number => {
       const e = asEvent(d);
-      return lod === "region" ? 0.006 + e.magnitude * 0.03 : 0.003;
+      return lod === "region" ? 0.006 + sizeIndex(e) * 0.03 : 0.003;
     },
     [lod],
   );
@@ -868,7 +869,7 @@ export default function GlobeScene() {
   const pointRadius = useCallback(
     (d: object): number => {
       const e = asEvent(d);
-      return (e.featured ? 0.46 : 0.14 + e.magnitude * 0.26) * markerScale;
+      return (0.34 + sizeIndex(e) * 0.22) * markerScale;
     },
     [markerScale],
   );
@@ -897,18 +898,16 @@ export default function GlobeScene() {
   // Dashed outline around the selected case.
   const footprints = useMemo<Footprint[]>(() => {
     if (!selectedEvent || arrivedId !== selectedEvent.id) return NO_FOOTPRINTS;
-    const area = detail?.id === selectedEvent.id ? detail.areaKm2 : null;
-    const realKm = area !== null ? Math.sqrt(area / Math.PI) : 4 + selectedEvent.magnitude * 22;
-    // Never smaller than the eye can follow at arrival altitude.
-    const radiusKm = Math.max(realKm, 14);
+    // The real outline of the analysed area (closed ring of [lat, lng]).
+    const ring = selectedEvent.footprint.map(([lon, lat]): [number, number] => [lat, lon]);
     return [
       {
         id: selectedEvent.id,
         color: `rgba(${CHANGE_TYPES[selectedEvent.type].rgb.join(", ")}, 0.95)`,
-        points: circlePoints(selectedEvent.lat, selectedEvent.lon, radiusKm),
+        points: ring.length > 0 ? [...ring, ring[0]] : ring,
       },
     ];
-  }, [selectedEvent, detail, arrivedId]);
+  }, [selectedEvent, arrivedId]);
 
   // The callout card appears once the camera has arrived.
   const htmlData = useMemo<HtmlDatum[]>(() => {
@@ -923,7 +922,6 @@ export default function GlobeScene() {
     if (orbit) return NO_EVENTS;
     return events.filter(
       (e) =>
-        e.featured ||
         e.id === selectedId ||
         greatCircleDeg(e.lat, e.lon, focusCenter.lat, focusCenter.lng) <= nearRadius,
     );
@@ -999,7 +997,7 @@ export default function GlobeScene() {
           pointLabel={pointLabel}
           onPointHover={handlePointHover}
           onPointClick={handlePointClick}
-          // Pulsing rings: featured cases and the selected one
+          // Pulsing rings: every analysed area
           ringsData={ringsData}
           ringLat={pointLat}
           ringLng={pointLng}
@@ -1019,7 +1017,7 @@ export default function GlobeScene() {
           pathDashGap={footprintGap}
           pathDashAnimateTime={reducedMotion ? 0 : footprintAnimate()}
           pathTransitionDuration={0}
-          // Focusable DOM markers (featured) and the selected case's callout
+          // Focusable DOM markers and the selected case's callout
           htmlElementsData={htmlData}
           htmlLat={pointLat}
           htmlLng={pointLng}

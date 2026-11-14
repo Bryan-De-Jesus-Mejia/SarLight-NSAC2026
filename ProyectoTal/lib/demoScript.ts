@@ -24,7 +24,7 @@ const store = () => useAppStore.getState();
 
 const RADAR_DAY = "2026-10-30";
 const EARLIER_DAY = "2026-06-20";
-const CASE_ID = "enriquillo-lake-advance";
+const CASE_ID = "azua-flood";
 
 export const DEMO_SCENES: readonly DemoScene[] = [
   {
@@ -57,15 +57,15 @@ export const DEMO_SCENES: readonly DemoScene[] = [
   },
   {
     kicker: "04 · The country",
-    title: "Thirty-two provinces, one lake",
+    title: "Thirty-two provinces, four analysed areas",
     body: "Zoom in and the map follows you: borders, provinces, and the places where the ground is changing.",
     ms: 7500,
     enter: () => globeApi.current?.openCountry("DOM"),
   },
   {
     kicker: "05 · A case",
-    title: "Lake Enriquillo",
-    body: "The Caribbean's largest lake lies below sea level. Calm water bounces the radar pulse away, so open water shows up dark.",
+    title: "A real comparison: Azua",
+    body: "Two NISAR passes twelve days apart, subtracted pixel by pixel. Calm water bounces the radar pulse away, so flooding would show up as a patch that turns dark.",
     ms: 11000,
     enter: () => {
       store().setOverlayDate(RADAR_DAY);
@@ -95,7 +95,7 @@ export const DEMO_SCENES: readonly DemoScene[] = [
   {
     kicker: "08 · Your turn",
     title: "Now explore",
-    body: "Drag, zoom, search, switch layers. The satellite imagery is open NASA data; the case figures in this prototype are simulated.",
+    body: "Drag, zoom, search, switch layers. The imagery is open NASA data and the case figures come from our own radar comparisons, not yet verified on the ground.",
     ms: Infinity,
     enter: () => {
       store().setOverlay("none");

@@ -5,8 +5,10 @@ Package name: `globalearth`
 
 > **Status: Phases 1–3, 5 and 6 delivered** (tour mode skipped by decision) —
 > project, data layer, 3D globe, case panel, timeline, filters, search and the
-> Methods page, all running on simulated data. Everything else in this document is the
-> plan for the next phases. See [Roadmap](#9-roadmap).
+> Methods page. **All simulated data has been removed:** every figure in the app now
+> comes from real NISAR and Sentinel-1 radar scenes analysed by our own pipeline
+> (`Data analytics/`). Everything else in this document is the plan for the next
+> phases. See [Roadmap](#9-roadmap).
 
 ---
 
@@ -34,11 +36,14 @@ earthquakes, agriculture, and land deformation.
 
 ### Honesty rules (non-negotiable)
 
-- Any simulated value is **always** labelled "Simulated data" in the interface.
-- No invented number is ever presented as a real measurement.
-- Drivers and impacts are worded as hypotheses, not findings.
-- The label is driven by the data itself (`source: "mock" | "nisar"`), so it
-  disappears only when real data is actually connected.
+- Every number shown comes from a real radar scene. Nothing is invented or simulated.
+- A flagged change is a **lead**, not a finding: nothing has been verified on the
+  ground, and the panel says so ("Real radar data · not verified on the ground").
+- Interpretation ("what a change like this can mean") is worded as context; the
+  panel computes its own cautions from the data (share of the change over open
+  water, very small areas, direction that contradicts the hypothesis, passes from
+  different NISAR processing releases).
+- Only two passes are compared, so no statistical significance is claimed.
 
 ---
 
@@ -75,73 +80,60 @@ app/
   icon.svg              favicon (Earth + radar pulses)
   globals.css           tokens, .glass, tooltip, marker, loader
   page.tsx              renders <Explorer />
-  methods/page.tsx      /methods: how it works, what is simulated
+  methods/page.tsx      /methods: how a change is measured, limits, sources
   api/events/route.ts   GET /api/events
 components/
   Explorer.tsx          client: loads data, mounts globe (dynamic, ssr:false), HUD, error, loader
-  Hud.tsx               title, "Simulated data" badge, bottom row layout
-  Legend.tsx            legend that doubles as the change-type filter
+  Hud.tsx               title, search, Demo / Methods buttons, dock
+  Legend.tsx            legend that doubles as the filter (types present in the data)
   Timeline.tsx          date scrubber with play/pause and activity chart
   SearchBox.tsx         search by name, place or type, with a results list
   LoadingScreen.tsx     loading cover
   globe/GlobeScene.tsx  the globe (client)
   panel/CasePanel.tsx   case panel (opens on selection)
-  panel/BeforeAfter.tsx before/after slider
-  panel/MetricChart.tsx time series with baseline and uncertainty
+  panel/SarViewer.tsx   real before/after, difference and flagged-pixel images
+  panel/BackscatterChart.tsx  median backscatter on every pass of the track
   icons/ChangeTypeIcon.tsx
 data/
   types.ts              types and the DataProvider interface
   changeTypes.ts        colour, glyph and label per change type
-  mock/featured.ts      8 featured cases
-  mock/generate.ts      320 secondary signals
-  providers/index.ts    picks the provider (env DATA_SOURCE)
-  providers/mockProvider.ts
-  mock/details.ts       EventDetail builder (series, statistics, texts)
-  providers/nisarProvider.ts   empty skeleton with TODOs
+  analysis/cases.json   exported radar analyses (generated, see 4.1)
+  providers/index.ts    returns the analysis provider
+  providers/analysisProvider.ts  reads cases.json -> EventSummary / EventDetail
 store/useAppStore.ts    Zustand store
 hooks/                  useElementSize, usePrefersReducedMotion, useVisibleEvents
-lib/                    prng, starfield, dom, format, syntheticSar, time, search
-public/textures/        earth-blue-marble.jpg, earth-topology.png
+lib/                    starfield, dom, format, time, search, events, geo, camera, trail, imagery
+public/analysis/<case>/ web-sized images of each analysis (generated, see 4.1)
 ```
 
 ### 3.1 Data flow
 
 ```
-DataProvider (server)  →  GET /api/events  →  Zustand store  →  Globe + HUD
-   mock | nisar             the only door        client state
+Data analytics/data/analisis  →  pipeline/export_web.py  →  data/analysis/cases.json
+                                                         →  public/analysis/**.webp
+AnalysisProvider (server)  →  GET /api/events  →  Zustand store  →  Globe + HUD + panel
 ```
 
 - The interface consumes **only** the API route, never a provider directly.
-- The list is requested **once**. Filters and the timeline are applied on the
-  client, so scrubbing time never hits the network.
-- `hooks/useVisibleEvents.ts` is the single place where the timeline date and
-  the selected change types are applied; the globe, legend and timeline all
-  read from it.
-- `DATA_SOURCE=nisar` switches the provider; any other value uses the mock.
-  The route resolves at request time, so the variable is read from the running
-  server.
+- The list is requested **once**. Filters, search and the timeline are applied on
+  the client (`hooks/useVisibleEvents.ts`).
+- `cases.json` is imported at build time, so the deployed app needs no filesystem
+  or database. To add or update an analysis, run the exporter and redeploy.
 
 ### 3.2 Data model (`data/types.ts`)
 
-The event type is split in two so the globe stays light:
-
-- **`EventSummary`** — what the globe paints: `id`, `type`, `name`, `region`,
-  `country`, `lat`, `lon`, `startDate`, `endDate` (ISO `YYYY-MM-DD`),
-  `magnitude` (0–1), `featured`, `significance`, `source`.
-- **`EventDetail extends EventSummary`** — what the case panel shows (Phase 2):
-  `areaKm2`, `summary` (two sentences), `sar { technique, band, polarizations,
-  explanation }`, `drivers`, `impact`, `metric { label, unit, series,
-  baselineEndDate }`, `change { value, unit, direction }`,
-  `significanceDetail { level, pValue, zScore, method }`, `imagery`
-  (`synthetic` seed + style, or `url` before/after).
-
-Supporting types: `ChangeType`, `SignificanceLevel`, `DataSource`,
-`SarTechnique`, `Polarization`, `EventFilters`, `TimeRange`, `EventsMeta`,
-`EventsResponse`, `ApiErrorResponse`.
+- **`EventSummary`** — what the globe paints: `id`, `type` (what the analysis looked
+  for: wildfire, flood…), `name`, `region`, `country`, `lat`, `lon`, `startDate`,
+  `endDate` (first and last pass compared), `sensors`, `changedAreaKm2`,
+  `changedPct`, `footprint` (real outline of the analysed area).
+- **`EventDetail extends EventSummary`** — `analyses: SensorAnalysis[]`, one per
+  sensor and polarisation (NISAR first). Each holds the two passes, the method
+  (threshold, direction, median filter, water threshold), the grid, statistics over
+  the whole scene and over **land only**, the image paths and the pass-by-pass series.
 
 ```ts
 interface DataProvider {
-  readonly source: DataSource;
+  readonly source: DataSource;           // "analysis"
   getEvents(filters?: EventFilters): Promise<EventSummary[]>;
   getEventById(id: string): Promise<EventDetail | null>;
   getTimeRange(): Promise<TimeRange>;
@@ -159,76 +151,55 @@ Provider failure → HTTP 503 with
 `{ error: { code: "DATA_SOURCE_UNAVAILABLE", message } }`. Unknown id → HTTP 404
 with code `EVENT_NOT_FOUND`.
 
-### 3.4 Connecting real NISAR data (`NisarProvider`)
+### 3.4 Live feeds (not built)
 
-The skeleton lists the work as TODOs:
-
-1. **Auth** — Earthdata Login token, server-side env only.
-2. **Discovery** — NASA CMR and/or ASF DAAC search by collection, area, time.
-3. **Products** — GCOV → backscatter change; GUNW → displacement; GOFF → ice
-   flow.
-4. **Preprocessing** — reduce multi-GB HDF5 granules offline to small JSON/COG.
-5. **Mapping** — emit `EventSummary` / `EventDetail` with `source: "nisar"`.
-6. **Significance** — from the real variability of each baseline.
+Adding live hazard data (earthquakes, fires, storms, floods) means implementing
+`DataProvider` for each feed and composing them in `providers/index.ts`. Research
+notes: USGS earthquake GeoJSON (no key), NASA FIRMS (free MAP_KEY), NASA EONET v3
+(no key), GDACS, NOAA NHC. A live event has no end date, and the per-event label
+("Live · USGS") would replace the single "Real radar data" badge.
 
 ---
 
-## 4. Simulated data
+## 4. Real data: radar change analyses
 
-All mock data is **deterministic**: `lib/prng.ts` (`mulberry32`, Box–Muller
-`gaussian`, `pick`, `clamp`), never `Math.random()`. Mock window:
-`2025-10-01 → 2026-10-31`.
+### 4.1 Pipeline
 
-### 4.1 Featured cases (8)
+`Data analytics/pipeline/` (Python, run from its `.venv`):
 
-Real locations, invented values. Lake Enriquillo is first — the team's home case.
+1. `bulk_fetch.py` — finds every NISAR (L2 GCOV) and OPERA RTC-S1 scene over an area
+   through ASF, streams only the area of interest and stores it in dB under
+   `data/collections/<name>/` with a `catalog.csv` of per-scene statistics.
+2. `sar_change_detection.py` — compares two passes of the same track: dB difference
+   (after − before), 5×5 median filter, threshold (3 dB). Output goes to
+   `data/analisis/<case>/<sensor_pol>/` (`diferencia_db.tif`, `mascara_cambio.tif`,
+   `estadisticas.json`, `visualizacion.png`).
+3. `export_web.py` — turns those results into web assets: four WebP images per
+   analysis (before, after, difference, flagged pixels), the real footprint in
+   lon/lat, and `data/analysis/cases.json`. It also derives the **land-only**
+   figures by setting aside pixels that were already open water in the before image
+   (darker than −17 dB in HH/VV, −22 dB in HV/VH), because wind and waves change
+   the echo of the sea. Run it with `python pipeline/export_web.py`.
 
-| id                            | type        | place                                   | magnitude | significance |
-| ----------------------------- | ----------- | --------------------------------------- | --------- | ------------ |
-| `enriquillo-lake-advance`     | wetland     | Lake Enriquillo, Dominican Republic     | 0.86      | high         |
-| `jakobshavn-terminus-retreat` | glacier     | Jakobshavn Isbræ, Greenland             | 0.92      | high         |
-| `everglades-marsh-loss`       | wetland     | Cape Sable, Florida, United States      | 0.64      | medium       |
-| `sierra-foothills-burn-scar`  | wildfire    | El Dorado County, California, United States | 0.78  | high         |
-| `atacama-coast-rupture`       | earthquake  | Antofagasta, Chile                      | 0.95      | high         |
-| `mekong-delta-subsidence`     | deformation | Cần Thơ, Vietnam                        | 0.72      | medium       |
-| `punjab-crop-rotation-shift`  | agriculture | Ludhiana, Punjab, India                 | 0.58      | medium       |
-| `rondonia-forest-conversion`  | agriculture | Rondônia, Brazil                        | 0.81      | high         |
+### 4.2 The analyses in the app
 
-### 4.2 Secondary signals (320)
+| Case                | What it looked for | Sensors                | Passes compared            |
+| ------------------- | ------------------ | ---------------------- | -------------------------- |
+| Pelempito           | wildfire (weaker echo) | NISAR HV, Sentinel-1 VH | Sep 2026                   |
+| Sierra de Bahoruco  | wildfire (weaker echo) | NISAR HV, Sentinel-1 VH | Jun–Jul 2026               |
+| Azua                | flood (both directions) | NISAR HH               | 17 → 29 Oct 2026           |
+| Monte Plata         | flood (both directions) | NISAR HH               | 17 → 29 Oct 2026           |
 
-Seed `20261109`. Each signal picks a change type, then a **real cluster** for
-that type (e.g. glaciers → West Greenland margin, Karakoram, Svalbard…;
-earthquakes → Honshu, East Anatolian Fault, Zagros…), and scatters around it
-with a gaussian (σ = the cluster's spread in degrees). Longitude scatter is
-corrected by `1 / max(cos(lat), 0.2)`, longitude is wrapped to `[-180, 180]`
-and latitude clamped to ±85. This keeps the globe believable: glaciers at high
-latitudes, earthquakes on plate boundaries, nothing in the open ocean.
+Names and regions of the cases are set in `CASES` inside `export_web.py`; every
+number is read from the analysis files.
 
-- `magnitude = clamp(0.06 + rand()^2.2 · 0.8, 0, 1)` — skewed to small signals.
-- Dates: random start inside the window, duration 12–191 days, end capped.
-- `significance`: `score = magnitude + (rand − 0.5) · 0.25`; `> 0.55` high,
-  `> 0.28` medium, otherwise low.
-- `id` `sig-0001…`, `name` `"<cluster> <type phrase>"`, lat/lon and magnitude
-  rounded to 3 decimals.
+### 4.3 What the panel shows
 
-### 4.3 Event detail (`data/mock/details.ts`)
-
-`buildEventDetail(summary)` derives the full `EventDetail` for any event, seeded
-from a hash of its id. The 8 featured cases have hand-written summaries, drivers,
-impact and metric; secondary signals use a per-type profile.
-
-- **Series** — 8 baseline passes before the event start, then one pass every
-  12 days (NISAR's repeat cycle) to the event end. Change develops gradually
-  (smoothstep), or as a step for earthquakes.
-- **Statistics are real arithmetic on the plotted points.** Noise is scaled so
-  the baseline's sample σ puts the change at the event's significance level;
-  `change`, `zScore` and `pValue` are then computed from the series itself
-  (mean of the last 3 passes vs the 8 baseline passes, two-sided z-test).
-  Levels: |z| ≥ 3 high, ≥ 2 medium, otherwise low.
-- **Imagery** — `{ kind: "synthetic", seed, style }`, rendered on canvas by
-  `lib/syntheticSar.ts`: speckled backscatter scenes (water, ice, burn scars,
-  field patchworks) or wrapped-phase interferograms (one bowl for subsidence,
-  two opposite lobes for earthquakes). Always tagged "Simulated imagery".
+Sensor tabs; a viewer with before/after swipe, difference and flagged-pixel views;
+changed area on land, weaker/stronger split, mean change and the dates; the median
+backscatter of the area on every pass of the same track (with the two compared
+passes marked); context on what a change like this can mean; computed cautions;
+and a collapsible "how this was computed".
 
 ---
 
@@ -236,12 +207,12 @@ impact and metric; secondary signals use a per-type profile.
 
 | # | Feature               | Phase | Summary |
 | - | --------------------- | ----- | ------- |
-| 1 | **3D globe**          | 1 ✅  | All signals as coloured columns (height and radius by magnitude), pulsing rings and focusable markers on the 8 featured cases, tooltip, click-to-fly camera, auto-rotation. |
-| 2 | **Case panel**        | 2 ✅  | Opens on selection. Before/after slider (synthetic backscatter or interferogram imagery), metric time series with baseline and uncertainty band, change value, significance (p-value, z-score, method), "how radar saw this" explainer, hypothesised drivers and impact. |
+| 1 | **3D globe**          | 1 ✅  | One marker per analysed area (size from the area that changed, on a log scale), pulsing rings, the real outline of the analysed area, tooltip, click-to-fly camera. |
+| 2 | **Case panel**        | 2 ✅  | Opens on selection: real before/after, difference and flagged-pixel images, changed area on land, backscatter on every pass, context and computed cautions (see 4.3). |
 | 3 | **Timeline**          | 3 ✅  | Scrubber across the data window with play/pause and a chart of how many signals are active each day. With a date set, the globe shows the signals active on that date (`startDate ≤ date ≤ endDate`); "Show all" returns to the whole period. Client-side only. |
 | 4 | **Tour mode**         | Skipped | Guided flight through the 8 featured cases, starting at Lake Enriquillo, with narration cards; pausable and skippable. |
-| 5 | **Filters & search**  | 5 ✅  | Multi-select change types and significance levels from the legend (nothing selected = everything shown), a featured-only switch, and a search box over name, region, country and type (accent-insensitive). Typing narrows the globe live; picking a result flies to that case and opens its panel. |
-| 6 | **Methods page**      | 6 ✅  | `/methods`: what SAR and NISAR are, each technique (backscatter, InSAR, coherence, polarimetry), how significance is computed, what is simulated and what is not, data sources. |
+| 5 | **Filters & search**  | 5 ✅  | Multi-select filter by what the analysis looked for (only types present in the data) and a search box over name, region, country and type (accent-insensitive). Picking a result flies to that case. |
+| 6 | **Methods page**      | 6 ✅  | `/methods`: what SAR and NISAR are, the techniques, the step-by-step change measurement with a table of every analysis, the limits of the numbers, and the sources. |
 | 7 | **Accessible event list & polish** | 7 | A keyboard- and screen-reader-friendly list equivalent to the globe, responsive pass, performance pass, final README. |
 
 ---
@@ -301,8 +272,8 @@ thin instrument layer over it.
 | Tracking surface change over time                    | Per-case time series against a baseline; a global timeline         |
 | Making radar understandable to non-experts           | Plain-language "how radar saw this" per case; a Methods page       |
 | Use of NISAR                                         | `DataProvider` seam + `NisarProvider` plan (GCOV / GUNW / GOFF)    |
-| Scientific honesty                                   | Significance shown explicitly; simulated data always labelled      |
-| Local relevance                                      | Lake Enriquillo (Dominican Republic) as the lead case              |
+| Scientific honesty                                   | Real data only; limits and cautions shown next to every number     |
+| Local relevance                                      | Four areas of the Dominican Republic analysed with NISAR           |
 
 ---
 
@@ -310,7 +281,7 @@ thin instrument layer over it.
 
 | Phase | Scope                                             | Status |
 | ----- | ------------------------------------------------- | ------ |
-| 1     | Project, data layer, globe with simulated data    | ✅ Done |
+| 1     | Project, data layer, globe                        | ✅ Done |
 | 2     | Case panel (`EventDetail`, `/api/events/[id]`, before/after slider, charts) | ✅ Done |
 | 3     | Timeline with play (+ change-type filters from the legend) | ✅ Done |
 | 4     | Tour mode                                         | Skipped (team decision) |
@@ -320,4 +291,7 @@ thin instrument layer over it.
 
 ### Not built yet
 
-Accessible event list, polish, final README. (Tour mode: skipped.)
+Accessible event list, polish, final README. (Tour mode: skipped.) Ideas: drape the
+difference image on the globe at its real position; per-pixel baselines from the whole
+time series so significance can be measured; cross-checks against independent fire
+and flood records; live hazard feeds (see 3.4).

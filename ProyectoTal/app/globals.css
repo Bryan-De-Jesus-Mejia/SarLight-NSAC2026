@@ -452,12 +452,6 @@ body {
   pointer-events: none;
 }
 
-.ge-compare-tag--simulated {
-  top: auto;
-  bottom: 0.5rem;
-  border-color: rgb(242 184 102 / 0.5);
-  color: var(--color-accent);
-}
 
 /* Chart text: always ink tokens, never the series colour */
 .ge-chart-tick {

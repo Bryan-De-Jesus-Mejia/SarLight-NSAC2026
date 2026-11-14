@@ -32,10 +32,8 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
     const tokens = queryTokens(query);
     if (tokens.length === 0) return { results: [], matchCount: 0 };
     const matches = events.filter((e) => matchesQuery(e, tokens));
-    // Featured cases first, then the strongest signals.
-    const ranked = [...matches].sort(
-      (a, b) => Number(b.featured) - Number(a.featured) || b.magnitude - a.magnitude,
-    );
+    // Largest change first.
+    const ranked = [...matches].sort((a, b) => b.changedAreaKm2 - a.changedAreaKm2);
     return { results: ranked.slice(0, MAX_RESULTS), matchCount: matches.length };
   }, [events, query]);
 
@@ -174,11 +172,9 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
                           {event.region} · {event.country}
                         </span>
                       </span>
-                      {event.featured && (
-                        <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-accent">
-                          Featured
-                        </span>
-                      )}
+                      <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-muted">
+                        {event.sensors.map((s) => (s === "nisar" ? "NISAR" : "S-1")).join(" + ")}
+                      </span>
                     </li>
                   );
                 })}

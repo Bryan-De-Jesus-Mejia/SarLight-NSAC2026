@@ -16,7 +16,7 @@ export interface VisibleEvents {
 }
 
 /**
- * The single place where the timeline, the filters and the search are applied.
+ * The single place where the timeline, the type filters and the search are applied.
  * All of it runs on the client over the list fetched once from /api/events.
  */
 export function useVisibleEvents(): VisibleEvents {
@@ -24,21 +24,13 @@ export function useVisibleEvents(): VisibleEvents {
   const meta = useAppStore((s) => s.meta);
   const timelineDay = useAppStore((s) => s.timelineDay);
   const activeTypes = useAppStore((s) => s.activeTypes);
-  const activeLevels = useAppStore((s) => s.activeLevels);
-  const featuredOnly = useAppStore((s) => s.featuredOnly);
   const query = useAppStore((s) => s.query);
 
-  // Significance, featured-only and search: independent of time and type.
+  // The search is independent of time and type.
   const refined = useMemo(() => {
     const tokens = queryTokens(query);
-    if (activeLevels.length === 0 && !featuredOnly && tokens.length === 0) return events;
-    return events.filter(
-      (e) =>
-        (activeLevels.length === 0 || activeLevels.includes(e.significance)) &&
-        (!featuredOnly || e.featured) &&
-        matchesQuery(e, tokens),
-    );
-  }, [events, activeLevels, featuredOnly, query]);
+    return tokens.length === 0 ? events : events.filter((e) => matchesQuery(e, tokens));
+  }, [events, query]);
 
   const scoped = useMemo(() => {
     if (timelineDay === null || !meta) return refined;

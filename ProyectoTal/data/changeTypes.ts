@@ -27,6 +27,15 @@ export const CHANGE_TYPES: Record<ChangeType, ChangeTypeMeta> = {
     iconPath:
       "M3 7c2-1.6 4-1.6 6 0s4 1.6 6 0 4-1.6 6 0M3 12c2-1.6 4-1.6 6 0s4 1.6 6 0 4-1.6 6 0M3 17c2-1.6 4-1.6 6 0s4 1.6 6 0 4-1.6 6 0",
   },
+  flood: {
+    label: "Floods",
+    noun: "flood",
+    blurb: "Land that turns to open water, seen as a sharp drop in radar backscatter.",
+    color: "#60a5fa",
+    rgb: [96, 165, 250],
+    // Water drop over a wave
+    iconPath: "M12 3.2s5 5.4 5 9.1a5 5 0 0 1-10 0c0-3.7 5-9.1 5-9.1zM4 19.6c2-1.2 4-1.2 6 0s4 1.2 6 0 3-.9 4-.4",
+  },
   glacier: {
     label: "Glaciers & ice",
     noun: "glacier",
@@ -79,6 +88,7 @@ export const CHANGE_TYPES: Record<ChangeType, ChangeTypeMeta> = {
 /** Fixed legend order. */
 export const CHANGE_TYPE_ORDER: readonly ChangeType[] = [
   "wetland",
+  "flood",
   "glacier",
   "wildfire",
   "earthquake",

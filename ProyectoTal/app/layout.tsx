@@ -25,7 +25,7 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "ONAT: Dancing With the SARs for NASA Space Apps Challenge 2026",
   description:
-    "An interactive globe for following how Earth's surface changes — wetlands, glaciers, wildfires, earthquakes, agriculture and land deformation — as seen by the NASA–ISRO NISAR radar mission. This prototype runs on simulated data.",
+    "An interactive globe for following how Earth's surface changes, as seen by the NASA–ISRO NISAR radar mission and Sentinel-1. Every figure comes from real radar scenes compared pass against pass; nothing has been verified on the ground yet.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

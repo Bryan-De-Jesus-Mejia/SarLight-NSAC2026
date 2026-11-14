@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
-import { SignificanceMeter } from "@/components/icons/SignificanceMeter";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
-import type { SignificanceLevel } from "@/data/types";
+import { getDataProvider } from "@/data/providers";
+import type { EventDetail } from "@/data/types";
+import { formatDate, formatValue } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Methods — Dancing with the SARs",
   description:
-    "How this explorer works: what SAR and NISAR measure, the four radar techniques behind the signals, how significance is computed, and exactly what is simulated in this prototype.",
+    "How this explorer works: what SAR and NISAR measure, how two radar passes become a change map, what the numbers can and cannot tell you, and which data they come from.",
 };
+
 
 const TECHNIQUES: readonly { name: string; measures: string; body: string; usedFor: string }[] = [
   {
@@ -39,25 +41,28 @@ const TECHNIQUES: readonly { name: string; measures: string; body: string; usedF
   },
 ];
 
-const LEVELS: readonly { level: SignificanceLevel; label: string; rule: string; meaning: string }[] = [
-  { level: "high", label: "High", rule: "|z| ≥ 3", meaning: "Well outside the baseline's normal variation." },
-  { level: "medium", label: "Medium", rule: "2 ≤ |z| < 3", meaning: "Likely a real change; worth a closer look." },
-  { level: "low", label: "Low", rule: "|z| < 2", meaning: "Within what the baseline does on its own." },
+const STEPS: readonly { step: string; body: string }[] = [
+  { step: "Pick two passes", body: "Two scenes from the same satellite track and polarisation, so both look at the ground from the same angle." },
+  { step: "Convert to decibels", body: "Backscatter power becomes 10·log10(power). Differences then read as ratios: −3 dB is about half the echo." },
+  { step: "Align and subtract", body: "The second scene is resampled onto the pixel grid of the first and subtracted: after − before." },
+  { step: "Calm the speckle", body: "Radar images are naturally grainy. A median filter (5×5 pixels) smooths the difference without blurring edges." },
+  { step: "Apply a threshold", body: "A pixel is flagged when it changed by at least 3 dB. Fire analyses look for weaker echoes only; flood analyses look in both directions." },
+  { step: "Count the area", body: "Flagged pixels become square kilometres using the pixel size: 10 m for NISAR, 30 m for Sentinel-1." },
+  { step: "Set the sea aside", body: "Pixels that were already open water in the before image (darker than −17 dB in HH/VV, −22 dB in HV/VH) are reported separately: wind and waves change their echo, so they are not counted as land change." },
 ];
 
-const HONESTY: readonly { item: string; status: "Real" | "Simulated"; note: string }[] = [
-  { item: "Places", status: "Real", note: "Every featured case and every cluster of signals sits at a real location where that kind of change is known to occur." },
-  { item: "Radar physics", status: "Real", note: "The explanations of how each technique works describe real SAR behaviour." },
-  { item: "Signal values", status: "Simulated", note: "Magnitudes, dates, areas, time series and significance are generated from a fixed seed. None is a measurement." },
-  { item: "Before / after imagery", status: "Simulated", note: "Drawn procedurally to illustrate what backscatter and interferograms look like. Not satellite images." },
-  { item: "Drivers and impacts", status: "Simulated", note: "Written as hypotheses for a real analyst to test, not as findings about these places today." },
+const LIMITS: readonly { title: string; body: string }[] = [
+  { title: "No ground truth", body: "Nothing here has been checked against field reports, fire detections or flood maps. A flagged area is a lead, not a finding." },
+  { title: "Only two passes", body: "With one before and one after there is no baseline: we cannot say whether the change is unusual for that place. The chart of every pass shows how much the whole area normally moves." },
+  { title: "Radar is not a camera", body: "A weaker echo can come from burned or cleared vegetation, but also from drier or smoother ground. A stronger one can come from wetter soil or growing crops." },
+  { title: "The threshold is a choice", body: "3 dB is a convention that balances false alarms against missed changes. A different value would flag a different area." },
+  { title: "Data releases differ", body: "ASF labels NISAR L-band products beta, provisional or validated. Provisional covers acquisitions from 17 June to 20 October 2026 and validated starts on 21 October, so a comparison across that date mixes two processing releases. There is also a gap with no data from 27 July to 10 August 2026." },
 ];
 
-const PIPELINE: readonly { step: string; body: string }[] = [
-  { step: "Discover", body: "Search NASA's Common Metadata Repository and the Alaska Satellite Facility DAAC for NISAR granules over an area and period." },
-  { step: "Reduce", body: "NISAR products are multi-gigabyte HDF5 files. An offline step turns them into small per-site time series and image tiles." },
-  { step: "Detect", body: "Compare each new pass against that site's own baseline and keep the changes that stand out from its normal variation." },
-  { step: "Serve", body: "A NisarProvider returns the same event shape the app already uses, with source set to “nisar” — and the “Simulated data” labels disappear on their own." },
+const SOURCES: readonly { name: string; body: string }[] = [
+  { name: "NISAR L2 GCOV", body: "L-band (about 24 cm), polarimetric backscatter at 10 m, from the Alaska Satellite Facility archive of NASA (ASF DAAC)." },
+  { name: "OPERA RTC-S1", body: "C-band (about 5.6 cm) Sentinel-1 backscatter at 30 m, terrain-corrected by the OPERA project of NASA, also from ASF." },
+  { name: "Base map and radar layers", body: "Satellite base map: Sentinel-2 cloudless by EOX (contains modified Copernicus Sentinel data 2021). Radar overlays: NASA GIBS." },
 ];
 
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: ReactNode }) {
@@ -72,7 +77,14 @@ function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string
   );
 }
 
-export default function MethodsPage() {
+export default async function MethodsPage() {
+  const provider = getDataProvider();
+  const events = await provider.getEvents();
+  const details = (await Promise.all(events.map((e) => provider.getEventById(e.id)))).filter(
+    (d): d is EventDetail => d !== null,
+  );
+  const analyses = details.flatMap((detail) => detail.analyses.map((a) => ({ detail, a })));
+
   return (
     <main className="mx-auto w-full max-w-3xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
       <nav aria-label="Site">
@@ -93,15 +105,15 @@ export default function MethodsPage() {
           How radar sees the Earth <em>move</em>
         </h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-          What the satellite measures, how a change becomes a signal on the globe, how sure we can
-          be about it — and exactly which parts of this prototype are simulated.
+          What the satellite measures, how two radar passes become a change map, and what the
+          numbers can and cannot tell you.
         </p>
         <p className="mt-6 inline-flex items-start gap-2.5 rounded-2xl border border-accent/50 bg-accent/10 px-4 py-3 text-sm leading-relaxed text-ink">
           <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
           <span>
-            <strong className="font-medium text-accent">This prototype runs on simulated data.</strong>{" "}
-            No value shown in the explorer is a NISAR measurement. The methods below are the ones the
-            app is built to apply once real products are connected.
+            <strong className="font-medium text-accent">Every figure in the explorer is computed from real radar scenes.</strong>{" "}
+            It is a first-pass analysis: nothing has been verified on the ground yet, and the limits are
+            listed below.
           </span>
         </p>
       </header>
@@ -120,7 +132,7 @@ export default function MethodsPage() {
             ISRO&rsquo;s S-band (about 9 cm). The long L-band waves pass through leaves and reach
             trunks, soil and ice, which is what makes it good at forests, wetlands and ground motion.
             It images nearly all of Earth&rsquo;s land and ice and returns to the same ground track
-            every 12 days — which is why every time series in this app has one point per 12-day pass.
+            every 12 days — which is why the charts in this app have one point per pass.
           </p>
         </Section>
 
@@ -137,7 +149,7 @@ export default function MethodsPage() {
           </ul>
         </Section>
 
-        <Section id="types" eyebrow="03 · What we track" title="Six kinds of surface change">
+        <Section id="types" eyebrow="03 · What we track" title="What the analyses look for">
           <ul className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
             {CHANGE_TYPE_ORDER.map((type) => {
               const info = CHANGE_TYPES[type];
@@ -162,107 +174,15 @@ export default function MethodsPage() {
             })}
           </ul>
           <p className="text-sm text-muted">
-            Each type has its own colour and its own glyph, so the map never relies on colour alone.
+            Today the analyses cover fire and flood searches in the Dominican Republic; the other types
+            are what the explorer is built to grow into. Each type has its own colour and its own glyph,
+            so the map never relies on colour alone.
           </p>
         </Section>
 
-        <Section id="significance" eyebrow="04 · How sure are we" title="Is the change real, or just noise?">
-          <p>
-            Every place wobbles on its own: soil gets wet, crops grow, the atmosphere delays the
-            signal. A change only matters if it is larger than that normal wobble. For each case the
-            app compares the end of the series with its own baseline:
-          </p>
-          <ol className="list-decimal space-y-1.5 pl-5 marker:font-mono marker:text-xs marker:text-muted">
-            <li>Take the 8 passes before the event as the baseline; compute their mean and spread (sample standard deviation, σ).</li>
-            <li>Take the mean of the last 3 passes as the post-change level.</li>
-            <li>The change is the difference between the two means.</li>
-            <li>Divide by σ to get a z-score, and convert it to a two-sided p-value under a normal distribution.</li>
-          </ol>
-          <p className="rounded-xl border border-line bg-white/[0.03] px-4 py-3 text-center font-mono text-sm text-ink">
-            z = ( mean<sub>last 3</sub> − mean<sub>baseline</sub> ) / σ<sub>baseline</sub>
-          </p>
-          <div className="overflow-hidden rounded-2xl border border-line">
-            <table className="w-full border-collapse text-left text-sm">
-              <caption className="sr-only">Significance levels and their thresholds</caption>
-              <thead className="bg-white/[0.04] font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                <tr>
-                  <th scope="col" className="px-4 py-2.5 font-normal">Level</th>
-                  <th scope="col" className="px-4 py-2.5 font-normal">Rule</th>
-                  <th scope="col" className="px-4 py-2.5 font-normal">Reading</th>
-                </tr>
-              </thead>
-              <tbody>
-                {LEVELS.map((row) => (
-                  <tr key={row.level} className="border-t border-line">
-                    <th scope="row" className="whitespace-nowrap px-4 py-3 font-medium text-ink">
-                      <SignificanceMeter level={row.level} className="mr-2" />
-                      {row.label}
-                    </th>
-                    <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-ink">{row.rule}</td>
-                    <td className="px-4 py-3 text-ink/80">{row.meaning}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p>
-            The numbers in each case panel are computed from the very points plotted in its chart —
-            you can open the data table and check them.
-          </p>
-          <p className="text-sm text-muted">
-            Limits of this test: it assumes roughly normal, independent baseline values, and 8 passes
-            is a short baseline. Real radar series have seasons and correlated noise, so a production
-            version should model the seasonal cycle and use a longer record before calling a change
-            significant.
-          </p>
-        </Section>
-
-        <Section id="honesty" eyebrow="05 · Honesty" title="What is real and what is simulated">
-          <ul className="space-y-2.5">
-            {HONESTY.map((row) => (
-              <li key={row.item} className="flex flex-col gap-1.5 rounded-2xl border border-line bg-white/[0.03] p-4 sm:flex-row sm:items-start sm:gap-4">
-                <span className="flex shrink-0 items-center gap-3 sm:w-56">
-                  <span
-                    className={`rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] ${
-                      row.status === "Simulated" ? "border-accent/60 text-accent" : "border-line text-ink"
-                    }`}
-                  >
-                    {row.status}
-                  </span>
-                  <span className="font-medium text-ink">{row.item}</span>
-                </span>
-                <span className="text-sm leading-relaxed text-ink/80">{row.note}</span>
-              </li>
-            ))}
-          </ul>
-          <p>
-            The simulated values are deterministic: the same seed always produces the same 328
-            signals, so the prototype behaves identically for everyone. Wherever a simulated value
-            appears, the interface says so.
-          </p>
-        </Section>
-
-        <Section id="real-data" eyebrow="06 · Next" title="From prototype to real NISAR data">
-          <p>
-            The app talks to its data through a single interface. Replacing the simulated provider
-            with a real one does not touch the globe, the panel or the timeline. Three NISAR Level-2
-            products cover the six change types:
-          </p>
-          <ul className="grid gap-3 sm:grid-cols-3">
-            {[
-              ["GCOV", "Geocoded polarimetric covariance", "Backscatter change: wetlands, wildfire, agriculture"],
-              ["GUNW", "Geocoded unwrapped interferogram", "Ground displacement: earthquakes, land deformation"],
-              ["GOFF", "Geocoded pixel offsets", "Ice flow and terminus motion: glaciers"],
-            ].map(([code, name, use]) => (
-              <li key={code} className="rounded-2xl border border-line bg-white/[0.03] p-4">
-                <p className="font-mono text-lg text-accent">{code}</p>
-                <p className="mt-1 text-sm font-medium text-ink">{name}</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted">{use}</p>
-              </li>
-            ))}
-          </ul>
+        <Section id="pipeline" eyebrow="04 · From two images to a number" title="How a change is measured">
           <ol className="space-y-3">
-            {PIPELINE.map((p, i) => (
+            {STEPS.map((p, i) => (
               <li key={p.step} className="flex gap-4">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line font-mono text-xs text-muted">
                   {i + 1}
@@ -274,13 +194,83 @@ export default function MethodsPage() {
               </li>
             ))}
           </ol>
+          <p className="rounded-xl border border-line bg-white/[0.03] px-4 py-3 text-center font-mono text-sm text-ink">
+            Δ = 10·log<sub>10</sub>(after) − 10·log<sub>10</sub>(before) &nbsp;→&nbsp; flagged where |Δ| ≥ 3 dB
+          </p>
+
+          <div className="overflow-x-auto rounded-2xl border border-line">
+            <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
+              <caption className="sr-only">The analyses behind the explorer</caption>
+              <thead className="bg-white/[0.04] font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+                <tr>
+                  <th scope="col" className="px-4 py-2.5 font-normal">Area</th>
+                  <th scope="col" className="px-4 py-2.5 font-normal">Satellite</th>
+                  <th scope="col" className="px-4 py-2.5 font-normal">Passes</th>
+                  <th scope="col" className="px-4 py-2.5 text-right font-normal">Land changed</th>
+                  <th scope="col" className="px-4 py-2.5 text-right font-normal">On sea</th>
+                </tr>
+              </thead>
+              <tbody>
+                {analyses.map(({ detail, a }) => (
+                  <tr key={`${detail.id}-${a.key}`} className="border-t border-line align-top">
+                    <th scope="row" className="px-4 py-3 font-medium text-ink">
+                      {detail.name.replace(" analysis", "")}
+                    </th>
+                    <td className="whitespace-nowrap px-4 py-3 text-ink/80">
+                      {a.sensor === "nisar" ? "NISAR" : "Sentinel-1"} · {a.pol}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-ink/80">
+                      {formatDate(a.pre.date.slice(0, 10))} → {formatDate(a.post.date.slice(0, 10))}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-xs text-ink">
+                      {formatValue(a.land.changedAreaKm2)} km²
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-xs text-muted">
+                      {formatValue(a.land.changedOnWaterKm2)} km²
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-muted">
+            These rows come straight from the analysis files; the case panel shows the same figures with the
+            images behind them.
+          </p>
+        </Section>
+
+        <Section id="limits" eyebrow="05 · How sure are we" title="What these numbers cannot tell you">
+          <ul className="space-y-2.5">
+            {LIMITS.map((row) => (
+              <li key={row.title} className="rounded-2xl border border-line bg-white/[0.03] p-4">
+                <p className="font-medium text-ink">{row.title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-ink/80">{row.body}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        <Section id="data" eyebrow="06 · Where the data comes from" title="Sources">
+          <ul className="grid gap-3 sm:grid-cols-3">
+            {SOURCES.map((row) => (
+              <li key={row.name} className="rounded-2xl border border-line bg-white/[0.03] p-4">
+                <p className="font-mono text-sm text-accent">{row.name}</p>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted">{row.body}</p>
+              </li>
+            ))}
+          </ul>
+          <p>
+            Next steps: compare each flagged area against independent records (fire detections, flood
+            reports), build a per-pixel baseline from the whole time series so significance can be measured,
+            and add live hazard feeds as a separate layer.
+          </p>
         </Section>
       </div>
 
       <footer className="mt-14 border-t border-line pt-6 text-sm text-muted">
         <p>
-          Built for the NASA Space Apps Challenge 2026, challenge “Dancing with the SARs”. Earth
-          imagery on the globe: NASA Blue Marble.
+          Built for the NASA Space Apps Challenge 2026, challenge “Dancing with the SARs”. Radar data:
+          NASA ASF DAAC (NISAR) and ESA Copernicus Sentinel-1 via the NASA OPERA project.
         </p>
         <Link href="/" className="mt-3 inline-block text-accent underline-offset-4 hover:underline">
           Back to the globe

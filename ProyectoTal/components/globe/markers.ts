@@ -1,11 +1,11 @@
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { EventDetail, EventSummary } from "@/data/types";
 import { escapeHtml } from "@/lib/dom";
-import { formatSigned, formatValue } from "@/lib/format";
+import { formatDate, formatValue } from "@/lib/format";
 
 /**
  * DOM elements drawn on the globe through its single "html elements" layer:
- *  - focusable markers for the featured cases, and
+ *  - focusable markers for every analysed area, and
  *  - one callout card for the selected case.
  */
 
@@ -36,7 +36,7 @@ export interface MarkerHandlers {
 export const markerHandlers: { current: MarkerHandlers | null } = { current: null };
 
 /**
- * Markers are created once for every featured case and never removed: the
+ * Markers are created once for every analysed area and never removed: the
  * timeline and the filters only switch them off through a data attribute
  * (see .ge-marker-anchor[data-off] in globals.css).
  */
@@ -66,7 +66,7 @@ function createMarker(e: EventSummary): HTMLElement {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "ge-marker";
-  button.setAttribute("aria-label", `${e.name}, ${e.country}. Featured ${meta.noun} case.`);
+  button.setAttribute("aria-label", `${e.name}, ${e.country}. Radar analysis, ${meta.noun}.`);
 
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
@@ -110,14 +110,15 @@ function createCallout(d: CalloutDatum): HTMLElement {
   anchor.appendChild(sweep);
 
   let stat = "";
+  let when = "";
   if (d.detail) {
-    const { change, metric } = d.detail;
-    const signed = change.direction === "increase" ? change.value : -change.value;
+    const main = d.detail.analyses[0];
     stat =
       `<div class="ge-callout-stat">` +
-      `<span class="ge-callout-value">${escapeHtml(formatSigned(signed))} ${escapeHtml(change.unit)}</span>` +
-      `<span class="ge-callout-metric">${escapeHtml(metric.label)}</span>` +
+      `<span class="ge-callout-value">${escapeHtml(formatValue(main.land.changedAreaKm2))} km²</span>` +
+      `<span class="ge-callout-metric">changed on land · ${escapeHtml(main.sensor === "nisar" ? "NISAR" : "Sentinel-1")}</span>` +
       `</div>`;
+    when = `${formatDate(main.pre.date.slice(0, 10))} → ${formatDate(main.post.date.slice(0, 10))}`;
   }
 
   const card = document.createElement("div");
@@ -128,9 +129,7 @@ function createCallout(d: CalloutDatum): HTMLElement {
     `<div class="ge-callout-name">${escapeHtml(d.name)}</div>` +
     `<div class="ge-callout-place">${escapeHtml(d.region)} · ${escapeHtml(d.country)}</div>` +
     stat +
-    (d.detail
-      ? `<div class="ge-callout-area">${escapeHtml(formatValue(d.detail.areaKm2))} km² affected</div>`
-      : "");
+    (when ? `<div class="ge-callout-area">${escapeHtml(when)}</div>` : "");
   anchor.appendChild(card);
 
   return anchor;
