@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { LayersPanel } from "@/components/LayersPanel";
 import { Legend } from "@/components/Legend";
 import { SearchBox } from "@/components/SearchBox";
 import { Timeline } from "@/components/Timeline";
@@ -41,16 +42,27 @@ export function Hud() {
   const caseOpen = useAppStore((s) => s.selectedId !== null);
   const [legendOpen, setLegendOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
+  const [layersOpen, setLayersOpen] = useState(false);
 
   // On phones there is room for one panel at a time.
   const narrow = () => window.matchMedia("(max-width: 767px)").matches;
+  const closeOthers = (keep: "legend" | "timeline" | "layers") => {
+    if (!narrow()) return;
+    if (keep !== "legend") setLegendOpen(false);
+    if (keep !== "timeline") setTimelineOpen(false);
+    if (keep !== "layers") setLayersOpen(false);
+  };
   const toggleLegend = () => {
-    if (!legendOpen && narrow()) setTimelineOpen(false);
+    if (!legendOpen) closeOthers("legend");
     setLegendOpen(!legendOpen);
   };
   const toggleTimeline = () => {
-    if (!timelineOpen && narrow()) setLegendOpen(false);
+    if (!timelineOpen) closeOthers("timeline");
     setTimelineOpen(!timelineOpen);
+  };
+  const toggleLayers = () => {
+    if (!layersOpen) closeOthers("layers");
+    setLayersOpen(!layersOpen);
   };
 
   return (
@@ -82,6 +94,9 @@ export function Hud() {
             <div className="ge-slot ge-slot--legend" data-open={legendOpen} inert={!legendOpen}>
               <Legend />
             </div>
+            <div className="ge-slot ge-slot--layers" data-open={layersOpen} inert={!layersOpen}>
+              <LayersPanel />
+            </div>
             <div className="ge-slot ge-slot--timeline" data-open={timelineOpen} inert={!timelineOpen}>
               <Timeline />
             </div>
@@ -90,6 +105,9 @@ export function Hud() {
           <div className="pointer-events-auto mt-3 flex gap-2">
             <DockButton label="Surface change signals" open={legendOpen} onClick={toggleLegend}>
               <path d="M12 3.5 3.5 8 12 12.5 20.5 8zM3.5 12 12 16.5 20.5 12M3.5 16 12 20.5 20.5 16" />
+            </DockButton>
+            <DockButton label="Real data layers" open={layersOpen} onClick={toggleLayers}>
+              <path d="M12 3.2a8.8 8.8 0 1 0 0 17.6 8.8 8.8 0 0 0 0-17.6zM3.4 12h17.2M12 3.2c2.4 2.4 3.6 5.4 3.6 8.8s-1.2 6.4-3.6 8.8c-2.4-2.4-3.6-5.4-3.6-8.8S9.6 5.6 12 3.2z" />
             </DockButton>
             <DockButton label="Timeline" open={timelineOpen} onClick={toggleTimeline}>
               <path d="M3.5 17.5h17M6 17.5v-4M10 17.5V8M14 17.5v-6.5M18 17.5V5.5" />

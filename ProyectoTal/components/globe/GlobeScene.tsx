@@ -40,6 +40,8 @@ import {
   trailForProvince,
   worldItem,
 } from "@/lib/trail";
+import { applyOverlay, createOverlayEngine, findBaseEngine } from "@/components/globe/imageryEngine";
+import { satelliteUrl } from "@/lib/imagery";
 import { useAppStore, type TrailItem } from "@/store/useAppStore";
 
 /* -------------------------------------------------------------------------- */
@@ -58,10 +60,8 @@ const DESKTOP_MIN_WIDTH = 768;
 const SHEET_FRACTION = 0.68;
 const POINT_TRANSITION_MS = 900;
 const RESUME_ROTATION_MS = 6000;
-const MIN_DISTANCE = 100 * (1 + 0.06);
+const MIN_DISTANCE = 100 * (1 + 0.012);
 const MAX_DISTANCE = 520;
-/** With real map tiles the camera may come much closer. */
-const TILE_MIN_DISTANCE = 100 * (1 + 0.012);
 
 const NO_EVENTS: EventSummary[] = [];
 const NO_REGIONS: RegionFeature[] = [];
@@ -80,30 +80,15 @@ const GLOBE_MATERIAL = (materialHost.__geGlobeMaterial ??= new MeshPhongMaterial
   bumpScale: 9,
 }));
 
-const RENDERER_CONFIG = { antialias: true, alpha: false, powerPreference: "high-performance" } as const;
-/** Above this the extra pixels cost far more than they show. */
-const MAX_PIXEL_RATIO = 1.5;
+const DEVICE_RATIO = typeof window === "undefined" ? 1 : window.devicePixelRatio;
+// Past 1.5× the pixel ratio already smooths edges: multisampling on top is wasted work.
+const RENDERER_CONFIG = {
+  antialias: DEVICE_RATIO < 1.5,
+  alpha: false,
+  powerPreference: "high-performance",
+} as const;
+const FULL_RATIO = Math.min(1.5, DEVICE_RATIO);
 
-/**
- * Optional real-imagery basemap, drawn as map tiles on the globe.
- * Enabled with ?base=sat or ?base=radar (add &date=YYYY-MM-DD for the radar).
- */
-type TileUrl = (x: number, y: number, level: number) => string;
-function readTileUrl(): TileUrl | null {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.search);
-  const base = params.get("base");
-  if (base === "sat") {
-    return (x, y, l) =>
-      `https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/${l}/${y}/${x}.jpg`;
-  }
-  if (base === "radar") {
-    const date = /^\d{4}-\d{2}-\d{2}$/.test(params.get("date") ?? "") ? params.get("date") : "2026-10-30";
-    return (x, y, l) =>
-      `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/NISAR_L2_Geocoded_Polarimetric_Covariance/default/${date}/GoogleMapsCompatible_Level13/${l}/${y}/${x}.png`;
-  }
-  return null;
-}
 
 /** Sharpen the surface texture at grazing angles (the globe's limb). */
 function sharpenGlobeTexture(anisotropy: number): void {
@@ -235,11 +220,13 @@ export default function GlobeScene() {
 
   const [webgl] = useState(isWebGLAvailable);
   const [starfieldUrl] = useState(createStarfieldDataUrl);
-  const [tileUrl] = useState(readTileUrl);
   const [sceneReady, setSceneReady] = useState(false);
   const [hoveredRegionId, setHoveredRegionId] = useState<string | null>(null);
   /** Id of the case the camera has finished flying to. */
   const [arrivedId, setArrivedId] = useState<string | null>(null);
+  const overlay = useAppStore((s) => s.overlay);
+  const overlayDate = useAppStore((s) => s.overlayDate);
+  const overlayRef = useRef<ReturnType<typeof createOverlayEngine> | null>(null);
 
   const aspect = size.height > 0 ? size.width / size.height : 1.6;
   const desktop = size.width >= DESKTOP_MIN_WIDTH;
@@ -417,8 +404,8 @@ export default function GlobeScene() {
     const controls = globe.controls();
     controls.enableDamping = true;
     controls.autoRotateSpeed = 0.35;
-    controls.minDistance = tileUrl ? TILE_MIN_DISTANCE : MIN_DISTANCE;
-    globe.renderer().setPixelRatio(Math.min(MAX_PIXEL_RATIO, window.devicePixelRatio));
+    controls.minDistance = MIN_DISTANCE;
+    globe.renderer().setPixelRatio(FULL_RATIO);
     controls.maxDistance = MAX_DISTANCE;
     controls.zoomSpeed = 0.7;
 
@@ -429,6 +416,10 @@ export default function GlobeScene() {
       flyingRef.current = false;
     };
     controls.addEventListener("start", stopFlight);
+
+    // Overlay (radar / water) layer, sharing the globe's own transform.
+    const base = findBaseEngine(globe.scene());
+    if (base?.parent) overlayRef.current = createOverlayEngine(base.parent);
 
     // Lighting: bright, even fill so continents stay readable everywhere, plus
     // a key light that rides with the camera to model the sphere (soft limb
@@ -444,21 +435,25 @@ export default function GlobeScene() {
 
     setSceneReady(true);
     setGlobeReady(true);
-  }, [setGlobeReady, tileUrl]);
+  }, [setGlobeReady]);
 
-  // Relief shading is invisible up close and costs a full-screen pass there.
-  const close = lod === "country" || lod === "ground";
+  // Radar / water overlay follows the layer panel.
   useEffect(() => {
-    if (!sceneReady) return;
-    const next = close ? 0 : 9;
-    if (GLOBE_MATERIAL.bumpScale !== next) GLOBE_MATERIAL.bumpScale = next;
-  }, [close, sceneReady]);
+    const engine = overlayRef.current;
+    if (!sceneReady || !engine) return;
+    applyOverlay(engine, overlay, overlayDate);
+    const camera = globeRef.current?.camera();
+    if (camera && overlay !== "none") engine.updatePov(camera);
+  }, [sceneReady, overlay, overlayDate]);
 
   // Every camera move: update the zoom level and slow the drag when close.
   const handleZoom = useCallback(
     ({ altitude }: { altitude: number }) => {
       const next: Lod = lodFromAltitude(altitude);
       setLod(next);
+      const overlayEngine = overlayRef.current;
+      const camera = globeRef.current?.camera();
+      if (overlayEngine?.visible && camera) overlayEngine.updatePov(camera);
 
       const controls = globeRef.current?.controls();
       if (controls) controls.rotateSpeed = Math.min(0.5, Math.max(0.015, altitude * 0.16));
@@ -731,7 +726,7 @@ export default function GlobeScene() {
           backgroundColor={BACKGROUND_COLOR}
           backgroundImageUrl={starfieldUrl || null}
           rendererConfig={RENDERER_CONFIG}
-          globeTileEngineUrl={tileUrl}
+          globeTileEngineUrl={satelliteUrl}
           globeImageUrl="/textures/earth-blue-marble.jpg"
           bumpImageUrl="/textures/earth-topology.png"
           globeMaterial={GLOBE_MATERIAL}

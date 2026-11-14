@@ -9,6 +9,7 @@ import type {
   SignificanceLevel,
 } from "@/data/types";
 
+import { DEFAULT_RADAR_DATE, type OverlayKind } from "@/lib/imagery";
 import type { Lod, View } from "@/lib/geo";
 
 export type LoadStatus = "idle" | "loading" | "ready" | "error";
@@ -54,6 +55,13 @@ interface AppState {
   selectedProvinceId: string | null;
   /** Breadcrumb: where the camera has been taken, outermost first. */
   trail: TrailItem[];
+  /** Real-data layer drawn over the planet. */
+  overlay: OverlayKind;
+  /** Day (YYYY-MM-DD) of the overlay pass. */
+  overlayDate: string;
+
+  setOverlay: (overlay: OverlayKind) => void;
+  setOverlayDate: (date: string) => void;
 
   setLod: (lod: Lod) => void;
   selectProvince: (id: string | null) => void;
@@ -123,7 +131,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   lod: "orbit",
   selectedProvinceId: null,
   trail: [],
+  overlay: "none",
+  overlayDate: DEFAULT_RADAR_DATE,
 
+  setOverlay: (overlay) => set({ overlay }),
+  setOverlayDate: (date) => set({ overlayDate: date }),
   setLod: (lod) => {
     if (get().lod !== lod) set({ lod });
   },
