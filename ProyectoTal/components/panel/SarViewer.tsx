@@ -10,6 +10,8 @@ import { useAppStore } from "@/store/useAppStore";
 
 interface SarViewerProps {
   analysis: SensorAnalysis;
+  /** Plain version for the general view: two tabs and everyday words. */
+  simple?: boolean;
 }
 
 type Mode = "swipe" | "diff" | "change" | "time";
@@ -61,7 +63,7 @@ function useProbeData(url: string): ImageData | null {
  * difference, the flagged pixels, or play every pass of the track as a
  * time-lapse. The same picture can be laid on the globe at its real position.
  */
-export function SarViewer({ analysis }: SarViewerProps) {
+export function SarViewer({ analysis, simple = false }: SarViewerProps) {
   const reducedMotion = usePrefersReducedMotion();
   const setDrape = useAppStore((s) => s.setDrape);
 
@@ -83,12 +85,17 @@ export function SarViewer({ analysis }: SarViewerProps) {
   const threshold = `${method.thresholdDb} dB`;
   const frame = frames[Math.min(frameIndex, Math.max(frames.length - 1, 0))];
 
-  const modes: Array<{ id: Mode; label: string }> = [
-    { id: "swipe", label: "Before / after" },
-    { id: "diff", label: "Difference" },
-    { id: "change", label: "Flagged" },
-  ];
-  if (frames.length > 1) modes.push({ id: "time", label: "Time-lapse" });
+  const modes: Array<{ id: Mode; label: string }> = simple
+    ? [
+        { id: "swipe", label: "Before / after" },
+        { id: "change", label: "What changed" },
+      ]
+    : [
+        { id: "swipe", label: "Before / after" },
+        { id: "diff", label: "Difference" },
+        { id: "change", label: "Flagged" },
+      ];
+  if (frames.length > 1) modes.push({ id: "time", label: simple ? "Over time" : "Time-lapse" });
 
   // Time-lapse clock.
   useEffect(() => {
@@ -297,7 +304,15 @@ export function SarViewer({ analysis }: SarViewerProps) {
     </div>
   );
 
-  const legend = (
+  const plainLegend = (
+    <p className="mt-2.5 text-xs leading-relaxed text-muted">
+      {mode === "swipe" && "Bright is rough ground, forest or buildings. Dark is calm water or smooth ground."}
+      {mode === "change" && "The coloured dots are the places that looked different on the second visit."}
+      {mode === "time" && "Every visit of the satellite. Green is thick vegetation, purple is bare ground or low crops, black is water."}
+    </p>
+  );
+
+  const legend = simple ? plainLegend : (
     <div className="mt-2.5 text-xs leading-relaxed text-muted">
       {mode === "swipe" && (
         <>

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
+import { GeneralView } from "@/components/panel/GeneralView";
 import { SarViewer } from "@/components/panel/SarViewer";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
@@ -222,11 +223,12 @@ function AnalysisView({ detail, analysis }: { detail: EventDetail; analysis: Sen
 
 function PanelBody({ detail }: { detail: EventDetail }) {
   const [picked, setPicked] = useState<string | null>(null);
-  const analysis = detail.analyses.find((a) => a.key === picked) ?? detail.analyses[0];
+  const technical = useAppStore((s) => s.audience === "technical");
+  const analysis = (technical ? detail.analyses.find((a) => a.key === picked) : undefined) ?? detail.analyses[0];
 
   return (
     <div className="space-y-5">
-      {detail.analyses.length > 1 && (
+      {technical && detail.analyses.length > 1 && (
         <div className="ge-segments" role="group" aria-label="Satellite">
           {detail.analyses.map((a) => (
             <button
@@ -241,7 +243,7 @@ function PanelBody({ detail }: { detail: EventDetail }) {
           ))}
         </div>
       )}
-      <AnalysisView detail={detail} analysis={analysis} />
+      {technical ? <AnalysisView detail={detail} analysis={analysis} /> : <GeneralView detail={detail} analysis={analysis} />}
     </div>
   );
 }
@@ -266,6 +268,7 @@ export function CasePanel() {
   const select = useAppStore((s) => s.select);
   const retryDetail = useAppStore((s) => s.retryDetail);
   const story = useAppStore((s) => s.story);
+  const technical = useAppStore((s) => s.audience === "technical");
   const setStory = useAppStore((s) => s.setStory);
 
   const titleRef = useRef<HTMLHeadingElement | null>(null);
@@ -318,14 +321,14 @@ export function CasePanel() {
             tabIndex={-1}
             className="ge-no-ring mt-1 font-display text-[1.7rem] leading-[1.1] text-ink"
           >
-            {summary.name}
+            {technical ? summary.name : summary.name.replace(/ (flood|fire)? ?analysis$/i, "")}
           </h2>
           <p className="mt-1 text-sm text-muted">
             {summary.region} · {summary.country}
           </p>
           <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-accent/50 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
             <span className="h-1 w-1 rounded-full bg-accent" aria-hidden="true" />
-            Real radar data · not verified on the ground
+            {technical ? "Real radar data · not verified on the ground" : "From real satellite images · a clue, not a verdict"}
           </p>
         </div>
         <button

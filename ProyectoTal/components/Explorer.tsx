@@ -25,6 +25,16 @@ export function Explorer() {
     if (useAppStore.getState().status === "idle") void loadEvents();
   }, [loadEvents]);
 
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem("ge-audience") === "technical") {
+        useAppStore.setState({ audience: "technical" });
+      }
+    } catch {
+      // No storage available: stay on the general view.
+    }
+  }, []);
+
   // ?demo starts the guided demo as soon as the globe is up (handy for recording).
   useEffect(() => {
     if (status !== "ready" || !globeReady) return;

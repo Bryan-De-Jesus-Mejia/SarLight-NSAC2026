@@ -69,6 +69,9 @@ interface AppState {
   setCompareBefore: (date: string | null) => void;
   setCurtain: (position: number) => void;
   setRadarClass: (klass: number | null) => void;
+  /** Who the app is talking to: everyone (plain words, the default) or a technical reader. */
+  audience: "general" | "technical";
+  setAudience: (audience: "general" | "technical") => void;
   /** Story mode: the open case told as a scroll (the case panel steps aside). */
   story: boolean;
   setStory: (on: boolean) => void;
@@ -168,6 +171,15 @@ export const useAppStore = create<AppState>((set, get) => ({
   setCompareBefore: (date) => set({ compareBefore: date }),
   setCurtain: (position) => set({ curtain: position }),
   setRadarClass: (klass) => set({ radarClass: klass }),
+  audience: "general",
+  setAudience: (audience) => {
+    try {
+      window.localStorage.setItem("ge-audience", audience);
+    } catch {
+      // Private mode: the choice just does not survive a reload.
+    }
+    set({ audience });
+  },
   story: false,
   setStory: (on) => set(on ? { story: true, lens: false, dance: false, overlay: "none", compare: false } : { story: false }),
   lens: false,
