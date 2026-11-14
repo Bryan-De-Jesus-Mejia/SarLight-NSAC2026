@@ -114,7 +114,7 @@ export function Timeline({ className = "" }: TimelineProps) {
 
   return (
     <section
-      className={`glass pointer-events-auto min-w-0 rounded-2xl px-4 pb-3 pt-3.5 ${className}`}
+      className={`ge-surface pointer-events-auto min-w-0 px-4 pb-3 pt-3.5 ${className}`}
       aria-label="Timeline"
     >
       <div className="flex items-center gap-3.5">
@@ -122,7 +122,7 @@ export function Timeline({ className = "" }: TimelineProps) {
           type="button"
           onClick={togglePlay}
           aria-label={playing ? "Pause timeline" : "Play timeline"}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-accent/70 bg-accent/10 text-accent transition-colors hover:bg-accent/20"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-line bg-white/[0.04] text-ink transition-colors hover:bg-white/10"
         >
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
             {playing ? <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /> : <path d="M8 5.2v13.6a.6.6 0 0 0 .92.5l10.4-6.8a.6.6 0 0 0 0-1L8.92 4.7A.6.6 0 0 0 8 5.2z" />}

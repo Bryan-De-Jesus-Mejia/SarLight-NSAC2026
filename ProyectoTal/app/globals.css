@@ -47,13 +47,16 @@ body {
 /* -------------------------------------------------------------------------- */
 
 .glass {
-  background: rgb(10 14 24 / 0.62);
+  background: rgb(9 12 20 / 0.9);
   border: 1px solid var(--color-line);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  box-shadow:
-    0 24px 60px -12px rgb(0 0 0 / 0.7),
-    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.8);
+}
+
+/* Flat instrument surface: panels, dock buttons, breadcrumb. */
+.ge-surface {
+  background: rgb(9 12 20 / 0.9);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
 }
 
 /* Soft darkening toward the edges so the HUD text sits on calm ground. */
@@ -64,6 +67,17 @@ body {
   background:
     radial-gradient(ellipse at 50% 50%, transparent 52%, rgb(3 5 10 / 0.55) 100%),
     linear-gradient(to bottom, rgb(3 5 10 / 0.5), transparent 22%, transparent 80%, rgb(3 5 10 / 0.45));
+}
+
+/* A case is open: the rest of the planet steps back. */
+.ge-vignette {
+  transition: background 700ms ease;
+}
+
+.ge-vignette[data-focus] {
+  background:
+    radial-gradient(ellipse at 38% 50%, transparent 18%, rgb(3 5 10 / 0.62) 78%),
+    linear-gradient(to bottom, rgb(3 5 10 / 0.55), transparent 22%, transparent 78%, rgb(3 5 10 / 0.5));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -86,8 +100,6 @@ body {
   border-radius: 12px;
   background: rgb(10 14 24 / 0.86);
   border: 1px solid var(--color-line);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
   box-shadow: 0 16px 40px -10px rgb(0 0 0 / 0.75);
   font-family: var(--font-sans);
 }
@@ -210,6 +222,150 @@ body {
 .ge-marker:focus-visible .ge-marker-label {
   opacity: 1;
   visibility: visible;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Selected-case callout: radar sweep + anchored card                         */
+/* The globe owns `transform` on the anchor: zero-size, children offset.      */
+/* -------------------------------------------------------------------------- */
+
+.ge-callout-anchor {
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.ge-sweep {
+  position: absolute;
+  top: -46px;
+  left: -46px;
+  width: 92px;
+  height: 92px;
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--marker-rgb) / 0.55);
+  background: conic-gradient(
+    from 0deg,
+    rgb(var(--marker-rgb) / 0.55),
+    rgb(var(--marker-rgb) / 0) 28%,
+    transparent
+  );
+  -webkit-mask: radial-gradient(circle, transparent 4px, #000 5px);
+  mask: radial-gradient(circle, transparent 4px, #000 5px);
+  animation:
+    ge-sweep-spin 2.6s linear infinite,
+    ge-sweep-in 600ms ease-out both;
+}
+
+@keyframes ge-sweep-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ge-sweep-in {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+.ge-callout {
+  position: absolute;
+  left: 52px;
+  bottom: 16px;
+  width: 15.5rem;
+  padding: 11px 13px 12px;
+  border-radius: 12px;
+  background: rgb(8 11 19 / 0.88);
+  border: 1px solid rgb(var(--marker-rgb) / 0.5);
+  box-shadow:
+    0 18px 44px -12px rgb(0 0 0 / 0.8),
+    0 0 26px -6px rgb(var(--marker-rgb) / 0.45);
+  animation: ge-callout-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Leader line from the card down to the event. */
+.ge-callout-line {
+  position: absolute;
+  left: -34px;
+  bottom: 12px;
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgb(var(--marker-rgb) / 0.9));
+}
+
+@keyframes ge-callout-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+.ge-callout-type {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--marker-color);
+}
+
+.ge-callout-name {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.12;
+  color: var(--color-ink);
+}
+
+.ge-callout-place {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.ge-callout-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-line);
+}
+
+.ge-callout-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.ge-callout-metric,
+.ge-callout-area {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.ge-callout-area {
+  margin-top: 2px;
+}
+
+.ge-callout-sim {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-sweep,
+  .ge-callout {
+    animation: none;
+  }
+
+  .ge-vignette {
+    transition: none;
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -407,4 +563,214 @@ body {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;
   border-radius: 4px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Dock: two panels that open from their buttons, side by side                */
+/* A panel first runs out sideways as a thin line, then unfolds downward.     */
+/* -------------------------------------------------------------------------- */
+
+.ge-dock {
+  --dock-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ge-dock-panels {
+  display: flex;
+  align-items: flex-end;
+  min-width: 0;
+}
+
+.ge-slot {
+  flex: 0 1 auto;
+  width: 0;
+  min-width: 0;
+  margin-right: 0;
+  overflow: hidden;
+  visibility: hidden;
+  /* Closing: fold up first, then run back in. */
+  transition:
+    width 380ms var(--dock-ease) 220ms,
+    margin-right 380ms var(--dock-ease) 220ms,
+    visibility 0s linear 600ms;
+}
+
+.ge-slot[data-open="true"] {
+  width: var(--slot-width);
+  margin-right: 0.75rem;
+  visibility: visible;
+  transition:
+    width 420ms var(--dock-ease),
+    margin-right 420ms var(--dock-ease),
+    visibility 0s;
+}
+
+.ge-slot--legend {
+  --slot-width: 16rem;
+}
+
+.ge-slot--timeline {
+  --slot-width: 38rem;
+}
+
+.ge-slot > * {
+  clip-path: inset(0 0 calc(100% - 2px) 0 round 8px);
+  transition: clip-path 260ms var(--dock-ease);
+}
+
+.ge-slot[data-open="true"] > * {
+  clip-path: inset(0 0 0 0 round 8px);
+  transition: clip-path 420ms var(--dock-ease) 300ms;
+}
+
+.ge-slot--legend > * {
+  width: 16rem;
+}
+
+.ge-slot--timeline > * {
+  width: 100%;
+  min-width: min(20rem, 100vw - 2.5rem);
+}
+
+.ge-dock-button {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-line);
+  background: rgb(9 12 20 / 0.9);
+  color: var(--color-muted);
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.ge-dock-button:hover {
+  color: var(--color-ink);
+  border-color: rgb(255 255 255 / 0.28);
+}
+
+.ge-dock-button[aria-expanded="true"] {
+  color: var(--color-void);
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.ge-crumbs {
+  animation: ge-crumbs-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ge-crumbs-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 50% 0 50%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Legend rows */
+.ge-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 3px;
+  text-align: left;
+  font-size: 0.875rem;
+  transition:
+    background-color 160ms ease,
+    opacity 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.ge-row:hover {
+  background: rgb(255 255 255 / 0.05);
+}
+
+.ge-row[aria-pressed="true"] {
+  background: rgb(255 255 255 / 0.07);
+  box-shadow: inset 2px 0 0 var(--row-color);
+}
+
+.ge-segments {
+  display: flex;
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ge-segment {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.ge-segment + .ge-segment {
+  border-left: 1px solid var(--color-line);
+}
+
+.ge-segment:hover {
+  color: var(--color-ink);
+}
+
+.ge-segment[aria-pressed="true"] {
+  background: rgb(255 255 255 / 0.1);
+  color: var(--color-ink);
+}
+
+.ge-switch {
+  position: relative;
+  width: 1.75rem;
+  height: 1rem;
+  border-radius: 3px;
+  border: 1px solid var(--color-line);
+  transition: background-color 160ms ease;
+}
+
+.ge-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--color-muted);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.ge-switch[data-on="true"] {
+  background: rgb(255 255 255 / 0.12);
+}
+
+.ge-switch[data-on="true"]::after {
+  transform: translateX(12px);
+  background: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-slot,
+  .ge-slot > *,
+  .ge-slot[data-open="true"],
+  .ge-slot[data-open="true"] > * {
+    transition: none;
+  }
+
+  .ge-crumbs {
+    animation: none;
+  }
 }

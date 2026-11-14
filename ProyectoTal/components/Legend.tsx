@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { SignificanceMeter } from "@/components/icons/SignificanceMeter";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
@@ -51,7 +51,7 @@ export function Legend({ className = "" }: LegendProps) {
   const filtering = filteringTypes || activeLevels.length > 0 || featuredOnly;
 
   return (
-    <section className={`glass pointer-events-auto w-64 shrink-0 rounded-2xl p-3 ${className}`} aria-labelledby="legend-title">
+    <section className={`ge-surface pointer-events-auto w-64 shrink-0 p-3 ${className}`} aria-labelledby="legend-title">
       <div className="flex h-6 items-center justify-between px-1">
         <h2 id="legend-title" className="whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
           Surface change signals
@@ -60,17 +60,16 @@ export function Legend({ className = "" }: LegendProps) {
           <button
             type="button"
             onClick={clearFilters}
-            className="-mr-1 rounded-full px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-accent transition-colors hover:bg-accent/15"
+            className="-mr-1 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
           >
             Clear
           </button>
         )}
       </div>
 
-      <ul className="mt-2 space-y-1" aria-label="Filter by change type">
+      <ul className="mt-2" aria-label="Filter by change type">
         {CHANGE_TYPE_ORDER.map((type) => {
           const info = CHANGE_TYPES[type];
-          const rgb = info.rgb.join(" ");
           const selected = activeTypes.includes(type);
           const dimmed = filteringTypes && !selected;
 
@@ -80,27 +79,14 @@ export function Legend({ className = "" }: LegendProps) {
                 type="button"
                 aria-pressed={selected}
                 onClick={() => toggleType(type)}
-                className={`ge-filter group flex w-full items-center gap-3 rounded-xl border px-1.5 py-1.5 text-left text-sm transition-all duration-200 ${
-                  dimmed ? "opacity-45 hover:opacity-80" : "opacity-100"
-                }`}
-                style={{
-                  borderColor: selected ? `rgb(${rgb} / 0.55)` : "transparent",
-                  backgroundColor: selected ? `rgb(${rgb} / 0.13)` : undefined,
-                }}
+                className={`ge-row ${dimmed ? "opacity-40 hover:opacity-80" : ""}`}
+                style={{ "--row-color": info.color } as CSSProperties}
               >
-                <span
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all duration-200"
-                  style={{
-                    color: selected ? "#06090f" : info.color,
-                    borderColor: selected ? info.color : `rgb(${rgb} / 0.45)`,
-                    backgroundColor: selected ? info.color : `rgb(${rgb} / 0.12)`,
-                    boxShadow: selected ? `0 0 14px rgb(${rgb} / 0.55)` : undefined,
-                  }}
-                >
-                  <ChangeTypeIcon type={type} size={15} />
+                <span className="flex w-5 shrink-0 justify-center" style={{ color: info.color }}>
+                  <ChangeTypeIcon type={type} size={16} />
                 </span>
                 <span className="flex-1 text-ink">{info.label}</span>
-                <span className="pr-1 font-mono text-xs tabular-nums text-muted">{counts[type]}</span>
+                <span className="font-mono text-xs tabular-nums text-muted">{counts[type]}</span>
               </button>
             </li>
           );
@@ -112,7 +98,7 @@ export function Legend({ className = "" }: LegendProps) {
         <p id="legend-significance" className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
           Significance
         </p>
-        <div className="mt-1.5 flex gap-1.5" role="group" aria-labelledby="legend-significance">
+        <div className="ge-segments mt-1.5" role="group" aria-labelledby="legend-significance">
           {LEVELS.map(({ level, label }) => {
             const selected = activeLevels.includes(level);
             return (
@@ -121,11 +107,7 @@ export function Legend({ className = "" }: LegendProps) {
                 type="button"
                 aria-pressed={selected}
                 onClick={() => toggleLevel(level)}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-1.5 py-1.5 text-xs transition-colors duration-200 ${
-                  selected
-                    ? "border-accent/70 bg-accent/15 text-accent"
-                    : "border-line text-muted hover:bg-white/5 hover:text-ink"
-                }`}
+                className="ge-segment"
               >
                 <SignificanceMeter level={level} />
                 {label}
@@ -139,21 +121,10 @@ export function Legend({ className = "" }: LegendProps) {
           role="switch"
           aria-checked={featuredOnly}
           onClick={() => setFeaturedOnly(!featuredOnly)}
-          className="mt-2 flex w-full items-center justify-between rounded-lg px-1 py-1.5 text-left text-xs text-ink transition-colors hover:bg-white/5"
+          className="mt-2 flex w-full items-center justify-between rounded px-1 py-1.5 text-left text-xs text-ink transition-colors hover:bg-white/5"
         >
           Featured cases only
-          <span
-            className={`relative h-[18px] w-8 rounded-full border transition-colors duration-200 ${
-              featuredOnly ? "border-accent bg-accent/80" : "border-line bg-white/10"
-            }`}
-            aria-hidden="true"
-          >
-            <span
-              className={`absolute top-[2px] h-3 w-3 rounded-full transition-all duration-200 ${
-                featuredOnly ? "left-[16px] bg-[#06090f]" : "left-[2px] bg-muted"
-              }`}
-            />
-          </span>
+          <span className="ge-switch" data-on={featuredOnly} aria-hidden="true" />
         </button>
       </div>
 

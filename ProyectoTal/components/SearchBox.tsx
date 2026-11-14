@@ -136,7 +136,7 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
       </div>
 
       {showList && (
-        <div className="glass ge-search-list absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-2xl p-1.5">
+        <div className="glass ge-search-list absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-lg p-1.5">
           {results.length > 0 ? (
             <>
               <ul id={listId} role="listbox" aria-label="Matching signals">

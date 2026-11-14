@@ -9,7 +9,23 @@ import type {
   SignificanceLevel,
 } from "@/data/types";
 
+import type { Lod, View } from "@/lib/geo";
+
 export type LoadStatus = "idle" | "loading" | "ready" | "error";
+
+export type TrailKind = "world" | "region" | "country" | "province" | "event";
+
+/** One step of the breadcrumb, with the camera view that reaches it. */
+export interface TrailItem {
+  key: string;
+  label: string;
+  kind: TrailKind;
+  view: View;
+  /** Province id, for kind "province". */
+  provinceId?: string;
+  /** Event id, for kind "event". */
+  eventId?: string;
+}
 
 interface AppState {
   events: EventSummary[];
@@ -32,7 +48,16 @@ interface AppState {
   /** Day index within meta.timeRange, or null to show the whole period. */
   timelineDay: number | null;
   timelinePlaying: boolean;
+  /** Zoom level of the camera (orbit / region / country / ground). */
+  lod: Lod;
+  /** Province highlighted by a click (Dominican Republic). */
+  selectedProvinceId: string | null;
+  /** Breadcrumb: where the camera has been taken, outermost first. */
+  trail: TrailItem[];
 
+  setLod: (lod: Lod) => void;
+  selectProvince: (id: string | null) => void;
+  setTrail: (trail: TrailItem[]) => void;
   loadEvents: () => Promise<void>;
   setGlobeReady: (ready: boolean) => void;
   /** Select an event (and load its detail), or clear the selection with null. */
@@ -95,6 +120,15 @@ export const useAppStore = create<AppState>((set, get) => ({
   query: "",
   timelineDay: null,
   timelinePlaying: false,
+  lod: "orbit",
+  selectedProvinceId: null,
+  trail: [],
+
+  setLod: (lod) => {
+    if (get().lod !== lod) set({ lod });
+  },
+  selectProvince: (id) => set({ selectedProvinceId: id }),
+  setTrail: (trail) => set({ trail }),
 
   loadEvents: async () => {
     if (get().status === "loading") return;

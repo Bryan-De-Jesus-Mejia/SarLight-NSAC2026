@@ -15,6 +15,7 @@ export function Explorer() {
   const errorMessage = useAppStore((s) => s.errorMessage);
   const globeReady = useAppStore((s) => s.globeReady);
   const loadEvents = useAppStore((s) => s.loadEvents);
+  const focused = useAppStore((s) => s.selectedId !== null);
 
   useEffect(() => {
     if (useAppStore.getState().status === "idle") void loadEvents();
@@ -28,7 +29,7 @@ export function Explorer() {
       <div className="absolute inset-0">
         <GlobeScene />
       </div>
-      <div className="ge-vignette" aria-hidden="true" />
+      <div className="ge-vignette" data-focus={focused ? "" : undefined} aria-hidden="true" />
 
       <Hud />
       <CasePanel />
