@@ -1,0 +1,13 @@
+asf_search>=10
+rasterio>=1.4
+numpy
+scipy
+h5py
+fsspec
+aiohttp
+requests
+python-dotenv
+matplotlib
+shapely
+# Opcional, solo para SAR_ACCESS_MODE=s3 (dentro de AWS us-west-2):
+# s3fs
