@@ -253,7 +253,15 @@ def main():
     ap.add_argument("--overlap", type=int, default=64, help="Solape entre tiles (def. 64)")
     args = ap.parse_args()
 
-    collection = args.collection.resolve()
+    collection = args.collection
+    if not collection.is_absolute() and not collection.exists():
+        collection = ROOT / collection
+    collection = collection.resolve()
+    if not (collection / "catalog.csv").exists():
+        raise SystemExit(f"No encuentro {collection / 'catalog.csv'}. ¿Se descargó esa colección con "
+                         f"bulk_fetch.py? Colecciones disponibles: "
+                         f"{sorted(p.name for p in (ROOT / 'data' / 'collections').glob('*') if p.is_dir())}")
+    print(f"Colección: {collection}", flush=True)
     out_root = collection / f"flood_{args.method}"
     out_root.mkdir(parents=True, exist_ok=True)
     if args.stage in ("water", "all"):
