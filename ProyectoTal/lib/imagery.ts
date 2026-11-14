@@ -2,7 +2,7 @@
 
 export type TileUrl = (x: number, y: number, level: number) => string;
 
-export type OverlayKind = "none" | "radar" | "water";
+export type OverlayKind = "none" | "radar" | "water" | "optical";
 
 /** Most recent pass over the Dominican Republic known to hold data. */
 export const DEFAULT_RADAR_DATE = "2026-10-30";
@@ -27,6 +27,13 @@ export const OVERLAYS: Record<Exclude<OverlayKind, "none">, OverlayInfo> = {
     maxLevel: 13,
     url: (date) => (x, y, level) =>
       `${GIBS}/NISAR_L2_Geocoded_Polarimetric_Covariance/default/${date}/GoogleMapsCompatible_Level13/${level}/${y}/${x}.png`,
+  },
+  optical: {
+    label: "Camera view, same day",
+    note: "VIIRS true colour, clouds included",
+    maxLevel: 9,
+    url: (date) => (x, y, level) =>
+      `${GIBS}/VIIRS_NOAA20_CorrectedReflectance_TrueColor/default/${date}/GoogleMapsCompatible_Level9/${level}/${y}/${x}.jpg`,
   },
   water: {
     label: "Surface water",

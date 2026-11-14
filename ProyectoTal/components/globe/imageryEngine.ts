@@ -1,5 +1,5 @@
 import ThreeSlippyMapGlobe from "three-slippy-map-globe";
-import { MeshBasicMaterial, type Camera, type Mesh, type Object3D, type Scene, type SphereGeometry } from "three";
+import { MeshBasicMaterial, Vector3, type Camera, type Mesh, type Object3D, type Scene, type SphereGeometry } from "three";
 import { OVERLAYS, type OverlayKind } from "@/lib/imagery";
 
 /**
@@ -34,16 +34,21 @@ export interface OverlayUniforms {
   side: { value: number };
   /** Colour class to keep vivid (-1 for all): 0 blue, 1 green, 2 orange-yellow, 3 red. */
   klass: { value: number };
+  /** Lens circle in drawing-buffer pixels: centre x, centre y (from the bottom), radius. */
+  lens: { value: Vector3 };
+  /** 0: no lens. 1: draw only inside the circle. */
+  lensMode: { value: number };
 }
 
 export function createOverlayUniforms(klass: { value: number }): OverlayUniforms {
-  return { splitX: { value: 0 }, side: { value: 0 }, klass };
+  return { splitX: { value: 0 }, side: { value: 0 }, klass, lens: { value: new Vector3(0, 0, 0) }, lensMode: { value: 0 } };
 }
 
 // Hue bands of the NISAR false-colour layer (see components/LayersPanel).
 const FRAGMENT_MASK = `
   vec4 sampledDiffuseColor = texture2D( map, vMapUv );
   if ( ( uSide < -0.5 && gl_FragCoord.x > uSplitX ) || ( uSide > 0.5 && gl_FragCoord.x < uSplitX ) ) discard;
+  if ( uLensMode > 0.5 && distance( gl_FragCoord.xy, uLens.xy ) > uLens.z ) discard;
   vec3 tint = sampledDiffuseColor.rgb;
   float peak = max( tint.r, max( tint.g, tint.b ) );
   float alphaMask = step( 0.002, peak );
@@ -72,7 +77,7 @@ const FRAGMENT_MASK = `
   diffuseColor.a *= alphaMask;
 `;
 
-export function createOverlayEngine(parent: Object3D, uniforms: OverlayUniforms): Engine {
+export function createOverlayEngine(parent: Object3D, uniforms: OverlayUniforms, renderOrder = 2): Engine {
   const engine = new ThreeSlippyMapGlobe(OVERLAY_RADIUS, { minLevel: 0, maxLevel: 13 });
   engine.visible = false;
 
@@ -97,14 +102,16 @@ export function createOverlayEngine(parent: Object3D, uniforms: OverlayUniforms)
           shader.uniforms.uSplitX = uniforms.splitX;
           shader.uniforms.uSide = uniforms.side;
           shader.uniforms.uClass = uniforms.klass;
+          shader.uniforms.uLens = uniforms.lens;
+          shader.uniforms.uLensMode = uniforms.lensMode;
           shader.fragmentShader = shader.fragmentShader
-            .replace("#include <common>", "#include <common>\nuniform float uSplitX;\nuniform float uSide;\nuniform float uClass;")
+            .replace("#include <common>", "#include <common>\nuniform float uSplitX;\nuniform float uSide;\nuniform float uClass;\nuniform vec3 uLens;\nuniform float uLensMode;")
             .replace("#include <map_fragment>", FRAGMENT_MASK);
         };
-        material.customProgramCacheKey = () => "ge-overlay-v2";
+        material.customProgramCacheKey = () => "ge-overlay-v3";
         tile.material = material;
         old.dispose();
-        tile.renderOrder = 2;
+        tile.renderOrder = renderOrder;
       }
     }
     return add(...objects);

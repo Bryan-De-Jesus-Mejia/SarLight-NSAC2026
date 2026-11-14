@@ -27,16 +27,58 @@ export type SensorId = "nisar" | "opera";
 
 export type Polarization = "HH" | "HV" | "VV" | "VH";
 
-/** One pass-to-pass observation of the whole area: its median backscatter. */
+/** One satellite pass over the area. */
 export interface SeriesPoint {
   /** ISO date, YYYY-MM-DD. */
   date: string;
-  medianDb: number;
-  meanDb: number;
-  /** Share of the area the pass actually covered, 0–100. */
+  /** Share of the land the pass actually covered, 0–100. */
   validPct: number;
   /** Covers enough of the area to be compared with the others. */
   usable: boolean;
+  /** Median backscatter (dB) of the land that was flagged as changed. */
+  insideDb: number | null;
+  /** Median backscatter (dB) of the rest of the land. */
+  outsideDb: number | null;
+  /** False-colour image of this pass (R = co-pol, G = cross-pol, B = co − cross). */
+  frame: string | null;
+}
+
+/** The same pair of passes measured with one polarisation. */
+export interface PolarisationRow {
+  pol: Polarization;
+  /** True for the polarisation the analysis was run with. */
+  analysed: boolean;
+  flaggedAreaKm2: number;
+  decreaseAreaKm2: number;
+  increaseAreaKm2: number;
+  medianDiffDb: number | null;
+}
+
+/** How the flagged change compares with each pixel's own pass-to-pass variation. */
+export interface BaselineStats {
+  passes: number;
+  /** Consecutive pass pairs used (the analysed pair is left out). */
+  pairs: number;
+  sigmaMedianDb: number | null;
+  judgedAreaKm2: number;
+  beyond3SigmaKm2: number;
+  beyond3SigmaPct: number;
+}
+
+export interface LandCoverClass {
+  code: number;
+  label: string;
+  flaggedKm2: number;
+  /** Share of the flagged land in this class. */
+  flaggedPct: number;
+  /** Share of all the land analysed in this class. */
+  scenePct: number;
+  sceneKm2: number;
+}
+
+export interface LandCover {
+  source: string;
+  classes: LandCoverClass[];
 }
 
 /** Area changed, counted over land only (permanent water excluded) and over everything. */
@@ -88,7 +130,18 @@ export interface SensorAnalysis {
     waterAreaKm2: number;
     changedOnWaterKm2: number;
   };
-  images: { pre: string; post: string; diff: string; change: string };
+  images: { pre: string; post: string; diff: string; change: string; thumb: string; probe: string };
+  /** How to decode the probe image: value = (channel − offset) / scale; channel 0 = no data. */
+  probe: {
+    size: [number, number];
+    diff: { scale: number; offset: number };
+    db: { scale: number; offset: number };
+  };
+  /** Null when the track has too few passes to build a baseline. */
+  baseline: BaselineStats | null;
+  polarisations: PolarisationRow[];
+  /** Null when the land-cover map could not be read. */
+  landCover: LandCover | null;
   imageSize: [number, number];
   footprint: {
     /** [lon, lat] corners. */
@@ -119,8 +172,10 @@ export interface EventSummary {
   /** Changed area over land, km², from the main (first) analysis. */
   changedAreaKm2: number;
   changedPct: number;
-  /** [lon, lat] corners of the analysed area. */
+  /** [lon, lat] corners of the analysed area: top-left, top-right, bottom-right, bottom-left. */
   footprint: Array<[number, number]>;
+  /** Small preview: the after image with the flagged pixels on top. */
+  thumb: string;
 }
 
 export interface EventDetail extends EventSummary {

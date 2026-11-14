@@ -49,21 +49,36 @@ export const DEMO_SCENES: readonly DemoScene[] = [
     },
   },
   {
-    kicker: "03 · The Caribbean",
+    kicker: "03 · Through the clouds",
+    title: "Same day, two ways of seeing",
+    body: "Outside the circle: what a camera saw that day, clouds included. Inside it: the radar, which makes its own light and passes straight through.",
+    ms: 10000,
+    enter: () => {
+      store().setOverlayDate(RADAR_DAY);
+      store().setLens(true);
+      globeApi.current?.flyTo({ lat: 18.6, lng: -70.4, altitude: 0.55 }, [worldItem, caribbeanItem]);
+    },
+  },
+  {
+    kicker: "04 · The Caribbean",
     title: "Hispaniola, under the radar",
     body: "The satellite returns to the same ground on a fixed rhythm. Dozens of passes over the island already sit in NASA's public catalogue.",
     ms: 8000,
-    enter: () => globeApi.current?.flyTo(CARIBBEAN_VIEW, [worldItem, caribbeanItem]),
+    enter: () => {
+      store().setOverlayDate(RADAR_DAY);
+      store().setOverlay("radar");
+      globeApi.current?.flyTo(CARIBBEAN_VIEW, [worldItem, caribbeanItem]);
+    },
   },
   {
-    kicker: "04 · The country",
+    kicker: "05 · The country",
     title: "Thirty-two provinces, four analysed areas",
     body: "Zoom in and the map follows you: borders, provinces, and the places where the ground is changing.",
     ms: 7500,
     enter: () => globeApi.current?.openCountry("DOM"),
   },
   {
-    kicker: "05 · A case",
+    kicker: "06 · A case",
     title: "A real comparison: Azua",
     body: "Two NISAR passes twelve days apart, subtracted pixel by pixel. Calm water bounces the radar pulse away, so flooding would show up as a patch that turns dark.",
     ms: 11000,
@@ -74,7 +89,7 @@ export const DEMO_SCENES: readonly DemoScene[] = [
     },
   },
   {
-    kicker: "06 · Two ways of seeing",
+    kicker: "07 · Two ways of seeing",
     title: "Eye versus radar",
     body: "Same place. First as a camera would see it, then as the radar does: it reads roughness and moisture, not colour.",
     ms: 10000,
@@ -82,7 +97,7 @@ export const DEMO_SCENES: readonly DemoScene[] = [
     cues: [{ at: 4500, run: () => store().setOverlay("radar") }],
   },
   {
-    kicker: "07 · Time",
+    kicker: "08 · Time",
     title: "The same place, a different day",
     body: "Every pass is a new look. Compare dates to see what moved: water spreading, fields turning, ground shifting.",
     ms: 9500,
@@ -93,7 +108,7 @@ export const DEMO_SCENES: readonly DemoScene[] = [
     cues: [{ at: 4500, run: () => store().setOverlayDate(RADAR_DAY) }],
   },
   {
-    kicker: "08 · Your turn",
+    kicker: "09 · Your turn",
     title: "Now explore",
     body: "Drag, zoom, search, switch layers. The imagery is open NASA data and the case figures come from our own radar comparisons, not yet verified on the ground.",
     ms: Infinity,

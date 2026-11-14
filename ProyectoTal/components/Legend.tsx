@@ -5,6 +5,7 @@ import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
 import type { ChangeType } from "@/data/types";
 import { useVisibleEvents } from "@/hooks/useVisibleEvents";
+import { formatDate, formatValue } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 
 interface LegendProps {
@@ -21,6 +22,8 @@ export function Legend({ className = "" }: LegendProps) {
   const activeTypes = useAppStore((s) => s.activeTypes);
   const toggleType = useAppStore((s) => s.toggleType);
   const clearFilters = useAppStore((s) => s.clearFilters);
+  const selectedId = useAppStore((s) => s.selectedId);
+  const select = useAppStore((s) => s.select);
   const { scoped, visible } = useVisibleEvents();
 
   const total = events.length;
@@ -79,6 +82,31 @@ export function Legend({ className = "" }: LegendProps) {
             </li>
           );
         })}
+      </ul>
+
+      {/* Every analysed area: the same cases as the markers, reachable without the globe. */}
+      <ul className="mt-2 max-h-56 space-y-0.5 overflow-y-auto border-t border-line pt-2" aria-label="Analysed areas">
+        {visible.map((event) => (
+          <li key={event.id}>
+            <button
+              type="button"
+              onClick={() => select(event.id)}
+              aria-current={event.id === selectedId}
+              className="ge-case"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={event.thumb} alt="" loading="lazy" />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[13px] leading-tight text-ink">
+                  {event.name.replace(" analysis", "")}
+                </span>
+                <span className="block truncate font-mono text-[10px] leading-snug text-muted">
+                  {formatValue(event.changedAreaKm2)} km² · {formatDate(event.endDate)}
+                </span>
+              </span>
+            </button>
+          </li>
+        ))}
       </ul>
 
       <p className="mt-2 border-t border-line px-1 pt-2.5 text-xs leading-relaxed text-muted" aria-live="polite">

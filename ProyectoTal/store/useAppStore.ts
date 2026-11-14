@@ -69,6 +69,21 @@ interface AppState {
   setCompareBefore: (date: string | null) => void;
   setCurtain: (position: number) => void;
   setRadarClass: (klass: number | null) => void;
+  /** Who the app is talking to: everyone (plain words, the default) or a technical reader. */
+  audience: "general" | "technical";
+  setAudience: (audience: "general" | "technical") => void;
+  /** Story mode: the open case told as a scroll (the case panel steps aside). */
+  story: boolean;
+  setStory: (on: boolean) => void;
+  /** Radar lens: the day as a camera saw it, with the radar inside a circle that follows the pointer. */
+  lens: boolean;
+  setLens: (on: boolean) => void;
+  /** "The satellite's dance": one real 12-day cycle of NISAR scenes painted on the planet. */
+  dance: boolean;
+  setDance: (on: boolean) => void;
+  /** Radar image laid over the globe on the selected case (null for none). */
+  drape: { url: string; opacity: number } | null;
+  setDrape: (drape: { url: string; opacity: number } | null) => void;
   /** Guided demo. */
   demoActive: boolean;
   demoStep: number;
@@ -147,20 +162,41 @@ export const useAppStore = create<AppState>((set, get) => ({
   overlayDate: DEFAULT_RADAR_DATE,
 
   setOverlay: (overlay) =>
-    set((state) => ({ overlay, compare: overlay === "none" ? false : state.compare })),
+    set((state) => ({ overlay, lens: false, compare: overlay === "none" ? false : state.compare })),
   compare: false,
   compareBefore: "2026-06-20",
   curtain: 0.5,
   radarClass: null,
-  setCompare: (on) => set((state) => ({ compare: on, overlay: on && state.overlay === "none" ? "radar" : state.overlay })),
+  setCompare: (on) => set((state) => ({ compare: on, lens: on ? false : state.lens, overlay: on && state.overlay === "none" ? "radar" : state.overlay })),
   setCompareBefore: (date) => set({ compareBefore: date }),
   setCurtain: (position) => set({ curtain: position }),
   setRadarClass: (klass) => set({ radarClass: klass }),
+  audience: "general",
+  setAudience: (audience) => {
+    try {
+      window.localStorage.setItem("ge-audience", audience);
+    } catch {
+      // Private mode: the choice just does not survive a reload.
+    }
+    set({ audience });
+  },
+  story: false,
+  setStory: (on) => set(on ? { story: true, lens: false, dance: false, overlay: "none", compare: false } : { story: false }),
+  lens: false,
+  setLens: (on) => set(on ? { lens: true, overlay: "none", compare: false, dance: false } : { lens: false }),
+  dance: false,
+  setDance: (on) => set(on ? { dance: true, lens: false, overlay: "none", compare: false } : { dance: false }),
+  drape: null,
+  setDrape: (drape) => {
+    const current = get().drape;
+    if (current?.url === drape?.url && current?.opacity === drape?.opacity) return;
+    set({ drape });
+  },
   demoActive: false,
   demoStep: 0,
   demoPaused: false,
-  startDemo: () => set({ demoActive: true, demoStep: 0, demoPaused: false, compare: false, radarClass: null }),
-  stopDemo: () => set({ demoActive: false, demoPaused: false, overlay: "none", compare: false, radarClass: null }),
+  startDemo: () => set({ demoActive: true, demoStep: 0, demoPaused: false, compare: false, radarClass: null, lens: false, dance: false }),
+  stopDemo: () => set({ demoActive: false, demoPaused: false, overlay: "none", compare: false, radarClass: null, lens: false }),
   setDemoStep: (step) => set({ demoStep: step }),
   setDemoPaused: (paused) => set({ demoPaused: paused }),
   setOverlayDate: (date) => set({ overlayDate: date }),
@@ -196,18 +232,18 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   select: (id) => {
     if (id === null) {
-      set({ selectedId: null, detail: null, detailStatus: "idle", detailError: null });
+      set({ selectedId: null, detail: null, detailStatus: "idle", detailError: null, drape: null, story: false });
       return;
     }
     if (id === get().selectedId && get().detailStatus !== "error") return;
 
     const cached = detailCache.get(id);
     if (cached) {
-      set({ selectedId: id, detail: cached, detailStatus: "ready", detailError: null });
+      set({ selectedId: id, detail: cached, detailStatus: "ready", detailError: null, drape: null });
       return;
     }
 
-    set({ selectedId: id, detail: null, detailStatus: "loading", detailError: null });
+    set({ selectedId: id, detail: null, detailStatus: "loading", detailError: null, drape: null });
 
     void (async () => {
       try {

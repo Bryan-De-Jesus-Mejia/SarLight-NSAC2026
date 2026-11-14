@@ -41,6 +41,8 @@ import {
   trailForProvince,
   worldItem,
 } from "@/lib/trail";
+import { createDrape, type Drape } from "@/components/globe/drape";
+import { createPassLayer, loadPassCycle, type PassLayer } from "@/components/globe/passes";
 import {
   buildBorders,
   pickLatLng,
@@ -80,6 +82,8 @@ const MIN_DISTANCE = 100 * (1 + 0.012);
 const MAX_DISTANCE = 520;
 
 const NO_EVENTS: EventSummary[] = [];
+/** Radius of the radar lens, in CSS pixels (matches .ge-lens). */
+const LENS_RADIUS_PX = 150;
 
 const DEVICE_RATIO = typeof window === "undefined" ? 1 : window.devicePixelRatio;
 const RENDERER_CONFIG = { antialias: true, alpha: false, powerPreference: "high-performance" } as const;
@@ -201,6 +205,8 @@ export default function GlobeScene() {
   const selectedId = useAppStore((s) => s.selectedId);
   const detail = useAppStore((s) => s.detail);
   const lod = useAppStore((s) => s.lod);
+  const drapeOn = useAppStore((s) => s.drape !== null);
+  const story = useAppStore((s) => s.story);
   const selectedProvinceId = useAppStore((s) => s.selectedProvinceId);
   const select = useAppStore((s) => s.select);
   const selectProvince = useAppStore((s) => s.selectProvince);
@@ -234,8 +240,8 @@ export default function GlobeScene() {
   );
 
   useEffect(() => {
-    syncMarkers(new Set(featured.map((e) => e.id)));
-  }, [featured]);
+    syncMarkers(new Set(story ? [] : featured.map((e) => e.id)));
+  }, [featured, story]);
 
   /* ----------------------------- camera flights ---------------------------- */
 
@@ -392,11 +398,18 @@ export default function GlobeScene() {
         if (event) focusEvent(event);
         return event !== undefined;
       },
+      frameCase: (altitude) => {
+        const state = useAppStore.getState();
+        const event = state.events.find((e) => e.id === state.selectedId);
+        if (!event) return;
+        const target: View = { lat: event.lat, lng: event.lon, altitude };
+        goTo(desktop ? panelShift(target, PANEL_PX, size.height) : sheetShift(target, SHEET_FRACTION));
+      },
     };
     return () => {
       globeApi.current = null;
     };
-  }, [navigate, countries, goTo, goToCountry, focusEvent, select, selectProvince, setTrail]);
+  }, [navigate, countries, goTo, goToCountry, focusEvent, select, selectProvince, setTrail, desktop, size.height]);
 
   // Closing a case (Esc, ✕) takes the camera back to where it was.
   const prevSelectedRef = useRef<string | null>(null);
@@ -479,7 +492,7 @@ export default function GlobeScene() {
       }
       baseEngineRef.current = base;
       overlayRef.current = createOverlayEngine(base.parent, UNIFORMS_A);
-      overlayBRef.current = createOverlayEngine(base.parent, UNIFORMS_B);
+      overlayBRef.current = createOverlayEngine(base.parent, UNIFORMS_B, 3);
       // Picking is done with maths (see "borders"): the map tiles must not be raycast targets.
       ignoreRaycast(base);
       ignoreRaycast(overlayRef.current);
@@ -507,9 +520,11 @@ export default function GlobeScene() {
 
   // Radar / water overlay follows the layer panel. Layer A is the picture, or
   // the "before" half when the curtain is on; layer B is the "after" half.
-  const kindA = compare && compareBefore === null ? "none" : overlay;
-  const dateA = compare && compareBefore !== null ? compareBefore : overlayDate;
-  const kindB = compare ? overlay : "none";
+  // With the lens on, A is the camera view of that day and B the radar inside the circle.
+  const lens = useAppStore((s) => s.lens);
+  const kindA = lens ? "optical" : compare && compareBefore === null ? "none" : overlay;
+  const dateA = !lens && compare && compareBefore !== null ? compareBefore : overlayDate;
+  const kindB = lens ? "radar" : compare ? overlay : "none";
 
   useEffect(() => {
     const engine = overlayRef.current;
@@ -528,9 +543,61 @@ export default function GlobeScene() {
   }, [overlaysReady, kindB, overlayDate]);
 
   useEffect(() => {
-    UNIFORMS_A.side.value = compare ? -1 : 0;
-    UNIFORMS_B.side.value = compare ? 1 : 0;
-  }, [compare]);
+    UNIFORMS_A.side.value = !lens && compare ? -1 : 0;
+    UNIFORMS_B.side.value = !lens && compare ? 1 : 0;
+  }, [compare, lens]);
+
+  // The lens follows the pointer: the circle goes straight to the shader and to a ring in the DOM.
+  const lensRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = containerRef.current;
+    const globe = globeRef.current;
+    if (!lens || !sceneReady || !el || !globe) return;
+    const canvas = globe.renderer().domElement;
+    const place = (clientX: number, clientY: number) => {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = canvas.width / rect.width;
+      UNIFORMS_B.lens.value.set(
+        (clientX - rect.left) * ratio,
+        canvas.height - (clientY - rect.top) * ratio,
+        LENS_RADIUS_PX * ratio,
+      );
+      if (lensRef.current) {
+        lensRef.current.style.transform = `translate(${clientX - rect.left}px, ${clientY - rect.top}px)`;
+      }
+    };
+    const rect = canvas.getBoundingClientRect();
+    place(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    UNIFORMS_B.lensMode.value = 1;
+    const onMove = (event: PointerEvent) => place(event.clientX, event.clientY);
+    el.addEventListener("pointermove", onMove);
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      UNIFORMS_B.lensMode.value = 0;
+    };
+  }, [lens, sceneReady, containerRef, size.width, size.height]);
+
+  // "The satellite's dance": one real 12-day cycle of NISAR scenes.
+  const dance = useAppStore((s) => s.dance);
+  useEffect(() => {
+    const globe = globeRef.current;
+    if (!dance || !sceneReady || !globe) return;
+    let alive = true;
+    let layer: PassLayer | null = null;
+    const parent = findBaseEngine(globe.scene())?.parent ?? globe.scene();
+    void loadPassCycle().then((cycle) => {
+      if (!alive || !cycle) return;
+      layer = createPassLayer(cycle);
+      parent.add(layer.mesh);
+    });
+    return () => {
+      alive = false;
+      if (layer) {
+        parent.remove(layer.mesh);
+        layer.dispose();
+      }
+    };
+  }, [dance, sceneReady]);
 
   // The curtain position and the lit-up colour go straight to the shader.
   useEffect(() => {
@@ -623,6 +690,7 @@ export default function GlobeScene() {
   useEffect(() => {
     markerHandlers.current = {
       activate: (event) => {
+        if (useAppStore.getState().story) return;
         if (caseLocked()) useAppStore.getState().select(null);
         else focusEvent(event);
       },
@@ -796,6 +864,7 @@ export default function GlobeScene() {
       if (!globe) return;
       const at = pickLatLng(globe.camera(), event.clientX, event.clientY, el.getBoundingClientRect());
       const region = at ? pickRegion(at.lat, at.lng) : null;
+      if (useAppStore.getState().story) return;
       if (region && !caseLocked()) openRegion(region);
       else useAppStore.getState().select(null);
     };
@@ -820,10 +889,12 @@ export default function GlobeScene() {
   );
   const highlights = useMemo<RegionFeature[]>(() => {
     const list: RegionFeature[] = [];
+    // In a story the radar image is the subject: no province tint over it.
+    if (story) return list;
     if (selectedProvince) list.push(selectedProvince);
     if (hovered?.kind === "province" && hovered.id !== selectedProvince?.id) list.push(hovered);
     return list;
-  }, [selectedProvince, hovered]);
+  }, [selectedProvince, hovered, story]);
 
   // Filling a whole country means triangulating it on the spot (a visible
   // hitch for the big ones): countries get a bright outline instead.
@@ -848,6 +919,7 @@ export default function GlobeScene() {
   }, []);
   const handlePointClick = useCallback(
     (d: object) => {
+      if (useAppStore.getState().story) return;
       if (caseLocked()) select(null);
       else focusEvent(asEvent(d));
     },
@@ -869,18 +941,20 @@ export default function GlobeScene() {
   const pointRadius = useCallback(
     (d: object): number => {
       const e = asEvent(d);
+      // With a radar image on the ground, the disc of the open case would hide it.
+      if (drapeOn && e.id === selectedId) return 0.004;
       return (0.34 + sizeIndex(e) * 0.22) * markerScale;
     },
-    [markerScale],
+    [markerScale, drapeOn, selectedId],
   );
 
   const ringsData = useMemo(() => {
-    if (reducedMotion) return NO_EVENTS;
+    if (reducedMotion || story) return NO_EVENTS;
     if (selectedEvent && !featured.some((e) => e.id === selectedEvent.id)) {
       return [...featured, selectedEvent];
     }
     return featured;
-  }, [reducedMotion, featured, selectedEvent]);
+  }, [reducedMotion, featured, selectedEvent, story]);
 
   const ringMaxRadius = useCallback(
     (d: object): number => (asEvent(d).id === selectedId ? 2.4 : 4.5) * markerScale,
@@ -894,6 +968,27 @@ export default function GlobeScene() {
     (d: object): number => (asEvent(d).id === selectedId ? 1100 : 1500),
     [selectedId],
   );
+
+  // The radar image of the selected case, laid on the planet at its real position.
+  const drape = useAppStore((s) => s.drape);
+  const drapeRef = useRef<Drape | null>(null);
+  useEffect(() => {
+    const globe = globeRef.current;
+    if (!sceneReady || !globe || !selectedEvent || selectedEvent.footprint.length < 4) return;
+    const parent = findBaseEngine(globe.scene())?.parent ?? globe.scene();
+    const layer = createDrape(selectedEvent.footprint);
+    parent.add(layer.mesh);
+    layer.show(useAppStore.getState().drape);
+    drapeRef.current = layer;
+    return () => {
+      parent.remove(layer.mesh);
+      layer.dispose();
+      drapeRef.current = null;
+    };
+  }, [sceneReady, selectedEvent]);
+  useEffect(() => {
+    drapeRef.current?.show(drape);
+  }, [drape]);
 
   // Dashed outline around the selected case.
   const footprints = useMemo<Footprint[]>(() => {
@@ -912,20 +1007,23 @@ export default function GlobeScene() {
   // The callout card appears once the camera has arrived.
   const htmlData = useMemo<HtmlDatum[]>(() => {
     if (!selectedEvent || arrivedId !== selectedEvent.id) return allFeatured;
+    if (story) return allFeatured;
     return [...allFeatured, toCalloutDatum(selectedEvent, detail)];
-  }, [allFeatured, selectedEvent, arrivedId, detail]);
+  }, [allFeatured, selectedEvent, arrivedId, detail, story]);
 
   const orbit = lod === "orbit";
   const hexData = orbit ? events : NO_EVENTS;
   const nearRadius = lod === "region" ? 65 : lod === "country" ? 46 : 30;
   const pointsData = useMemo(() => {
     if (orbit) return NO_EVENTS;
+    // A story is about one place: the other signals step back.
+    if (story) return NO_EVENTS;
     return events.filter(
       (e) =>
         e.id === selectedId ||
         greatCircleDeg(e.lat, e.lon, focusCenter.lat, focusCenter.lng) <= nearRadius,
     );
-  }, [orbit, events, selectedId, focusCenter, nearRadius]);
+  }, [orbit, events, selectedId, focusCenter, nearRadius, story]);
 
   /* --------------------------------- render -------------------------------- */
 
@@ -945,7 +1043,7 @@ export default function GlobeScene() {
   }
 
   return (
-    <div ref={containerRef} className="ge-globe relative h-full w-full">
+    <div ref={containerRef} className="ge-globe relative h-full w-full" data-lens={lens ? "" : undefined}>
       {size.width > 0 && size.height > 0 && (
         <Globe
           ref={globeRef}
@@ -1027,6 +1125,11 @@ export default function GlobeScene() {
         />
       )}
       <div ref={tipRef} className="ge-region-tip" aria-hidden="true" />
+      {lens && (
+        <div ref={lensRef} className="ge-lens" aria-hidden="true">
+          <span>Radar · sees through cloud</span>
+        </div>
+      )}
       {perfOn && <div ref={perfRef} className="ge-perf" aria-hidden="true" />}
     </div>
   );

@@ -195,11 +195,39 @@ number is read from the analysis files.
 
 ### 4.3 What the panel shows
 
-Sensor tabs; a viewer with before/after swipe, difference and flagged-pixel views;
-changed area on land, weaker/stronger split, mean change and the dates; the median
-backscatter of the area on every pass of the same track (with the two compared
-passes marked); context on what a change like this can mean; computed cautions;
-and a collapsible "how this was computed".
+Sensor tabs, then for the chosen analysis:
+
+- **Viewer** — before/after swipe, difference, flagged pixels and a **time-lapse** of
+  every pass in false colour (R = co-pol, G = cross-pol, B = co − cross). Hovering
+  reads the pixel (change and before → after, in dB). The picture can be enlarged,
+  downloaded and **laid on the globe at its real position** (`components/globe/drape.ts`).
+- **Flagged land vs the rest** — median echo of both groups on every pass, and a
+  sentence saying whether the change is local.
+- **Which channel sees it** — the same pair of passes with the other polarisation,
+  plus the other sensor (L-band vs C-band) when there is one.
+- **What was on the ground** — ESA WorldCover 2021 classes of the flagged land
+  against the classes of all the land analysed.
+- **Compared with normal variation** — per-pixel baseline, when the track has at
+  least 7 passes.
+- **What could be driving it** — hypotheses, each with the evidence that would
+  confirm or rule it out. Computed cautions and "how this was computed" follow.
+- **Share** — link to the case (`?case=<id>`), JSON and GeoJSON downloads.
+
+### 4.4 Globe-wide views
+
+- **Radar lens** — the planet as a camera saw it on the chosen day (NOAA-20 VIIRS
+  true colour, clouds included) with the NISAR radar of the same day inside a
+  circle that follows the pointer. The cut-out is done in the overlay shader.
+- **12-day dance** — the footprints of every real NISAR scene of one cycle
+  (about 15,000), drawn in the order they were acquired, with a clock. The list
+  comes from NASA's CMR catalogue through `pipeline/export_passes.py`, which writes
+  `public/geo/nisar-cycle.json`, so the animation needs no network.
+- **Story mode** — the open case told as a scroll (`components/Story.tsx`, opened with
+  "Tell me the story" in the panel or `?story=<id>`). Eight steps: the place, before,
+  after, the difference, is it real, through time, what was there, what could explain
+  it. Each step moves the camera and changes the radar image on the globe. Every
+  sentence and figure is built from the analysis, so new cases get a story for free.
+- **Case list** — every analysed area with a thumbnail in the legend panel.
 
 ---
 

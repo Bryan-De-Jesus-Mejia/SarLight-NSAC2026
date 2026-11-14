@@ -7,12 +7,13 @@ import { formatDate, formatMonth } from "@/lib/format";
 
 interface BackscatterChartProps {
   analysis: SensorAnalysis;
-  /** Series colour (the change type's colour). */
+  /** Colour of the flagged-land series (the change type's colour). */
   color: string;
 }
 
-const HEIGHT = 190;
-const MARGIN = { top: 16, right: 14, bottom: 24, left: 46 };
+const HEIGHT = 200;
+const MARGIN = { top: 18, right: 14, bottom: 24, left: 46 };
+const REST_COLOR = "#9ba7bb";
 
 const toMs = (iso: string): number => Date.parse(`${iso.slice(0, 10)}T00:00:00Z`);
 
@@ -31,16 +32,18 @@ function niceTicks(min: number, max: number, target = 4): number[] {
 }
 
 /**
- * Median radar backscatter of the whole area on every pass of the same track
- * and polarisation. The two passes that were compared are marked. This is the
- * area-wide level, so it moves little when only a small patch changes.
+ * Median backscatter on every pass of the track, for two groups of pixels:
+ * the land that was flagged as changed, and the rest of the land. If the
+ * flagged land moves while the rest holds still, the change is local and not
+ * something that affected the whole scene (rain, calibration, season).
  */
 export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   const [wrapRef, size] = useElementSize<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
 
   const series = analysis.series;
-  const usable = useMemo(() => series.filter((p) => p.usable), [series]);
+  const usable = useMemo(() => series.filter((p) => p.usable && p.outsideDb !== null), [series]);
+  const hasInside = usable.some((p) => p.insideDb !== null);
   const width = size.width;
   const preDay = analysis.pre.date.slice(0, 10);
   const postDay = analysis.post.date.slice(0, 10);
@@ -48,10 +51,10 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   const model = useMemo(() => {
     if (usable.length < 2) return null;
     const times = usable.map((p) => toMs(p.date));
-    const values = usable.map((p) => p.medianDb);
+    const values = usable.flatMap((p) => [p.outsideDb, p.insideDb]).filter((v): v is number => v !== null);
     const rawMin = Math.min(...values);
     const rawMax = Math.max(...values);
-    const pad = Math.max((rawMax - rawMin) * 0.25, 0.4);
+    const pad = Math.max((rawMax - rawMin) * 0.18, 0.4);
     const yMin = rawMin - pad;
     const yMax = rawMax + pad;
     return { times, yMin, yMax, ticks: niceTicks(yMin, yMax) };
@@ -71,19 +74,33 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   const t0 = model.times[0];
   const t1 = model.times[model.times.length - 1];
   const x = (ms: number): number => MARGIN.left + ((ms - t0) / (t1 - t0 || 1)) * plotW;
-  const y = (v: number): number =>
-    MARGIN.top + (1 - (v - model.yMin) / (model.yMax - model.yMin)) * plotH;
+  const y = (v: number): number => MARGIN.top + (1 - (v - model.yMin) / (model.yMax - model.yMin)) * plotH;
 
-  const points = usable.map((p, i) => ({ px: x(model.times[i]), py: y(p.medianDb), p }));
-  const linePath = points.map((pt, i) => `${i === 0 ? "M" : "L"}${pt.px.toFixed(1)} ${pt.py.toFixed(1)}`).join(" ");
+  const points = usable.map((p, i) => ({
+    px: x(model.times[i]),
+    inY: p.insideDb === null ? null : y(p.insideDb),
+    outY: y(p.outsideDb as number),
+    p,
+  }));
+  const path = (pick: (pt: (typeof points)[number]) => number | null): string => {
+    let d = "";
+    let pen = false;
+    for (const pt of points) {
+      const v = pick(pt);
+      if (v === null) {
+        pen = false;
+        continue;
+      }
+      d += `${pen ? "L" : "M"}${pt.px.toFixed(1)} ${v.toFixed(1)} `;
+      pen = true;
+    }
+    return d;
+  };
 
   const marks = [
     { day: preDay, label: "Before" },
     { day: postDay, label: "After" },
-  ].filter((m) => {
-    const ms = toMs(m.day);
-    return ms >= t0 && ms <= t1;
-  });
+  ].filter((m) => toMs(m.day) >= t0 && toMs(m.day) <= t1);
 
   const xTicks = [0, Math.floor((points.length - 1) / 2), points.length - 1]
     .filter((i, n, all) => all.indexOf(i) === n)
@@ -100,7 +117,9 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   };
 
   const active = hover !== null ? points[hover] : null;
-  const tooltipLeft = active ? Math.min(Math.max(active.px, 70), Math.max(width - 70, 70)) : 0;
+  const tooltipLeft = active ? Math.min(Math.max(active.px, 84), Math.max(width - 84, 84)) : 0;
+  const last = points[points.length - 1];
+  const fmt = (v: number | null): string => (v === null ? "—" : v.toFixed(2));
 
   return (
     <div>
@@ -110,18 +129,12 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
             width={width}
             height={HEIGHT}
             role="img"
-            aria-label={`Median radar backscatter of the area on each pass, in dB, from ${formatDate(usable[0].date)} to ${formatDate(usable[usable.length - 1].date)}. A table of the values follows.`}
+            aria-label={`Median radar backscatter in dB on each pass, for the flagged land and for the rest of the land, from ${formatDate(usable[0].date)} to ${formatDate(usable[usable.length - 1].date)}. A table of the values follows.`}
             className="block overflow-visible"
           >
             {model.ticks.map((tick) => (
               <g key={tick}>
-                <line
-                  x1={MARGIN.left}
-                  x2={MARGIN.left + plotW}
-                  y1={y(tick)}
-                  y2={y(tick)}
-                  stroke="rgb(255 255 255 / 0.08)"
-                />
+                <line x1={MARGIN.left} x2={MARGIN.left + plotW} y1={y(tick)} y2={y(tick)} stroke="rgb(255 255 255 / 0.08)" />
                 <text x={MARGIN.left - 8} y={y(tick)} dy="0.32em" textAnchor="end" className="ge-chart-tick">
                   {tick}
                 </text>
@@ -143,23 +156,14 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
             {/* The two compared passes */}
             {marks.map((m, i) => {
               const mx = x(toMs(m.day));
-              // "Before" sits left of its line. "After" sits right of its line, or
-              // below the first label and left of its line when the edge is near.
               const nearEdge = mx > MARGIN.left + plotW - 56;
               const anchorEnd = i === 0 || nearEdge;
               return (
                 <g key={m.label}>
-                  <line
-                    x1={mx}
-                    x2={mx}
-                    y1={MARGIN.top}
-                    y2={MARGIN.top + plotH}
-                    stroke="rgb(242 184 102 / 0.75)"
-                    strokeDasharray="3 4"
-                  />
+                  <line x1={mx} x2={mx} y1={MARGIN.top - 4} y2={MARGIN.top + plotH} stroke="rgb(242 184 102 / 0.75)" strokeDasharray="3 4" />
                   <text
                     x={mx + (anchorEnd ? -5 : 5)}
-                    y={MARGIN.top + 10 + (i === 1 && nearEdge ? 14 : 0)}
+                    y={MARGIN.top + 6 + (i === 1 && nearEdge ? 13 : 0)}
                     textAnchor={anchorEnd ? "end" : "start"}
                     className="ge-chart-note"
                   >
@@ -169,33 +173,34 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
               );
             })}
 
-            <path d={linePath} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-            {points.map((pt) => {
-              const compared = pt.p.date === preDay || pt.p.date === postDay;
-              return (
-                <circle
-                  key={pt.p.date}
-                  cx={pt.px}
-                  cy={pt.py}
-                  r={compared ? 4.5 : 3}
-                  fill={compared ? color : "#0a0e18"}
-                  stroke={color}
-                  strokeWidth={compared ? 2 : 1.5}
-                />
-              );
-            })}
+            {/* Rest of the land: the reference */}
+            <path d={path((pt) => pt.outY)} fill="none" stroke={REST_COLOR} strokeWidth={2} strokeDasharray="5 4" strokeLinecap="round" />
+            {points.map((pt) => (
+              <circle key={`o${pt.p.date}`} cx={pt.px} cy={pt.outY} r={2.5} fill="#0a0e18" stroke={REST_COLOR} strokeWidth={1.5} />
+            ))}
+
+            {/* Flagged land */}
+            {hasInside && (
+              <>
+                <path d={path((pt) => pt.inY)} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+                {points.map((pt) =>
+                  pt.inY === null ? null : (
+                    <circle
+                      key={`i${pt.p.date}`}
+                      cx={pt.px}
+                      cy={pt.inY}
+                      r={pt.p.date === preDay || pt.p.date === postDay ? 4.5 : 3}
+                      fill={pt.p.date === preDay || pt.p.date === postDay ? color : "#0a0e18"}
+                      stroke={color}
+                      strokeWidth={2}
+                    />
+                  ),
+                )}
+              </>
+            )}
 
             {active && (
-              <g pointerEvents="none">
-                <line
-                  x1={active.px}
-                  x2={active.px}
-                  y1={MARGIN.top}
-                  y2={MARGIN.top + plotH}
-                  stroke="rgb(233 237 245 / 0.4)"
-                />
-                <circle cx={active.px} cy={active.py} r={5} fill={color} stroke="#0a0e18" strokeWidth={2} />
-              </g>
+              <line x1={active.px} x2={active.px} y1={MARGIN.top} y2={MARGIN.top + plotH} stroke="rgb(233 237 245 / 0.4)" pointerEvents="none" />
             )}
             <rect
               x={MARGIN.left}
@@ -212,36 +217,48 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
         {active && (
           <div
             className="ge-chart-tooltip"
-            style={{ left: tooltipLeft, top: Math.max(active.py - 12, 0) }}
+            style={{ left: tooltipLeft, top: Math.max(Math.min(active.inY ?? active.outY, active.outY) - 12, 0) }}
             aria-hidden="true"
           >
             <div className="text-muted">{formatDate(active.p.date)}</div>
+            {hasInside && (
+              <div className="text-ink">
+                Flagged land <span className="font-medium">{fmt(active.p.insideDb)}</span> dB
+              </div>
+            )}
             <div className="text-ink">
-              <span className="font-medium">{active.p.medianDb.toFixed(2)}</span> dB
-              <span className="text-muted"> · {active.p.validPct.toFixed(0)}% covered</span>
+              Rest of land <span className="font-medium">{fmt(active.p.outsideDb)}</span> dB
             </div>
           </div>
         )}
       </div>
 
       <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
+        {hasInside && (
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-0.5 w-4 rounded" style={{ background: color }} />
+            Flagged land{last.p.insideDb !== null ? ` (${fmt(last.p.insideDb)} dB)` : ""}
+          </span>
+        )}
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-full border-2" style={{ borderColor: color, background: color }} />
-          Passes compared
+          <span className="inline-block w-4 border-t-2 border-dashed" style={{ borderColor: REST_COLOR }} />
+          Rest of the land ({fmt(last.p.outsideDb)} dB)
         </span>
-        <span>{analysis.group} · {analysis.pol} · {usable.length} passes</span>
+        <span>
+          {analysis.pol} · {usable.length} passes
+        </span>
       </p>
 
       <details className="mt-2 text-xs text-muted">
         <summary className="cursor-pointer select-none rounded hover:text-ink">View data table</summary>
         <div className="mt-2 max-h-44 overflow-y-auto rounded-lg border border-line">
           <table className="w-full border-collapse text-left font-mono text-[11px] tabular-nums">
-            <caption className="sr-only">Median backscatter of the area on each pass, in dB.</caption>
+            <caption className="sr-only">Median backscatter on each pass, in dB.</caption>
             <thead className="sticky top-0 bg-[#0d121d] text-muted">
               <tr>
                 <th scope="col" className="px-2.5 py-1.5 font-normal">Date</th>
-                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Median (dB)</th>
-                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Covered</th>
+                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Flagged</th>
+                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Rest</th>
                 <th scope="col" className="px-2.5 py-1.5 font-normal">Note</th>
               </tr>
             </thead>
@@ -249,10 +266,10 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
               {series.map((p) => (
                 <tr key={p.date} className="border-t border-line">
                   <td className="px-2.5 py-1">{p.date}</td>
-                  <td className="px-2.5 py-1 text-right">{p.medianDb.toFixed(2)}</td>
-                  <td className="px-2.5 py-1 text-right">{p.validPct.toFixed(0)}%</td>
+                  <td className="px-2.5 py-1 text-right">{fmt(p.insideDb)}</td>
+                  <td className="px-2.5 py-1 text-right">{fmt(p.outsideDb)}</td>
                   <td className="px-2.5 py-1 text-muted">
-                    {p.date === preDay ? "Before" : p.date === postDay ? "After" : p.usable ? "" : "Partial pass"}
+                    {p.date === preDay ? "Before" : p.date === postDay ? "After" : p.usable ? "" : `Partial pass (${p.validPct.toFixed(0)}%)`}
                   </td>
                 </tr>
               ))}

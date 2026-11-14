@@ -13,6 +13,8 @@ export interface GlobeApi {
   openCountry: (iso: string) => void;
   /** Open a case by id, flying to it. */
   focusCase: (id: string) => boolean;
+  /** Move the camera closer to (or back from) the open case without closing it. */
+  frameCase: (altitude: number) => void;
 }
 
 export const globeApi: { current: GlobeApi | null } = { current: null };
