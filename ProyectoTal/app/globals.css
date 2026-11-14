@@ -804,3 +804,135 @@ body {
     animation: none;
   }
 }
+
+/* Region tooltip, moved by script (the globe's own tooltip only knows meshes). */
+.ge-region-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  max-width: 300px;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ge-perf {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 30;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 0.7);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #9dffb0;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Guided demo                                                                */
+/* -------------------------------------------------------------------------- */
+
+.ge-demo-text {
+  animation: ge-demo-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ge-demo-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.ge-demo-button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+  color: var(--color-muted);
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.ge-demo-button:hover:not(:disabled) {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ge-demo-button:disabled {
+  opacity: 0.35;
+}
+
+.ge-demo-text-button {
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.ge-demo-text-button:hover {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ge-demo-text-button--primary {
+  color: var(--color-void);
+  background: var(--color-ink);
+}
+
+.ge-demo-text-button--primary:hover {
+  color: var(--color-void);
+  background: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-demo-text {
+    animation: none;
+  }
+}
+
+/* Before/after curtain */
+.ge-curtain-handle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: rgb(9 12 20 / 0.92);
+  border: 1px solid rgb(255 255 255 / 0.5);
+  color: var(--color-ink);
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.ge-curtain-handle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.ge-curtain-tag {
+  position: absolute;
+  top: calc(50% - 3.1rem);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--color-line);
+  background: rgb(9 12 20 / 0.85);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-ink);
+  pointer-events: none;
+}
+

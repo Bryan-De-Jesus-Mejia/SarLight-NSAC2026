@@ -40,6 +40,8 @@ function DockButton({
 export function Hud() {
   const hasEvents = useAppStore((s) => s.events.length > 0);
   const caseOpen = useAppStore((s) => s.selectedId !== null);
+  const demoActive = useAppStore((s) => s.demoActive);
+  const startDemo = useAppStore((s) => s.startDemo);
   const [legendOpen, setLegendOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
@@ -74,7 +76,20 @@ export function Hud() {
           Dancing with the <em>SARs</em>
         </h1>
 
-        {hasEvents && <SearchBox className="w-full md:order-none md:w-72 max-md:order-last" />}
+        {hasEvents && !demoActive && <SearchBox className="w-full md:order-none md:w-72 max-md:order-last" />}
+
+        {hasEvents && !demoActive && (
+          <button
+            type="button"
+            onClick={startDemo}
+            className="ge-surface pointer-events-auto flex h-10 shrink-0 items-center gap-2 px-3.5 text-sm text-ink transition-colors hover:text-accent"
+          >
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M8 5.2v13.6a.6.6 0 0 0 .92.5l10.4-6.8a.6.6 0 0 0 0-1L8.92 4.7A.6.6 0 0 0 8 5.2z" />
+            </svg>
+            Demo
+          </button>
+        )}
 
         <Link
           href="/methods"
@@ -87,7 +102,7 @@ export function Hud() {
         </Link>
       </div>
 
-      {hasEvents && (
+      {hasEvents && !demoActive && (
         // With the case panel open, keep the dock clear of it.
         <div className={`ge-dock ${caseOpen ? "max-md:hidden md:pr-[28rem]" : ""}`}>
           <div className="ge-dock-panels">

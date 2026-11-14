@@ -234,3 +234,12 @@ export function circlePoints(
   }
   return points;
 }
+
+/** Great-circle distance between two points, in degrees. */
+export function greatCircleDeg(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const r = Math.PI / 180;
+  const dLat = (lat2 - lat1) * r;
+  const dLng = (lng2 - lng1) * r;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(dLng / 2) ** 2;
+  return 2 * Math.asin(Math.min(1, Math.sqrt(h))) * (180 / Math.PI);
+}

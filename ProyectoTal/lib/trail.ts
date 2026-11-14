@@ -16,7 +16,7 @@ const inCaribbean = (lat: number, lng: number): boolean =>
   lng >= CARIBBEAN_BOX[0] && lat >= CARIBBEAN_BOX[1] && lng <= CARIBBEAN_BOX[2] && lat <= CARIBBEAN_BOX[3];
 
 export const worldItem: TrailItem = { key: "world", label: "World", kind: "world", view: WORLD_VIEW };
-const caribbeanItem: TrailItem = {
+export const caribbeanItem: TrailItem = {
   key: "caribbean",
   label: "Caribbean",
   kind: "region",

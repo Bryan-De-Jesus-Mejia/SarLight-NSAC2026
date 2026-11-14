@@ -20,6 +20,8 @@ export interface SarSceneOptions {
   direction: "increase" | "decrease";
 }
 
+type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
 const W = SAR_IMAGE_WIDTH;
 const H = SAR_IMAGE_HEIGHT;
 const TAU = Math.PI * 2;
@@ -106,7 +108,7 @@ function planBackscatter(o: SarSceneOptions): BackscatterPlan {
   }
 }
 
-function drawBackscatter(ctx: CanvasRenderingContext2D, o: SarSceneOptions, after: boolean): void {
+function drawBackscatter(ctx: Ctx2D, o: SarSceneOptions, after: boolean): void {
   const image = ctx.createImageData(W, H);
   const data = image.data;
   const { seed } = o;
@@ -210,7 +212,7 @@ function phaseColor(phase: number, brightness: number): [number, number, number]
   return [k(0) * brightness * 255, k(8) * brightness * 255, k(4) * brightness * 255];
 }
 
-function drawInterferogram(ctx: CanvasRenderingContext2D, o: SarSceneOptions, after: boolean): void {
+function drawInterferogram(ctx: Ctx2D, o: SarSceneOptions, after: boolean): void {
   const image = ctx.createImageData(W, H);
   const data = image.data;
   const { seed } = o;
@@ -275,6 +277,12 @@ export function renderSarImage(
   canvas.height = H;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+  if (options.style === "interferogram") drawInterferogram(ctx, options, moment === "after");
+  else drawBackscatter(ctx, options, moment === "after");
+}
+
+/** Paint a scene on any 2D context (a page canvas or an OffscreenCanvas in a worker). */
+export function drawSarScene(ctx: Ctx2D, options: SarSceneOptions, moment: "before" | "after"): void {
   if (options.style === "interferogram") drawInterferogram(ctx, options, moment === "after");
   else drawBackscatter(ctx, options, moment === "after");
 }

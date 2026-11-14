@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { EventDetail } from "@/data/types";
 import { formatDate } from "@/lib/format";
-import { SAR_IMAGE_HEIGHT, SAR_IMAGE_WIDTH, renderSarImage } from "@/lib/syntheticSar";
+import { paintSar } from "@/lib/sarClient";
+import { SAR_IMAGE_HEIGHT, SAR_IMAGE_WIDTH } from "@/lib/syntheticSar";
 
 interface BeforeAfterProps {
   detail: EventDetail;
@@ -36,8 +37,9 @@ export function BeforeAfter({ detail }: BeforeAfterProps) {
       magnitude: detail.magnitude,
       direction: detail.change.direction,
     };
-    if (beforeRef.current) renderSarImage(beforeRef.current, options, "before");
-    if (afterRef.current) renderSarImage(afterRef.current, options, "after");
+    // Painted in a worker: opening a case never freezes the globe.
+    if (beforeRef.current) void paintSar(beforeRef.current, options, "before");
+    if (afterRef.current) void paintSar(afterRef.current, options, "after");
   }, [imagery, detail.type, detail.magnitude, detail.change.direction]);
 
   const clip = { clipPath: `inset(0 ${100 - position}% 0 0)` };

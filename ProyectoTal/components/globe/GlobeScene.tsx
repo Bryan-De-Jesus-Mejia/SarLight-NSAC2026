@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Globe, { type GlobeMethods } from "react-globe.gl";
-import { AmbientLight, Color, DirectionalLight, MeshPhongMaterial } from "three";
+import { AmbientLight, DirectionalLight } from "three";
 import {
   htmlElement,
   htmlElementVisibilityModifier,
@@ -21,6 +21,7 @@ import { flyCamera, jumpCamera, type Flight } from "@/lib/camera";
 import { escapeHtml, isWebGLAvailable } from "@/lib/dom";
 import {
   LOD_MARKER_SCALE,
+  greatCircleDeg,
   circlePoints,
   lodFromAltitude,
   panelShift,
@@ -40,7 +41,23 @@ import {
   trailForProvince,
   worldItem,
 } from "@/lib/trail";
-import { applyOverlay, createOverlayEngine, findBaseEngine } from "@/components/globe/imageryEngine";
+import {
+  buildBorders,
+  pickLatLng,
+  setBorderHighlight,
+  setBorderLod,
+  type BorderLayers,
+} from "@/components/globe/borders";
+import {
+  applyOverlay,
+  capLevels,
+  createOverlayEngine,
+  createOverlayUniforms,
+  findBaseEngine,
+  ignoreRaycast,
+  thinTiles,
+  type Engine,
+} from "@/components/globe/imageryEngine";
 import { satelliteUrl } from "@/lib/imagery";
 import { useAppStore, type TrailItem } from "@/store/useAppStore";
 
@@ -58,45 +75,17 @@ const PANEL_PX = 440;
 const DESKTOP_MIN_WIDTH = 768;
 /** Share of the screen the case panel covers on small screens (max-h 72dvh). */
 const SHEET_FRACTION = 0.68;
-const POINT_TRANSITION_MS = 900;
 const RESUME_ROTATION_MS = 6000;
 const MIN_DISTANCE = 100 * (1 + 0.012);
 const MAX_DISTANCE = 520;
 
 const NO_EVENTS: EventSummary[] = [];
-const NO_REGIONS: RegionFeature[] = [];
-
-/**
- * One shared globe material: a faint cool sheen and crisp relief. The globe
- * applies its colour and bump textures to it.
- */
-// Kept on globalThis so a hot reload reuses the material that already holds
-// the textures (a fresh one would render the globe blank white).
-const materialHost = globalThis as { __geGlobeMaterial?: MeshPhongMaterial };
-const GLOBE_MATERIAL = (materialHost.__geGlobeMaterial ??= new MeshPhongMaterial({
-  color: new Color("#ffffff"),
-  specular: new Color("#31466b"),
-  shininess: 14,
-  bumpScale: 9,
-}));
 
 const DEVICE_RATIO = typeof window === "undefined" ? 1 : window.devicePixelRatio;
-// Past 1.5× the pixel ratio already smooths edges: multisampling on top is wasted work.
-const RENDERER_CONFIG = {
-  antialias: DEVICE_RATIO < 1.5,
-  alpha: false,
-  powerPreference: "high-performance",
-} as const;
-const FULL_RATIO = Math.min(1.5, DEVICE_RATIO);
+const RENDERER_CONFIG = { antialias: true, alpha: false, powerPreference: "high-performance" } as const;
+// Multisampling smooths the edges; pixels past 1.25x only cost fill rate.
+const FULL_RATIO = Math.min(1.25, DEVICE_RATIO);
 
-
-/** Sharpen the surface texture at grazing angles (the globe's limb). */
-function sharpenGlobeTexture(anisotropy: number): void {
-  const { map } = GLOBE_MATERIAL;
-  if (!map) return;
-  map.anisotropy = anisotropy;
-  map.needsUpdate = true;
-}
 
 /* -------------------------------------------------------------------------- */
 /* Layer accessors                                                            */
@@ -108,6 +97,7 @@ function sharpenGlobeTexture(anisotropy: number): void {
 
 const asEvent = (d: object): EventSummary => d as EventSummary;
 const asRegion = (d: object): RegionFeature => d as RegionFeature;
+const regionAltitude = (): number => 0.0005;
 const regionCurvature = (d: object): number => (asRegion(d).kind === "province" ? 1 : 3);
 const asRegionGeometry = (d: object): { type: "Polygon"; coordinates: number[] } =>
   asRegion(d).geometry as unknown as { type: "Polygon"; coordinates: number[] };
@@ -138,6 +128,18 @@ const HTML_ALTITUDE = 0.004;
 const htmlAltitude = (): number => HTML_ALTITUDE;
 
 const noSideColor = (): string => "";
+const noLabel = (): string => "";
+
+/** Shader inputs of the two overlay layers (the curtain shows one on each side). */
+const CLASS_UNIFORM = { value: -1 };
+const UNIFORMS_A = createOverlayUniforms(CLASS_UNIFORM);
+const UNIFORMS_B = createOverlayUniforms(CLASS_UNIFORM);
+
+/** A case is open and a visitor (not the demo) is driving: map clicks close it instead of opening anything. */
+const caseLocked = (): boolean => {
+  const state = useAppStore.getState();
+  return state.selectedId !== null && !state.demoActive;
+};
 
 /* Event footprint (a dashed outline around the selected case) */
 interface Footprint {
@@ -145,6 +147,7 @@ interface Footprint {
   color: string;
   points: Array<[number, number]>;
 }
+const NO_FOOTPRINTS: Footprint[] = [];
 const footprintPoints = (d: object): Array<[number, number]> => (d as Footprint).points;
 const footprintLat = (p: unknown): number => (p as [number, number])[0];
 const footprintLng = (p: unknown): number => (p as [number, number])[1];
@@ -182,16 +185,6 @@ const hexSide = (h: object): string => hexColor(h as HexBinLike, 0.35);
 const hexAltitude = (h: object): number =>
   0.006 + Math.min(0.1, (h as HexBinLike).sumWeight * 0.006);
 const hexMargin = (): number => 0.22;
-const hexLabel = (h: object): string => {
-  const n = (h as HexBinLike).points.length;
-  return (
-    `<div class="ge-tooltip">` +
-    `<div class="ge-tooltip-type" style="color:var(--color-accent)">Signal density</div>` +
-    `<div class="ge-tooltip-name">${n} signal${n === 1 ? "" : "s"} here</div>` +
-    `<div class="ge-tooltip-place">Click to zoom in</div>` +
-    `</div>`
-  );
-};
 
 /* -------------------------------------------------------------------------- */
 /* Component                                                                  */
@@ -205,7 +198,6 @@ export default function GlobeScene() {
   // Timeline + type filters are already applied here.
   const { visible: events } = useVisibleEvents();
   const allEvents = useAppStore((s) => s.events);
-  const timelineOn = useAppStore((s) => s.timelineDay !== null);
   const selectedId = useAppStore((s) => s.selectedId);
   const detail = useAppStore((s) => s.detail);
   const lod = useAppStore((s) => s.lod);
@@ -221,12 +213,14 @@ export default function GlobeScene() {
   const [webgl] = useState(isWebGLAvailable);
   const [starfieldUrl] = useState(createStarfieldDataUrl);
   const [sceneReady, setSceneReady] = useState(false);
-  const [hoveredRegionId, setHoveredRegionId] = useState<string | null>(null);
   /** Id of the case the camera has finished flying to. */
   const [arrivedId, setArrivedId] = useState<string | null>(null);
   const overlay = useAppStore((s) => s.overlay);
   const overlayDate = useAppStore((s) => s.overlayDate);
   const overlayRef = useRef<ReturnType<typeof createOverlayEngine> | null>(null);
+  const overlayBRef = useRef<ReturnType<typeof createOverlayEngine> | null>(null);
+  const compare = useAppStore((s) => s.compare);
+  const compareBefore = useAppStore((s) => s.compareBefore);
 
   const aspect = size.height > 0 ? size.width / size.height : 1.6;
   const desktop = size.width >= DESKTOP_MIN_WIDTH;
@@ -251,11 +245,19 @@ export default function GlobeScene() {
   /** The case the camera was last sent to. */
   const focusedIdRef = useRef<string | null>(null);
 
+  const baseEngineRef = useRef<Engine | null>(null);
+  const releaseTilesRef = useRef<(() => void) | null>(null);
+  const releaseTiles = useCallback(() => {
+    releaseTilesRef.current?.();
+    releaseTilesRef.current = null;
+  }, []);
+
   const goTo = useCallback(
     (view: View, onDone?: () => void) => {
       const globe = globeRef.current;
       if (!globe) return;
       flightRef.current?.cancel();
+      releaseTiles();
       if (reducedMotion) {
         jumpCamera(globe, view);
         flyingRef.current = false;
@@ -264,15 +266,20 @@ export default function GlobeScene() {
         return;
       }
       flyingRef.current = true;
+      releaseTilesRef.current = capLevels(
+        [baseEngineRef.current, overlayRef.current, overlayBRef.current],
+        globe.camera(),
+      );
       flightRef.current = flyCamera(globe, view, {
         onDone: () => {
           flyingRef.current = false;
           flightRef.current = null;
+          releaseTiles();
           onDone?.();
         },
       });
     },
-    [reducedMotion],
+    [reducedMotion, releaseTiles],
   );
 
   const dr = useMemo(() => countries.find((c) => c.id === DR_ISO), [countries]);
@@ -366,11 +373,29 @@ export default function GlobeScene() {
   );
 
   useEffect(() => {
-    globeApi.current = { navigate };
+    globeApi.current = {
+      navigate,
+      flyTo: (view, trail = []) => {
+        savedViewRef.current = null;
+        select(null);
+        selectProvince(null);
+        setTrail(trail);
+        goTo(view);
+      },
+      openCountry: (iso) => {
+        const country = countries.find((c) => c.id === iso);
+        if (country) goToCountry(country);
+      },
+      focusCase: (id) => {
+        const event = useAppStore.getState().events.find((e) => e.id === id);
+        if (event) focusEvent(event);
+        return event !== undefined;
+      },
+    };
     return () => {
       globeApi.current = null;
     };
-  }, [navigate]);
+  }, [navigate, countries, goTo, goToCountry, focusEvent, select, selectProvince, setTrail]);
 
   // Closing a case (Esc, ✕) takes the camera back to where it was.
   const prevSelectedRef = useRef<string | null>(null);
@@ -403,6 +428,7 @@ export default function GlobeScene() {
 
     const controls = globe.controls();
     controls.enableDamping = true;
+    controls.dampingFactor = 0.3; // 0.05 (the default) glides for seconds behind the hand
     controls.autoRotateSpeed = 0.35;
     controls.minDistance = MIN_DISTANCE;
     globe.renderer().setPixelRatio(FULL_RATIO);
@@ -414,12 +440,9 @@ export default function GlobeScene() {
       flightRef.current?.cancel();
       flightRef.current = null;
       flyingRef.current = false;
+      releaseTiles();
     };
     controls.addEventListener("start", stopFlight);
-
-    // Overlay (radar / water) layer, sharing the globe's own transform.
-    const base = findBaseEngine(globe.scene());
-    if (base?.parent) overlayRef.current = createOverlayEngine(base.parent);
 
     // Lighting: bright, even fill so continents stay readable everywhere, plus
     // a key light that rides with the camera to model the sphere (soft limb
@@ -431,29 +454,114 @@ export default function GlobeScene() {
     globe.scene().add(camera);
     globe.lights([new AmbientLight(0xd4e0f7, 2.7)]);
 
-    sharpenGlobeTexture(globe.renderer().capabilities.getMaxAnisotropy());
-
     setSceneReady(true);
     setGlobeReady(true);
-  }, [setGlobeReady]);
+  }, [setGlobeReady, releaseTiles]);
 
-  // Radar / water overlay follows the layer panel.
+  // The overlay layers join the scene next to the globe's own tile engine. That
+  // engine is not yet in the scene when onGlobeReady fires, so wait for it.
+  const [overlaysReady, setOverlaysReady] = useState(false);
+  /** Where the camera looks (snapped to 4 degrees): signals far from it are not drawn. */
+  const [focusCenter, setFocusCenter] = useState({ lat: 16, lng: -62 });
+  const focusRef = useRef(focusCenter);
+  useEffect(() => {
+    if (!sceneReady) return;
+    let frame = 0;
+    let tries = 0;
+    const attach = () => {
+      const globe = globeRef.current;
+      if (!globe) return;
+      const base = findBaseEngine(globe.scene());
+      if (!base?.parent) {
+        if (tries++ < 300) frame = requestAnimationFrame(attach);
+        return;
+      }
+      baseEngineRef.current = base;
+      overlayRef.current = createOverlayEngine(base.parent, UNIFORMS_A);
+      overlayBRef.current = createOverlayEngine(base.parent, UNIFORMS_B);
+      // Picking is done with maths (see "borders"): the map tiles must not be raycast targets.
+      ignoreRaycast(base);
+      ignoreRaycast(overlayRef.current);
+      ignoreRaycast(overlayBRef.current);
+      globe.scene().traverse((object) => {
+        const type = (object as unknown as { __globeObjType?: string }).__globeObjType;
+        if (type === "globe" || type === "atmosphere") object.raycast = () => {};
+      });
+      setOverlaysReady(true);
+    };
+    attach();
+    return () => cancelAnimationFrame(frame);
+  }, [sceneReady]);
+
+  // Hide the tile levels buried under the current one (see thinTiles).
+  useEffect(() => {
+    if (!overlaysReady) return;
+    const timer = setInterval(() => {
+      if (baseEngineRef.current) thinTiles(baseEngineRef.current);
+      if (overlayRef.current) thinTiles(overlayRef.current);
+      if (overlayBRef.current) thinTiles(overlayBRef.current);
+    }, 300);
+    return () => clearInterval(timer);
+  }, [overlaysReady]);
+
+  // Radar / water overlay follows the layer panel. Layer A is the picture, or
+  // the "before" half when the curtain is on; layer B is the "after" half.
+  const kindA = compare && compareBefore === null ? "none" : overlay;
+  const dateA = compare && compareBefore !== null ? compareBefore : overlayDate;
+  const kindB = compare ? overlay : "none";
+
   useEffect(() => {
     const engine = overlayRef.current;
-    if (!sceneReady || !engine) return;
-    applyOverlay(engine, overlay, overlayDate);
+    if (!overlaysReady || !engine) return;
+    applyOverlay(engine, kindA, dateA);
     const camera = globeRef.current?.camera();
-    if (camera && overlay !== "none") engine.updatePov(camera);
-  }, [sceneReady, overlay, overlayDate]);
+    if (camera && kindA !== "none") engine.updatePov(camera);
+  }, [overlaysReady, kindA, dateA]);
+
+  useEffect(() => {
+    const engine = overlayBRef.current;
+    if (!overlaysReady || !engine) return;
+    applyOverlay(engine, kindB, overlayDate);
+    const camera = globeRef.current?.camera();
+    if (camera && kindB !== "none") engine.updatePov(camera);
+  }, [overlaysReady, kindB, overlayDate]);
+
+  useEffect(() => {
+    UNIFORMS_A.side.value = compare ? -1 : 0;
+    UNIFORMS_B.side.value = compare ? 1 : 0;
+  }, [compare]);
+
+  // The curtain position and the lit-up colour go straight to the shader.
+  useEffect(() => {
+    const globe = globeRef.current;
+    if (!sceneReady || !globe) return;
+    const sync = () => {
+      const state = useAppStore.getState();
+      const width = globe.renderer().domElement.width;
+      UNIFORMS_A.splitX.value = state.curtain * width;
+      UNIFORMS_B.splitX.value = state.curtain * width;
+      CLASS_UNIFORM.value = state.radarClass ?? -1;
+    };
+    sync();
+    return useAppStore.subscribe(sync);
+  }, [sceneReady, size.width, size.height]);
 
   // Every camera move: update the zoom level and slow the drag when close.
   const handleZoom = useCallback(
-    ({ altitude }: { altitude: number }) => {
+    ({ lat, lng, altitude }: { lat: number; lng: number; altitude: number }) => {
       const next: Lod = lodFromAltitude(altitude);
+      if (greatCircleDeg(lat, lng, focusRef.current.lat, focusRef.current.lng) > 4) {
+        focusRef.current = { lat, lng };
+        setFocusCenter(focusRef.current);
+      }
       setLod(next);
-      const overlayEngine = overlayRef.current;
       const camera = globeRef.current?.camera();
-      if (overlayEngine?.visible && camera) overlayEngine.updatePov(camera);
+      if (camera) {
+        const a = overlayRef.current;
+        const b = overlayBRef.current;
+        if (a?.visible) a.updatePov(camera);
+        if (b?.visible) b.updatePov(camera);
+      }
 
       const controls = globeRef.current?.controls();
       if (controls) controls.rotateSpeed = Math.min(0.5, Math.max(0.015, altitude * 0.16));
@@ -513,7 +621,10 @@ export default function GlobeScene() {
   // Markers reach the latest handlers through the module-level ref.
   useEffect(() => {
     markerHandlers.current = {
-      activate: focusEvent,
+      activate: (event) => {
+        if (caseLocked()) useAppStore.getState().select(null);
+        else focusEvent(event);
+      },
       reveal: (event) => {
         const globe = globeRef.current;
         if (!globe) return;
@@ -528,101 +639,219 @@ export default function GlobeScene() {
 
   /* -------------------------------- borders -------------------------------- */
 
-  // Province counts feed the borders' tint.
+  const bordersRef = useRef<BorderLayers | null>(null);
+  const tipRef = useRef<HTMLDivElement | null>(null);
+  const perfRef = useRef<HTMLDivElement | null>(null);
+  // Add ?perf to the address for a live frame-rate readout.
+  const [perfOn] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).has("perf"));
+  const overPointRef = useRef(false);
+  const hoveredIdRef = useRef<string | null>(null);
+  const [hovered, setHovered] = useState<RegionFeature | null>(null);
+
+  // Borders and the shade are a few merged meshes, built once the data is in.
+  useEffect(() => {
+    const globe = globeRef.current;
+    if (!sceneReady || !globe || !countries.length) return;
+    const parent = findBaseEngine(globe.scene())?.parent ?? globe.scene();
+    const layers = buildBorders(countries, provinces);
+    parent.add(layers.group);
+    bordersRef.current = layers;
+    setBorderLod(layers, useAppStore.getState().lod);
+    return () => {
+      layers.dispose();
+      bordersRef.current = null;
+    };
+  }, [sceneReady, countries, provinces]);
+
+  useEffect(() => {
+    if (bordersRef.current) setBorderLod(bordersRef.current, lod);
+  }, [lod, sceneReady, countries, provinces]);
+
+  // Frame-rate readout (?perf): written straight to the DOM, so it costs nothing to React.
+  useEffect(() => {
+    const globe = globeRef.current;
+    const out = perfRef.current;
+    if (!perfOn || !sceneReady || !globe || !out) return;
+    let frames = 0;
+    let last = performance.now();
+    let frame = 0;
+    const tick = (now: number) => {
+      frames += 1;
+      if (now - last >= 500) {
+        const info = globe.renderer().info;
+        const fps = Math.round((frames * 1000) / (now - last));
+        out.textContent = `${fps} fps · ${info.render.calls} calls · ${Math.round(info.render.triangles / 1000)}k tris · ${useAppStore.getState().lod}`;
+        frames = 0;
+        last = now;
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [perfOn, sceneReady]);
+
+  // How many signals each province holds (for its tooltip).
   const provinceCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    if (!provinces.length) return counts;
     for (const event of events) {
       const hit = provinces.find((p) => pointInRegion(event.lon, event.lat, p));
       if (hit) counts.set(hit.id, (counts.get(hit.id) ?? 0) + 1);
     }
     return counts;
   }, [events, provinces]);
+  const provinceCountsRef = useRef(provinceCounts);
+  useEffect(() => {
+    provinceCountsRef.current = provinceCounts;
+  }, [provinceCounts]);
 
-  const showProvinces = lod === "country" || lod === "ground";
-
-  // Provinces replace the national outline of the Dominican Republic once close.
-  const regions = useMemo<RegionFeature[]>(() => {
-    if (!countries.length) return NO_REGIONS;
-    return showProvinces ? [...countries.filter((c) => c.id !== DR_ISO), ...provinces] : countries;
-  }, [countries, provinces, showProvinces]);
-
-  const regionCapColor = useCallback(
-    (d: object): string => {
-      const r = asRegion(d);
-      const hovered = r.id === hoveredRegionId;
-      if (r.kind === "province") {
-        if (hovered) return `rgba(${ACCENT_RGB}, 0.34)`;
-        if (r.id === selectedProvinceId) return `rgba(${ACCENT_RGB}, 0.2)`;
-        const count = provinceCounts.get(r.id) ?? 0;
-        return count > 0
-          ? `rgba(110, 168, 255, ${(0.1 + Math.min(count, 6) * 0.04).toFixed(2)})`
-          : "rgba(255, 255, 255, 0.02)";
+  /** The region under a coordinate: a province when close in on the Dominican Republic, else a country. */
+  const pickRegion = useCallback(
+    (lat: number, lng: number): RegionFeature | null => {
+      const level = useAppStore.getState().lod;
+      if (level === "country" || level === "ground") {
+        const province = provinces.find((p) => pointInRegion(lng, lat, p));
+        if (province) return province;
       }
-      if (hovered) return "rgba(233, 237, 245, 0.16)";
-      if (r.id === DR_ISO) return `rgba(${ACCENT_RGB}, ${lod === "orbit" ? 0.07 : 0.03})`;
-      // Spotlight: the rest of the land dims once we are in the region.
-      return lod === "orbit" ? "rgba(0, 0, 0, 0)" : "rgba(3, 5, 10, 0.24)";
+      return countries.find((c) => pointInRegion(lng, lat, c)) ?? null;
     },
-    [hoveredRegionId, selectedProvinceId, provinceCounts, lod],
+    [countries, provinces],
   );
 
-  const regionStrokeColor = useCallback(
-    (d: object): string => {
-      const r = asRegion(d);
-      if (r.kind === "province") {
-        return r.id === hoveredRegionId ? "rgba(255, 232, 190, 1)" : `rgba(${ACCENT_RGB}, 0.72)`;
-      }
-      if (r.id === DR_ISO) return `rgba(${ACCENT_RGB}, 0.95)`;
-      return lod === "orbit" ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.38)";
-    },
-    [hoveredRegionId, lod],
-  );
-
-  const regionAltitude = useCallback(
-    (d: object): number => {
-      const r = asRegion(d);
-      // Barely above the ground: a taller polygon shifts under a tilted camera
-      // and the pointer ends up over the wrong province.
-      if (r.kind === "province") return 0.0007;
-      return r.id === DR_ISO ? 0.0006 : 0.0004;
-    },
-    [],
-  );
-
-  const regionLabel = useCallback(
-    (d: object): string => {
-      const r = asRegion(d);
-      const isProvince = r.kind === "province";
-      const count = isProvince ? (provinceCounts.get(r.id) ?? 0) : 0;
-      return (
-        `<div class="ge-tooltip">` +
-        `<div class="ge-tooltip-type" style="color:var(--color-accent)">${isProvince ? "Province" : "Country"}</div>` +
-        `<div class="ge-tooltip-name">${escapeHtml(r.name)}</div>` +
-        (isProvince
-          ? `<div class="ge-tooltip-place">${count} signal${count === 1 ? "" : "s"} · Click to zoom in</div>`
-          : `<div class="ge-tooltip-place">Click to zoom in</div>`) +
-        `</div>`
-      );
-    },
-    [provinceCounts],
-  );
-
-  const handleRegionHover = useCallback((d: object | null) => {
-    setHoveredRegionId(d ? asRegion(d).id : null);
-  }, []);
-
-  const handleRegionClick = useCallback(
-    (d: object) => {
-      const r = asRegion(d);
-      if (r.kind === "province") goToProvince(r);
-      else goToCountry(r);
+  const openRegion = useCallback(
+    (region: RegionFeature) => {
+      if (region.kind === "province") goToProvince(region);
+      else goToCountry(region);
     },
     [goToCountry, goToProvince],
   );
 
-  const handleGlobeClick = useCallback(() => select(null), [select]);
-  const handlePointClick = useCallback((d: object) => focusEvent(asEvent(d)), [focusEvent]);
+  // Hover and click are worked out here, not by raycasting hundreds of meshes.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!sceneReady || !el) return;
+
+    let frame = 0;
+    let px = 0;
+    let py = 0;
+    let down: { x: number; y: number } | null = null;
+    let dragged = false;
+
+    const clear = () => {
+      if (hoveredIdRef.current !== null) {
+        hoveredIdRef.current = null;
+        setHovered(null);
+      }
+      if (tipRef.current) tipRef.current.style.opacity = "0";
+    };
+
+    const run = () => {
+      frame = 0;
+      const globe = globeRef.current;
+      if (!globe || down || overPointRef.current || caseLocked()) return clear();
+      const rect = el.getBoundingClientRect();
+      const at = pickLatLng(globe.camera(), px, py, rect);
+      const region = at ? pickRegion(at.lat, at.lng) : null;
+      if (!region) return clear();
+
+      const tip = tipRef.current;
+      if (tip) {
+        tip.style.transform = `translate(${px - rect.left}px, ${py - rect.top}px)`;
+        if (hoveredIdRef.current !== region.id) {
+          const count = region.kind === "province" ? (provinceCountsRef.current.get(region.id) ?? 0) : null;
+          tip.innerHTML =
+            `<div class="ge-tooltip">` +
+            `<div class="ge-tooltip-type" style="color:var(--color-accent)">${region.kind === "province" ? "Province" : "Country"}</div>` +
+            `<div class="ge-tooltip-name">${escapeHtml(region.name)}</div>` +
+            `<div class="ge-tooltip-place">${count === null ? "" : `${count} signal${count === 1 ? "" : "s"} · `}Click to zoom in</div>` +
+            `</div>`;
+        }
+        tip.style.opacity = "1";
+      }
+      if (hoveredIdRef.current !== region.id) {
+        hoveredIdRef.current = region.id;
+        setHovered(region);
+      }
+    };
+
+    const onMove = (event: PointerEvent) => {
+      px = event.clientX;
+      py = event.clientY;
+      if (down && Math.hypot(px - down.x, py - down.y) > 5) dragged = true;
+      if (!(event.target instanceof Element) || !event.target.closest("canvas")) return clear();
+      if (!frame) frame = requestAnimationFrame(run);
+    };
+    const onDown = (event: PointerEvent) => {
+      down = { x: event.clientX, y: event.clientY };
+      dragged = false;
+      clear();
+    };
+    const onUp = (event: PointerEvent) => {
+      const start = down;
+      down = null;
+      if (!start || dragged) return;
+      if (!(event.target instanceof Element) || !event.target.closest("canvas")) return;
+      if (overPointRef.current) return; // the point has its own click
+      const globe = globeRef.current;
+      if (!globe) return;
+      const at = pickLatLng(globe.camera(), event.clientX, event.clientY, el.getBoundingClientRect());
+      const region = at ? pickRegion(at.lat, at.lng) : null;
+      if (region && !caseLocked()) openRegion(region);
+      else useAppStore.getState().select(null);
+    };
+
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerdown", onDown);
+    el.addEventListener("pointerup", onUp);
+    el.addEventListener("pointerleave", clear);
+    return () => {
+      cancelAnimationFrame(frame);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointerleave", clear);
+    };
+  }, [sceneReady, containerRef, pickRegion, openRegion]);
+
+  // Only the hovered and the selected region get a fill.
+  const selectedProvince = useMemo(
+    () => provinces.find((p) => p.id === selectedProvinceId) ?? null,
+    [provinces, selectedProvinceId],
+  );
+  const highlights = useMemo<RegionFeature[]>(() => {
+    const list: RegionFeature[] = [];
+    if (selectedProvince) list.push(selectedProvince);
+    if (hovered?.kind === "province" && hovered.id !== selectedProvince?.id) list.push(hovered);
+    return list;
+  }, [selectedProvince, hovered]);
+
+  // Filling a whole country means triangulating it on the spot (a visible
+  // hitch for the big ones): countries get a bright outline instead.
+  useEffect(() => {
+    if (bordersRef.current) setBorderHighlight(bordersRef.current, hovered?.kind === "country" ? hovered : null);
+  }, [hovered]);
+
+  const regionCapColor = useCallback(
+    (d: object): string => {
+      const r = asRegion(d);
+      return r.id === hovered?.id ? `rgba(${ACCENT_RGB}, 0.34)` : `rgba(${ACCENT_RGB}, 0.2)`;
+    },
+    [hovered],
+  );
+  const regionStrokeColor = useCallback(
+    (d: object): string | null => (asRegion(d).id === hovered?.id ? "rgba(255, 232, 190, 1)" : null),
+    [hovered],
+  );
+
+  const handlePointHover = useCallback((point: object | null) => {
+    overPointRef.current = point !== null;
+  }, []);
+  const handlePointClick = useCallback(
+    (d: object) => {
+      if (caseLocked()) select(null);
+      else focusEvent(asEvent(d));
+    },
+    [focusEvent, select],
+  );
 
   /* -------------------------------- events --------------------------------- */
 
@@ -667,7 +896,7 @@ export default function GlobeScene() {
 
   // Dashed outline around the selected case.
   const footprints = useMemo<Footprint[]>(() => {
-    if (!selectedEvent) return [];
+    if (!selectedEvent || arrivedId !== selectedEvent.id) return NO_FOOTPRINTS;
     const area = detail?.id === selectedEvent.id ? detail.areaKm2 : null;
     const realKm = area !== null ? Math.sqrt(area / Math.PI) : 4 + selectedEvent.magnitude * 22;
     // Never smaller than the eye can follow at arrival altitude.
@@ -679,7 +908,7 @@ export default function GlobeScene() {
         points: circlePoints(selectedEvent.lat, selectedEvent.lon, radiusKm),
       },
     ];
-  }, [selectedEvent, detail]);
+  }, [selectedEvent, detail, arrivedId]);
 
   // The callout card appears once the camera has arrived.
   const htmlData = useMemo<HtmlDatum[]>(() => {
@@ -689,13 +918,16 @@ export default function GlobeScene() {
 
   const orbit = lod === "orbit";
   const hexData = orbit ? events : NO_EVENTS;
-  const pointsData = orbit ? NO_EVENTS : events;
-  const hexClick = useCallback(
-    (_hex: object, _event: MouseEvent, coords: { lat: number; lng: number }) => {
-      goTo({ lat: coords.lat, lng: coords.lng, altitude: 0.5 });
-    },
-    [goTo],
-  );
+  const nearRadius = lod === "region" ? 65 : lod === "country" ? 46 : 30;
+  const pointsData = useMemo(() => {
+    if (orbit) return NO_EVENTS;
+    return events.filter(
+      (e) =>
+        e.featured ||
+        e.id === selectedId ||
+        greatCircleDeg(e.lat, e.lon, focusCenter.lat, focusCenter.lng) <= nearRadius,
+    );
+  }, [orbit, events, selectedId, focusCenter, nearRadius]);
 
   /* --------------------------------- render -------------------------------- */
 
@@ -714,10 +946,8 @@ export default function GlobeScene() {
     );
   }
 
-  const quiet = reducedMotion || timelineOn;
-
   return (
-    <div ref={containerRef} className="ge-globe h-full w-full">
+    <div ref={containerRef} className="ge-globe relative h-full w-full">
       {size.width > 0 && size.height > 0 && (
         <Globe
           ref={globeRef}
@@ -727,27 +957,21 @@ export default function GlobeScene() {
           backgroundImageUrl={starfieldUrl || null}
           rendererConfig={RENDERER_CONFIG}
           globeTileEngineUrl={satelliteUrl}
-          globeImageUrl="/textures/earth-blue-marble.jpg"
-          bumpImageUrl="/textures/earth-topology.png"
-          globeMaterial={GLOBE_MATERIAL}
           showAtmosphere
           atmosphereColor={ATMOSPHERE_COLOR}
           atmosphereAltitude={0.19}
           onGlobeReady={handleGlobeReady}
-          onGlobeClick={handleGlobeClick}
           onZoom={handleZoom}
           // Borders: countries, and the provinces of the Dominican Republic up close
-          polygonsData={regions}
+          polygonsData={highlights}
           polygonGeoJsonGeometry={asRegionGeometry}
           polygonCapColor={regionCapColor}
           polygonSideColor={noSideColor}
           polygonStrokeColor={regionStrokeColor}
           polygonAltitude={regionAltitude}
           polygonCapCurvatureResolution={regionCurvature}
-          polygonLabel={regionLabel}
+          polygonLabel={noLabel}
           polygonsTransitionDuration={0}
-          onPolygonHover={handleRegionHover}
-          onPolygonClick={handleRegionClick}
           // Orbit: how busy each area is
           hexBinPointsData={hexData}
           hexBinPointLat={pointLat}
@@ -758,9 +982,8 @@ export default function GlobeScene() {
           hexAltitude={hexAltitude}
           hexTopColor={hexTop}
           hexSideColor={hexSide}
-          hexLabel={hexLabel}
-          hexTransitionDuration={quiet ? 0 : 600}
-          onHexClick={hexClick}
+          hexBinMerge
+          hexTransitionDuration={0}
           // Region and closer: every signal as a flat disc
           pointsData={pointsData}
           pointLat={pointLat}
@@ -768,12 +991,13 @@ export default function GlobeScene() {
           pointColor={pointColor}
           pointAltitude={pointAltitude}
           pointRadius={pointRadius}
-          pointResolution={10}
+          pointResolution={6}
           pointsMerge={false}
           // While the timeline runs the data changes every few frames: a grow-in
           // tween would be restarted before it could finish.
-          pointsTransitionDuration={quiet ? 0 : POINT_TRANSITION_MS}
+          pointsTransitionDuration={0}
           pointLabel={pointLabel}
+          onPointHover={handlePointHover}
           onPointClick={handlePointClick}
           // Pulsing rings: featured cases and the selected one
           ringsData={ringsData}
@@ -804,6 +1028,8 @@ export default function GlobeScene() {
           htmlElementVisibilityModifier={htmlElementVisibilityModifier}
         />
       )}
+      <div ref={tipRef} className="ge-region-tip" aria-hidden="true" />
+      {perfOn && <div ref={perfRef} className="ge-perf" aria-hidden="true" />}
     </div>
   );
 }

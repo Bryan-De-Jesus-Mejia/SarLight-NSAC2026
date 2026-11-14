@@ -61,6 +61,26 @@ interface AppState {
   overlayDate: string;
 
   setOverlay: (overlay: OverlayKind) => void;
+  /** Before/after curtain over the overlay. */
+  compare: boolean;
+  /** Date shown left of the curtain; null means plain satellite imagery. */
+  compareBefore: string | null;
+  /** Curtain position, 0..1 from the left edge of the screen. */
+  curtain: number;
+  /** Radar colour class lit up from the legend (null for none). */
+  radarClass: number | null;
+  setCompare: (on: boolean) => void;
+  setCompareBefore: (date: string | null) => void;
+  setCurtain: (position: number) => void;
+  setRadarClass: (klass: number | null) => void;
+  /** Guided demo. */
+  demoActive: boolean;
+  demoStep: number;
+  demoPaused: boolean;
+  startDemo: () => void;
+  stopDemo: () => void;
+  setDemoStep: (step: number) => void;
+  setDemoPaused: (paused: boolean) => void;
   setOverlayDate: (date: string) => void;
 
   setLod: (lod: Lod) => void;
@@ -134,7 +154,23 @@ export const useAppStore = create<AppState>((set, get) => ({
   overlay: "none",
   overlayDate: DEFAULT_RADAR_DATE,
 
-  setOverlay: (overlay) => set({ overlay }),
+  setOverlay: (overlay) =>
+    set((state) => ({ overlay, compare: overlay === "none" ? false : state.compare })),
+  compare: false,
+  compareBefore: "2026-06-20",
+  curtain: 0.5,
+  radarClass: null,
+  setCompare: (on) => set((state) => ({ compare: on, overlay: on && state.overlay === "none" ? "radar" : state.overlay })),
+  setCompareBefore: (date) => set({ compareBefore: date }),
+  setCurtain: (position) => set({ curtain: position }),
+  setRadarClass: (klass) => set({ radarClass: klass }),
+  demoActive: false,
+  demoStep: 0,
+  demoPaused: false,
+  startDemo: () => set({ demoActive: true, demoStep: 0, demoPaused: false, compare: false, radarClass: null }),
+  stopDemo: () => set({ demoActive: false, demoPaused: false, overlay: "none", compare: false, radarClass: null }),
+  setDemoStep: (step) => set({ demoStep: step }),
+  setDemoPaused: (paused) => set({ demoPaused: paused }),
   setOverlayDate: (date) => set({ overlayDate: date }),
   setLod: (lod) => {
     if (get().lod !== lod) set({ lod });

@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
+import { Curtain } from "@/components/Curtain";
+import { DemoPlayer } from "@/components/DemoPlayer";
 import { Hud } from "@/components/Hud";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { CasePanel } from "@/components/panel/CasePanel";
@@ -21,6 +23,14 @@ export function Explorer() {
     if (useAppStore.getState().status === "idle") void loadEvents();
   }, [loadEvents]);
 
+  // ?demo starts the guided demo as soon as the globe is up (handy for recording).
+  useEffect(() => {
+    if (status !== "ready" || !globeReady) return;
+    if (!new URLSearchParams(window.location.search).has("demo")) return;
+    const timer = setTimeout(() => useAppStore.getState().startDemo(), 1200);
+    return () => clearTimeout(timer);
+  }, [status, globeReady]);
+
   const failed = status === "error";
   const loaded = (status === "ready" && globeReady) || failed;
 
@@ -31,7 +41,9 @@ export function Explorer() {
       </div>
       <div className="ge-vignette" data-focus={focused ? "" : undefined} aria-hidden="true" />
 
+      <Curtain />
       <Hud />
+      <DemoPlayer />
       <CasePanel />
 
       {failed && (
