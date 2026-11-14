@@ -23,6 +23,7 @@ import csv
 import json
 import time
 import traceback
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import date, timedelta
 
 import asf_search as asf
@@ -64,28 +65,27 @@ def parse_pair(file_id: str) -> dict:
             "ref": f[11][:8], "sec": f[13][:8]}
 
 
-def find_pairs(bbox, event: date, max_days: int, min_cov: float, per_group: int) -> list[dict]:
+def _ymd(s: str) -> date:
+    return date(int(s[:4]), int(s[4:6]), int(s[6:8]))
+
+
+def search_gunw(bbox, start: date, end: date, max_days: int, min_cov: float) -> dict[str, list[dict]]:
+    """Pares GUNW sobre el bbox con separación <= max_days y cobertura >= min_cov, agrupados por geometría."""
     aoi = box(*bbox)
-    log(f"Buscando GUNW en ASF alrededor de {event} (±{max_days} días) ... "
-        f"(el servidor de la NASA puede tardar varios minutos)")
+    log(f"Buscando GUNW en ASF entre {start} y {end} ... (el servidor de la NASA puede tardar varios minutos)")
     t0 = time.time()
     results = []
     with Heartbeat("Búsqueda en ASF/CMR"):
         for page_no, page in enumerate(asf.search_generator(
                 dataset=asf.DATASET.NISAR, processingLevel="GUNW", intersectsWith=aoi.wkt,
-                start=(event - timedelta(days=max_days)).isoformat(),
-                end=(event + timedelta(days=max_days)).isoformat(), maxResults=2000), 1):
+                start=start.isoformat(), end=end.isoformat(), maxResults=2000), 1):
             results += list(page)
             log(f"   página {page_no}: {len(results)} productos GUNW acumulados ({time.time() - t0:.0f}s)")
-    ev = event.strftime("%Y%m%d")
     best = {}
     for p in results:
         pr = p.properties
         info = parse_pair(pr["fileID"])
-        if not (info["ref"] < ev < info["sec"]):
-            continue
-        days = (date.fromisoformat(f"{info['sec'][:4]}-{info['sec'][4:6]}-{info['sec'][6:]}")
-                - date.fromisoformat(f"{info['ref'][:4]}-{info['ref'][4:6]}-{info['ref'][6:]}")).days
+        days = (_ymd(info["sec"]) - _ymd(info["ref"])).days
         if days > max_days:
             continue
         cov = round(100 * shape(p.geometry).intersection(aoi).area / aoi.area, 1)
@@ -100,15 +100,23 @@ def find_pairs(bbox, event: date, max_days: int, min_cov: float, per_group: int)
     by_group = {}
     for rec in best.values():
         g = f"T{rec['track']:03d}_F{rec['frame']:03d}_{rec['direction']}"
-        by_group.setdefault(g, []).append(rec)
+        by_group.setdefault(g, []).append({**rec, "group": g, "pair": f"{rec['ref']}_{rec['sec']}"})
+    return by_group
+
+
+def find_pairs(bbox, event: date, max_days: int, min_cov: float, per_group: int) -> list[dict]:
+    ev = event.strftime("%Y%m%d")
+    by_group = search_gunw(bbox, event - timedelta(days=max_days), event + timedelta(days=max_days),
+                           max_days, min_cov)
+    by_group = {g: [r for r in recs if r["ref"] < ev < r["sec"]] for g, recs in by_group.items()}
     pairs = []
     for g, recs in by_group.items():
-        for rec in sorted(recs, key=lambda r: (r["days"], -r["cov"]))[:per_group]:
-            pairs.append({**rec, "group": g, "pair": f"{rec['ref']}_{rec['sec']}"})
+        pairs += sorted(recs, key=lambda r: (r["days"], -r["cov"]))[:per_group]
     return sorted(pairs, key=lambda r: -r["cov"])
 
 
-def fetch_pair(rec: dict, bbox, root, catalog) -> str:
+def fetch_pair(rec: dict, bbox, root) -> tuple[dict, str]:
+    """Descarga un par y devuelve (fila del catálogo, resumen). El catálogo lo escribe el proceso principal."""
     out = root / "gunw" / rec["group"] / rec["pair"]
     layers = {k: f"{BASE}/{v.format(pol=rec['pol'])}" for k, v in LAYERS.items()}
     with Heartbeat(f"Leyendo {len(layers)} capas de {rec['group']} {rec['pair']} (streaming)"):
@@ -129,13 +137,21 @@ def fetch_pair(rec: dict, bbox, root, catalog) -> str:
            "frame": rec["frame"], "pol": rec["pol"], "aoi_coverage_pct": rec["cov"],
            "center_frequency_hz": meta.get("center_frequency_hz", ""), "rows": rows, "cols": cols,
            "path": str(out.relative_to(root)), "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%S")}
+    return row, f"{rows}x{cols} px, {len(data)} capas"
+
+
+def append_catalog(catalog, row: dict):
     new = not catalog.exists()
     with open(catalog, "a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=CATALOG_FIELDS)
         if new:
             w.writeheader()
         w.writerow(row)
-    return f"{rows}x{cols} px, {len(data)} capas"
+
+
+def _worker_init(verbose: bool):
+    setup_stdout()
+    sar_io.VERBOSE = verbose
 
 
 def main():
@@ -151,11 +167,12 @@ def main():
     ap.add_argument("--min-coverage", type=float, default=20, help="%% mínimo del bbox cubierto (def. 20)")
     ap.add_argument("--per-group", type=int, default=1,
                     help="Pares por geometría, de menor a mayor separación temporal (def. 1)")
+    ap.add_argument("--workers", type=int, default=1,
+                    help="Pares en paralelo (def. 1; en la nube usa 3-4)")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
     root = DATA_DIR / "collections" / args.name
-    catalog = root / "catalog.csv"
     pairs = find_pairs(args.bbox, date.fromisoformat(args.event_date), args.max_days, args.min_coverage,
                        args.per_group)
     log(f"{len(pairs)} pares cosísmicos seleccionados:")
@@ -164,31 +181,51 @@ def main():
     if args.dry_run or not pairs:
         return
 
-    done = set()
-    if catalog.exists():
-        with open(catalog, newline="") as f:
-            done = {(r["group"], r["pair"]) for r in csv.DictReader(f)}
     root.mkdir(parents=True, exist_ok=True)
     (root / "manifest.json").write_text(json.dumps(
         {"type": "earthquake", "event_date": args.event_date, "bbox": args.bbox, "max_days": args.max_days,
          "min_coverage": args.min_coverage, "per_group": args.per_group,
          "updated": time.strftime("%Y-%m-%dT%H:%M:%S")}, indent=2))
+    download(pairs, args.bbox, root, args.name, args.workers)
 
-    prog = Progress(len(pairs), f"Descarga {args.name}", unit="pares")
+
+def download(pairs: list[dict], bbox, root, name: str, workers: int = 1):
+    """Descarga los pares que falten en catalog.csv (reanudable); los errores van a errors.log.
+
+    Con workers > 1 baja varios pares a la vez en procesos separados (h5py no es concurrente en un proceso).
+    En una red rápida (nube) esto multiplica la velocidad; en una línea lenta casera no ayuda.
+    """
+    catalog = root / "catalog.csv"
+    done = set()
+    if catalog.exists():
+        with open(catalog, newline="") as f:
+            done = {(r["group"], r["pair"]) for r in csv.DictReader(f)}
+    prog = Progress(len(pairs), f"Descarga {name}", unit="pares")
+    todo = []
     for p in pairs:
-        tag = f"{p['group']:20} {p['pair']}"
         if (p["group"], p["pair"]) in done:
-            prog.step(f"{tag} ya descargado", status="SALTADA")
-            continue
-        try:
-            prog.step(f"{tag} {fetch_pair(p, args.bbox, root, catalog)}")
-        except Exception as e:
-            prog.step(f"{tag} {type(e).__name__}: {e}", status="ERROR")
-            with open(root / "errors.log", "a") as f:
-                f.write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')} {p['scene']}\n{traceback.format_exc()}\n")
+            prog.step(f"{p['group']:20} {p['pair']} ya descargado", status="SALTADA")
+        else:
+            todo.append(p)
+    if todo and workers > 1:
+        log(f"{len(todo)} pares por bajar con {workers} procesos en paralelo")
+    with ProcessPoolExecutor(max_workers=max(1, workers), initializer=_worker_init,
+                             initargs=(workers <= 1,)) as pool:
+        futures = {pool.submit(fetch_pair, p, bbox, root): p for p in todo}
+        for fut in as_completed(futures):
+            p = futures[fut]
+            tag = f"{p['group']:20} {p['pair']}"
+            try:
+                row, msg = fut.result()
+                append_catalog(catalog, row)
+                prog.step(f"{tag} {msg}")
+            except Exception as e:
+                prog.step(f"{tag} {type(e).__name__}: {e}", status="ERROR")
+                with open(root / "errors.log", "a") as f:
+                    f.write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')} {p['scene']}\n"
+                            f"{''.join(traceback.format_exception(e))}\n")
     prog.summary(final=True)
     log(f"Catálogo: {catalog}")
-
 
 if __name__ == "__main__":
     main()

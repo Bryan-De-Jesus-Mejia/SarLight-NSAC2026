@@ -70,6 +70,18 @@ def nan_median(a: np.ndarray, size: int) -> np.ndarray:
     return np.where(valid, median_filter(np.where(valid, a, 0), size=size), np.nan).astype(np.float32)
 
 
+def remove_plane(a: np.ndarray) -> np.ndarray:
+    """Resta el plano a + b·x + c·y ajustado por mínimos cuadrados (rampa geométrica/orbital de los offsets)."""
+    rows, cols = np.nonzero(np.isfinite(a))
+    if rows.size < 100:
+        return a - np.nanmedian(a)
+    step = max(1, rows.size // 200_000)
+    r, c = rows[::step].astype(np.float64), cols[::step].astype(np.float64)
+    coef, *_ = np.linalg.lstsq(np.column_stack([np.ones_like(r), c, r]), a[rows[::step], cols[::step]], rcond=None)
+    yy, xx = np.mgrid[:a.shape[0], :a.shape[1]]
+    return (a - (coef[0] + coef[1] * xx + coef[2] * yy)).astype(np.float32)
+
+
 def lonlat_to_rc(lon, lat, transform, crs):
     xs, ys = warp_transform("EPSG:4326", crs, [lon], [lat])
     col, row = ~transform * (xs[0], ys[0])
@@ -137,9 +149,10 @@ def analyze_pair(pair_dir: Path, out: Path, meta: dict, args) -> dict:
             good &= np.nan_to_num(ocorr, nan=0) >= args.min_offset_corr
         rng_f = nan_median(np.where(good, rng, np.nan), args.offset_median)
         azi_f = nan_median(np.where(good, azi, np.nan), args.offset_median)
+        # Los offsets traen una rampa de geometría/órbita de decenas de cm en toda la escena: se resta un plano.
         # Offset de rango positivo = alejamiento del satélite; se invierte para la misma convención que la fase.
-        rng_cm = (-(rng_f - np.nanmedian(rng_f)) * 100).astype(np.float32)
-        azi_cm = ((azi_f - np.nanmedian(azi_f)) * 100).astype(np.float32)
+        rng_cm = (-remove_plane(rng_f) * 100).astype(np.float32)
+        azi_cm = (remove_plane(azi_f) * 100).astype(np.float32)
         both = valid & np.isfinite(rng_cm)
         if both.sum() > 1000 and np.nanstd(los_cm[both]) > 0 and np.nanstd(rng_cm[both]) > 0:
             consistency = float(np.corrcoef(los_cm[both], rng_cm[both])[0, 1])

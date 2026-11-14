@@ -1,0 +1,155 @@
+"""Corre en la nube (GitHub Codespaces) los trabajos de cloud/trabajos.txt y empaqueta los resultados.
+
+La PC local tiene ~1 MB/s de internet; en la nube la descarga desde ASF es mucho más rápida. Aquí se
+baja y se analiza todo, y solo se trae a casa un .tar.gz con los resultados:
+  - data/analisis/<colección>/            (mapas PNG, estadísticas JSON, GeoTIFF de resultados)
+  - catalog.csv / manifest.json / errors.log de cada colección
+  - los datos crudos de las colecciones que aún no tienen análisis (p.ej. glaciares)
+  - cloud/logs/ (un log por trabajo)
+
+Uso (desde "Data analytics"):
+  python cloud/run_jobs.py                       # todos los trabajos, 3 a la vez
+  python cloud/run_jobs.py --solo glaciar_jakobshavn colapso_langtang
+  python cloud/run_jobs.py --solo-empaquetar     # vuelve a crear el .tar.gz con lo que ya hay
+Luego descarga resultados/resultados_<fecha>.tar.gz (clic derecho > Download en el explorador de VS Code)
+y en la PC local:  tar -xzf resultados_<fecha>.tar.gz -C "Data analytics"
+"""
+import argparse
+import os
+import subprocess
+import sys
+import tarfile
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
+sys.path.insert(0, str(ROOT / "pipeline"))
+
+from progress import Progress, fmt_dur, log, setup_stdout  # noqa: E402
+
+LOGS = HERE / "logs"
+DATA = ROOT / "data"
+
+
+def read_jobs(path: Path) -> dict[str, str]:
+    jobs = {}
+    for n, line in enumerate(path.read_text().splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        name, sep, cmd = line.partition(":")
+        if not sep or not cmd.strip():
+            raise SystemExit(f"{path}:{n}: formato esperado 'nombre: comando'")
+        jobs[name.strip()] = cmd.strip()
+    return jobs
+
+
+def last_line(path: Path) -> str:
+    try:
+        lines = [l for l in path.read_text(errors="replace").splitlines() if l.strip()]
+        return lines[-1][-110:] if lines else "(sin salida aún)"
+    except FileNotFoundError:
+        return "(esperando turno)"
+
+
+def run_job(name: str, cmd: str) -> tuple[int, float]:
+    env = {**os.environ, "PYTHONUNBUFFERED": "1",
+           "PATH": f"{Path(sys.executable).parent}{os.pathsep}{os.environ.get('PATH', '')}"}
+    t0 = time.time()
+    with open(LOGS / f"{name}.log", "w") as f:
+        code = subprocess.run(["bash", "-c", cmd], cwd=ROOT, stdout=f, stderr=subprocess.STDOUT, env=env).returncode
+    return code, time.time() - t0
+
+
+def package(include_raw: list[str]) -> Path:
+    out_dir = ROOT / "resultados"
+    out_dir.mkdir(exist_ok=True)
+    out = out_dir / f"resultados_{time.strftime('%Y%m%d_%H%M')}.tar.gz"
+    analyzed = {p.name for p in (DATA / "analisis").glob("*") if p.is_dir()}
+    files = []
+    for p in sorted((DATA / "analisis").rglob("*")):
+        if p.is_file():
+            files.append(p)
+    for coll in sorted(p for p in (DATA / "collections").glob("*") if p.is_dir()):
+        raw = coll.name not in analyzed or coll.name in include_raw
+        for p in sorted(coll.rglob("*")):
+            if p.is_file() and (raw or p.name in ("catalog.csv", "manifest.json", "errors.log")):
+                files.append(p)
+        if raw:
+            log(f"   {coll.name}: sin análisis, se incluyen los datos crudos")
+    files += sorted(LOGS.glob("*.log"))
+    total = sum(p.stat().st_size for p in files)
+    log(f"Empaquetando {len(files)} archivos ({total / 2**20:.0f} MB) ...")
+    with tarfile.open(out, "w:gz", compresslevel=6) as tar:
+        for p in files:
+            tar.add(p, arcname=str(p.relative_to(ROOT)))
+    log(f"Paquete: {out} ({out.stat().st_size / 2**20:.0f} MB)")
+    return out
+
+
+def main():
+    setup_stdout()
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--jobs-file", type=Path, default=HERE / "trabajos.txt")
+    ap.add_argument("--solo", nargs="+", help="Solo estos trabajos (por nombre)")
+    ap.add_argument("--paralelo", type=int, default=3, help="Trabajos a la vez (def. 3)")
+    ap.add_argument("--incluir-datos", nargs="*", default=[],
+                    help="Incluir también los datos crudos de estas colecciones aunque tengan análisis")
+    ap.add_argument("--solo-empaquetar", action="store_true")
+    args = ap.parse_args()
+
+    if args.solo_empaquetar:
+        package(args.incluir_datos)
+        return
+
+    jobs = read_jobs(args.jobs_file)
+    if args.solo:
+        missing = set(args.solo) - set(jobs)
+        if missing:
+            raise SystemExit(f"No están en {args.jobs_file.name}: {sorted(missing)}. Hay: {sorted(jobs)}")
+        jobs = {k: v for k, v in jobs.items() if k in args.solo}
+
+    from earthdata_auth import get_token
+    get_token()  # falla aquí, y no a mitad de camino, si faltan los secretos de Earthdata
+    log("Credenciales de Earthdata OK")
+
+    LOGS.mkdir(exist_ok=True)
+    log(f"{len(jobs)} trabajos, {args.paralelo} a la vez. Logs en {LOGS}/<trabajo>.log")
+    running: dict[str, float] = {}
+    lock = threading.Lock()
+    stop = threading.Event()
+
+    def status_loop():
+        while not stop.wait(60):
+            with lock:
+                for name, t0 in running.items():
+                    log(f"   ... {name} ({fmt_dur(time.time() - t0)}): {last_line(LOGS / f'{name}.log')}")
+
+    def task(name: str):
+        with lock:
+            running[name] = time.time()
+        try:
+            return run_job(name, jobs[name])
+        finally:
+            with lock:
+                running.pop(name, None)
+
+    threading.Thread(target=status_loop, daemon=True).start()
+    prog = Progress(len(jobs), "Trabajos en la nube", unit="trabajos")
+    with ThreadPoolExecutor(args.paralelo) as pool:
+        futures = {pool.submit(task, name): name for name in jobs}
+        for fut in as_completed(futures):
+            name = futures[fut]
+            code, dt = fut.result()
+            status = "OK" if code == 0 else "ERROR"
+            prog.step(f"{name} en {fmt_dur(dt)} | {last_line(LOGS / f'{name}.log')}", status=status)
+    stop.set()
+    prog.summary(final=True)
+    package(args.incluir_datos)
+
+
+if __name__ == "__main__":
+    main()
