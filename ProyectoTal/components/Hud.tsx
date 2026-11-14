@@ -1,6 +1,7 @@
 "use client";
 
 import { Legend } from "@/components/Legend";
+import { SearchBox } from "@/components/SearchBox";
 import { Timeline } from "@/components/Timeline";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -12,8 +13,8 @@ export function Hud() {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-5 sm:p-8">
-      <div className="flex items-start justify-between gap-6">
-        <header className="max-w-xl">
+      <div className="flex flex-wrap items-start gap-x-4 gap-y-4">
+        <header className="mr-auto max-w-xl">
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
             NISAR · NASA–ISRO Synthetic Aperture Radar
           </p>
@@ -25,9 +26,11 @@ export function Hud() {
           </p>
         </header>
 
+        {hasEvents && <SearchBox className="w-full md:order-none md:w-72 max-md:order-last" />}
+
         {meta?.source === "mock" && (
           <p
-            className="pointer-events-auto flex shrink-0 items-center gap-2 rounded-full border border-accent/60 bg-accent/10 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-accent backdrop-blur-md"
+            className="pointer-events-auto flex h-10 shrink-0 items-center gap-2 rounded-full border border-accent/60 bg-accent/10 px-3.5 font-mono text-[11px] uppercase tracking-[0.16em] text-accent backdrop-blur-md"
             title="Every value shown is synthetic, generated for this prototype. It is not a NISAR measurement."
           >
             <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />

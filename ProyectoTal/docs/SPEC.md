@@ -3,8 +3,9 @@
 NASA Space Apps Challenge 2026 · Challenge: **"Dancing with the SARs"**
 Package name: `globalearth`
 
-> **Status: Phases 1–3 delivered** — project, data layer, 3D globe, case panel,
-> timeline and change-type filters, all running on simulated data. Everything else in this document is the
+> **Status: Phases 1–3 and 5 delivered** (tour mode skipped by decision) —
+> project, data layer, 3D globe, case panel, timeline, filters and search, all
+> running on simulated data. Everything else in this document is the
 > plan for the next phases. See [Roadmap](#9-roadmap).
 
 ---
@@ -75,6 +76,7 @@ components/
   Hud.tsx               title, "Simulated data" badge, bottom row layout
   Legend.tsx            legend that doubles as the change-type filter
   Timeline.tsx          date scrubber with play/pause and activity chart
+  SearchBox.tsx         search by name, place or type, with a results list
   LoadingScreen.tsx     loading cover
   globe/GlobeScene.tsx  the globe (client)
   panel/CasePanel.tsx   case panel (opens on selection)
@@ -92,7 +94,7 @@ data/
   providers/nisarProvider.ts   empty skeleton with TODOs
 store/useAppStore.ts    Zustand store
 hooks/                  useElementSize, usePrefersReducedMotion, useVisibleEvents
-lib/                    prng, starfield, dom, format, syntheticSar, time
+lib/                    prng, starfield, dom, format, syntheticSar, time, search
 public/textures/        earth-blue-marble.jpg, earth-topology.png
 ```
 
@@ -231,8 +233,8 @@ impact and metric; secondary signals use a per-type profile.
 | 1 | **3D globe**          | 1 ✅  | All signals as coloured columns (height and radius by magnitude), pulsing rings and focusable markers on the 8 featured cases, tooltip, click-to-fly camera, auto-rotation. |
 | 2 | **Case panel**        | 2 ✅  | Opens on selection. Before/after slider (synthetic backscatter or interferogram imagery), metric time series with baseline and uncertainty band, change value, significance (p-value, z-score, method), "how radar saw this" explainer, hypothesised drivers and impact. |
 | 3 | **Timeline**          | 3 ✅  | Scrubber across the data window with play/pause and a chart of how many signals are active each day. With a date set, the globe shows the signals active on that date (`startDate ≤ date ≤ endDate`); "Show all" returns to the whole period. Client-side only. |
-| 4 | **Tour mode**         | 4     | Guided flight through the 8 featured cases, starting at Lake Enriquillo, with narration cards; pausable and skippable. |
-| 5 | **Filters & search**  | 5 (part ✅) | Done: multi-select change types from the legend (nothing selected = everything shown). Pending: featured-only switch, significance filter, search by name/region/country. |
+| 4 | **Tour mode**         | Skipped | Guided flight through the 8 featured cases, starting at Lake Enriquillo, with narration cards; pausable and skippable. |
+| 5 | **Filters & search**  | 5 ✅  | Multi-select change types and significance levels from the legend (nothing selected = everything shown), a featured-only switch, and a search box over name, region, country and type (accent-insensitive). Typing narrows the globe live; picking a result flies to that case and opens its panel. |
 | 6 | **Methods page**      | 6     | `/methods`: what SAR and NISAR are, each technique (backscatter, InSAR, coherence, polarimetry), how significance is computed, what is simulated and what is not, data sources. |
 | 7 | **Accessible event list & polish** | 7 | A keyboard- and screen-reader-friendly list equivalent to the globe, responsive pass, performance pass, final README. |
 
@@ -305,12 +307,11 @@ thin instrument layer over it.
 | 1     | Project, data layer, globe with simulated data    | ✅ Done |
 | 2     | Case panel (`EventDetail`, `/api/events/[id]`, before/after slider, charts) | ✅ Done |
 | 3     | Timeline with play (+ change-type filters from the legend) | ✅ Done |
-| 4     | Tour mode                                         | Next |
-| 5     | Remaining filters and search                      | Planned |
-| 6     | `/methods` page                                   | Planned |
+| 4     | Tour mode                                         | Skipped (team decision) |
+| 5     | Filters and search                                | ✅ Done |
+| 6     | `/methods` page                                   | Next |
 | 7     | Accessible event list, polish, final README       | Planned |
 
 ### Not built yet
 
-Tour, remaining filters and search, `/methods`, accessible event list, final
-README.
+`/methods`, accessible event list, final README. (Tour mode: skipped.)

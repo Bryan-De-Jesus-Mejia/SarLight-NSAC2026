@@ -209,13 +209,22 @@ export default function GlobeScene() {
     [reducedMotion],
   );
 
-  const focusEvent = useCallback(
-    (event: EventSummary) => {
-      flyTo(event, FOCUS_ALTITUDE);
-      select(event.id);
-    },
-    [flyTo, select],
-  );
+  const focusEvent = useCallback((event: EventSummary) => select(event.id), [select]);
+
+  // Whatever selects a case (a point, a marker or the search box), the camera
+  // flies to it.
+  const flownTo = useRef<string | null>(null);
+  useEffect(() => {
+    if (selectedId === null) {
+      flownTo.current = null;
+      return;
+    }
+    if (!sceneReady || flownTo.current === selectedId) return;
+    const event = allEvents.find((e) => e.id === selectedId);
+    if (!event) return;
+    flownTo.current = selectedId;
+    flyTo(event, FOCUS_ALTITUDE);
+  }, [selectedId, sceneReady, allEvents, flyTo]);
 
   const handlePointClick = useCallback((d: object) => focusEvent(asEvent(d)), [focusEvent]);
   const handleGlobeClick = useCallback(() => select(null), [select]);

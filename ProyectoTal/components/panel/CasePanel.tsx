@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
+import { SignificanceMeter } from "@/components/icons/SignificanceMeter";
 import { BeforeAfter } from "@/components/panel/BeforeAfter";
 import { MetricChart } from "@/components/panel/MetricChart";
 import { CHANGE_TYPES } from "@/data/changeTypes";
@@ -16,10 +17,10 @@ const TECHNIQUE_LABELS: Record<SarTechnique, string> = {
   polarimetry: "Polarimetry",
 };
 
-const SIGNIFICANCE: Record<SignificanceLevel, { label: string; note: string; bars: number }> = {
-  high: { label: "High", note: "Well outside normal variation", bars: 3 },
-  medium: { label: "Medium", note: "Likely a real change", bars: 2 },
-  low: { label: "Low", note: "Within normal variation", bars: 1 },
+const SIGNIFICANCE: Record<SignificanceLevel, { label: string; note: string }> = {
+  high: { label: "High", note: "Well outside normal variation" },
+  medium: { label: "Medium", note: "Likely a real change" },
+  low: { label: "Low", note: "Within normal variation" },
 };
 
 function SectionTitle({ children }: { children: ReactNode }) {
@@ -35,21 +36,6 @@ function Stat({ label, children, note }: { label: string; children: ReactNode; n
       <dd className="mt-1 text-lg font-medium leading-tight text-ink">{children}</dd>
       {note && <p className="mt-0.5 text-[11px] leading-snug text-muted">{note}</p>}
     </div>
-  );
-}
-
-/** Three-step meter: the level is carried by the bar count and the label, not by colour. */
-function SignificanceMeter({ level }: { level: SignificanceLevel }) {
-  return (
-    <span className="mr-1.5 inline-flex items-end gap-[3px] align-baseline" aria-hidden="true">
-      {[1, 2, 3].map((step) => (
-        <span
-          key={step}
-          className={`w-[4px] rounded-[1px] ${step <= SIGNIFICANCE[level].bars ? "bg-ink" : "bg-white/20"}`}
-          style={{ height: 5 + step * 3 }}
-        />
-      ))}
-    </span>
   );
 }
 
@@ -76,7 +62,7 @@ function PanelBody({ detail }: { detail: EventDetail }) {
           {formatSigned(signedChange)} <span className="text-sm font-normal text-muted">{detail.change.unit}</span>
         </Stat>
         <Stat label="Significance" note={SIGNIFICANCE[sig.level].note}>
-          <SignificanceMeter level={sig.level} />
+          <SignificanceMeter level={sig.level} className="mr-1.5" />
           {SIGNIFICANCE[sig.level].label}
         </Stat>
         <Stat label="Area affected">
@@ -215,7 +201,7 @@ export function CasePanel() {
             id="case-title"
             ref={titleRef}
             tabIndex={-1}
-            className="mt-1 font-display text-[1.7rem] leading-[1.1] text-ink outline-none"
+            className="ge-no-ring mt-1 font-display text-[1.7rem] leading-[1.1] text-ink"
           >
             {summary.name}
           </h2>

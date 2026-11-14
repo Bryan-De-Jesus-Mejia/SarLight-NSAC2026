@@ -2,8 +2,9 @@
 
 import { useMemo } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
+import { SignificanceMeter } from "@/components/icons/SignificanceMeter";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
-import type { ChangeType } from "@/data/types";
+import type { ChangeType, SignificanceLevel } from "@/data/types";
 import { useVisibleEvents } from "@/hooks/useVisibleEvents";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -11,16 +12,26 @@ interface LegendProps {
   className?: string;
 }
 
+const LEVELS: readonly { level: SignificanceLevel; label: string }[] = [
+  { level: "low", label: "Low" },
+  { level: "medium", label: "Medium" },
+  { level: "high", label: "High" },
+];
+
 /**
- * Legend that doubles as the type filter. Nothing selected means everything
- * is shown; selecting one or more types narrows the globe to those.
+ * Legend that doubles as the filter panel. With nothing selected everything
+ * is shown; selecting change types or significance levels narrows the globe.
  */
 export function Legend({ className = "" }: LegendProps) {
   const total = useAppStore((s) => s.events.length);
   const activeTypes = useAppStore((s) => s.activeTypes);
+  const activeLevels = useAppStore((s) => s.activeLevels);
+  const featuredOnly = useAppStore((s) => s.featuredOnly);
   const toggleType = useAppStore((s) => s.toggleType);
-  const clearTypes = useAppStore((s) => s.clearTypes);
-  const { inTime, visible } = useVisibleEvents();
+  const toggleLevel = useAppStore((s) => s.toggleLevel);
+  const setFeaturedOnly = useAppStore((s) => s.setFeaturedOnly);
+  const clearFilters = useAppStore((s) => s.clearFilters);
+  const { scoped, visible } = useVisibleEvents();
 
   const counts = useMemo(() => {
     const byType: Record<ChangeType, number> = {
@@ -31,24 +42,25 @@ export function Legend({ className = "" }: LegendProps) {
       agriculture: 0,
       deformation: 0,
     };
-    for (const event of inTime) byType[event.type] += 1;
+    for (const event of scoped) byType[event.type] += 1;
     return byType;
-  }, [inTime]);
+  }, [scoped]);
 
   const featuredVisible = useMemo(() => visible.filter((e) => e.featured).length, [visible]);
-  const filtering = activeTypes.length > 0;
+  const filteringTypes = activeTypes.length > 0;
+  const filtering = filteringTypes || activeLevels.length > 0 || featuredOnly;
 
   return (
     <section className={`glass pointer-events-auto w-64 shrink-0 rounded-2xl p-3 ${className}`} aria-labelledby="legend-title">
       <div className="flex h-6 items-center justify-between px-1">
-        <h2 id="legend-title" className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+        <h2 id="legend-title" className="whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
           Surface change signals
         </h2>
         {filtering && (
           <button
             type="button"
-            onClick={clearTypes}
-            className="rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-accent transition-colors hover:bg-accent/15"
+            onClick={clearFilters}
+            className="-mr-1 rounded-full px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-accent transition-colors hover:bg-accent/15"
           >
             Clear
           </button>
@@ -60,7 +72,7 @@ export function Legend({ className = "" }: LegendProps) {
           const info = CHANGE_TYPES[type];
           const rgb = info.rgb.join(" ");
           const selected = activeTypes.includes(type);
-          const dimmed = filtering && !selected;
+          const dimmed = filteringTypes && !selected;
 
           return (
             <li key={type}>
@@ -95,7 +107,57 @@ export function Legend({ className = "" }: LegendProps) {
         })}
       </ul>
 
-      <p className="mt-2.5 border-t border-line px-1 pt-2.5 text-xs leading-relaxed text-muted" aria-live="polite">
+      {/* Refine: hidden on phones for now, where vertical space is scarce. */}
+      <div className="mt-2.5 border-t border-line px-1 pt-2.5 max-md:hidden">
+        <p id="legend-significance" className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+          Significance
+        </p>
+        <div className="mt-1.5 flex gap-1.5" role="group" aria-labelledby="legend-significance">
+          {LEVELS.map(({ level, label }) => {
+            const selected = activeLevels.includes(level);
+            return (
+              <button
+                key={level}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => toggleLevel(level)}
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-1.5 py-1.5 text-xs transition-colors duration-200 ${
+                  selected
+                    ? "border-accent/70 bg-accent/15 text-accent"
+                    : "border-line text-muted hover:bg-white/5 hover:text-ink"
+                }`}
+              >
+                <SignificanceMeter level={level} />
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          role="switch"
+          aria-checked={featuredOnly}
+          onClick={() => setFeaturedOnly(!featuredOnly)}
+          className="mt-2 flex w-full items-center justify-between rounded-lg px-1 py-1.5 text-left text-xs text-ink transition-colors hover:bg-white/5"
+        >
+          Featured cases only
+          <span
+            className={`relative h-[18px] w-8 rounded-full border transition-colors duration-200 ${
+              featuredOnly ? "border-accent bg-accent/80" : "border-line bg-white/10"
+            }`}
+            aria-hidden="true"
+          >
+            <span
+              className={`absolute top-[2px] h-3 w-3 rounded-full transition-all duration-200 ${
+                featuredOnly ? "left-[16px] bg-[#06090f]" : "left-[2px] bg-muted"
+              }`}
+            />
+          </span>
+        </button>
+      </div>
+
+      <p className="mt-2 border-t border-line px-1 pt-2.5 text-xs leading-relaxed text-muted" aria-live="polite">
         {visible.length === total ? (
           <>
             {total} signals · {featuredVisible} featured cases with pulsing rings
@@ -106,7 +168,6 @@ export function Legend({ className = "" }: LegendProps) {
             {featuredVisible} featured
           </>
         )}
-        {!filtering && <span className="mt-0.5 block text-[11px] text-muted/80">Select types to filter the globe.</span>}
       </p>
     </section>
   );

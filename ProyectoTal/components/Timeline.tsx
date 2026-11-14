@@ -25,22 +25,20 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 export function Timeline({ className = "" }: TimelineProps) {
   const events = useAppStore((s) => s.events);
   const meta = useAppStore((s) => s.meta);
-  const activeTypes = useAppStore((s) => s.activeTypes);
   const day = useAppStore((s) => s.timelineDay);
   const playing = useAppStore((s) => s.timelinePlaying);
   const setDay = useAppStore((s) => s.setTimelineDay);
   const setPlaying = useAppStore((s) => s.setTimelinePlaying);
-  const { visible } = useVisibleEvents();
+  const { visible, timeless } = useVisibleEvents();
 
   const range = meta?.timeRange ?? null;
   const lastDay = range ? dayCount(range) : 0;
 
-  // How many signals (of the selected types) are active on each day.
+  // How many signals (after filters and search) are active on each day.
   const activity = useMemo(() => {
     if (!range) return { path: "", max: 0 };
     const diff = new Array<number>(lastDay + 2).fill(0);
-    for (const e of events) {
-      if (activeTypes.length > 0 && !activeTypes.includes(e.type)) continue;
+    for (const e of timeless) {
       const from = Math.max(0, isoToDay(range, e.startDate));
       const to = Math.min(lastDay, isoToDay(range, e.endDate));
       if (to < from) continue;
@@ -58,7 +56,7 @@ export function Timeline({ className = "" }: TimelineProps) {
     const scale = max > 0 ? (CHART_HEIGHT - 6) / max : 0;
     const top = perDay.map((n, d) => `L${d} ${(CHART_HEIGHT - n * scale).toFixed(1)}`).join(" ");
     return { path: `M0 ${CHART_HEIGHT} ${top} L${lastDay} ${CHART_HEIGHT} Z`, max };
-  }, [events, activeTypes, range, lastDay]);
+  }, [timeless, range, lastDay]);
 
   const months = useMemo(() => {
     if (!range) return [];

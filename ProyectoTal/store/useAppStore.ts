@@ -6,6 +6,7 @@ import type {
   EventSummary,
   EventsMeta,
   EventsResponse,
+  SignificanceLevel,
 } from "@/data/types";
 
 export type LoadStatus = "idle" | "loading" | "ready" | "error";
@@ -23,6 +24,11 @@ interface AppState {
   detailError: string | null;
   /** Change types to show. Empty means "all": no filter applied. */
   activeTypes: ChangeType[];
+  /** Significance levels to show. Empty means "all". */
+  activeLevels: SignificanceLevel[];
+  featuredOnly: boolean;
+  /** Free-text search over name, place and type. */
+  query: string;
   /** Day index within meta.timeRange, or null to show the whole period. */
   timelineDay: number | null;
   timelinePlaying: boolean;
@@ -34,7 +40,11 @@ interface AppState {
   /** Re-request the detail of the selected event after a failure. */
   retryDetail: () => void;
   toggleType: (type: ChangeType) => void;
-  clearTypes: () => void;
+  toggleLevel: (level: SignificanceLevel) => void;
+  setFeaturedOnly: (value: boolean) => void;
+  setQuery: (query: string) => void;
+  /** Reset type, significance and featured filters (the search has its own clear button). */
+  clearFilters: () => void;
   setTimelineDay: (day: number | null) => void;
   setTimelinePlaying: (playing: boolean) => void;
 }
@@ -80,6 +90,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   detailStatus: "idle",
   detailError: null,
   activeTypes: [],
+  activeLevels: [],
+  featuredOnly: false,
+  query: "",
   timelineDay: null,
   timelinePlaying: false,
 
@@ -151,7 +164,15 @@ export const useAppStore = create<AppState>((set, get) => ({
         ? state.activeTypes.filter((t) => t !== type)
         : [...state.activeTypes, type],
     })),
-  clearTypes: () => set({ activeTypes: [] }),
+  toggleLevel: (level) =>
+    set((state) => ({
+      activeLevels: state.activeLevels.includes(level)
+        ? state.activeLevels.filter((l) => l !== level)
+        : [...state.activeLevels, level],
+    })),
+  setFeaturedOnly: (value) => set({ featuredOnly: value }),
+  setQuery: (query) => set({ query }),
+  clearFilters: () => set({ activeTypes: [], activeLevels: [], featuredOnly: false }),
 
   setTimelineDay: (day) =>
     set(day === null ? { timelineDay: null, timelinePlaying: false } : { timelineDay: day }),

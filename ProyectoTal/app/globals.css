@@ -31,6 +31,17 @@ body {
   outline-offset: 2px;
 }
 
+/* Programmatic focus targets (e.g. the case title) take focus without a ring. */
+.ge-no-ring:focus,
+.ge-no-ring:focus-visible {
+  outline: none;
+}
+
+/* The search field shows focus on its pill-shaped wrapper instead. */
+.ge-search input:focus-visible {
+  outline: none;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Surfaces                                                                   */
 /* -------------------------------------------------------------------------- */
