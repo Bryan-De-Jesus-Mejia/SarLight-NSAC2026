@@ -1,11 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Curtain } from "@/components/Curtain";
 import { DemoPlayer } from "@/components/DemoPlayer";
 import { Hud } from "@/components/Hud";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { PassDance } from "@/components/PassDance";
+import { Story } from "@/components/Story";
 import { CasePanel } from "@/components/panel/CasePanel";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -31,6 +33,34 @@ export function Explorer() {
     return () => clearTimeout(timer);
   }, [status, globeReady]);
 
+  // ?case=<id> opens that case; the address follows the open case so it can be shared.
+  const selectedId = useAppStore((s) => s.selectedId);
+  const storyOn = useAppStore((s) => s.story);
+  const linkedRef = useRef(false);
+  useEffect(() => {
+    if (status !== "ready" || !globeReady || linkedRef.current) return;
+    linkedRef.current = true;
+    // ?story=<id> opens the case straight in story mode.
+    const params = new URLSearchParams(window.location.search);
+    const storyId = params.get("story");
+    const id = storyId ?? params.get("case");
+    if (id && useAppStore.getState().events.some((e) => e.id === id)) {
+      const timer = setTimeout(() => {
+        useAppStore.getState().select(id);
+        if (storyId) useAppStore.getState().setStory(true);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [status, globeReady]);
+  useEffect(() => {
+    if (!linkedRef.current) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("case");
+    url.searchParams.delete("story");
+    if (selectedId) url.searchParams.set(storyOn ? "story" : "case", selectedId);
+    window.history.replaceState(null, "", url);
+  }, [selectedId, storyOn]);
+
   const failed = status === "error";
   const loaded = (status === "ready" && globeReady) || failed;
 
@@ -44,6 +74,8 @@ export function Explorer() {
       <Curtain />
       <Hud />
       <DemoPlayer />
+      <PassDance />
+      <Story />
       <CasePanel />
 
       {failed && (

@@ -68,7 +68,9 @@ export function LayersPanel({ className = "" }: { className?: string }) {
   const setCompare = useAppStore((s) => s.setCompare);
   const setBefore = useAppStore((s) => s.setCompareBefore);
   const setRadarClass = useAppStore((s) => s.setRadarClass);
-  const passes = useNisarPasses(overlay !== "none");
+  const lens = useAppStore((s) => s.lens);
+  const setLens = useAppStore((s) => s.setLens);
+  const passes = useNisarPasses(overlay !== "none" || lens);
   const days = passes.length ? passes : [date];
 
   const [hovered, setHovered] = useState<number | null>(null);
@@ -90,6 +92,31 @@ export function LayersPanel({ className = "" }: { className?: string }) {
       <h2 id="layers-title" className="flex h-6 items-center px-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
         Real data layers
       </h2>
+
+      <div className="mt-2 border-b border-line px-1 pb-2.5">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={lens}
+          onClick={() => setLens(!lens)}
+          className="flex w-full items-center justify-between rounded text-left text-xs text-ink"
+        >
+          Radar lens
+          <span className="ge-switch" data-on={lens} aria-hidden="true" />
+        </button>
+        <p className="mt-1.5 text-[11px] leading-snug text-muted">
+          The planet as a camera saw it that day, clouds and all. Inside the circle, the NISAR radar of the same day.
+        </p>
+        {lens && (
+          <div className="mt-2">
+            <Heading>Day</Heading>
+            <Chips days={days} value={date} onPick={(d) => d && setDate(d)} />
+            <p className="mt-2 text-[11px] leading-snug text-muted">
+              Camera view: NOAA-20 VIIRS true colour (NASA GIBS). Where the circle stays empty, NISAR did not pass that day.
+            </p>
+          </div>
+        )}
+      </div>
 
       <ul className="mt-2" aria-label="Layer drawn over the planet">
         {CHOICES.map(({ kind, label, note }) => (

@@ -48,6 +48,9 @@ const STEPS: readonly { step: string; body: string }[] = [
   { step: "Calm the speckle", body: "Radar images are naturally grainy. A median filter (5×5 pixels) smooths the difference without blurring edges." },
   { step: "Apply a threshold", body: "A pixel is flagged when it changed by at least 3 dB. Fire analyses look for weaker echoes only; flood analyses look in both directions." },
   { step: "Count the area", body: "Flagged pixels become square kilometres using the pixel size: 10 m for NISAR, 30 m for Sentinel-1." },
+  { step: "Compare with the rest", body: "For every pass of the track we take the median echo of the flagged land and of all the other land. If only the flagged land moves, the change is local." },
+  { step: "Check the other channel", body: "The same two passes are compared again with the other polarisation, over the same land and with the same threshold." },
+  { step: "Measure normal variation", body: "Where a track has at least 7 passes, the differences between consecutive passes give each pixel its own typical variation; we report how much of the flagged land moved more than 3 times that." },
   { step: "Set the sea aside", body: "Pixels that were already open water in the before image (darker than −17 dB in HH/VV, −22 dB in HV/VH) are reported separately: wind and waves change their echo, so they are not counted as land change." },
 ];
 
@@ -62,7 +65,9 @@ const LIMITS: readonly { title: string; body: string }[] = [
 const SOURCES: readonly { name: string; body: string }[] = [
   { name: "NISAR L2 GCOV", body: "L-band (about 24 cm), polarimetric backscatter at 10 m, from the Alaska Satellite Facility archive of NASA (ASF DAAC)." },
   { name: "OPERA RTC-S1", body: "C-band (about 5.6 cm) Sentinel-1 backscatter at 30 m, terrain-corrected by the OPERA project of NASA, also from ASF." },
-  { name: "Base map and radar layers", body: "Satellite base map: Sentinel-2 cloudless by EOX (contains modified Copernicus Sentinel data 2021). Radar overlays: NASA GIBS." },
+  { name: "Base map and radar layers", body: "Satellite base map: Sentinel-2 cloudless by EOX (contains modified Copernicus Sentinel data 2021). Radar overlays and the same-day camera view of the radar lens (NOAA-20 VIIRS true colour): NASA GIBS." },
+  { name: "Land cover", body: "ESA WorldCover 2021 v200 at 10 m (© ESA WorldCover project, contains modified Copernicus Sentinel data), used to say what kind of ground the flagged pixels sit on." },
+  { name: "NISAR scene footprints", body: "The 12-day dance draws the footprints of every NISAR L2 GCOV scene of one cycle, as listed in the public NASA CMR catalogue." },
 ];
 
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: ReactNode }) {
@@ -251,7 +256,7 @@ export default async function MethodsPage() {
         </Section>
 
         <Section id="data" eyebrow="06 · Where the data comes from" title="Sources">
-          <ul className="grid gap-3 sm:grid-cols-3">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {SOURCES.map((row) => (
               <li key={row.name} className="rounded-2xl border border-line bg-white/[0.03] p-4">
                 <p className="font-mono text-sm text-accent">{row.name}</p>

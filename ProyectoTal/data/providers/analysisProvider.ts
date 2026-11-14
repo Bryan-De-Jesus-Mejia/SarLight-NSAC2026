@@ -47,6 +47,7 @@ function toSummary(c: RawCase): EventSummary {
     changedAreaKm2: main.land.changedAreaKm2,
     changedPct: main.land.changedPct,
     footprint: main.footprint.polygon,
+    thumb: main.images.thumb,
   };
 }
 

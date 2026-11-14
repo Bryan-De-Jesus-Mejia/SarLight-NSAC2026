@@ -7,6 +7,7 @@ import { LayersPanel } from "@/components/LayersPanel";
 import { Legend } from "@/components/Legend";
 import { SearchBox } from "@/components/SearchBox";
 import { Timeline } from "@/components/Timeline";
+import { globeApi } from "@/lib/globeApi";
 import { useAppStore } from "@/store/useAppStore";
 
 function DockButton({
@@ -40,8 +41,21 @@ function DockButton({
 export function Hud() {
   const hasEvents = useAppStore((s) => s.events.length > 0);
   const caseOpen = useAppStore((s) => s.selectedId !== null);
-  const demoActive = useAppStore((s) => s.demoActive);
+  // The guided demo and story mode both take over the screen.
+  const demoActive = useAppStore((s) => s.demoActive || s.story);
   const startDemo = useAppStore((s) => s.startDemo);
+  const story = useAppStore((s) => s.story);
+  const lens = useAppStore((s) => s.lens);
+  const dance = useAppStore((s) => s.dance);
+  const setLens = useAppStore((s) => s.setLens);
+  const setDance = useAppStore((s) => s.setDance);
+
+  const toggleDance = () => {
+    if (dance) return setDance(false);
+    // Seen from far away, so the whole planet fills in.
+    globeApi.current?.flyTo({ lat: 12, lng: -45, altitude: 2.7 });
+    setDance(true);
+  };
   const [legendOpen, setLegendOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
@@ -91,15 +105,48 @@ export function Hud() {
           </button>
         )}
 
+        {hasEvents && !demoActive && (
+          <>
+            <button
+              type="button"
+              aria-pressed={lens}
+              onClick={() => setLens(!lens)}
+              title="The day as a camera saw it, with the radar inside a circle"
+              className={`ge-surface pointer-events-auto flex h-10 shrink-0 items-center gap-2 px-3.5 text-sm transition-colors hover:text-accent max-md:hidden ${lens ? "text-accent" : "text-ink"}`}
+            >
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+                <circle cx="10.5" cy="10.5" r="6.5" />
+                <path d="M15.5 15.5 20 20M7.5 10.5h6" />
+              </svg>
+              Radar lens
+            </button>
+            <button
+              type="button"
+              aria-pressed={dance}
+              onClick={toggleDance}
+              title="Watch one real 12-day cycle of NISAR scenes cover the planet"
+              className={`ge-surface pointer-events-auto flex h-10 shrink-0 items-center gap-2 px-3.5 text-sm transition-colors hover:text-accent max-md:hidden ${dance ? "text-accent" : "text-ink"}`}
+            >
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.5" />
+                <path d="M5.5 17.5c3-7 8-10 13-11M12 3.5v2M12 18.5v2" />
+              </svg>
+              12-day dance
+            </button>
+          </>
+        )}
+
+{!story && (
         <Link
-          href="/methods"
-          className="ge-surface pointer-events-auto flex h-10 shrink-0 items-center gap-2 px-3.5 text-sm text-ink transition-colors hover:text-accent"
-        >
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M5 4.5h9.5a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h9.5M9 8.5h5" />
-          </svg>
-          Methods
-        </Link>
+            href="/methods"
+            className="ge-surface pointer-events-auto flex h-10 shrink-0 items-center gap-2 px-3.5 text-sm text-ink transition-colors hover:text-accent"
+          >
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 4.5h9.5a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h9.5M9 8.5h5" />
+            </svg>
+            Methods
+          </Link>
+        )}
       </div>
 
       {hasEvents && !demoActive && (

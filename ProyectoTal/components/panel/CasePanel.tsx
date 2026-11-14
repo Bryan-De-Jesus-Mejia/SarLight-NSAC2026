@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
+import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
 import { SarViewer } from "@/components/panel/SarViewer";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
@@ -95,6 +96,12 @@ function cautionsOf(type: ChangeType, a: SensorAnalysis): string[] {
       `This analysis only looked for weaker echoes. The echo also got stronger by at least ${a.method.thresholdDb} dB over ${km(land.increaseAreaKm2)} km² of land, which is not counted above.`,
     );
   }
+  const mappedWater = a.landCover?.classes.find((c) => c.code === 80);
+  if (mappedWater && mappedWater.flaggedPct >= 20) {
+    notes.push(
+      `The 2021 land-cover map marks ${Math.round(mappedWater.flaggedPct)}% of the flagged land as permanent water: shoreline or shallow water that the brightness filter did not catch. That part is not land change.`,
+    );
+  }
   notes.push("Not verified on the ground or against other sources.");
   return notes;
 }
@@ -142,12 +149,17 @@ function AnalysisView({ detail, analysis }: { detail: EventDetail; analysis: Sen
 
       <section aria-labelledby="case-series">
         <SectionTitle>
-          <span id="case-series">Backscatter on every pass · dB</span>
+          <span id="case-series">Flagged land vs the rest · every pass · dB</span>
         </SectionTitle>
-        <div className="mt-2.5">
+        <div className="mt-2.5 space-y-3">
           <BackscatterChart analysis={analysis} color={meta.color} />
+          <LocalChange analysis={analysis} />
         </div>
       </section>
+
+      <Channels detail={detail} analysis={analysis} color={meta.color} />
+      <GroundCover analysis={analysis} />
+      <Baseline analysis={analysis} />
 
       <section aria-labelledby="case-reading">
         <SectionTitle>
@@ -155,6 +167,8 @@ function AnalysisView({ detail, analysis }: { detail: EventDetail; analysis: Sen
         </SectionTitle>
         <p className="mt-2.5 text-sm leading-relaxed text-ink/85">{READING[detail.type]}</p>
       </section>
+
+      <Hypotheses type={detail.type} />
 
       <section aria-labelledby="case-care">
         <SectionTitle>
@@ -200,6 +214,8 @@ function AnalysisView({ detail, analysis }: { detail: EventDetail; analysis: Sen
           .
         </p>
       </details>
+
+      <ShareBar detail={detail} analysis={analysis} />
     </div>
   );
 }
@@ -249,6 +265,8 @@ export function CasePanel() {
   const detailError = useAppStore((s) => s.detailError);
   const select = useAppStore((s) => s.select);
   const retryDetail = useAppStore((s) => s.retryDetail);
+  const story = useAppStore((s) => s.story);
+  const setStory = useAppStore((s) => s.setStory);
 
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -263,13 +281,13 @@ export function CasePanel() {
   useEffect(() => {
     if (selectedId === null) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") select(null);
+      if (event.key === "Escape" && !useAppStore.getState().story) select(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [selectedId, select]);
 
-  if (selectedId === null || summary === null) return null;
+  if (selectedId === null || summary === null || story) return null;
 
   const meta = CHANGE_TYPES[summary.type];
 
@@ -336,7 +354,24 @@ export function CasePanel() {
             </button>
           </div>
         ) : detail && detail.id === selectedId ? (
-          <PanelBody key={detail.id} detail={detail} />
+          <>
+            <button
+              type="button"
+              onClick={() => setStory(true)}
+              className="mb-5 flex w-full items-center gap-3 rounded-xl border border-accent/60 bg-accent/10 px-4 py-3 text-left transition-colors hover:bg-accent/20"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/70 text-accent">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path d="M8 5.2v13.6a.6.6 0 0 0 .92.5l10.4-6.8a.6.6 0 0 0 0-1L8.92 4.7A.6.6 0 0 0 8 5.2z" />
+                </svg>
+              </span>
+              <span>
+                <span className="block text-sm font-medium text-accent">Tell me the story</span>
+                <span className="block text-xs text-muted">A step-by-step walk through what the radar saw</span>
+              </span>
+            </button>
+            <PanelBody key={detail.id} detail={detail} />
+          </>
         ) : (
           <PanelSkeleton />
         )}
