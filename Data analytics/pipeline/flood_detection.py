@@ -25,8 +25,8 @@ Ejemplos:
 import argparse
 import csv
 import json
-import sys
 import time
+import traceback
 from collections import defaultdict
 from pathlib import Path
 
@@ -34,6 +34,7 @@ import numpy as np
 import rasterio
 from rasterio.warp import Resampling, reproject
 
+from progress import Heartbeat, Progress, log, setup_stdout
 from sar_io import write_geotiff
 from search_scenes import ROOT
 
@@ -80,11 +81,17 @@ class WaterModel:
         cnt = np.zeros((ph, pw), np.float32)
         rows = sorted({min(r, ph - c) for r in range(0, ph, step)})
         cols = sorted({min(q, pw - c) for q in range(0, pw, step)})
+        total = len(rows) * len(cols)
+        report_every = max(1, total // 10)
+        t0, n = time.time(), 0
         for r in rows:
             for q in cols:
                 prob = self.session.run(["water_prob"], {"image": x[None, :, r:r + c, q:q + c]})[0][0, 0]
                 acc[r:r + c, q:q + c] += prob
                 cnt[r:r + c, q:q + c] += 1
+                n += 1
+                if total >= 10 and (n % report_every == 0 or n == total):
+                    log(f"     modelo: tile {n}/{total} ({100 * n / total:.0f}%) | {time.time() - t0:.0f}s")
         out = (acc / cnt)[:h, :w]
         out[~valid] = np.nan
         return out
@@ -131,51 +138,75 @@ def stage_water(scenes, out_root: Path, args):
         with open(catalog, newline="") as f:
             done = {r["scene"] for r in csv.DictReader(f)}
     todo = [s for s in scenes if s["scene"] not in done]
-    print(f"Fase 1 (agua, método {args.method}): {len(scenes)} escenas, {len(done)} ya hechas, "
-          f"{len(todo)} pendientes", flush=True)
+    log(f"Fase 1 (agua, método {args.method}): {len(scenes)} escenas con VV+VH, {len(done)} ya hechas, "
+        f"{len(todo)} pendientes")
     if not todo:
         return
-    model = WaterModel(MODEL_PATH, args.chip, args.overlap) if args.method == "model" else None
-    t_start = time.time()
-    for i, s in enumerate(todo, 1):
-        t0 = time.time()
-        vv, transform, crs = read_db(s["VV"])
-        vh, t_vh, _ = read_db(s["VH"])
-        if vh.shape != vv.shape or t_vh != transform:
-            print(f"[{i}/{len(todo)}] SALTADA {s['scene']}: VV y VH con mallas distintas", flush=True)
-            continue
-        prob = model.predict(vv, vh) if model else threshold_prob(vv, vh, args.vv_max, args.vh_max)
-        valid = np.isfinite(prob)
-        out = np.full(prob.shape, NODATA, np.uint8)
-        out[valid] = np.round(prob[valid] * 100).astype(np.uint8)
-        out_dir = out_root / slug(s["group"])
-        out_dir.mkdir(parents=True, exist_ok=True)
-        path = out_dir / f"{stamp(s['date'])}_water_prob.tif"
-        write_geotiff(path, out, transform, crs, nodata=NODATA, units="percent",
-                      method=args.method, scene=s["scene"], date=s["date"], group=s["group"])
-        px = pixel_km2(transform)
-        n_valid, n_water = int(valid.sum()), int((prob[valid] >= args.prob).sum())
-        row = {"scene": s["scene"], "group": s["group"], "date": s["date"],
-               "path": str(path.relative_to(out_root)), "valid_km2": round(n_valid * px, 3),
-               "water_km2": round(n_water * px, 3),
-               "water_pct": round(100 * n_water / n_valid, 3) if n_valid else 0,
-               "seconds": round(time.time() - t0, 1)}
-        new = not catalog.exists()
-        with open(catalog, "a", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=WATER_FIELDS)
-            if new:
-                w.writeheader()
-            w.writerow(row)
-        elapsed = time.time() - t_start
-        print(f"[{i}/{len(todo)}] {s['date'][:10]} {s['group']:34} agua {row['water_km2']:8.2f} km² "
-              f"({row['water_pct']:.1f}%) {row['seconds']:5.1f}s | {i / (elapsed / 60):.1f} escenas/min",
-              flush=True)
+    model = None
+    if args.method == "model":
+        with Heartbeat(f"Cargando modelo {MODEL_PATH.name}"):
+            model = WaterModel(MODEL_PATH, args.chip, args.overlap)
+    prog = Progress(len(todo), "Fase 1 agua")
+    for s in todo:
+        tag = f"{s['date'][:10]} {s['group']:34}"
+        try:
+            row = water_scene(s, model, out_root, catalog, args)
+            prog.step(f"{tag} agua {row['water_km2']:8.2f} km² ({row['water_pct']:.1f}%) {row['seconds']:5.1f}s")
+        except SkipScene as e:
+            prog.step(f"{tag} {e}", status="SALTADA")
+        except Exception as e:
+            prog.step(f"{tag} {type(e).__name__}: {e}", status="ERROR")
+            with open(out_root / "errors.log", "a") as f:
+                f.write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')} {s['scene']}\n{traceback.format_exc()}\n")
+    prog.summary(final=True)
+    if prog.failed:
+        log(f"Errores en {out_root / 'errors.log'} (relanza el comando para reintentarlas).")
+
+
+class SkipScene(Exception):
+    pass
+
+
+def water_scene(s: dict, model, out_root: Path, catalog: Path, args) -> dict:
+    t0 = time.time()
+    log(f"   {s['date'][:10]} {s['group']}: leyendo VV y VH ...")
+    vv, transform, crs = read_db(s["VV"])
+    vh, t_vh, _ = read_db(s["VH"])
+    if vh.shape != vv.shape or t_vh != transform:
+        raise SkipScene("VV y VH con mallas distintas")
+    if model:
+        log(f"   inferencia del modelo sobre {vv.shape[0]}x{vv.shape[1]} px ...")
+        prob = model.predict(vv, vh)
+    else:
+        prob = threshold_prob(vv, vh, args.vv_max, args.vh_max)
+    valid = np.isfinite(prob)
+    out = np.full(prob.shape, NODATA, np.uint8)
+    out[valid] = np.round(prob[valid] * 100).astype(np.uint8)
+    out_dir = out_root / slug(s["group"])
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"{stamp(s['date'])}_water_prob.tif"
+    write_geotiff(path, out, transform, crs, nodata=NODATA, units="percent",
+                  method=args.method, scene=s["scene"], date=s["date"], group=s["group"])
+    px = pixel_km2(transform)
+    n_valid, n_water = int(valid.sum()), int((prob[valid] >= args.prob).sum())
+    row = {"scene": s["scene"], "group": s["group"], "date": s["date"],
+           "path": str(path.relative_to(out_root)), "valid_km2": round(n_valid * px, 3),
+           "water_km2": round(n_water * px, 3),
+           "water_pct": round(100 * n_water / n_valid, 3) if n_valid else 0,
+           "seconds": round(time.time() - t0, 1)}
+    new = not catalog.exists()
+    with open(catalog, "a", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=WATER_FIELDS)
+        if new:
+            w.writeheader()
+        w.writerow(row)
+    return row
 
 
 def stage_floods(out_root: Path, args):
     catalog = out_root / "water_catalog.csv"
     if not catalog.exists():
-        print("Fase 2: no hay water_catalog.csv; corre primero la fase 1.")
+        log("Fase 2: no hay water_catalog.csv; corre primero la fase 1.")
         return
     by_group = defaultdict(list)
     with open(catalog, newline="") as f:
@@ -183,12 +214,14 @@ def stage_floods(out_root: Path, args):
             by_group[r["group"]].append(r)
 
     summary = []
-    print(f"\nFase 2 (inundaciones): {len(by_group)} bursts", flush=True)
-    for gi, (group, rows) in enumerate(sorted(by_group.items()), 1):
+    print()
+    prog = Progress(len(by_group), "Fase 2 inundaciones", unit="bursts")
+    for group, rows in sorted(by_group.items()):
         rows.sort(key=lambda r: r["date"])
         if len(rows) < args.min_dates:
-            print(f"[{gi}/{len(by_group)}] {group}: solo {len(rows)} fechas (< {args.min_dates}), se omite")
+            prog.step(f"{group:34} solo {len(rows)} fechas (< {args.min_dates})", status="SALTADA")
             continue
+        log(f"   {group}: apilando {len(rows)} fechas ...")
         with rasterio.open(out_root / rows[0]["path"]) as ref:
             shape, transform, crs = (ref.height, ref.width), ref.transform, ref.crs
         stack = np.full((len(rows), *shape), NODATA, np.uint8)
@@ -220,8 +253,9 @@ def stage_floods(out_root: Path, args):
                             "permanent_water_km2": round(int((water[k] & ~normally_dry).sum()) * px, 3),
                             "flood_km2": round(int(flood.sum()) * px, 3)})
         top = max(summary[-len(rows):], key=lambda x: x["flood_km2"])
-        print(f"[{gi}/{len(by_group)}] {group:34} {len(rows)} fechas | máx. inundación "
-              f"{top['flood_km2']:.2f} km² el {top['date'][:10]}", flush=True)
+        prog.step(f"{group:34} {len(rows)} fechas | máx. inundación {top['flood_km2']:.2f} km² "
+                  f"el {top['date'][:10]}")
+    prog.summary(final=True)
 
     if summary:
         with open(out_root / "flood_summary.csv", "w", newline="") as f:
@@ -235,7 +269,7 @@ def stage_floods(out_root: Path, args):
 
 
 def main():
-    sys.stdout.reconfigure(line_buffering=True)
+    setup_stdout()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--collection", type=Path, required=True, help="Carpeta de bulk_fetch (con catalog.csv)")
     ap.add_argument("--stage", choices=["water", "floods", "all"], default="all")
@@ -261,7 +295,7 @@ def main():
         raise SystemExit(f"No encuentro {collection / 'catalog.csv'}. ¿Se descargó esa colección con "
                          f"bulk_fetch.py? Colecciones disponibles: "
                          f"{sorted(p.name for p in (ROOT / 'data' / 'collections').glob('*') if p.is_dir())}")
-    print(f"Colección: {collection}", flush=True)
+    log(f"Colección: {collection}")
     out_root = collection / f"flood_{args.method}"
     out_root.mkdir(parents=True, exist_ok=True)
     if args.stage in ("water", "all"):

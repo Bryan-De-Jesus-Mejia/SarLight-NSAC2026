@@ -19,7 +19,6 @@ import argparse
 import glob
 import json
 import math
-import sys
 import time
 from datetime import datetime
 from pathlib import Path
@@ -33,15 +32,18 @@ import rasterio
 from rasterio.warp import Resampling, reproject
 from scipy.ndimage import median_filter
 
+from progress import Heartbeat, log, setup_stdout
 from sar_io import SarWindow, is_remote, read_window, write_geotiff
 from search_scenes import DATA_DIR, ROOT, resolve_scene_url
 
 GLOB_CHARS = "*?["
 PLOT_MAX_PX = 2000
+TOTAL_STEPS = 6
 
 
-def log(msg: str):
-    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+def step(n: int, msg: str):
+    print()
+    log(f"PASO {n}/{TOTAL_STEPS}: {msg}")
 
 
 def _candidates(source: str) -> list[Path]:
@@ -102,9 +104,10 @@ def load(label: str, source: str, bbox, pol) -> tuple[SarWindow, dict]:
                              f"indica --pol (VV, VH, HH o HV).")
         log(f"[{label}] Resolviendo escena ASF {resolved} ...")
         resolved = resolve_scene_url(resolved, pol)
-    log(f"[{label}] Leyendo {resolved}")
+    log(f"[{label}] Archivo: {resolved}")
     t0 = time.time()
-    win = read_window(resolved, bbox, pol)
+    with Heartbeat(f"[{label}] Leyendo imagen"):
+        win = read_window(resolved, bbox, pol)
     meta = local_tags(resolved)
     meta["resolved"] = resolved
     vals = win.db[np.isfinite(win.db)]
@@ -178,7 +181,7 @@ def plot(pre_db, post_db, diff, mask, stats, path):
 
 
 def main():
-    sys.stdout.reconfigure(line_buffering=True)
+    setup_stdout()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--pre", required=True)
     ap.add_argument("--post", required=True)
@@ -197,12 +200,15 @@ def main():
     if not out.is_absolute():
         out = ROOT / out
 
+    step(1, "Imagen PRE")
     pre, mpre = load("PRE ", args.pre, args.bbox, args.pol)
+    step(2, "Imagen POST")
     post, mpost = load("POST", args.post, args.bbox, args.pol)
     check_pair(pre, post, mpre, mpost)
 
-    log("Alineando la imagen post a la malla pre ...")
-    post_db = align(post, pre)
+    step(3, "Alineación")
+    with Heartbeat("Alineando la imagen post a la malla pre"):
+        post_db = align(post, pre)
     both = np.isfinite(pre.db) & np.isfinite(post_db)
     overlap = 100 * both.sum() / max(1, np.isfinite(pre.db).sum())
     log(f"Solape pre/post: {overlap:.1f}% de los píxeles válidos de la pre")
@@ -211,8 +217,9 @@ def main():
     if overlap < 50:
         log("AVISO: solape menor al 50%; el resultado solo cubre parte de la zona.")
 
-    log(f"Calculando diferencia y filtro de mediana {args.median}x{args.median} ...")
-    diff = nan_median(post_db - pre.db, args.median)
+    step(4, "Diferencia y filtro de speckle")
+    with Heartbeat(f"Diferencia post-pre y filtro de mediana {args.median}x{args.median}"):
+        diff = nan_median(post_db - pre.db, args.median)
     valid = np.isfinite(diff)
     if args.direction == "decrease":
         changed = diff <= -args.threshold
@@ -249,16 +256,19 @@ def main():
         "pre_mean_db": round(float(np.nanmean(pre.db)), 3),
         "post_mean_db": round(float(np.nanmean(post_db)), 3),
     }
+    step(5, "Resultados")
     log(f"Área válida {stats['valid_area_km2']} km² | cambio ({args.direction}, ±{args.threshold} dB): "
         f"{stats['changed_area_km2']} km² ({stats['changed_pct']}%) | caída {stats['decrease_area_km2']} km², "
         f"subida {stats['increase_area_km2']} km² | diferencia media {stats['mean_diff_db']} dB")
 
-    log(f"Guardando resultados en {out} ...")
+    step(6, f"Guardando en {out}")
     out.mkdir(parents=True, exist_ok=True)
-    write_geotiff(out / "diferencia_db.tif", diff, pre.transform, pre.crs, units="dB")
-    write_geotiff(out / "mascara_cambio.tif", mask, pre.transform, pre.crs, nodata=255)
+    with Heartbeat("Escribiendo GeoTIFFs"):
+        write_geotiff(out / "diferencia_db.tif", diff, pre.transform, pre.crs, units="dB")
+        write_geotiff(out / "mascara_cambio.tif", mask, pre.transform, pre.crs, nodata=255)
     (out / "estadisticas.json").write_text(json.dumps(stats, indent=2, ensure_ascii=False))
-    plot(pre.db, post_db, diff, mask, stats, out / "visualizacion.png")
+    with Heartbeat("Generando visualizacion.png"):
+        plot(pre.db, post_db, diff, mask, stats, out / "visualizacion.png")
     for name in ("diferencia_db.tif", "mascara_cambio.tif", "visualizacion.png", "estadisticas.json"):
         log(f"  {out / name}")
     log(f"Listo en {time.time() - t_start:.1f}s")
