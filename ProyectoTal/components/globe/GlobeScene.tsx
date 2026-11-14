@@ -123,6 +123,7 @@ function sharpenGlobeTexture(anisotropy: number): void {
 
 const asEvent = (d: object): EventSummary => d as EventSummary;
 const asRegion = (d: object): RegionFeature => d as RegionFeature;
+const regionCurvature = (d: object): number => (asRegion(d).kind === "province" ? 1 : 3);
 const asRegionGeometry = (d: object): { type: "Polygon"; coordinates: number[] } =>
   asRegion(d).geometry as unknown as { type: "Polygon"; coordinates: number[] };
 
@@ -460,7 +461,7 @@ export default function GlobeScene() {
       setLod(next);
 
       const controls = globeRef.current?.controls();
-      if (controls) controls.rotateSpeed = Math.min(1, Math.max(0.1, altitude * 0.9));
+      if (controls) controls.rotateSpeed = Math.min(0.5, Math.max(0.015, altitude * 0.16));
 
       // Zoomed all the way out by hand: the trail no longer applies.
       const state = useAppStore.getState();
@@ -586,8 +587,10 @@ export default function GlobeScene() {
   const regionAltitude = useCallback(
     (d: object): number => {
       const r = asRegion(d);
-      if (r.kind === "province") return 0.0025;
-      return r.id === DR_ISO ? 0.002 : 0.0012;
+      // Barely above the ground: a taller polygon shifts under a tilted camera
+      // and the pointer ends up over the wrong province.
+      if (r.kind === "province") return 0.0007;
+      return r.id === DR_ISO ? 0.0006 : 0.0004;
     },
     [],
   );
@@ -745,6 +748,7 @@ export default function GlobeScene() {
           polygonSideColor={noSideColor}
           polygonStrokeColor={regionStrokeColor}
           polygonAltitude={regionAltitude}
+          polygonCapCurvatureResolution={regionCurvature}
           polygonLabel={regionLabel}
           polygonsTransitionDuration={0}
           onPolygonHover={handleRegionHover}
