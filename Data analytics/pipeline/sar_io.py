@@ -126,17 +126,21 @@ def _read_gcov(source: str, bbox, pol) -> SarWindow:
     return read_gcov(source, bbox, [pol])[pol.upper()]
 
 
-def read_gcov(source: str, bbox, pols: list[str]) -> dict[str, SarWindow]:
-    """Lee varias polarizaciones de un NISAR GCOV abriendo el HDF5 una sola vez."""
+def read_gcov(source: str, bbox, pols: list[str], freq: str | None = None) -> dict[str, SarWindow]:
+    """Lee varias polarizaciones de un NISAR GCOV abriendo el HDF5 una sola vez.
+
+    freq: 'A' (~10 m) o 'B' (~80 m) como preferencia; si la escena no la tiene, usa la otra.
+    """
     out = {}
     with _open_h5(source) as fobj, h5py.File(fobj, "r") as f:
         grids = f[GCOV_GRIDS]
+        order = sorted(grids, key=lambda k: (k != f"frequency{freq}", k))
         for pol in (p.upper() for p in pols):
             term = pol * 2 if len(pol) == 2 else pol
-            freq = next((k for k in sorted(grids) if term in grids[k]), None)
-            if freq is None:
+            freq_key = next((k for k in order if term in grids[k]), None)
+            if freq_key is None:
                 raise SystemExit(f"{term} no está en {source}. Disponibles: {gcov_terms(f)}")
-            grp = grids[freq]
+            grp = grids[freq_key]
             x, y = grp["xCoordinates"][()], grp["yCoordinates"][()]
             crs = CRS.from_epsg(int(np.asarray(grp["projection"][()]).item()))
             dx, dy = float(x[1] - x[0]), float(y[1] - y[0])
@@ -155,12 +159,15 @@ def read_gcov(source: str, bbox, pols: list[str]) -> dict[str, SarWindow]:
     return out
 
 
-def write_geotiff(path, array: np.ndarray, transform, crs, nodata=np.nan, **tags):
+def write_geotiff(path, array: np.ndarray, transform, crs, nodata=np.nan, max_z_error=None, **tags):
+    """max_z_error: si se da, compresión LERC con ese error máximo (p.ej. 0.01 dB), ~2.5x menos disco."""
     count = 1 if array.ndim == 2 else array.shape[0]
+    compression = (dict(compress="lerc_zstd", max_z_error=max_z_error) if max_z_error
+                   else dict(compress="deflate"))
     profile = dict(
         driver="GTiff", height=array.shape[-2], width=array.shape[-1], count=count,
         dtype=array.dtype, crs=crs, transform=transform, nodata=nodata,
-        compress="deflate", tiled=True, blockxsize=256, blockysize=256, BIGTIFF="IF_SAFER",
+        tiled=True, blockxsize=256, blockysize=256, BIGTIFF="IF_SAFER", **compression,
     )
     with rasterio.open(path, "w", **profile) as dst:
         dst.write(array if array.ndim == 3 else array[np.newaxis])
