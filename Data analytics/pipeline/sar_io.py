@@ -159,6 +159,38 @@ def read_gcov(source: str, bbox, pols: list[str], freq: str | None = None) -> di
     return out
 
 
+def read_h5_layers(source: str, layers: dict[str, str], bbox, meta: dict[str, str] | None = None):
+    """Lee el recorte bbox de varias capas geocodificadas de un HDF5 NISAR (GUNW, GOFF...) en una apertura.
+
+    layers: {nombre: ruta_dataset}; las coordenadas se toman del grupo padre de cada dataset.
+    Devuelve ({nombre: (array, transform, crs)}, {clave_meta: valor}). Las capas que no existen se omiten.
+    """
+    out, values = {}, {}
+    with _open_h5(source) as fobj, h5py.File(fobj, "r") as f:
+        for key, path in (meta or {}).items():
+            if path in f:
+                v = f[path][()]
+                values[key] = v.decode() if isinstance(v, bytes) else (v.item() if hasattr(v, "item") else v)
+        for name, path in layers.items():
+            if path not in f:
+                print(f"   Aviso: {path} no está en el producto; se omite '{name}'", file=sys.stderr)
+                continue
+            grp = f[path.rsplit("/", 1)[0]]
+            x, y = grp["xCoordinates"][()], grp["yCoordinates"][()]
+            crs = CRS.from_epsg(int(np.asarray(grp["projection"][()]).item()))
+            dx, dy = float(x[1] - x[0]), float(y[1] - y[0])
+            x_edge, y_edge = float(x[0]) - dx / 2, float(y[0]) - dy / 2
+            left, bottom, right, top = transform_bounds("EPSG:4326", crs, *bbox, densify_pts=21)
+            c0, c1 = _index_range(left, right, x_edge, dx, len(x))
+            r0, r1 = _index_range(bottom, top, y_edge, dy, len(y))
+            if r1 <= r0 or c1 <= c0:
+                raise SystemExit(f"El bbox {bbox} no se solapa con {source}")
+            _check_size(r1 - r0, c1 - c0)
+            data = f[path][r0:r1, c0:c1]
+            out[name] = (data, Affine(dx, 0, x_edge + c0 * dx, 0, dy, y_edge + r0 * dy), crs)
+    return out, values
+
+
 def write_geotiff(path, array: np.ndarray, transform, crs, nodata=np.nan, max_z_error=None, **tags):
     """max_z_error: si se da, compresión LERC con ese error máximo (p.ej. 0.01 dB), ~2.5x menos disco."""
     count = 1 if array.ndim == 2 else array.shape[0]
