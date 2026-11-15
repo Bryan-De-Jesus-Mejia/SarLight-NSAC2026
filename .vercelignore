@@ -1,0 +1,2 @@
+# The site is built only from nisar-explorer/ (see vercel.json). The radar pipeline and its data are not needed.
+DataAnalytics/
