@@ -69,7 +69,7 @@ import { useAppStore, type TrailItem } from "@/store/useAppStore";
 /* Constants                                                                  */
 /* -------------------------------------------------------------------------- */
 
-const BACKGROUND_COLOR = "#03050a";
+const BACKGROUND_COLOR = "#040406";
 const ATMOSPHERE_COLOR = "#6ea8ff";
 const ACCENT_RGB = "242, 184, 102";
 /** Camera altitude on arrival at an event. */

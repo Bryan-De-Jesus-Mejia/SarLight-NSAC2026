@@ -101,7 +101,7 @@ export function SeriesChart({ series, unit, height = 130, zero = false, decimals
                   cx={px(toMs(p.x))}
                   cy={py(p.y)}
                   r="3"
-                  fill={p.hollow ? "#0a0e18" : s.color}
+                  fill={p.hollow ? "#0a0a0e" : s.color}
                   stroke={s.color}
                   strokeWidth="1.5"
                 >

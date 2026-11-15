@@ -174,7 +174,7 @@ export function PassDance() {
             </p>
             <p className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[11px] text-muted">
               <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-sm" style={{ background: "#f2b866" }} aria-hidden="true" /> {t("heading north")}
+                <span className="h-2 w-2 rounded-sm" style={{ background: "#fb7185" }} aria-hidden="true" /> {t("heading north")}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-sm" style={{ background: "#5c9eff" }} aria-hidden="true" /> {t("heading south")}

@@ -328,7 +328,7 @@ export function Story() {
   const stepRefs = useRef<Array<HTMLElement | null>>([]);
 
   const analysis = detail?.analyses[0] ?? null;
-  const color = detail ? CHANGE_TYPES[detail.type].color : "#f2b866";
+  const color = detail ? CHANGE_TYPES[detail.type].color : "#fb7185";
   const steps = useMemo(
     () => {
       if (!on || !detail) return [];

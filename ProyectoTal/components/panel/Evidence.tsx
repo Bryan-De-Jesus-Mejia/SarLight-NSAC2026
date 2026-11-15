@@ -197,7 +197,7 @@ export function GroundCover({ analysis }: { analysis: SensorAnalysis }) {
           <li key={c.code}>
             <span className="flex items-baseline justify-between gap-3 text-sm">
               <span className="flex items-center gap-2 text-ink">
-                <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: COVER_COLOR[c.code] ?? "#9ba7bb" }} aria-hidden="true" />
+                <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: COVER_COLOR[c.code] ?? "#9a9aa4" }} aria-hidden="true" />
                 {t(c.label)}
               </span>
               <span className="font-mono text-xs tabular-nums text-ink">
@@ -205,8 +205,8 @@ export function GroundCover({ analysis }: { analysis: SensorAnalysis }) {
               </span>
             </span>
             <span className="mt-1 block space-y-0.5">
-              <Bar value={c.flaggedPct} max={max} color={COVER_COLOR[c.code] ?? "#9ba7bb"} />
-              <Bar value={c.scenePct} max={max} color="#9ba7bb" muted />
+              <Bar value={c.flaggedPct} max={max} color={COVER_COLOR[c.code] ?? "#9a9aa4"} />
+              <Bar value={c.scenePct} max={max} color="#9a9aa4" muted />
             </span>
           </li>
         ))}

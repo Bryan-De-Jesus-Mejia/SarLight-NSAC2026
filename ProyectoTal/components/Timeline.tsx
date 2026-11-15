@@ -173,7 +173,7 @@ export function Timeline({ className = "" }: TimelineProps) {
           </defs>
           <path d={activity.path} fill="rgb(255 255 255 / 0.13)" />
           {day !== null && (
-            <path d={activity.path} fill="rgb(242 184 102 / 0.42)" clipPath="url(#ge-timeline-elapsed)" />
+            <path d={activity.path} fill="rgb(251 113 133 / 0.42)" clipPath="url(#ge-timeline-elapsed)" />
           )}
         </svg>
         <input

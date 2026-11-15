@@ -195,7 +195,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
             style={{ left: `${position}%` }}
             aria-hidden="true"
           >
-            <span className="absolute left-1/2 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-[rgb(10_14_24/0.85)] text-white shadow-lg">
+            <span className="absolute left-1/2 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-[rgb(10_10_14/0.85)] text-white shadow-lg">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 7l-5 5 5 5M15 7l5 5-5 5" />
               </svg>
@@ -426,7 +426,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
             role="dialog"
             aria-modal="true"
             aria-label={t("Radar images, enlarged")}
-            className="fixed inset-0 z-[60] flex flex-col bg-[rgb(3_5_10/0.94)] p-4 sm:p-6"
+            className="fixed inset-0 z-[60] flex flex-col bg-[rgb(4_4_6/0.94)] p-4 sm:p-6"
           >
             <div className="mx-auto flex w-full max-w-6xl items-start gap-3">
               <div className="min-w-0 flex-1">{tabs}</div>

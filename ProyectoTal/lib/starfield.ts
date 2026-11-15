@@ -31,7 +31,7 @@ export function createStarfieldDataUrl(): string {
 
   const rand = mulberry32(SEED);
 
-  ctx.fillStyle = "#03050a";
+  ctx.fillStyle = "#040406";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
   // A faint veil of haze: a few very soft, very large glows.

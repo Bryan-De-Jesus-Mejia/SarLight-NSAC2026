@@ -253,7 +253,7 @@ function MiniWeather({ ctx, keyDate, kind }: { ctx: CaseContext; keyDate: string
           const h = ((v - min) / (max - min || 1)) * (H - 2);
           return <rect key={w.dates[i]} x={i * bw + bw * 0.15} y={H - h} width={bw * 0.7} height={Math.max(h, 0.3)} fill={color} opacity={i === keyIndex ? 1 : 0.55} />;
         })}
-        {keyIndex >= 0 && <line x1={keyIndex * bw + bw / 2} x2={keyIndex * bw + bw / 2} y1={0} y2={H} stroke="#f2b866" strokeWidth={0.6} strokeDasharray="1.5 1.5" vectorEffect="non-scaling-stroke" />}
+        {keyIndex >= 0 && <line x1={keyIndex * bw + bw / 2} x2={keyIndex * bw + bw / 2} y1={0} y2={H} stroke="#fb7185" strokeWidth={0.6} strokeDasharray="1.5 1.5" vectorEffect="non-scaling-stroke" />}
       </svg>
       <figcaption className="flex justify-between font-mono text-[10px] text-muted">
         <span>{formatDate(w.dates[0])}</span>

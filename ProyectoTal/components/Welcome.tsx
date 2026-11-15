@@ -57,7 +57,7 @@ export function Welcome() {
   const last = step >= STEPS.length;
 
   return (
-    <div className="pointer-events-auto absolute inset-0 z-40 flex items-end justify-center bg-[rgb(3_5_10/0.55)] p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <div className="pointer-events-auto absolute inset-0 z-40 flex items-end justify-center bg-[rgb(4_4_6/0.55)] p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
       <div className="ge-intro glass w-full max-w-md rounded-2xl p-6">
         <div className="flex gap-1.5" aria-hidden="true">
           {[0, 1, 2].map((i) => (

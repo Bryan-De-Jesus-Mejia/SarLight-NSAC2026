@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { LangSync } from "@/components/LangSync";
 import "./globals.css";
 
 // next/font downloads these at build time and self-hosts them: no runtime CDN.
-const display = Instrument_Serif({
-  variable: "--font-instrument-serif",
+// One sans for the text, and a grotesk for titles and big numbers.
+const display = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
 });
 
-// One sans for the whole interface, and the serif only as the accent.
 const sans = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
@@ -20,6 +19,12 @@ const sans = Plus_Jakarta_Sans({
 
 // The printable study guide keeps its own faces. They are not preloaded: a
 // page only downloads them if it draws a glyph with them.
+const guideSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 const guideSans = IBM_Plex_Sans({
   variable: "--font-plex-sans",
   subsets: ["latin"],
@@ -44,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${guideSans.variable} ${guideMono.variable} h-full antialiased`}
+      className={`${display.variable} ${sans.variable} ${guideSerif.variable} ${guideSans.variable} ${guideMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <LangSync />

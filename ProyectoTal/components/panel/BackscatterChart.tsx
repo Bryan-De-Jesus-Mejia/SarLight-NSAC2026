@@ -14,7 +14,7 @@ interface BackscatterChartProps {
 
 const HEIGHT = 200;
 const MARGIN = { top: 18, right: 14, bottom: 24, left: 46 };
-const REST_COLOR = "#9ba7bb";
+const REST_COLOR = "#9a9aa4";
 
 const toMs = (iso: string): number => Date.parse(`${iso.slice(0, 10)}T00:00:00Z`);
 
@@ -167,7 +167,7 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
               const anchorEnd = i === 0 || nearEdge;
               return (
                 <g key={m.label}>
-                  <line x1={mx} x2={mx} y1={MARGIN.top - 4} y2={MARGIN.top + plotH} stroke="rgb(242 184 102 / 0.75)" strokeDasharray="3 4" />
+                  <line x1={mx} x2={mx} y1={MARGIN.top - 4} y2={MARGIN.top + plotH} stroke="rgb(251 113 133 / 0.75)" strokeDasharray="3 4" />
                   <text
                     x={mx + (anchorEnd ? -5 : 5)}
                     y={MARGIN.top + 6 + (i === 1 && nearEdge ? 13 : 0)}
@@ -183,7 +183,7 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
             {/* Rest of the land: the reference */}
             <path d={path((pt) => pt.outY)} fill="none" stroke={REST_COLOR} strokeWidth={2} strokeDasharray="5 4" strokeLinecap="round" />
             {points.map((pt) => (
-              <circle key={`o${pt.p.date}`} cx={pt.px} cy={pt.outY} r={2.5} fill="#0a0e18" stroke={REST_COLOR} strokeWidth={1.5} />
+              <circle key={`o${pt.p.date}`} cx={pt.px} cy={pt.outY} r={2.5} fill="#0a0a0e" stroke={REST_COLOR} strokeWidth={1.5} />
             ))}
 
             {/* Flagged land */}
@@ -197,7 +197,7 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
                       cx={pt.px}
                       cy={pt.inY}
                       r={pt.p.date === preDay || pt.p.date === postDay ? 4.5 : 3}
-                      fill={pt.p.date === preDay || pt.p.date === postDay ? color : "#0a0e18"}
+                      fill={pt.p.date === preDay || pt.p.date === postDay ? color : "#0a0a0e"}
                       stroke={color}
                       strokeWidth={2}
                     />

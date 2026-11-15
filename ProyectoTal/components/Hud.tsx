@@ -91,7 +91,7 @@ export function Hud() {
       )}
 
       <header className="flex flex-wrap items-start gap-x-6 gap-y-3">
-        <h1 className="mr-auto font-display text-3xl leading-[1.05] text-ink sm:text-4xl">
+        <h1 className="ge-brand mr-auto text-3xl leading-[1.05] text-ink sm:text-4xl">
           Dancing with the <em>SARs</em>
         </h1>
 
