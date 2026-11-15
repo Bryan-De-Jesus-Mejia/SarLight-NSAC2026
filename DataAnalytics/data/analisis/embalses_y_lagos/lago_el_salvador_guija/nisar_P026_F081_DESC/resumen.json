@@ -1,0 +1,42 @@
+{
+  "collection": "lago_el_salvador_guija",
+  "source": "nisar",
+  "orbit": "P026_F081_DESC",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-28T00:24:42Z",
+    "2026-07-10T00:24:41Z",
+    "2026-07-22T00:24:41Z",
+    "2026-08-15T00:24:39Z",
+    "2026-08-27T00:24:39Z",
+    "2026-09-08T00:24:39Z",
+    "2026-09-20T00:24:39Z",
+    "2026-10-02T00:24:39Z",
+    "2026-10-14T00:24:39Z",
+    "2026-10-26T00:24:39Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32616",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-28T00:24:42Z",
+  "first_water_km2": 0.067,
+  "last_date": "2026-10-26T00:24:39Z",
+  "last_water_km2": 0.604,
+  "change_km2": 0.537,
+  "change_pct": 801.5,
+  "min_date": "2026-09-08T00:24:39Z",
+  "min_water_km2": 0.014,
+  "max_date": "2026-10-26T00:24:39Z",
+  "max_water_km2": 0.604,
+  "range_pct_of_max": 97.7
+}
