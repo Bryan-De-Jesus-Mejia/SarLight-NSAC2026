@@ -39,7 +39,7 @@ export function Legend({ className = "" }: LegendProps) {
   }, [scoped]);
 
   const filtering = activeTypes.length > 0;
-  const areas = useMemo(() => visible.reduce((sum, e) => sum + e.changedAreaKm2, 0), [visible]);
+  const areas = useMemo(() => visible.reduce((sum, e) => (e.kind ? sum : sum + e.changedAreaKm2), 0), [visible]);
 
   return (
     <section className={`ge-surface pointer-events-auto w-64 shrink-0 p-3 ${className}`} aria-labelledby="legend-title">
