@@ -30,7 +30,10 @@ jobs:
       run:
         working-directory: DataAnalytics
     steps:
+      # La rama (no el commit del disparo): una ejecución que esperó en cola ve lo que la anterior ya subió.
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       # Con el Python del sistema y sin dependencias: si todo tiene análisis, el resto de pasos se salta.
       - name: ¿Hay trabajos pendientes?
