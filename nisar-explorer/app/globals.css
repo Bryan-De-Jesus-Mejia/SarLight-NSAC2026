@@ -583,6 +583,23 @@ body:has(.ge-callout-anchor) .ge-marker {
   border-radius: 4px;
 }
 
+/* Two handles on one track (start and end of a period): only the handles take the pointer. */
+.ge-range--dual {
+  pointer-events: none;
+}
+
+.ge-range--dual::-webkit-slider-thumb {
+  pointer-events: auto;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.ge-range--dual::-moz-range-thumb {
+  pointer-events: auto;
+  width: 6px;
+  cursor: ew-resize;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Dock: two panels that open from their buttons, side by side                */
 /* A panel first runs out sideways as a thin line, then unfolds downward.     */
@@ -864,6 +881,29 @@ body:has(.ge-callout-anchor) .ge-marker {
 /* -------------------------------------------------------------------------- */
 /* Guided demo                                                                */
 /* -------------------------------------------------------------------------- */
+
+/* Tutorial: a ring around the control being explained, and the rest of the screen dimmed. */
+.ge-tour-ring {
+  border: 2px solid var(--color-accent);
+  box-shadow:
+    0 0 0 9999px rgb(3 5 10 / 0.42),
+    0 0 24px 2px rgb(251 113 133 / 0.55);
+  transition: left 280ms ease, top 280ms ease, width 280ms ease, height 280ms ease;
+  animation: ge-tour-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes ge-tour-pulse {
+  50% {
+    border-color: rgb(251 113 133 / 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-tour-ring {
+    animation: none;
+    transition: none;
+  }
+}
 
 .ge-demo-text {
   animation: ge-demo-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;

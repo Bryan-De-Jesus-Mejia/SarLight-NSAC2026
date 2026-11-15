@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { MenuButton } from "@/components/CommandMenu";
 import { GeneralIntro } from "@/components/GeneralIntro";
 import { LanguageSelect } from "@/components/LanguageSelect";
@@ -46,8 +46,8 @@ export function Hud() {
   const hasEvents = useAppStore((s) => s.events.length > 0);
   const caseOpen = useAppStore((s) => s.selectedId !== null);
   const chatOpen = useChatStore((s) => s.open);
-  // The guided demo and story mode both take over the screen.
-  const demoActive = useAppStore((s) => s.demoActive || s.story);
+  // Story mode takes over the screen; the tutorial keeps every control visible, since it points at them.
+  const demoActive = useAppStore((s) => s.story);
   const audience = useAppStore((s) => s.audience);
   const story = useAppStore((s) => s.story);
   const lens = useAppStore((s) => s.lens);
@@ -57,30 +57,24 @@ export function Hud() {
   const intro = useAppStore((s) => s.intro);
   const setIntro = useAppStore((s) => s.setIntro);
 
-  const [legendOpen, setLegendOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(false);
-  const [layersOpen, setLayersOpen] = useState(false);
+  // The dock lives in the store: opening a panel there closes the cards on the same side of the screen.
+  const dock = useAppStore((s) => s.dock);
+  const setDock = useAppStore((s) => s.setDock);
+  const legendOpen = dock.legend;
+  const timelineOpen = dock.timeline;
+  const layersOpen = dock.layers;
 
   // On phones there is room for one panel at a time.
-  const narrow = () => window.matchMedia("(max-width: 767px)").matches;
-  const closeOthers = (keep: "legend" | "timeline" | "layers") => {
-    if (!narrow()) return;
-    if (keep !== "legend") setLegendOpen(false);
-    if (keep !== "timeline") setTimelineOpen(false);
-    if (keep !== "layers") setLayersOpen(false);
+  const toggle = (panel: "legend" | "timeline" | "layers") => {
+    const open = !dock[panel];
+    if (open && window.matchMedia("(max-width: 767px)").matches) {
+      for (const other of ["legend", "timeline", "layers"] as const) if (other !== panel) setDock(other, false);
+    }
+    setDock(panel, open);
   };
-  const toggleLegend = () => {
-    if (!legendOpen) closeOthers("legend");
-    setLegendOpen(!legendOpen);
-  };
-  const toggleTimeline = () => {
-    if (!timelineOpen) closeOthers("timeline");
-    setTimelineOpen(!timelineOpen);
-  };
-  const toggleLayers = () => {
-    if (!layersOpen) closeOthers("layers");
-    setLayersOpen(!layersOpen);
-  };
+  const toggleLegend = () => toggle("legend");
+  const toggleTimeline = () => toggle("timeline");
+  const toggleLayers = () => toggle("layers");
 
   const ready = hasEvents && !demoActive;
 
@@ -98,13 +92,22 @@ export function Hud() {
         {/* Phones: the menu holds the pickers, so the bar keeps three buttons together: search, community and menu. */}
         <div className="flex items-center gap-2 md:ml-auto md:flex-wrap md:justify-end">
           <LanguageSelect className="max-md:hidden" />
-          {ready && <ViewSelect className="max-md:hidden" />}
-          {ready && <SearchBox className="md:w-60 xl:w-72" />}
+          {ready && (
+            <div data-tour="view" className="contents">
+              <ViewSelect className="max-md:hidden" />
+            </div>
+          )}
+          {ready && (
+            <div data-tour="search" className="contents">
+              <SearchBox className="md:w-60 xl:w-72" />
+            </div>
+          )}
           {ready && !story && (
             <button
               type="button"
               aria-pressed={community}
               onClick={() => setCommunity(!community)}
+              data-tour="community"
               title={t("Is my community at risk? See what our radar found around a place")}
               className="ge-ctl ge-ctl--primary pointer-events-auto inline-flex shrink-0"
             >
@@ -114,7 +117,9 @@ export function Hud() {
               <span className="sr-only lg:not-sr-only">{t("Is my community at risk?")}</span>
             </button>
           )}
-          <MenuButton />
+          <div data-tour="menu" className="contents">
+            <MenuButton />
+          </div>
         </div>
       </header>
 
@@ -122,18 +127,18 @@ export function Hud() {
         // With the case panel open, keep the dock clear of it.
         <div className={`ge-dock ${caseOpen || chatOpen ? "max-md:hidden md:pr-[28rem]" : ""}`}>
           <div className="ge-dock-panels">
-            <div className="ge-slot ge-slot--legend" data-open={legendOpen} inert={!legendOpen}>
+            <div className="ge-slot ge-slot--legend" data-tour="legend" data-open={legendOpen} inert={!legendOpen}>
               <Legend />
             </div>
-            <div className="ge-slot ge-slot--layers" data-open={layersOpen} inert={!layersOpen}>
+            <div className="ge-slot ge-slot--layers" data-tour="layers" data-open={layersOpen} inert={!layersOpen}>
               <LayersPanel />
             </div>
-            <div className="ge-slot ge-slot--timeline" data-open={timelineOpen} inert={!timelineOpen}>
+            <div className="ge-slot ge-slot--timeline" data-tour="timeline" data-open={timelineOpen} inert={!timelineOpen}>
               <Timeline />
             </div>
           </div>
 
-          <div className="pointer-events-auto mt-3 flex gap-2">
+          <div className="pointer-events-auto mt-3 flex gap-2" data-tour="dock">
             <DockButton label={t("Surface change signals")} open={legendOpen} onClick={toggleLegend}>
               <path d="M12 3.5 3.5 8 12 12.5 20.5 8zM3.5 12 12 16.5 20.5 12M3.5 16 12 20.5 20.5 16" />
             </DockButton>

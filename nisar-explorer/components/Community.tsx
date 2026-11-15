@@ -134,7 +134,7 @@ export function Community() {
   return (
     <section
       aria-labelledby="community-title"
-      className="ge-intro glass pointer-events-auto absolute left-5 top-[8.75rem] z-30 flex max-h-[calc(100dvh-11rem)] w-[min(23rem,calc(100vw-2.5rem))] flex-col rounded-2xl sm:left-8"
+      className="ge-intro glass pointer-events-auto absolute left-5 top-[8.75rem] z-30 flex max-h-[calc(100dvh-15rem)] w-[min(23rem,calc(100vw-2.5rem))] flex-col rounded-2xl sm:left-8"
     >
       <div className="flex items-start gap-3 px-5 pt-5">
         <div className="min-w-0 flex-1">

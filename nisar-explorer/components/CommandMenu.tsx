@@ -88,8 +88,8 @@ function useCommands(): Command[] {
     list.push({
       id: "demo",
       group: "explore",
-      label: t("Guided demo"),
-      hint: t("A short guided tour of the globe"),
+      label: t("How to use SarLight"),
+      hint: t("A step-by-step tour of every control"),
       icon: (
         <Glyph size={14}>
           <path d="M8 5.200v13.600a.6.6 0 0 0 .92.5l10.400-6.800a.6.6 0 0 0 0-1L8.920 4.700A.6.6 0 0 0 8 5.200z" fill="currentColor" stroke="none" />
@@ -141,8 +141,8 @@ function useCommands(): Command[] {
     list.push({
       id: "lens",
       group: "explore",
-      label: t("Radar lens"),
-      hint: t("The day as a camera saw it, with the radar inside a circle"),
+      label: t("Cloud lens"),
+      hint: t("The day as a camera saw it, with the ground under the clouds inside a circle"),
       icon: (
         <Glyph>
           <circle cx="10.500" cy="10.500" r="6.500" />

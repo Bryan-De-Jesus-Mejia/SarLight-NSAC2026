@@ -1,24 +1,13 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useT } from "@/i18n/core";
-import { DEMO_SCENES } from "@/lib/demoScript";
+import { TUTORIAL_STEPS } from "@/lib/tutorial";
 import { useAppStore } from "@/store/useAppStore";
 
-const LAST = DEMO_SCENES.length - 1;
-const TICK_MS = 100;
+const LAST = TUTORIAL_STEPS.length - 1;
 
-function IconButton({
-  label,
-  onClick,
-  disabled,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  children: ReactNode;
-}) {
+function IconButton({ label, onClick, disabled, children }: { label: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
   return (
     <button type="button" aria-label={label} title={label} onClick={onClick} disabled={disabled} className="ge-demo-button">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -28,134 +17,124 @@ function IconButton({
   );
 }
 
-/** Captions and controls of the guided demo. The scenes themselves live in lib/demoScript. */
+/** Where the control a step talks about sits on screen (null while it is not there). */
+function useTargetRect(target: string | undefined, step: number): DOMRect | null {
+  const [rect, setRect] = useState<DOMRect | null>(null);
+  useEffect(() => {
+    if (!target) return;
+    let frame = 0;
+    let last = "";
+    const measure = () => {
+      const el = document.querySelector<HTMLElement>(`[data-tour="${target}"]`);
+      // Wrappers with display: contents have no box of their own: measure their child.
+      const box = el ? (el.getBoundingClientRect().width ? el : (el.firstElementChild as HTMLElement | null)) : null;
+      const r = box?.getBoundingClientRect() ?? null;
+      const key = r && r.width > 0 ? `${r.x}|${r.y}|${r.width}|${r.height}` : "";
+      if (key !== last) {
+        last = key;
+        setRect(key ? r : null);
+      }
+      frame = requestAnimationFrame(measure);
+    };
+    frame = requestAnimationFrame(measure);
+    return () => cancelAnimationFrame(frame);
+  }, [target, step]);
+  return target ? rect : null;
+}
+
+/** The tutorial card and the ring around the control it explains. The steps live in lib/tutorial. */
 export function DemoPlayer() {
   const t = useT();
   const active = useAppStore((s) => s.demoActive);
   const step = useAppStore((s) => s.demoStep);
-  const paused = useAppStore((s) => s.demoPaused);
   const caseOpen = useAppStore((s) => s.selectedId !== null);
   const setStep = useAppStore((s) => s.setDemoStep);
-  const setPaused = useAppStore((s) => s.setDemoPaused);
   const stop = useAppStore((s) => s.stopDemo);
   const start = useAppStore((s) => s.startDemo);
+  const current = TUTORIAL_STEPS[Math.min(step, LAST)];
+  const rect = useTargetRect(active ? current.target : undefined, step);
 
-  const elapsed = useRef(0);
-  const fired = useRef<Set<number>>(new Set());
-  const bar = useRef<HTMLDivElement | null>(null);
-
-  // A new scene: reset the clock and run its opening action.
+  // A new step sets its scene.
   useEffect(() => {
-    if (!active) return;
-    elapsed.current = 0;
-    fired.current = new Set();
-    if (bar.current) bar.current.style.transform = "scaleX(0)";
-    DEMO_SCENES[step].enter();
+    if (active) TUTORIAL_STEPS[Math.min(step, LAST)].enter?.();
   }, [active, step]);
 
-  // The clock: advances the scene, fires its cues and moves on at the end.
-  useEffect(() => {
-    if (!active) return;
-    const scene = DEMO_SCENES[step];
-    const timer = setInterval(() => {
-      if (useAppStore.getState().demoPaused) return;
-      elapsed.current += TICK_MS;
-      scene.cues?.forEach((cue, index) => {
-        if (elapsed.current >= cue.at && !fired.current.has(index)) {
-          fired.current.add(index);
-          cue.run();
-        }
-      });
-      if (Number.isFinite(scene.ms)) {
-        if (bar.current) bar.current.style.transform = `scaleX(${Math.min(1, elapsed.current / scene.ms)})`;
-        if (elapsed.current >= scene.ms && step < LAST) setStep(step + 1);
-      }
-    }, TICK_MS);
-    return () => clearInterval(timer);
-  }, [active, step, setStep]);
-
-  // Keyboard, and grabbing the globe takes the controls back.
+  // Keyboard: arrows move through the steps, Esc closes the tour.
   useEffect(() => {
     if (!active) return;
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
       if (event.key === "Escape") stop();
-      else if (event.key === " ") {
-        event.preventDefault();
-        setPaused(!useAppStore.getState().demoPaused);
-      } else if (event.key === "ArrowRight") setStep(Math.min(LAST, useAppStore.getState().demoStep + 1));
+      else if (event.key === "ArrowRight") setStep(Math.min(LAST, useAppStore.getState().demoStep + 1));
       else if (event.key === "ArrowLeft") setStep(Math.max(0, useAppStore.getState().demoStep - 1));
     };
-    const onPointer = (event: PointerEvent) => {
-      if (event.target instanceof Element && event.target.closest("canvas")) setPaused(true);
-    };
     window.addEventListener("keydown", onKey);
-    window.addEventListener("pointerdown", onPointer);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      window.removeEventListener("pointerdown", onPointer);
-    };
-  }, [active, stop, setPaused, setStep]);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active, stop, setStep]);
 
   if (!active) return null;
-  const scene = DEMO_SCENES[step];
-  const last = step === LAST;
+  const last = step >= LAST;
+  // The card sits away from the right-hand case panel, and away from the control it points at.
+  const targetLow = rect !== null && rect.top > window.innerHeight * 0.55;
 
   return (
-    <div
-      className={`pointer-events-none absolute inset-x-5 bottom-5 z-20 max-md:top-auto ${caseOpen ? "md:right-[28.5rem]" : ""} ${caseOpen ? "max-md:bottom-auto max-md:top-[5.5rem]" : ""}`}
-    >
-      <section className="ge-surface ge-demo pointer-events-auto relative mx-auto max-w-xl overflow-hidden" aria-live="polite" aria-label={t("Guided demo")}>
-        {!last && (
-          <div className="absolute inset-x-0 top-0 h-[2px] bg-white/10">
-            <div ref={bar} className="h-full origin-left bg-accent" style={{ transform: "scaleX(0)", transition: `transform ${TICK_MS}ms linear` }} />
+    <>
+      {rect && (
+        <div
+          aria-hidden="true"
+          className="ge-tour-ring pointer-events-none fixed z-[45] rounded-xl"
+          style={{ left: rect.left - 6, top: rect.top - 6, width: rect.width + 12, height: rect.height + 12 }}
+        />
+      )}
+      <div
+        className={`pointer-events-none fixed inset-x-3 z-[46] md:inset-x-auto md:w-[26rem] ${caseOpen ? "md:right-[29.5rem]" : "md:right-6"} ${
+          targetLow ? "top-[5.5rem]" : "bottom-5"
+        }`}
+      >
+        <section className="ge-surface ge-demo pointer-events-auto relative overflow-hidden" aria-live="polite" aria-label={t("How to use SarLight")}>
+          <div className="absolute inset-x-0 top-0 flex h-[3px] gap-[2px]" aria-hidden="true">
+            {TUTORIAL_STEPS.map((_, i) => (
+              <span key={i} className={`h-full flex-1 ${i <= step ? "bg-accent" : "bg-white/10"}`} />
+            ))}
           </div>
-        )}
-        <div key={step} className="ge-demo-text px-5 pb-4 pt-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">{t(scene.kicker)}</p>
-          <h2 className="mt-1.5 font-display text-[1.7rem] leading-[1.1] text-ink">{t(scene.title)}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-ink/80">{t(scene.body)}</p>
-        </div>
-        <div className="flex items-center justify-between gap-3 border-t border-line px-3 py-2">
-          <div className="flex items-center gap-1">
-            <IconButton label={t("Previous scene")} onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>
-              <path d="M15 5 8 12l7 7" />
-            </IconButton>
-            {!last && (
-              <IconButton label={paused ? t("Play") : t("Pause")} onClick={() => setPaused(!paused)}>
-                {paused ? <path d="M8 5.5v13l10-6.5z" /> : <path d="M8 5.5v13M16 5.5v13" />}
+          <div key={step} className="ge-demo-text px-5 pb-4 pt-5">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
+              {t("{n} of {total}", { n: step + 1, total: TUTORIAL_STEPS.length })} · {t(current.kicker)}
+            </p>
+            <h2 className="mt-1.5 font-display text-[1.6rem] leading-[1.1] text-ink">{t(current.title)}</h2>
+            <p className="mt-2 text-sm leading-relaxed text-ink/80">{t(current.body)}</p>
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-line px-3 py-2">
+            <div className="flex items-center gap-1">
+              <IconButton label={t("Back")} onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>
+                <path d="M15 5 8 12l7 7" />
               </IconButton>
-            )}
-            <IconButton label={t("Next scene")} onClick={() => setStep(Math.min(LAST, step + 1))} disabled={last}>
-              <path d="m9 5 7 7-7 7" />
-            </IconButton>
-          </div>
-          <div className="flex items-center gap-2">
-            {last ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPaused(false);
-                    start();
-                  }}
-                  className="ge-demo-text-button"
-                >
-                  {t("Replay")}
+              {!last && (
+                <button type="button" onClick={() => setStep(step + 1)} className="ge-demo-text-button ge-demo-text-button--primary">
+                  {t("Next")}
                 </button>
-                <button type="button" onClick={stop} className="ge-demo-text-button ge-demo-text-button--primary">
-                  {t("Explore")}
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {last ? (
+                <>
+                  <button type="button" onClick={start} className="ge-demo-text-button">
+                    {t("Start again")}
+                  </button>
+                  <button type="button" onClick={stop} className="ge-demo-text-button ge-demo-text-button--primary">
+                    {t("Explore")}
+                  </button>
+                </>
+              ) : (
+                <button type="button" onClick={stop} className="ge-demo-text-button">
+                  {t("Close tour")}
                 </button>
-              </>
-            ) : (
-              <button type="button" onClick={stop} className="ge-demo-text-button">
-                {t("Exit demo")}
-              </button>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }

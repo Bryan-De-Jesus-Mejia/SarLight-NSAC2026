@@ -98,8 +98,8 @@ export function Welcome() {
                   },
                 },
                 {
-                  label: msg("Watch the guided tour"),
-                  note: msg("Two minutes, hands free"),
+                  label: msg("Take the tour"),
+                  note: msg("Learn every control in a minute, at your own pace"),
                   run: () => {
                     close();
                     startDemo();

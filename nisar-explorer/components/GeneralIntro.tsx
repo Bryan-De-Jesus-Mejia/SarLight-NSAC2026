@@ -75,7 +75,7 @@ export function GeneralIntro({ onClose }: { onClose: () => void }) {
   return (
     <section
       aria-labelledby="intro-title"
-      className="ge-intro glass pointer-events-auto absolute left-5 top-[6.5rem] flex max-h-[calc(100dvh-9rem)] w-[22rem] flex-col rounded-2xl max-md:inset-x-3 max-md:bottom-[5.25rem] max-md:left-3 max-md:top-auto max-md:max-h-[58dvh] max-md:w-auto sm:left-8"
+      className="ge-intro glass pointer-events-auto absolute left-5 top-[6.5rem] flex max-h-[calc(100dvh-13rem)] w-[22rem] flex-col rounded-2xl max-md:inset-x-3 max-md:bottom-[5.25rem] max-md:left-3 max-md:top-auto max-md:max-h-[58dvh] max-md:w-auto sm:left-8"
     >
       <div className="flex items-start gap-3 px-5 pt-5">
         <div className="min-w-0 flex-1">

@@ -47,9 +47,11 @@ interface AppState {
   activeTypes: ChangeType[];
   /** Free-text search over name, place and type. */
   query: string;
-  /** Day index within meta.timeRange, or null to show the whole period. */
+  /** Day index within meta.timeRange of the play head, or null when nothing is playing. */
   timelineDay: number | null;
   timelinePlaying: boolean;
+  /** First and last day (indices within meta.timeRange) of the period to show, or null for all of it. */
+  timelineRange: [number, number] | null;
   /** Zoom level of the camera (orbit / region / country / ground). */
   lod: Lod;
   /** Province highlighted by a click (Dominican Republic). */
@@ -77,6 +79,10 @@ interface AppState {
   /** Who the app is talking to: everyone (plain words, the default), a technical reader or a student. */
   audience: Audience;
   setAudience: (audience: Audience) => void;
+  /** The panels of the bottom dock. Opening one closes the cards that share its side of the screen. */
+  dock: Record<DockPanel, boolean>;
+  setDock: (panel: DockPanel, open: boolean) => void;
+  closeDock: () => void;
   /** The "where the land changed most" card of the simple views. */
   intro: boolean;
   setIntro: (on: boolean) => void;
@@ -99,7 +105,7 @@ interface AppState {
   /** Radar image laid over the globe on the selected case (null for none). */
   drape: { url: string; opacity: number } | null;
   setDrape: (drape: { url: string; opacity: number } | null) => void;
-  /** Guided demo. */
+  /** The tutorial: a step-by-step tour of the controls (it keeps the interface on screen). */
   demoActive: boolean;
   demoStep: number;
   demoPaused: boolean;
@@ -124,7 +130,13 @@ interface AppState {
   clearFilters: () => void;
   setTimelineDay: (day: number | null) => void;
   setTimelinePlaying: (playing: boolean) => void;
+  setTimelineRange: (range: [number, number] | null) => void;
+  /** Back to the start: the whole period, nothing playing. */
+  resetTimeline: () => void;
 }
+
+export type DockPanel = "legend" | "layers" | "timeline";
+const DOCK_CLOSED: Record<DockPanel, boolean> = { legend: false, layers: false, timeline: false };
 
 /** Details already fetched this session, so reopening a case is instant. */
 const detailCache = new Map<string, EventDetail>();
@@ -170,6 +182,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   query: "",
   timelineDay: null,
   timelinePlaying: false,
+  timelineRange: null,
   lod: "orbit",
   selectedProvinceId: null,
   trail: [],
@@ -195,8 +208,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     }
     set({ audience });
   },
+  dock: DOCK_CLOSED,
+  setDock: (panel, open) =>
+    set((state) => (open ? { dock: { ...state.dock, [panel]: true }, intro: false, community: false, communityPicking: false } : { dock: { ...state.dock, [panel]: false } })),
+  closeDock: () => set({ dock: DOCK_CLOSED }),
   intro: false,
-  setIntro: (on) => set({ intro: on }),
+  setIntro: (on) => set(on ? { intro: true, community: false, dock: DOCK_CLOSED } : { intro: false }),
   story: false,
   setStory: (on) => set(on ? { story: true, lens: false, dance: false, overlay: "none", compare: false } : { story: false }),
   lens: false,
@@ -204,7 +221,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   community: false,
   communityPicking: false,
   communityPoint: null,
-  setCommunity: (on) => set(on ? { community: true, story: false } : { community: false, communityPicking: false }),
+  setCommunity: (on) => set(on ? { community: true, story: false, intro: false, dock: DOCK_CLOSED } : { community: false, communityPicking: false }),
   setCommunityPicking: (on) => set({ communityPicking: on }),
   setCommunityPoint: (point) => set({ communityPoint: point, communityPicking: false }),
   dance: false,
@@ -218,8 +235,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   demoActive: false,
   demoStep: 0,
   demoPaused: false,
-  startDemo: () => set({ demoActive: true, demoStep: 0, demoPaused: false, compare: false, radarClass: null, lens: false, dance: false }),
-  stopDemo: () => set({ demoActive: false, demoPaused: false, overlay: "none", compare: false, radarClass: null, lens: false }),
+  startDemo: () =>
+    set({ demoActive: true, demoStep: 0, demoPaused: false, compare: false, radarClass: null, lens: false, dance: false, story: false, intro: false, community: false, dock: DOCK_CLOSED }),
+  stopDemo: () => set({ demoActive: false, demoPaused: false, overlay: "none", compare: false, radarClass: null, lens: false, dock: DOCK_CLOSED }),
   setDemoStep: (step) => set({ demoStep: step }),
   setDemoPaused: (paused) => set({ demoPaused: paused }),
   setOverlayDate: (date) => set({ overlayDate: date }),
@@ -303,6 +321,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   setTimelineDay: (day) =>
     set(day === null ? { timelineDay: null, timelinePlaying: false } : { timelineDay: day }),
   setTimelinePlaying: (playing) => set({ timelinePlaying: playing }),
+  setTimelineRange: (range) => set({ timelineRange: range, timelineDay: null, timelinePlaying: false }),
+  resetTimeline: () => set({ timelineDay: null, timelinePlaying: false, timelineRange: null }),
 
   retryDetail: () => {
     const id = get().selectedId;

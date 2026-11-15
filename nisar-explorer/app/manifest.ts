@@ -19,7 +19,7 @@ export default function manifest(): MetadataRoute.Manifest {
       { name: "Is my community at risk?", short_name: "My community", url: "/?go=community", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
       { name: "Study mode and classroom", short_name: "Study", url: "/?go=study", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
       { name: "When does NISAR pass over me?", short_name: "Next pass", url: "/?go=passes", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
-      { name: "Guided demo", short_name: "Demo", url: "/?demo", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
+      { name: "How to use SarLight", short_name: "Tour", url: "/?demo", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
     ],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

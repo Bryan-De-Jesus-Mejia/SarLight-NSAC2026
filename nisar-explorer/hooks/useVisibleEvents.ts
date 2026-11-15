@@ -11,7 +11,7 @@ export interface VisibleEvents {
   scoped: EventSummary[];
   /** Every filter applied. This is what the globe draws. */
   visible: EventSummary[];
-  /** Every filter applied except the timeline date. Feeds the activity chart of the timeline. */
+  /** Every filter applied except the timeline period. Feeds the activity chart of the timeline. */
   timeless: EventSummary[];
 }
 
@@ -23,6 +23,7 @@ export function useVisibleEvents(): VisibleEvents {
   const events = useAppStore((s) => s.events);
   const meta = useAppStore((s) => s.meta);
   const timelineDay = useAppStore((s) => s.timelineDay);
+  const timelineRange = useAppStore((s) => s.timelineRange);
   const activeTypes = useAppStore((s) => s.activeTypes);
   const query = useAppStore((s) => s.query);
 
@@ -32,12 +33,21 @@ export function useVisibleEvents(): VisibleEvents {
     return tokens.length === 0 ? events : events.filter((e) => matchesQuery(e, tokens));
   }, [events, query]);
 
+  // While playing: what is active on the play head's day. Otherwise: what overlaps the chosen period.
   const scoped = useMemo(() => {
-    if (timelineDay === null || !meta) return refined;
+    if (!meta) return refined;
     // ISO dates compare correctly as strings.
-    const date = dayToIso(meta.timeRange, timelineDay);
-    return refined.filter((e) => e.startDate <= date && date <= e.endDate);
-  }, [refined, meta, timelineDay]);
+    if (timelineDay !== null) {
+      const date = dayToIso(meta.timeRange, timelineDay);
+      return refined.filter((e) => e.startDate <= date && date <= e.endDate);
+    }
+    if (timelineRange) {
+      const from = dayToIso(meta.timeRange, timelineRange[0]);
+      const to = dayToIso(meta.timeRange, timelineRange[1]);
+      return refined.filter((e) => e.startDate <= to && from <= e.endDate);
+    }
+    return refined;
+  }, [refined, meta, timelineDay, timelineRange]);
 
   const visible = useMemo(
     () => (activeTypes.length === 0 ? scoped : scoped.filter((e) => activeTypes.includes(e.type))),

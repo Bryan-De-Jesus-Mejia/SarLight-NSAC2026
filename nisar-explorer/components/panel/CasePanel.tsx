@@ -374,6 +374,7 @@ export function CasePanel() {
 
   return (
     <aside
+      data-tour="case"
       key={selectedId}
       aria-labelledby="case-title"
       className="ge-panel glass pointer-events-auto absolute inset-x-0 bottom-0 z-20 flex max-h-[56dvh] flex-col rounded-t-2xl md:inset-x-auto md:bottom-5 md:right-5 md:top-[5.75rem] md:max-h-none md:w-[27rem] md:rounded-2xl"
@@ -439,6 +440,7 @@ export function CasePanel() {
             <button
               type="button"
               onClick={() => setStory(true)}
+              data-tour="story"
               className="mb-5 flex w-full items-center gap-3 rounded-xl border border-accent/60 bg-accent/10 px-4 py-3 text-left transition-colors hover:bg-accent/20"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/70 text-accent">

@@ -10,6 +10,7 @@ import { people } from "./people";
 import { panel } from "./panel";
 import { shell } from "./shell";
 import { story } from "./story";
+import { tour } from "./tour";
 import { ui } from "./ui";
 import { water } from "./water";
 
@@ -32,4 +33,5 @@ export const es: Record<string, string> = {
   ...exportCase,
   ...offline,
   ...passes,
+  ...tour,
 };

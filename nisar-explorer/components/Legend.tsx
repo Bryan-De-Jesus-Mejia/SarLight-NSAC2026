@@ -40,6 +40,9 @@ export function Legend({ className = "" }: LegendProps) {
     return byType;
   }, [scoped]);
 
+  // The areas as a ranking: the most land affected first.
+  const ranked = useMemo(() => [...visible].sort((a, b) => b.changedAreaKm2 - a.changedAreaKm2), [visible]);
+
   const filtering = activeTypes.length > 0;
   const areas = useMemo(() => visible.reduce((sum, e) => (e.kind ? sum : sum + e.changedAreaKm2), 0), [visible]);
 
@@ -86,9 +89,10 @@ export function Legend({ className = "" }: LegendProps) {
         })}
       </ul>
 
-      {/* Every analysed area: the same cases as the markers, reachable without the globe. */}
-      <ul className="mt-2 max-h-56 space-y-0.5 overflow-y-auto border-t border-line pt-2" aria-label={t("Analysed areas")}>
-        {visible.map((event) => (
+      {/* Every analysed area, ranked by land affected: the same cases as the markers, reachable without the globe. */}
+      <p className="mt-2 border-t border-line px-1 pt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted">{t("Ranked by land affected")}</p>
+      <ol className="mt-1 max-h-56 space-y-0.5 overflow-y-auto" aria-label={t("Analysed areas, the most land affected first")}>
+        {ranked.map((event, i) => (
           <li key={event.id}>
             <button
               type="button"
@@ -96,6 +100,9 @@ export function Legend({ className = "" }: LegendProps) {
               aria-current={event.id === selectedId}
               className="ge-case"
             >
+              <span className="w-5 shrink-0 text-right font-mono text-[10px] tabular-nums text-muted" aria-hidden="true">
+                {i + 1}
+              </span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={event.thumb} alt="" loading="lazy" />
               <span className="min-w-0 flex-1">
@@ -109,7 +116,7 @@ export function Legend({ className = "" }: LegendProps) {
             </button>
           </li>
         ))}
-      </ul>
+      </ol>
 
       <p className="mt-2 border-t border-line px-1 pt-2.5 text-xs leading-relaxed text-muted" aria-live="polite">
         {visible.length === total ? (
