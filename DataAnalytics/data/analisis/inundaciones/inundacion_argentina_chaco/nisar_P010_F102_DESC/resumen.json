@@ -1,0 +1,40 @@
+{
+  "collection": "inundacion_argentina_chaco",
+  "source": "nisar",
+  "orbit": "P010_F102_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-18T21:58:13Z",
+    "2026-09-30T21:58:13Z",
+    "2026-10-12T21:58:13Z",
+    "2026-10-24T21:58:14Z",
+    "2026-11-05T21:58:14Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32721",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-25",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-18T21:58:13Z",
+    "2026-09-30T21:58:13Z",
+    "2026-10-12T21:58:13Z",
+    "2026-10-24T21:58:14Z"
+  ],
+  "peak_date": "2026-11-05T21:58:14Z",
+  "peak_flood_km2": 43.536,
+  "peak_new_water_km2": 23.965,
+  "peak_flooded_veg_km2": 19.571,
+  "max_extent_km2": 43.536,
+  "max_extent_open_water_km2": 23.965,
+  "max_extent_flooded_veg_km2": 19.571,
+  "permanent_water_km2": 3.482
+}
