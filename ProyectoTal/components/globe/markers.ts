@@ -113,12 +113,21 @@ function createCallout(d: CalloutDatum): HTMLElement {
   let when = "";
   if (d.detail) {
     const main = d.detail.analyses[0];
-    stat =
-      `<div class="ge-callout-stat">` +
-      `<span class="ge-callout-value">${escapeHtml(formatValue(main.land.changedAreaKm2))} km²</span>` +
-      `<span class="ge-callout-metric">changed on land · ${escapeHtml(main.sensor === "nisar" ? "NISAR" : "Sentinel-1")}</span>` +
-      `</div>`;
-    when = `${formatDate(main.pre.date.slice(0, 10))} → ${formatDate(main.post.date.slice(0, 10))}`;
+    if (main) {
+      stat =
+        `<div class="ge-callout-stat">` +
+        `<span class="ge-callout-value">${escapeHtml(formatValue(main.land.changedAreaKm2))} km²</span>` +
+        `<span class="ge-callout-metric">changed on land · ${escapeHtml(main.sensor === "nisar" ? "NISAR" : "Sentinel-1")}</span>` +
+        `</div>`;
+      when = `${formatDate(main.pre.date.slice(0, 10))} → ${formatDate(main.post.date.slice(0, 10))}`;
+    } else {
+      stat =
+        `<div class="ge-callout-stat">` +
+        `<span class="ge-callout-value">${escapeHtml(formatValue(d.detail.changedAreaKm2))} km²</span>` +
+        `<span class="ge-callout-metric">NISAR · ${escapeHtml(METRIC_NOTE[d.detail.kind ?? "agriculture"])}</span>` +
+        `</div>`;
+      when = `${formatDate(d.detail.startDate)} → ${formatDate(d.detail.endDate)}`;
+    }
   }
 
   const card = document.createElement("div");
@@ -134,6 +143,12 @@ function createCallout(d: CalloutDatum): HTMLElement {
 
   return anchor;
 }
+
+const METRIC_NOTE = {
+  agriculture: "farmland that changed",
+  glacier: "ice moving fast",
+  displacement: "ground moved over 5 cm",
+} as const;
 
 export const htmlElement = (d: object): HTMLElement =>
   isCallout(d) ? createCallout(d) : createMarker(d as EventSummary);
