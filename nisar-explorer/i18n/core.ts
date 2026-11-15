@@ -39,7 +39,7 @@ export function msg<T extends string>(text: T): T {
 
 const isLang = (value: unknown): value is Lang => value === "en" || value === "es";
 
-/** ?lang= in the address, then what the visitor chose before, then the browser's language. */
+/** The address (the study guide path, or ?lang=), then what the visitor chose before, then English. */
 export function detectLang(): Lang {
   try {
     // The study guide lives at /aula/es/… or /aula/en/…: the address decides.
@@ -58,14 +58,9 @@ export function detectLang(): Lang {
     const saved = window.localStorage.getItem(LANG_STORAGE_KEY);
     if (isLang(saved)) return saved;
   } catch {
-    // Storage blocked: fall through to the browser language.
+    // Storage blocked: fall through to the default.
   }
-  const preferred = navigator.languages?.length ? navigator.languages : [navigator.language];
-  for (const tag of preferred) {
-    const primary = tag?.toLowerCase().slice(0, 2);
-    if (primary === "es") return "es";
-    if (primary === "en") return "en";
-  }
+  // English is the default, whatever the browser says: the visitor picks Spanish once and it is remembered.
   return "en";
 }
 

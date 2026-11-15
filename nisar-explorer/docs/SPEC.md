@@ -1,14 +1,16 @@
-# Dancing with the SARs — Project specification
+# SarLight — Project specification
 
-NASA Space Apps Challenge 2026 · Challenge: **"Dancing with the SARs"**
-Package name: `globalearth`
+NASA Space Apps Challenge 2026 · Challenge: **"Dancing with the SARs"** · Project name: **SarLight**
+Package name: `nisar-explorer`
 
-> **Status: Phases 1–3, 5 and 6 delivered** (tour mode skipped by decision) —
-> project, data layer, 3D globe, case panel, timeline, filters, search and the
-> Methods page. **All simulated data has been removed:** every figure in the app now
-> comes from real NISAR and Sentinel-1 radar scenes analysed by our own pipeline
-> (`Data analytics/`). Everything else in this document is the plan for the next
-> phases. See [Roadmap](#9-roadmap).
+> **Status:** the explorer is live and complete for the challenge: 3D globe, case
+> panel, timeline, filters, search, story mode, guided demo, "Is my community at
+> risk?", the Methods page, English/Spanish, the three views (Exploration, Analysis,
+> Study) with the classroom and printable study guides, a Ctrl+K menu, an assistant
+> that answers from the analysed data, SEO and an installable web app.
+> **All simulated data has been removed:** every figure comes from real NISAR and
+> Sentinel-1 radar scenes analysed by our own pipeline (`DataAnalytics/`). Tour
+> mode was skipped by decision. See [Roadmap](#9-roadmap).
 
 ---
 
@@ -56,7 +58,7 @@ earthquakes, agriculture, and land deformation.
 | Styling    | Tailwind CSS 4 (`@theme inline` tokens in `app/globals.css`)             |
 | Globe      | `react-globe.gl` on `three`                                              |
 | State      | Zustand                                                                  |
-| Fonts      | Instrument Serif, IBM Plex Sans, IBM Plex Mono via `next/font` (self-hosted at build) |
+| Fonts      | Plus Jakarta Sans (interface), Space Grotesk (titles), Instrument Serif (project name), via `next/font` (self-hosted at build). The printable study guide keeps IBM Plex. |
 
 **Offline at runtime.** Textures are local files copied from the `three-globe`
 package, fonts are self-hosted, the star background is drawn on a canvas. No CDN,
@@ -77,7 +79,7 @@ then pins the framework and the install/build commands.
 ```
 app/
   layout.tsx            fonts + metadata
-  icon.svg              favicon (Earth + radar pulses)
+  icon.png, favicon.ico, apple-icon.png, manifest.ts   icons and web manifest
   globals.css           tokens, .glass, tooltip, marker, loader
   page.tsx              renders <Explorer />
   methods/page.tsx      /methods: how a change is measured, limits, sources
@@ -250,12 +252,13 @@ Sensor tabs, then for the chosen analysis:
 **Direction:** a quiet observatory. The Earth is the hero; the interface is a
 thin instrument layer over it.
 
-- **Colour tokens** — `void #03050a`, `ink #e9edf5`, `muted #9ba7bb`,
-  `line rgb(255 255 255 / .12)`, warm `accent #f2b866`. Dark scheme only.
-- **Type** — Instrument Serif (display, with italics for *SARs*), IBM Plex Sans
-  (text), IBM Plex Mono (labels, numbers, eyebrow lines).
-- **Surfaces** — `.glass`: `rgb(10 14 24 / .62)`, hairline border,
-  `blur(14px) saturate(140%)`, deep shadow.
+- **Colour tokens** — `void #040406`, `ink #f4f4f6`, `muted #9a9aa4`,
+  `line rgb(255 255 255 / .10)`, rose `accent #fb7185` (strong `#e11d48` for fills).
+  Dark scheme only.
+- **Type** — Space Grotesk (titles and big numbers), Plus Jakarta Sans (text,
+  labels, numbers); Instrument Serif only for the project name.
+- **Surfaces** — `.glass`: near-black, hairline border, `blur(20px)`, lit top
+  edge, deep shadow. Controls are pills; panels use 16 px corners.
 - **Change types** — each has a colour **and** its own glyph; colour is never
   the only signal.
 

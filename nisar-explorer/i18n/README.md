@@ -1,6 +1,6 @@
 # Idiomas (ES / EN)
 
-La interfaz está en inglés y español. El visitante empieza en el idioma de su navegador (`?lang=es|en` en la dirección manda sobre todo), puede cambiarlo con el interruptor **ES | EN** de la barra superior (y de `/methods`) y la elección se guarda en `localStorage` (`ge-lang`).
+La interfaz está en inglés y español. **El idioma por defecto es el inglés**, sin importar el idioma del navegador. El visitante lo cambia con el selector de idioma de la barra superior (y de `/methods`) y la elección se guarda en `localStorage` (`ge-lang`); `?lang=es|en` en la dirección manda sobre todo.
 
 ## Cómo funciona
 

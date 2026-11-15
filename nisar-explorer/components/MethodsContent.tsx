@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { LanguageSelect } from "@/components/LanguageSelect";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
-import { msg, useT } from "@/i18n/core";
+import { msg, useLang, useT } from "@/i18n/core";
 import { formatDate, formatValue } from "@/lib/format";
 
 /** One analysis, reduced to what the table shows (so the server page can hand it over as plain data). */
@@ -101,6 +101,7 @@ function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string
 
 export function MethodsContent({ rows }: { rows: MethodsRow[] }) {
   const t = useT();
+  const lang = useLang();
 
   return (
     <main className="mx-auto w-full max-w-3xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
@@ -232,13 +233,13 @@ export function MethodsContent({ rows }: { rows: MethodsRow[] }) {
                       {row.sensor === "nisar" ? "NISAR" : "Sentinel-1"} · {row.pol}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-ink/80">
-                      {formatDate(row.pre)} → {formatDate(row.post)}
+                      {formatDate(row.pre, lang)} → {formatDate(row.post, lang)}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-xs text-ink">
-                      {formatValue(row.changedKm2)} km²
+                      {formatValue(row.changedKm2, lang)} km²
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-xs text-muted">
-                      {formatValue(row.seaKm2)} km²
+                      {formatValue(row.seaKm2, lang)} km²
                     </td>
                   </tr>
                 ))}

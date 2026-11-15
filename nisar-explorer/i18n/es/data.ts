@@ -170,6 +170,8 @@ const countries: Record<string, string> = {
 
 /** Proper nouns that read the same in both languages, so the lookup finds them without a warning. */
 const same = [
+  "NISAR L2 GCOV",
+  "OPERA RTC-S1",
   "Venezuela",
   "Vietnam",
   "Indonesia",

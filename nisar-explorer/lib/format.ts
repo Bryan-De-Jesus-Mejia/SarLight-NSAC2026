@@ -1,26 +1,30 @@
-import { LOCALE_TAG, getLang } from "@/i18n/core";
+import { LOCALE_TAG, getLang, type Lang } from "@/i18n/core";
 
 /*
  * Dates and numbers in the language on screen. These read the current
  * language when called, so a component that uses them should also use `useT()`
  * (or `useLang()`): that is what makes it draw again when the language changes.
+ *
+ * A page that the server also draws (such as /methods) passes the language it got
+ * from `useLang()` as the last argument: that hook still says "en" while the page
+ * hydrates, so the text matches what the server sent.
  */
 
-const tag = (): string => LOCALE_TAG[getLang()];
+const tag = (lang: Lang = getLang()): string => LOCALE_TAG[lang];
 
 const dateFormats = new Map<string, Intl.DateTimeFormat>();
-function dateFormat(key: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
-  const id = `${key}|${tag()}`;
+function dateFormat(key: string, options: Intl.DateTimeFormatOptions, lang?: Lang): Intl.DateTimeFormat {
+  const id = `${key}|${tag(lang)}`;
   let format = dateFormats.get(id);
-  if (!format) dateFormats.set(id, (format = new Intl.DateTimeFormat(tag(), { ...options, timeZone: "UTC" })));
+  if (!format) dateFormats.set(id, (format = new Intl.DateTimeFormat(tag(lang), { ...options, timeZone: "UTC" })));
   return format;
 }
 
 const toDate = (iso: string): Date => new Date(`${iso}T00:00:00Z`);
 
 /** "2025-11-04" → "Nov 4, 2025" / "4 nov 2025". */
-export function formatDate(iso: string): string {
-  return dateFormat("date", { day: "numeric", month: "short", year: "numeric" }).format(toDate(iso));
+export function formatDate(iso: string, lang?: Lang): string {
+  return dateFormat("date", { day: "numeric", month: "short", year: "numeric" }, lang).format(toDate(iso));
 }
 
 /** Short month name: "Nov" / "nov". */
@@ -47,23 +51,23 @@ export function formatClock(timestamp: number): string {
 
 const numberFormats = new Map<string, Intl.NumberFormat>();
 /** A number with a fixed ceiling of decimals, in the language on screen. */
-export function formatNumber(value: number, maxDecimals = 0, minDecimals = 0): string {
-  const id = `${tag()}|${maxDecimals}|${minDecimals}`;
+export function formatNumber(value: number, maxDecimals = 0, minDecimals = 0, lang?: Lang): string {
+  const id = `${tag(lang)}|${maxDecimals}|${minDecimals}`;
   let format = numberFormats.get(id);
   if (!format) {
     numberFormats.set(
       id,
-      (format = new Intl.NumberFormat(tag(), { minimumFractionDigits: minDecimals, maximumFractionDigits: maxDecimals })),
+      (format = new Intl.NumberFormat(tag(lang), { minimumFractionDigits: minDecimals, maximumFractionDigits: maxDecimals })),
     );
   }
   return format.format(value);
 }
 
 /** Number with a sensible count of decimals for its size. */
-export function formatValue(value: number): string {
+export function formatValue(value: number, lang?: Lang): string {
   const abs = Math.abs(value);
   const decimals = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
-  return formatNumber(value, decimals);
+  return formatNumber(value, decimals, 0, lang);
 }
 
 /** Signed number: "+18.4" / "−3.1" (true minus sign). */

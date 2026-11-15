@@ -20,7 +20,9 @@ try {
 if (input.stop_hook_active) process.exit(0);
 
 const here = dirname(fileURLToPath(import.meta.url));
-const result = spawnSync(process.execPath, [join(here, "check-i18n.mjs")], { encoding: "utf8" });
+const run = (script) => spawnSync(process.execPath, [join(here, script)], { encoding: "utf8" });
+// The sentences in the code, and the names of the cases the pipeline adds.
+const result = [run("check-i18n.mjs"), run("check-case-names.mjs")].find((r) => r.status !== 0) ?? { status: 0 };
 
 if (result.status === 0) process.exit(0);
 
