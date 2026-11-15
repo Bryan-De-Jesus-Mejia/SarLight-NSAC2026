@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_colombia_cordoba",
+  "source": "nisar",
+  "orbit": "P047_F006_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-21T10:39:36Z",
+    "2026-10-03T10:39:36Z",
+    "2026-10-15T10:39:36Z",
+    "2026-10-27T10:39:37Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32618",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-23",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-21T10:39:36Z",
+    "2026-10-03T10:39:36Z",
+    "2026-10-15T10:39:36Z"
+  ],
+  "peak_date": "2026-10-27T10:39:37Z",
+  "peak_flood_km2": 27.224,
+  "peak_new_water_km2": 10.264,
+  "peak_flooded_veg_km2": 16.96,
+  "max_extent_km2": 27.224,
+  "max_extent_open_water_km2": 10.264,
+  "max_extent_flooded_veg_km2": 16.96,
+  "permanent_water_km2": 50.434
+}
