@@ -97,6 +97,17 @@ const FLOODS = {
   inundacion_eeuu_pagosa_springs: { id: "pagosa-flood", name: "Pagosa Springs river flooding", region: "Pagosa Springs, Colorado", country: "United States", setting: "river" },
   inundacion_india_jammu: { id: "jammu-flood", name: "Jammu flash flooding", region: "Jammu, Jammu and Kashmir", country: "India", setting: "town" },
   inundacion_nepal_gorkha: { id: "gorkha-flood", name: "Budhi Gandaki flash flood", region: "Chumnubri, Gorkha", country: "Nepal", setting: "valley" },
+  inundacion_nepal_nisikhola_baglung: { id: "baglung-flood", name: "Nisikhola flash flood", region: "Nisikhola, Baglung", country: "Nepal", setting: "valley" },
+  inundacion_colombia_turbaco: { id: "turbaco-flood", name: "Turbaco flooding", region: "Turbaco, Bolívar", country: "Colombia", setting: "town" },
+  inundacion_ecuador_quininde: { id: "quininde-flood", name: "Quinindé river flooding", region: "Quinindé, Esmeraldas", country: "Ecuador", setting: "river" },
+  inundacion_eeuu_durango: { id: "durango-flood", name: "Animas River flooding at Durango", region: "Durango, Colorado", country: "United States", setting: "river" },
+  inundacion_eeuu_south_fork: { id: "south-fork-flood", name: "South Fork river flooding", region: "South Fork, Colorado", country: "United States", setting: "river" },
+  inundacion_eeuu_farmington: { id: "farmington-flood", name: "Farmington flooding", region: "Farmington, New Mexico", country: "United States", setting: "town" },
+  inundacion_eeuu_hurricane_utah: { id: "hurricane-utah-flood", name: "Hurricane flash flooding", region: "Hurricane, Utah", country: "United States", setting: "town" },
+  inundacion_espana_denia: { id: "denia-flood", name: "Dénia flooding", region: "Dénia, Alicante", country: "Spain", setting: "town" },
+  inundacion_espana_gandia_oliva: { id: "gandia-flood", name: "Gandia and Oliva flooding", region: "La Safor, Valencia", country: "Spain", setting: "town" },
+  inundacion_vietnam_da_nang: { id: "da-nang-flood", name: "Da Nang urban flooding", region: "Da Nang", country: "Vietnam", setting: "town" },
+  inundacion_vietnam_hue: { id: "hue-flood", name: "Hue flooding", region: "Hue", country: "Vietnam", setting: "town" },
 };
 /* The ground before and after a dated event (date chosen by the team from public reports). */
 const EVENTS = {
@@ -109,6 +120,8 @@ const EVENTS = {
   "deslizamientos/deslizamiento_guatemala_san_miguel_petapa": { id: "petapa-landslide", type: "landslide", cause: "landslide", name: "San Miguel Petapa landslide watch", region: "Villa Hermosa, San Miguel Petapa", country: "Guatemala" },
   "deslizamientos/deslizamiento_honduras_santa_cruz_yojoa": { id: "yojoa-landslide", type: "landslide", cause: "landslide", name: "Santa Cruz de Yojoa landslide watch", region: "Santa Cruz de Yojoa, Cortés", country: "Honduras" },
   "vientos/viento_brasil_santa_maria": { id: "santa-maria-wind", type: "storm", cause: "wind", name: "Santa Maria windstorm", region: "Santa Maria, Rio Grande do Sul", country: "Brazil" },
+  "deslizamientos/deslizamiento_honduras_tegucigalpa": { id: "tegucigalpa-landslide", type: "landslide", cause: "landslide", name: "Tegucigalpa landslide watch", region: "Comayagüela, Tegucigalpa", country: "Honduras" },
+  "vientos/viento_india_kakinada_yanam": { id: "kakinada-wind", type: "storm", cause: "wind", name: "Kakinada cyclone wind damage", region: "Kakinada and Yanam", country: "India" },
 };
 /* Reservoirs and lakes: calm open water counted on every pass. */
 const WATER = {
@@ -123,6 +136,9 @@ const WATER = {
   embalse_el_salvador_cerron_grande: { id: "cerron-grande-reservoir", body: "reservoir", name: "Cerrón Grande reservoir", region: "Chalatenango and Cuscatlán", country: "El Salvador" },
   embalse_el_salvador_el_chaparral: { id: "el-chaparral-reservoir", body: "reservoir", name: "El Chaparral reservoir", region: "San Luis de la Reina, San Miguel", country: "El Salvador" },
   lago_el_salvador_guija: { id: "guija-lake", body: "lake", name: "Lake Güija", region: "Metapán, Santa Ana", country: "El Salvador" },
+  embalse_puerto_rico_la_plata: { id: "la-plata-reservoir", body: "reservoir", name: "La Plata reservoir", region: "Toa Alta, Naranjito and Bayamón", country: "Puerto Rico" },
+  lago_panama_gatun: { id: "gatun-lake", body: "lake", name: "Gatún Lake", region: "Colón and Panamá Oeste", country: "Panama" },
+  lago_peru_titicaca_puno: { id: "titicaca-lake", body: "lake", name: "Lake Titicaca at Puno Bay", region: "Puno Bay, Puno", country: "Peru" },
 };
 
 /* ------------------------------ helpers ---------------------------------- */

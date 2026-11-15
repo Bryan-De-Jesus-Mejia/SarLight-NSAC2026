@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-15T07:59:44.081Z",
+ "generatedAt": "2026-11-15T15:35:19.179Z",
  "cases": [
   {
    "id": "venezuela-quake",
@@ -5472,6 +5472,354 @@
    }
   },
   {
+   "id": "gatun-lake",
+   "type": "wetland",
+   "name": "Gatún Lake",
+   "region": "Colón and Panamá Oeste",
+   "country": "Panama",
+   "lat": 9.17,
+   "lon": -79.79,
+   "startDate": "2026-06-19",
+   "endDate": "2026-11-07",
+   "footprint": [
+    [
+     -80,
+     9.36
+    ],
+    [
+     -79.58,
+     9.36
+    ],
+    [
+     -79.58,
+     8.98
+    ],
+    [
+     -80,
+     8.98
+    ]
+   ],
+   "thumb": "/analysis-extra/gatun-lake/thumb.webp",
+   "changedAreaKm2": 212.71,
+   "changedPct": 0,
+   "extra": {
+    "kind": "water",
+    "body": "lake",
+    "orbits": [
+     {
+      "key": "P076_F006_ASCE",
+      "label": "Track 76 · frame 6 · ascending",
+      "track": 76,
+      "frame": 6,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32617",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-19",
+       "2026-07-01",
+       "2026-07-13",
+       "2026-07-25",
+       "2026-08-18",
+       "2026-08-30",
+       "2026-09-11",
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17",
+       "2026-10-29",
+       "2026-10-29"
+      ],
+      "map": "/analysis-extra/gatun-lake/P076_F006_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       902
+      ],
+      "frames": [
+       {
+        "date": "2026-06-19",
+        "src": "/analysis-extra/gatun-lake/P076_F006_ASCE_2026-06-19.webp"
+       },
+       {
+        "date": "2026-07-13",
+        "src": "/analysis-extra/gatun-lake/P076_F006_ASCE_2026-07-13.webp"
+       },
+       {
+        "date": "2026-08-18",
+        "src": "/analysis-extra/gatun-lake/P076_F006_ASCE_2026-08-18.webp"
+       },
+       {
+        "date": "2026-09-11",
+        "src": "/analysis-extra/gatun-lake/P076_F006_ASCE_2026-09-11.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/gatun-lake/P076_F006_ASCE_2026-10-05.webp"
+       },
+       {
+        "date": "2026-10-29",
+        "src": "/analysis-extra/gatun-lake/P076_F006_ASCE_2026-10-29.webp"
+       }
+      ],
+      "firstDate": "2026-06-19",
+      "firstWaterKm2": 172.95,
+      "lastDate": "2026-10-29",
+      "lastWaterKm2": 98.8,
+      "changeKm2": -74.14,
+      "changePct": -42.9,
+      "minDate": "2026-08-30",
+      "minWaterKm2": 47.45,
+      "maxDate": "2026-10-05",
+      "maxWaterKm2": 212.71,
+      "rangePctOfMax": 77.7,
+      "series": [
+       {
+        "date": "2026-06-19",
+        "coDb": -6.695,
+        "crossDb": -11.962,
+        "validPct": 100,
+        "waterKm2": 172.948
+       },
+       {
+        "date": "2026-07-01",
+        "coDb": -6.984,
+        "crossDb": -12.268,
+        "validPct": 100,
+        "waterKm2": 59.538
+       },
+       {
+        "date": "2026-07-13",
+        "coDb": -6.457,
+        "crossDb": -11.75,
+        "validPct": 100,
+        "waterKm2": 104.464
+       },
+       {
+        "date": "2026-07-25",
+        "coDb": -6.83,
+        "crossDb": -12.048,
+        "validPct": 100,
+        "waterKm2": 66.111
+       },
+       {
+        "date": "2026-08-18",
+        "coDb": -6.437,
+        "crossDb": -11.676,
+        "validPct": 100,
+        "waterKm2": 198.281
+       },
+       {
+        "date": "2026-08-30",
+        "coDb": -6.443,
+        "crossDb": -11.701,
+        "validPct": 100,
+        "waterKm2": 47.452
+       },
+       {
+        "date": "2026-09-11",
+        "coDb": -6.512,
+        "crossDb": -11.868,
+        "validPct": 100,
+        "waterKm2": 77.678
+       },
+       {
+        "date": "2026-09-23",
+        "coDb": -6.479,
+        "crossDb": -11.73,
+        "validPct": 100,
+        "waterKm2": 212.303
+       },
+       {
+        "date": "2026-10-05",
+        "coDb": -6.582,
+        "crossDb": -11.74,
+        "validPct": 100,
+        "waterKm2": 212.712
+       },
+       {
+        "date": "2026-10-17",
+        "coDb": -6.609,
+        "crossDb": -11.933,
+        "validPct": 100,
+        "waterKm2": 156.575
+       },
+       {
+        "date": "2026-10-29",
+        "coDb": -6.858,
+        "crossDb": -11.717,
+        "validPct": 100,
+        "waterKm2": 128.086
+       },
+       {
+        "date": "2026-10-29",
+        "coDb": -6.434,
+        "crossDb": -11.7,
+        "validPct": 100,
+        "waterKm2": 98.803
+       }
+      ]
+     },
+     {
+      "key": "P040_F084_DESC",
+      "label": "Track 40 · frame 84 · descending",
+      "track": 40,
+      "frame": 84,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32617",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-28",
+       "2026-07-10",
+       "2026-07-22",
+       "2026-08-15",
+       "2026-08-27",
+       "2026-09-08",
+       "2026-09-20",
+       "2026-10-02",
+       "2026-10-14",
+       "2026-10-26",
+       "2026-10-26",
+       "2026-11-07"
+      ],
+      "map": "/analysis-extra/gatun-lake/P040_F084_DESC_map.webp",
+      "mapSize": [
+       1000,
+       902
+      ],
+      "frames": [
+       {
+        "date": "2026-06-28",
+        "src": "/analysis-extra/gatun-lake/P040_F084_DESC_2026-06-28.webp"
+       },
+       {
+        "date": "2026-07-22",
+        "src": "/analysis-extra/gatun-lake/P040_F084_DESC_2026-07-22.webp"
+       },
+       {
+        "date": "2026-08-27",
+        "src": "/analysis-extra/gatun-lake/P040_F084_DESC_2026-08-27.webp"
+       },
+       {
+        "date": "2026-09-20",
+        "src": "/analysis-extra/gatun-lake/P040_F084_DESC_2026-09-20.webp"
+       },
+       {
+        "date": "2026-10-14",
+        "src": "/analysis-extra/gatun-lake/P040_F084_DESC_2026-10-14.webp"
+       },
+       {
+        "date": "2026-11-07",
+        "src": "/analysis-extra/gatun-lake/P040_F084_DESC_2026-11-07.webp"
+       }
+      ],
+      "firstDate": "2026-06-28",
+      "firstWaterKm2": 28.15,
+      "lastDate": "2026-11-07",
+      "lastWaterKm2": 62.31,
+      "changeKm2": 34.16,
+      "changePct": 121.4,
+      "minDate": "2026-09-08",
+      "minWaterKm2": 22.12,
+      "maxDate": "2026-10-14",
+      "maxWaterKm2": 150.66,
+      "rangePctOfMax": 85.3,
+      "series": [
+       {
+        "date": "2026-06-28",
+        "coDb": -7.05,
+        "crossDb": -12.018,
+        "validPct": 100,
+        "waterKm2": 28.151
+       },
+       {
+        "date": "2026-07-10",
+        "coDb": -7.047,
+        "crossDb": -12.206,
+        "validPct": 100,
+        "waterKm2": 57.989
+       },
+       {
+        "date": "2026-07-22",
+        "coDb": -6.696,
+        "crossDb": -11.893,
+        "validPct": 100,
+        "waterKm2": 144.678
+       },
+       {
+        "date": "2026-08-15",
+        "coDb": -6.862,
+        "crossDb": -12.08,
+        "validPct": 100,
+        "waterKm2": 35.539
+       },
+       {
+        "date": "2026-08-27",
+        "coDb": -6.363,
+        "crossDb": -11.593,
+        "validPct": 100,
+        "waterKm2": 73.294
+       },
+       {
+        "date": "2026-09-08",
+        "coDb": -6.701,
+        "crossDb": -11.927,
+        "validPct": 100,
+        "waterKm2": 22.122
+       },
+       {
+        "date": "2026-09-20",
+        "coDb": -6.419,
+        "crossDb": -11.618,
+        "validPct": 100,
+        "waterKm2": 108.654
+       },
+       {
+        "date": "2026-10-02",
+        "coDb": -6.571,
+        "crossDb": -11.661,
+        "validPct": 100,
+        "waterKm2": 130.898
+       },
+       {
+        "date": "2026-10-14",
+        "coDb": -6.617,
+        "crossDb": -11.822,
+        "validPct": 100,
+        "waterKm2": 150.661
+       },
+       {
+        "date": "2026-10-26",
+        "coDb": -6.845,
+        "crossDb": -11.725,
+        "validPct": 100,
+        "waterKm2": 42.428
+       },
+       {
+        "date": "2026-10-26",
+        "coDb": -6.567,
+        "crossDb": -11.811,
+        "validPct": 100,
+        "waterKm2": 33.964
+       },
+       {
+        "date": "2026-11-07",
+        "coDb": -6.966,
+        "crossDb": -11.753,
+        "validPct": 100,
+        "waterKm2": 62.314
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
    "id": "amazon-clearing",
    "type": "agriculture",
    "name": "Amazon forest clearing",
@@ -7266,6 +7614,582 @@
         "crossDb": -12.229,
         "validPct": 93.86,
         "waterKm2": 1.265
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "la-plata-reservoir",
+   "type": "wetland",
+   "name": "La Plata reservoir",
+   "region": "Toa Alta, Naranjito and Bayamón",
+   "country": "Puerto Rico",
+   "lat": 18.31,
+   "lon": -66.225,
+   "startDate": "2026-06-29",
+   "endDate": "2026-11-02",
+   "footprint": [
+    [
+     -66.26,
+     18.35
+    ],
+    [
+     -66.19,
+     18.35
+    ],
+    [
+     -66.19,
+     18.27
+    ],
+    [
+     -66.26,
+     18.27
+    ]
+   ],
+   "thumb": "/analysis-extra/la-plata-reservoir/thumb.webp",
+   "changedAreaKm2": 0.16,
+   "changedPct": 0,
+   "extra": {
+    "kind": "water",
+    "body": "reservoir",
+    "orbits": [
+     {
+      "key": "P133_F011_ASCE",
+      "label": "Track 133 · frame 11 · ascending",
+      "track": 133,
+      "frame": 11,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32620",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-07-05",
+       "2026-07-17",
+       "2026-08-10",
+       "2026-08-22",
+       "2026-09-03",
+       "2026-09-15",
+       "2026-09-27",
+       "2026-10-09",
+       "2026-10-21",
+       "2026-11-02"
+      ],
+      "map": "/analysis-extra/la-plata-reservoir/P133_F011_ASCE_map.webp",
+      "mapSize": [
+       781,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-07-05",
+        "src": "/analysis-extra/la-plata-reservoir/P133_F011_ASCE_2026-07-05.webp"
+       },
+       {
+        "date": "2026-08-10",
+        "src": "/analysis-extra/la-plata-reservoir/P133_F011_ASCE_2026-08-10.webp"
+       },
+       {
+        "date": "2026-09-03",
+        "src": "/analysis-extra/la-plata-reservoir/P133_F011_ASCE_2026-09-03.webp"
+       },
+       {
+        "date": "2026-09-15",
+        "src": "/analysis-extra/la-plata-reservoir/P133_F011_ASCE_2026-09-15.webp"
+       },
+       {
+        "date": "2026-10-09",
+        "src": "/analysis-extra/la-plata-reservoir/P133_F011_ASCE_2026-10-09.webp"
+       },
+       {
+        "date": "2026-11-02",
+        "src": "/analysis-extra/la-plata-reservoir/P133_F011_ASCE_2026-11-02.webp"
+       }
+      ],
+      "firstDate": "2026-07-05",
+      "firstWaterKm2": 0.12,
+      "lastDate": "2026-11-02",
+      "lastWaterKm2": 0.16,
+      "changeKm2": 0.04,
+      "changePct": 30.1,
+      "minDate": "2026-08-22",
+      "minWaterKm2": 0,
+      "maxDate": "2026-11-02",
+      "maxWaterKm2": 0.16,
+      "rangePctOfMax": 100,
+      "series": [
+       {
+        "date": "2026-07-05",
+        "coDb": -6.512,
+        "crossDb": -12.181,
+        "validPct": 99.99,
+        "waterKm2": 0.123
+       },
+       {
+        "date": "2026-07-17",
+        "coDb": -6.411,
+        "crossDb": -12.038,
+        "validPct": 99.99,
+        "waterKm2": 0.023
+       },
+       {
+        "date": "2026-08-10",
+        "coDb": -6.13,
+        "crossDb": -11.859,
+        "validPct": 99.99,
+        "waterKm2": 0.023
+       },
+       {
+        "date": "2026-08-22",
+        "coDb": -6.224,
+        "crossDb": -11.853,
+        "validPct": 99.99,
+        "waterKm2": 0
+       },
+       {
+        "date": "2026-09-03",
+        "coDb": -5.92,
+        "crossDb": -11.778,
+        "validPct": 99.99,
+        "waterKm2": 0.008
+       },
+       {
+        "date": "2026-09-15",
+        "coDb": -5.907,
+        "crossDb": -11.683,
+        "validPct": 99.99,
+        "waterKm2": 0.008
+       },
+       {
+        "date": "2026-09-27",
+        "coDb": -6.278,
+        "crossDb": -11.938,
+        "validPct": 99.99,
+        "waterKm2": 0.009
+       },
+       {
+        "date": "2026-10-09",
+        "coDb": -6.337,
+        "crossDb": -12.085,
+        "validPct": 99.99,
+        "waterKm2": 0.048
+       },
+       {
+        "date": "2026-10-21",
+        "coDb": -5.981,
+        "crossDb": -11.806,
+        "validPct": 99.99,
+        "waterKm2": 0.004
+       },
+       {
+        "date": "2026-11-02",
+        "coDb": -6.962,
+        "crossDb": -12.368,
+        "validPct": 99.99,
+        "waterKm2": 0.16
+       }
+      ]
+     },
+     {
+      "key": "P054_F079_DESC",
+      "label": "Track 54 · frame 79 · descending",
+      "track": 54,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-29",
+       "2026-07-11",
+       "2026-07-23",
+       "2026-08-16",
+       "2026-08-28",
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15",
+       "2026-10-27"
+      ],
+      "map": "/analysis-extra/la-plata-reservoir/P054_F079_DESC_map.webp",
+      "mapSize": [
+       779,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-06-29",
+        "src": "/analysis-extra/la-plata-reservoir/P054_F079_DESC_2026-06-29.webp"
+       },
+       {
+        "date": "2026-07-23",
+        "src": "/analysis-extra/la-plata-reservoir/P054_F079_DESC_2026-07-23.webp"
+       },
+       {
+        "date": "2026-08-28",
+        "src": "/analysis-extra/la-plata-reservoir/P054_F079_DESC_2026-08-28.webp"
+       },
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/la-plata-reservoir/P054_F079_DESC_2026-09-09.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/la-plata-reservoir/P054_F079_DESC_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-27",
+        "src": "/analysis-extra/la-plata-reservoir/P054_F079_DESC_2026-10-27.webp"
+       }
+      ],
+      "firstDate": "2026-06-29",
+      "firstWaterKm2": 0,
+      "lastDate": "2026-10-27",
+      "lastWaterKm2": 0.05,
+      "changeKm2": 0.04,
+      "changePct": 1050,
+      "minDate": "2026-07-11",
+      "minWaterKm2": 0,
+      "maxDate": "2026-10-27",
+      "maxWaterKm2": 0.05,
+      "rangePctOfMax": 95.7,
+      "series": [
+       {
+        "date": "2026-06-29",
+        "coDb": -6.467,
+        "crossDb": -12.236,
+        "validPct": 100,
+        "waterKm2": 0.004
+       },
+       {
+        "date": "2026-07-11",
+        "coDb": -6.338,
+        "crossDb": -12.17,
+        "validPct": 100,
+        "waterKm2": 0.002
+       },
+       {
+        "date": "2026-07-23",
+        "coDb": -6.383,
+        "crossDb": -12.171,
+        "validPct": 100,
+        "waterKm2": 0.006
+       },
+       {
+        "date": "2026-08-16",
+        "coDb": -6.166,
+        "crossDb": -12.118,
+        "validPct": 100,
+        "waterKm2": 0.004
+       },
+       {
+        "date": "2026-08-28",
+        "coDb": -6.246,
+        "crossDb": -11.937,
+        "validPct": 100,
+        "waterKm2": 0.006
+       },
+       {
+        "date": "2026-09-09",
+        "coDb": -5.764,
+        "crossDb": -11.918,
+        "validPct": 100,
+        "waterKm2": 0.002
+       },
+       {
+        "date": "2026-09-21",
+        "coDb": -6.11,
+        "crossDb": -12.12,
+        "validPct": 100,
+        "waterKm2": 0.004
+       },
+       {
+        "date": "2026-10-03",
+        "coDb": -6.138,
+        "crossDb": -12.221,
+        "validPct": 100,
+        "waterKm2": 0.004
+       },
+       {
+        "date": "2026-10-15",
+        "coDb": -6.153,
+        "crossDb": -12.131,
+        "validPct": 100,
+        "waterKm2": 0.006
+       },
+       {
+        "date": "2026-10-27",
+        "coDb": -6.911,
+        "crossDb": -12.604,
+        "validPct": 100,
+        "waterKm2": 0.046
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "titicaca-lake",
+   "type": "wetland",
+   "name": "Lake Titicaca at Puno Bay",
+   "region": "Puno Bay, Puno",
+   "country": "Peru",
+   "lat": -15.82,
+   "lon": -69.955,
+   "startDate": "2026-06-29",
+   "endDate": "2026-10-27",
+   "footprint": [
+    [
+     -70.03,
+     -15.76
+    ],
+    [
+     -69.88,
+     -15.76
+    ],
+    [
+     -69.88,
+     -15.88
+    ],
+    [
+     -70.03,
+     -15.88
+    ]
+   ],
+   "thumb": "/analysis-extra/titicaca-lake/thumb.webp",
+   "changedAreaKm2": 86.49,
+   "changedPct": 0,
+   "extra": {
+    "kind": "water",
+    "body": "lake",
+    "orbits": [
+     {
+      "key": "P046_F170_ASCE",
+      "label": "Track 46 · frame 170 · ascending",
+      "track": 46,
+      "frame": 170,
+      "direction": "ascending",
+      "pixelM": 40,
+      "crs": "EPSG:32719",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-29",
+       "2026-07-11",
+       "2026-07-23",
+       "2026-08-16",
+       "2026-08-28",
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15",
+       "2026-10-27"
+      ],
+      "map": "/analysis-extra/titicaca-lake/P046_F170_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       821
+      ],
+      "frames": [
+       {
+        "date": "2026-06-29",
+        "src": "/analysis-extra/titicaca-lake/P046_F170_ASCE_2026-06-29.webp"
+       },
+       {
+        "date": "2026-07-23",
+        "src": "/analysis-extra/titicaca-lake/P046_F170_ASCE_2026-07-23.webp"
+       },
+       {
+        "date": "2026-08-28",
+        "src": "/analysis-extra/titicaca-lake/P046_F170_ASCE_2026-08-28.webp"
+       },
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/titicaca-lake/P046_F170_ASCE_2026-09-09.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/titicaca-lake/P046_F170_ASCE_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-27",
+        "src": "/analysis-extra/titicaca-lake/P046_F170_ASCE_2026-10-27.webp"
+       }
+      ],
+      "firstDate": "2026-06-29",
+      "firstWaterKm2": 55.52,
+      "lastDate": "2026-10-27",
+      "lastWaterKm2": 45.41,
+      "changeKm2": -10.11,
+      "changePct": -18.2,
+      "minDate": "2026-07-11",
+      "minWaterKm2": 44.01,
+      "maxDate": "2026-07-23",
+      "maxWaterKm2": 86.49,
+      "rangePctOfMax": 49.1,
+      "series": [
+       {
+        "date": "2026-06-29",
+        "coDb": -12.948,
+        "crossDb": -22.89,
+        "validPct": 100,
+        "waterKm2": 55.515
+       },
+       {
+        "date": "2026-07-11",
+        "coDb": -13.421,
+        "crossDb": -23.471,
+        "validPct": 100,
+        "waterKm2": 44.013
+       },
+       {
+        "date": "2026-07-23",
+        "coDb": -13.214,
+        "crossDb": -23.285,
+        "validPct": 100,
+        "waterKm2": 86.491
+       },
+       {
+        "date": "2026-08-16",
+        "coDb": -12.762,
+        "crossDb": -23.164,
+        "validPct": 100,
+        "waterKm2": 83.69
+       },
+       {
+        "date": "2026-08-28",
+        "coDb": -12.764,
+        "crossDb": -23.467,
+        "validPct": 100,
+        "waterKm2": 83.866
+       },
+       {
+        "date": "2026-09-09",
+        "coDb": -12.851,
+        "crossDb": -23.404,
+        "validPct": 100,
+        "waterKm2": 63.493
+       },
+       {
+        "date": "2026-09-21",
+        "coDb": -13.069,
+        "crossDb": -23.961,
+        "validPct": 100,
+        "waterKm2": 84.43
+       },
+       {
+        "date": "2026-10-03",
+        "coDb": -13.41,
+        "crossDb": -24.007,
+        "validPct": 100,
+        "waterKm2": 81.256
+       },
+       {
+        "date": "2026-10-15",
+        "coDb": -13.394,
+        "crossDb": -23.862,
+        "validPct": 100,
+        "waterKm2": 80.318
+       },
+       {
+        "date": "2026-10-27",
+        "coDb": -13.575,
+        "crossDb": -23.904,
+        "validPct": 100,
+        "waterKm2": 45.406
+       }
+      ]
+     },
+     {
+      "key": "P025_F096_DESC",
+      "label": "Track 25 · frame 96 · descending",
+      "track": 25,
+      "frame": 96,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32719",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-07-09",
+       "2026-08-26",
+       "2026-09-19",
+       "2026-10-13"
+      ],
+      "map": "/analysis-extra/titicaca-lake/P025_F096_DESC_map.webp",
+      "mapSize": [
+       1000,
+       821
+      ],
+      "frames": [
+       {
+        "date": "2026-07-09",
+        "src": "/analysis-extra/titicaca-lake/P025_F096_DESC_2026-07-09.webp"
+       },
+       {
+        "date": "2026-08-26",
+        "src": "/analysis-extra/titicaca-lake/P025_F096_DESC_2026-08-26.webp"
+       },
+       {
+        "date": "2026-09-19",
+        "src": "/analysis-extra/titicaca-lake/P025_F096_DESC_2026-09-19.webp"
+       },
+       {
+        "date": "2026-10-13",
+        "src": "/analysis-extra/titicaca-lake/P025_F096_DESC_2026-10-13.webp"
+       }
+      ],
+      "firstDate": "2026-07-09",
+      "firstWaterKm2": 86.86,
+      "lastDate": "2026-10-13",
+      "lastWaterKm2": 74.96,
+      "changeKm2": -11.9,
+      "changePct": -13.7,
+      "minDate": "2026-09-19",
+      "minWaterKm2": 50.43,
+      "maxDate": "2026-07-09",
+      "maxWaterKm2": 86.86,
+      "rangePctOfMax": 41.9,
+      "series": [
+       {
+        "date": "2026-07-09",
+        "coDb": -13.483,
+        "crossDb": -21.689,
+        "validPct": 100,
+        "waterKm2": 86.862
+       },
+       {
+        "date": "2026-08-26",
+        "coDb": -13.189,
+        "crossDb": -21.986,
+        "validPct": 100,
+        "waterKm2": 77.458
+       },
+       {
+        "date": "2026-09-19",
+        "coDb": -13.084,
+        "crossDb": -22.269,
+        "validPct": 100,
+        "waterKm2": 50.427
+       },
+       {
+        "date": "2026-10-13",
+        "coDb": -13.932,
+        "crossDb": -22.402,
+        "validPct": 100,
+        "waterKm2": 74.958
        }
       ]
      }
@@ -10265,6 +11189,376 @@
    }
   },
   {
+   "id": "baglung-flood",
+   "type": "flood",
+   "name": "Nisikhola flash flood",
+   "region": "Nisikhola, Baglung",
+   "country": "Nepal",
+   "lat": 28.375,
+   "lon": 83.025,
+   "startDate": "2026-08-18",
+   "endDate": "2026-10-10",
+   "footprint": [
+    [
+     82.88,
+     28.48
+    ],
+    [
+     83.17,
+     28.48
+    ],
+    [
+     83.17,
+     28.27
+    ],
+    [
+     82.88,
+     28.27
+    ]
+   ],
+   "thumb": "/analysis-extra/baglung-flood/thumb.webp",
+   "changedAreaKm2": 66.55,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "valley",
+    "orbits": [
+     {
+      "key": "P077_F074_DESC",
+      "label": "Track 77 · frame 74 · descending",
+      "track": 77,
+      "frame": 74,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32644",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-18",
+       "2026-08-30",
+       "2026-09-11",
+       "2026-09-23",
+       "2026-10-05"
+      ],
+      "map": "/analysis-extra/baglung-flood/P077_F074_DESC_map.webp",
+      "mapSize": [
+       1000,
+       818
+      ],
+      "frames": [
+       {
+        "date": "2026-08-18",
+        "src": "/analysis-extra/baglung-flood/P077_F074_DESC_2026-08-18.webp"
+       },
+       {
+        "date": "2026-08-30",
+        "src": "/analysis-extra/baglung-flood/P077_F074_DESC_2026-08-30.webp"
+       },
+       {
+        "date": "2026-09-11",
+        "src": "/analysis-extra/baglung-flood/P077_F074_DESC_2026-09-11.webp"
+       },
+       {
+        "date": "2026-09-23",
+        "src": "/analysis-extra/baglung-flood/P077_F074_DESC_2026-09-23.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/baglung-flood/P077_F074_DESC_2026-10-05.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-08-18",
+       "2026-08-30",
+       "2026-09-11",
+       "2026-09-23"
+      ],
+      "peakDate": "2026-10-05",
+      "peakFloodKm2": 66.55,
+      "peakNewWaterKm2": 0.19,
+      "peakFloodedVegKm2": 66.36,
+      "maxExtentKm2": 66.55,
+      "maxExtentOpenWaterKm2": 0.19,
+      "maxExtentFloodedVegKm2": 66.36,
+      "permanentWaterKm2": 22.91,
+      "series": [
+       {
+        "date": "2026-08-18",
+        "baseline": true,
+        "coDb": -5.169,
+        "crossDb": -9.787,
+        "validPct": 98.85,
+        "newWaterKm2": 0.473,
+        "floodedVegKm2": 55.348,
+        "permanentWaterKm2": 0.2,
+        "floodKm2": 55.821
+       },
+       {
+        "date": "2026-08-30",
+        "baseline": true,
+        "coDb": -5.231,
+        "crossDb": -10.26,
+        "validPct": 99.58,
+        "newWaterKm2": 24.081,
+        "floodedVegKm2": 1.921,
+        "permanentWaterKm2": 22.799,
+        "floodKm2": 26.002
+       },
+       {
+        "date": "2026-09-11",
+        "baseline": true,
+        "coDb": -4.948,
+        "crossDb": -9.64,
+        "validPct": 98.85,
+        "newWaterKm2": 0.238,
+        "floodedVegKm2": 66.382,
+        "permanentWaterKm2": 0.163,
+        "floodKm2": 66.62
+       },
+       {
+        "date": "2026-09-23",
+        "baseline": true,
+        "coDb": -5.383,
+        "crossDb": -10.457,
+        "validPct": 99.58,
+        "newWaterKm2": 23.932,
+        "floodedVegKm2": 4.23,
+        "permanentWaterKm2": 22.792,
+        "floodKm2": 28.162
+       },
+       {
+        "date": "2026-10-05",
+        "baseline": false,
+        "coDb": -4.669,
+        "crossDb": -9.682,
+        "validPct": 98.85,
+        "newWaterKm2": 0.187,
+        "floodedVegKm2": 66.358,
+        "permanentWaterKm2": 0.176,
+        "floodKm2": 66.545
+       }
+      ]
+     },
+     {
+      "key": "P149_F074_DESC",
+      "label": "Track 149 · frame 74 · descending",
+      "track": 149,
+      "frame": 74,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32644",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-23",
+       "2026-09-04",
+       "2026-09-16",
+       "2026-09-28",
+       "2026-10-10"
+      ],
+      "map": "/analysis-extra/baglung-flood/P149_F074_DESC_map.webp",
+      "mapSize": [
+       1000,
+       817
+      ],
+      "frames": [
+       {
+        "date": "2026-08-23",
+        "src": "/analysis-extra/baglung-flood/P149_F074_DESC_2026-08-23.webp"
+       },
+       {
+        "date": "2026-09-04",
+        "src": "/analysis-extra/baglung-flood/P149_F074_DESC_2026-09-04.webp"
+       },
+       {
+        "date": "2026-09-16",
+        "src": "/analysis-extra/baglung-flood/P149_F074_DESC_2026-09-16.webp"
+       },
+       {
+        "date": "2026-09-28",
+        "src": "/analysis-extra/baglung-flood/P149_F074_DESC_2026-09-28.webp"
+       },
+       {
+        "date": "2026-10-10",
+        "src": "/analysis-extra/baglung-flood/P149_F074_DESC_2026-10-10.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-08-23",
+       "2026-09-04",
+       "2026-09-16"
+      ],
+      "peakDate": "2026-09-28",
+      "peakFloodKm2": 5.84,
+      "peakNewWaterKm2": 1.59,
+      "peakFloodedVegKm2": 4.25,
+      "maxExtentKm2": 8.09,
+      "maxExtentOpenWaterKm2": 1.59,
+      "maxExtentFloodedVegKm2": 6.5,
+      "permanentWaterKm2": 0.01,
+      "series": [
+       {
+        "date": "2026-08-23",
+        "baseline": true,
+        "coDb": -4.785,
+        "crossDb": -9.754,
+        "validPct": 99.98,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 1.589,
+        "permanentWaterKm2": 0.006,
+        "floodKm2": 1.589
+       },
+       {
+        "date": "2026-09-04",
+        "baseline": true,
+        "coDb": -6.074,
+        "crossDb": -10.376,
+        "validPct": 99.92,
+        "newWaterKm2": 0.022,
+        "floodedVegKm2": 0.035,
+        "permanentWaterKm2": 0.006,
+        "floodKm2": 0.057
+       },
+       {
+        "date": "2026-09-16",
+        "baseline": true,
+        "coDb": -5.295,
+        "crossDb": -9.903,
+        "validPct": 99.98,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.763,
+        "permanentWaterKm2": 0.006,
+        "floodKm2": 0.763
+       },
+       {
+        "date": "2026-09-28",
+        "baseline": false,
+        "coDb": -6.081,
+        "crossDb": -10.739,
+        "validPct": 99.92,
+        "newWaterKm2": 1.587,
+        "floodedVegKm2": 4.251,
+        "permanentWaterKm2": 0,
+        "floodKm2": 5.838
+       },
+       {
+        "date": "2026-10-10",
+        "baseline": false,
+        "coDb": -5.081,
+        "crossDb": -10.413,
+        "validPct": 99.98,
+        "newWaterKm2": 0.005,
+        "floodedVegKm2": 2.44,
+        "permanentWaterKm2": 0.006,
+        "floodKm2": 2.445
+       }
+      ]
+     },
+     {
+      "key": "P026_F016_ASCE",
+      "label": "Track 26 · frame 16 · ascending",
+      "track": 26,
+      "frame": 16,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32644",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-26",
+       "2026-09-19",
+       "2026-10-01"
+      ],
+      "map": "/analysis-extra/baglung-flood/P026_F016_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       818
+      ],
+      "frames": [
+       {
+        "date": "2026-08-26",
+        "src": "/analysis-extra/baglung-flood/P026_F016_ASCE_2026-08-26.webp"
+       },
+       {
+        "date": "2026-09-19",
+        "src": "/analysis-extra/baglung-flood/P026_F016_ASCE_2026-09-19.webp"
+       },
+       {
+        "date": "2026-10-01",
+        "src": "/analysis-extra/baglung-flood/P026_F016_ASCE_2026-10-01.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-08-26",
+       "2026-09-19"
+      ],
+      "peakDate": "2026-10-01",
+      "peakFloodKm2": 1.14,
+      "peakNewWaterKm2": 0.04,
+      "peakFloodedVegKm2": 1.1,
+      "maxExtentKm2": 1.14,
+      "maxExtentOpenWaterKm2": 0.04,
+      "maxExtentFloodedVegKm2": 1.1,
+      "permanentWaterKm2": 0.1,
+      "series": [
+       {
+        "date": "2026-08-26",
+        "baseline": true,
+        "coDb": -4.534,
+        "crossDb": -9.781,
+        "validPct": 99.75,
+        "newWaterKm2": 0.018,
+        "floodedVegKm2": 0.068,
+        "permanentWaterKm2": 0.078,
+        "floodKm2": 0.086
+       },
+       {
+        "date": "2026-09-19",
+        "baseline": true,
+        "coDb": -4.962,
+        "crossDb": -10.247,
+        "validPct": 99.75,
+        "newWaterKm2": 0.026,
+        "floodedVegKm2": 0.008,
+        "permanentWaterKm2": 0.094,
+        "floodKm2": 0.034
+       },
+       {
+        "date": "2026-10-01",
+        "baseline": false,
+        "coDb": -4.969,
+        "crossDb": -10.295,
+        "validPct": 99.74,
+        "newWaterKm2": 0.04,
+        "floodedVegKm2": 1.102,
+        "permanentWaterKm2": 0.081,
+        "floodKm2": 1.142
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
    "id": "iowa-harvest",
    "type": "agriculture",
    "name": "Iowa crop harvest",
@@ -10742,6 +12036,166 @@
         "floodedVegKm2": 4.534,
         "permanentWaterKm2": 3.542,
         "floodKm2": 12.02
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "quininde-flood",
+   "type": "flood",
+   "name": "Quinindé river flooding",
+   "region": "Quinindé, Esmeraldas",
+   "country": "Ecuador",
+   "lat": 0.325,
+   "lon": -79.475,
+   "startDate": "2026-08-25",
+   "endDate": "2026-10-12",
+   "footprint": [
+    [
+     -79.55,
+     0.4
+    ],
+    [
+     -79.4,
+     0.4
+    ],
+    [
+     -79.4,
+     0.25
+    ],
+    [
+     -79.55,
+     0.25
+    ]
+   ],
+   "thumb": "/analysis-extra/quininde-flood/thumb.webp",
+   "changedAreaKm2": 1.22,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "river",
+    "orbits": [
+     {
+      "key": "P004_F002_ASCE",
+      "label": "Track 4 · frame 2 · ascending",
+      "track": 4,
+      "frame": 2,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32617",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-25",
+       "2026-09-06",
+       "2026-09-18",
+       "2026-09-30",
+       "2026-10-12"
+      ],
+      "map": "/analysis-extra/quininde-flood/P004_F002_ASCE_map.webp",
+      "mapSize": [
+       933,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-25",
+        "src": "/analysis-extra/quininde-flood/P004_F002_ASCE_2026-08-25.webp"
+       },
+       {
+        "date": "2026-09-06",
+        "src": "/analysis-extra/quininde-flood/P004_F002_ASCE_2026-09-06.webp"
+       },
+       {
+        "date": "2026-09-18",
+        "src": "/analysis-extra/quininde-flood/P004_F002_ASCE_2026-09-18.webp"
+       },
+       {
+        "date": "2026-09-30",
+        "src": "/analysis-extra/quininde-flood/P004_F002_ASCE_2026-09-30.webp"
+       },
+       {
+        "date": "2026-10-12",
+        "src": "/analysis-extra/quininde-flood/P004_F002_ASCE_2026-10-12.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-08-25",
+       "2026-09-06",
+       "2026-09-18"
+      ],
+      "peakDate": "2026-10-12",
+      "peakFloodKm2": 1.22,
+      "peakNewWaterKm2": 0.08,
+      "peakFloodedVegKm2": 1.14,
+      "maxExtentKm2": 1.76,
+      "maxExtentOpenWaterKm2": 0.11,
+      "maxExtentFloodedVegKm2": 1.65,
+      "permanentWaterKm2": 0.04,
+      "series": [
+       {
+        "date": "2026-08-25",
+        "baseline": true,
+        "coDb": -6.738,
+        "crossDb": -12.777,
+        "validPct": 100,
+        "newWaterKm2": 0.001,
+        "floodedVegKm2": 0.536,
+        "permanentWaterKm2": 0.007,
+        "floodKm2": 0.537
+       },
+       {
+        "date": "2026-09-06",
+        "baseline": true,
+        "coDb": -6.814,
+        "crossDb": -12.832,
+        "validPct": 100,
+        "newWaterKm2": 0.108,
+        "floodedVegKm2": 0.034,
+        "permanentWaterKm2": 0.04,
+        "floodKm2": 0.142
+       },
+       {
+        "date": "2026-09-18",
+        "baseline": true,
+        "coDb": -6.692,
+        "crossDb": -12.567,
+        "validPct": 100,
+        "newWaterKm2": 0.076,
+        "floodedVegKm2": 0.204,
+        "permanentWaterKm2": 0.038,
+        "floodKm2": 0.28
+       },
+       {
+        "date": "2026-09-30",
+        "baseline": false,
+        "coDb": -6.517,
+        "crossDb": -12.418,
+        "validPct": 100,
+        "newWaterKm2": 0.035,
+        "floodedVegKm2": 0.665,
+        "permanentWaterKm2": 0.018,
+        "floodKm2": 0.7
+       },
+       {
+        "date": "2026-10-12",
+        "baseline": false,
+        "coDb": -6.466,
+        "crossDb": -12.213,
+        "validPct": 100,
+        "newWaterKm2": 0.082,
+        "floodedVegKm2": 1.137,
+        "permanentWaterKm2": 0.02,
+        "floodKm2": 1.219
        }
       ]
      }
@@ -11419,6 +12873,296 @@
         "floodedVegKm2": 52.598,
         "permanentWaterKm2": 1.058,
         "floodKm2": 61.139
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "tegucigalpa-landslide",
+   "type": "landslide",
+   "name": "Tegucigalpa landslide watch",
+   "region": "Comayagüela, Tegucigalpa",
+   "country": "Honduras",
+   "lat": 14.08,
+   "lon": -87.21,
+   "startDate": "2026-09-01",
+   "endDate": "2026-10-31",
+   "footprint": [
+    [
+     -87.28,
+     14.14
+    ],
+    [
+     -87.14,
+     14.14
+    ],
+    [
+     -87.14,
+     14.02
+    ],
+    [
+     -87.28,
+     14.02
+    ]
+   ],
+   "thumb": "/analysis-extra/tegucigalpa-landslide/thumb.webp",
+   "changedAreaKm2": 2.61,
+   "changedPct": 0,
+   "extra": {
+    "kind": "change",
+    "cause": "landslide",
+    "eventDate": "2026-10-08",
+    "orbits": [
+     {
+      "key": "P098_F081_DESC",
+      "label": "Track 98 · frame 81 · descending",
+      "track": 98,
+      "frame": 81,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32616",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-09-01",
+       "2026-09-13",
+       "2026-09-25",
+       "2026-10-07",
+       "2026-10-19",
+       "2026-10-31"
+      ],
+      "map": "/analysis-extra/tegucigalpa-landslide/P098_F081_DESC_map.webp",
+      "mapSize": [
+       1000,
+       869
+      ],
+      "frames": [
+       {
+        "date": "2026-09-01",
+        "src": "/analysis-extra/tegucigalpa-landslide/P098_F081_DESC_2026-09-01.webp"
+       },
+       {
+        "date": "2026-09-13",
+        "src": "/analysis-extra/tegucigalpa-landslide/P098_F081_DESC_2026-09-13.webp"
+       },
+       {
+        "date": "2026-09-25",
+        "src": "/analysis-extra/tegucigalpa-landslide/P098_F081_DESC_2026-09-25.webp"
+       },
+       {
+        "date": "2026-10-07",
+        "src": "/analysis-extra/tegucigalpa-landslide/P098_F081_DESC_2026-10-07.webp"
+       },
+       {
+        "date": "2026-10-19",
+        "src": "/analysis-extra/tegucigalpa-landslide/P098_F081_DESC_2026-10-19.webp"
+       },
+       {
+        "date": "2026-10-31",
+        "src": "/analysis-extra/tegucigalpa-landslide/P098_F081_DESC_2026-10-31.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-09-01",
+       "2026-09-13",
+       "2026-09-25",
+       "2026-10-07"
+      ],
+      "firstPostDate": "2026-10-19",
+      "firstPostDropKm2": 0.24,
+      "firstPostRiseKm2": 5.53,
+      "peakDropDate": "2026-10-31",
+      "peakDropKm2": 2.61,
+      "lastDate": "2026-10-31",
+      "lastDropKm2": 2.61,
+      "lastRiseKm2": 0.64,
+      "series": [
+       {
+        "date": "2026-09-01",
+        "baseline": true,
+        "coDb": -6.608,
+        "crossDb": -12.3,
+        "coChangeDb": -0.622,
+        "crossChangeDb": -0.545,
+        "validPct": 100,
+        "dropKm2": 1.896,
+        "riseKm2": 0.08
+       },
+       {
+        "date": "2026-09-13",
+        "baseline": true,
+        "coDb": -6.442,
+        "crossDb": -12.162,
+        "coChangeDb": -0.482,
+        "crossChangeDb": -0.429,
+        "validPct": 100,
+        "dropKm2": 1.248,
+        "riseKm2": 0.062
+       },
+       {
+        "date": "2026-09-25",
+        "baseline": true,
+        "coDb": -5.244,
+        "crossDb": -11.195,
+        "coChangeDb": 0.634,
+        "crossChangeDb": 0.489,
+        "validPct": 100,
+        "dropKm2": 0.034,
+        "riseKm2": 3.175
+       },
+       {
+        "date": "2026-10-07",
+        "baseline": true,
+        "coDb": -5.378,
+        "crossDb": -11.165,
+        "coChangeDb": 0.51,
+        "crossChangeDb": 0.516,
+        "validPct": 100,
+        "dropKm2": 0.103,
+        "riseKm2": 2.238
+       },
+       {
+        "date": "2026-10-19",
+        "baseline": false,
+        "coDb": -5.123,
+        "crossDb": -11.265,
+        "coChangeDb": 0.796,
+        "crossChangeDb": 0.486,
+        "validPct": 97.2,
+        "dropKm2": 0.242,
+        "riseKm2": 5.525
+       },
+       {
+        "date": "2026-10-31",
+        "baseline": false,
+        "coDb": -6.323,
+        "crossDb": -11.943,
+        "coChangeDb": -0.375,
+        "crossChangeDb": -0.229,
+        "validPct": 100,
+        "dropKm2": 2.608,
+        "riseKm2": 0.643
+       }
+      ]
+     },
+     {
+      "key": "P033_F009_ASCE",
+      "label": "Track 33 · frame 9 · ascending",
+      "track": 33,
+      "frame": 9,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32616",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-09-08",
+       "2026-09-20",
+       "2026-10-02",
+       "2026-10-14",
+       "2026-10-26"
+      ],
+      "map": "/analysis-extra/tegucigalpa-landslide/P033_F009_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       869
+      ],
+      "frames": [
+       {
+        "date": "2026-09-08",
+        "src": "/analysis-extra/tegucigalpa-landslide/P033_F009_ASCE_2026-09-08.webp"
+       },
+       {
+        "date": "2026-09-20",
+        "src": "/analysis-extra/tegucigalpa-landslide/P033_F009_ASCE_2026-09-20.webp"
+       },
+       {
+        "date": "2026-10-02",
+        "src": "/analysis-extra/tegucigalpa-landslide/P033_F009_ASCE_2026-10-02.webp"
+       },
+       {
+        "date": "2026-10-14",
+        "src": "/analysis-extra/tegucigalpa-landslide/P033_F009_ASCE_2026-10-14.webp"
+       },
+       {
+        "date": "2026-10-26",
+        "src": "/analysis-extra/tegucigalpa-landslide/P033_F009_ASCE_2026-10-26.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-09-08",
+       "2026-09-20",
+       "2026-10-02"
+      ],
+      "firstPostDate": "2026-10-14",
+      "firstPostDropKm2": 0.59,
+      "firstPostRiseKm2": 0.51,
+      "peakDropDate": "2026-10-26",
+      "peakDropKm2": 5.25,
+      "lastDate": "2026-10-26",
+      "lastDropKm2": 5.25,
+      "lastRiseKm2": 0.26,
+      "series": [
+       {
+        "date": "2026-09-08",
+        "baseline": true,
+        "coDb": -6.239,
+        "crossDb": -12.214,
+        "coChangeDb": -0.678,
+        "crossChangeDb": -0.646,
+        "validPct": 100,
+        "dropKm2": 11.551,
+        "riseKm2": 0.069
+       },
+       {
+        "date": "2026-09-20",
+        "baseline": true,
+        "coDb": -5.159,
+        "crossDb": -11.191,
+        "coChangeDb": 0.006,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.048,
+        "riseKm2": 0.53
+       },
+       {
+        "date": "2026-10-02",
+        "baseline": true,
+        "coDb": -5.291,
+        "crossDb": -11.298,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.087,
+        "riseKm2": 0.363
+       },
+       {
+        "date": "2026-10-14",
+        "baseline": false,
+        "coDb": -5.418,
+        "crossDb": -11.42,
+        "coChangeDb": 0.038,
+        "crossChangeDb": 0.054,
+        "validPct": 100,
+        "dropKm2": 0.591,
+        "riseKm2": 0.511
+       },
+       {
+        "date": "2026-10-26",
+        "baseline": false,
+        "coDb": -6.257,
+        "crossDb": -11.719,
+        "coChangeDb": -0.817,
+        "crossChangeDb": -0.284,
+        "validPct": 100,
+        "dropKm2": 5.254,
+        "riseKm2": 0.261
        }
       ]
      }
@@ -13037,6 +14781,504 @@
    }
   },
   {
+   "id": "da-nang-flood",
+   "type": "flood",
+   "name": "Da Nang urban flooding",
+   "region": "Da Nang",
+   "country": "Vietnam",
+   "lat": 16.05,
+   "lon": 108.2,
+   "startDate": "2026-09-09",
+   "endDate": "2026-10-15",
+   "footprint": [
+    [
+     108.12,
+     16.12
+    ],
+    [
+     108.28,
+     16.12
+    ],
+    [
+     108.28,
+     15.98
+    ],
+    [
+     108.12,
+     15.98
+    ]
+   ],
+   "thumb": "/analysis-extra/da-nang-flood/thumb.webp",
+   "changedAreaKm2": 1.38,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P047_F080_DESC",
+      "label": "Track 47 · frame 80 · descending",
+      "track": 47,
+      "frame": 80,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32648",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15"
+      ],
+      "map": "/analysis-extra/da-nang-flood/P047_F080_DESC_map.webp",
+      "mapSize": [
+       1000,
+       900
+      ],
+      "frames": [
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/da-nang-flood/P047_F080_DESC_2026-09-09.webp"
+       },
+       {
+        "date": "2026-09-21",
+        "src": "/analysis-extra/da-nang-flood/P047_F080_DESC_2026-09-21.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/da-nang-flood/P047_F080_DESC_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-15",
+        "src": "/analysis-extra/da-nang-flood/P047_F080_DESC_2026-10-15.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03"
+      ],
+      "peakDate": "2026-10-15",
+      "peakFloodKm2": 1.38,
+      "peakNewWaterKm2": 0.22,
+      "peakFloodedVegKm2": 1.16,
+      "maxExtentKm2": 1.38,
+      "maxExtentOpenWaterKm2": 0.22,
+      "maxExtentFloodedVegKm2": 1.16,
+      "permanentWaterKm2": 0.04,
+      "series": [
+       {
+        "date": "2026-09-09",
+        "baseline": true,
+        "coDb": -7.535,
+        "crossDb": -14.15,
+        "validPct": 100,
+        "newWaterKm2": 0.34,
+        "floodedVegKm2": 0.468,
+        "permanentWaterKm2": 0.035,
+        "floodKm2": 0.808
+       },
+       {
+        "date": "2026-09-21",
+        "baseline": true,
+        "coDb": -6.75,
+        "crossDb": -13.322,
+        "validPct": 100,
+        "newWaterKm2": 0.14,
+        "floodedVegKm2": 1.973,
+        "permanentWaterKm2": 0.03,
+        "floodKm2": 2.113
+       },
+       {
+        "date": "2026-10-03",
+        "baseline": true,
+        "coDb": -7.725,
+        "crossDb": -14.292,
+        "validPct": 100,
+        "newWaterKm2": 0.135,
+        "floodedVegKm2": 0.316,
+        "permanentWaterKm2": 0.028,
+        "floodKm2": 0.451
+       },
+       {
+        "date": "2026-10-15",
+        "baseline": false,
+        "coDb": -7.115,
+        "crossDb": -13.658,
+        "validPct": 100,
+        "newWaterKm2": 0.22,
+        "floodedVegKm2": 1.157,
+        "permanentWaterKm2": 0.024,
+        "floodKm2": 1.377
+       }
+      ]
+     },
+     {
+      "key": "P054_F010_ASCE",
+      "label": "Track 54 · frame 10 · ascending",
+      "track": 54,
+      "frame": 10,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32648",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15"
+      ],
+      "map": "/analysis-extra/da-nang-flood/P054_F010_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       900
+      ],
+      "frames": [
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/da-nang-flood/P054_F010_ASCE_2026-09-09.webp"
+       },
+       {
+        "date": "2026-09-21",
+        "src": "/analysis-extra/da-nang-flood/P054_F010_ASCE_2026-09-21.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/da-nang-flood/P054_F010_ASCE_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-15",
+        "src": "/analysis-extra/da-nang-flood/P054_F010_ASCE_2026-10-15.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03"
+      ],
+      "peakDate": "2026-10-15",
+      "peakFloodKm2": 0.84,
+      "peakNewWaterKm2": 0.11,
+      "peakFloodedVegKm2": 0.74,
+      "maxExtentKm2": 0.84,
+      "maxExtentOpenWaterKm2": 0.11,
+      "maxExtentFloodedVegKm2": 0.74,
+      "permanentWaterKm2": 0.92,
+      "series": [
+       {
+        "date": "2026-09-09",
+        "baseline": true,
+        "coDb": -7.161,
+        "crossDb": -14.489,
+        "validPct": 100,
+        "newWaterKm2": 1.054,
+        "floodedVegKm2": 0.327,
+        "permanentWaterKm2": 0.914,
+        "floodKm2": 1.381
+       },
+       {
+        "date": "2026-09-21",
+        "baseline": true,
+        "coDb": -6.228,
+        "crossDb": -13.494,
+        "validPct": 100,
+        "newWaterKm2": 0.001,
+        "floodedVegKm2": 8.64,
+        "permanentWaterKm2": 0.043,
+        "floodKm2": 8.641
+       },
+       {
+        "date": "2026-10-03",
+        "baseline": true,
+        "coDb": -7.684,
+        "crossDb": -15.047,
+        "validPct": 100,
+        "newWaterKm2": 0.331,
+        "floodedVegKm2": 0.11,
+        "permanentWaterKm2": 0.916,
+        "floodKm2": 0.441
+       },
+       {
+        "date": "2026-10-15",
+        "baseline": false,
+        "coDb": -7.012,
+        "crossDb": -14.416,
+        "validPct": 100,
+        "newWaterKm2": 0.105,
+        "floodedVegKm2": 0.739,
+        "permanentWaterKm2": 0.106,
+        "floodKm2": 0.844
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "hue-flood",
+   "type": "flood",
+   "name": "Hue flooding",
+   "region": "Hue",
+   "country": "Vietnam",
+   "lat": 16.47,
+   "lon": 107.59,
+   "startDate": "2026-09-09",
+   "endDate": "2026-10-15",
+   "footprint": [
+    [
+     107.48,
+     16.56
+    ],
+    [
+     107.7,
+     16.56
+    ],
+    [
+     107.7,
+     16.38
+    ],
+    [
+     107.48,
+     16.38
+    ]
+   ],
+   "thumb": "/analysis-extra/hue-flood/thumb.webp",
+   "changedAreaKm2": 10.51,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P054_F010_ASCE",
+      "label": "Track 54 · frame 10 · ascending",
+      "track": 54,
+      "frame": 10,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32648",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15"
+      ],
+      "map": "/analysis-extra/hue-flood/P054_F010_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       845
+      ],
+      "frames": [
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/hue-flood/P054_F010_ASCE_2026-09-09.webp"
+       },
+       {
+        "date": "2026-09-21",
+        "src": "/analysis-extra/hue-flood/P054_F010_ASCE_2026-09-21.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/hue-flood/P054_F010_ASCE_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-15",
+        "src": "/analysis-extra/hue-flood/P054_F010_ASCE_2026-10-15.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03"
+      ],
+      "peakDate": "2026-10-15",
+      "peakFloodKm2": 10.51,
+      "peakNewWaterKm2": 9.58,
+      "peakFloodedVegKm2": 0.94,
+      "maxExtentKm2": 10.51,
+      "maxExtentOpenWaterKm2": 9.58,
+      "maxExtentFloodedVegKm2": 0.94,
+      "permanentWaterKm2": 6.46,
+      "series": [
+       {
+        "date": "2026-09-09",
+        "baseline": true,
+        "coDb": -7.682,
+        "crossDb": -14.959,
+        "validPct": 100,
+        "newWaterKm2": 0.529,
+        "floodedVegKm2": 22.651,
+        "permanentWaterKm2": 5.224,
+        "floodKm2": 23.18
+       },
+       {
+        "date": "2026-09-21",
+        "baseline": true,
+        "coDb": -7.701,
+        "crossDb": -15.004,
+        "validPct": 100,
+        "newWaterKm2": 0.297,
+        "floodedVegKm2": 9.014,
+        "permanentWaterKm2": 1.656,
+        "floodKm2": 9.311
+       },
+       {
+        "date": "2026-10-03",
+        "baseline": true,
+        "coDb": -8.747,
+        "crossDb": -15.987,
+        "validPct": 100,
+        "newWaterKm2": 30.435,
+        "floodedVegKm2": 0.676,
+        "permanentWaterKm2": 6.45,
+        "floodKm2": 31.111
+       },
+       {
+        "date": "2026-10-15",
+        "baseline": false,
+        "coDb": -8.048,
+        "crossDb": -15.314,
+        "validPct": 100,
+        "newWaterKm2": 9.577,
+        "floodedVegKm2": 0.937,
+        "permanentWaterKm2": 3.111,
+        "floodKm2": 10.514
+       }
+      ]
+     },
+     {
+      "key": "P047_F080_DESC",
+      "label": "Track 47 · frame 80 · descending",
+      "track": 47,
+      "frame": 80,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32648",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15"
+      ],
+      "map": "/analysis-extra/hue-flood/P047_F080_DESC_map.webp",
+      "mapSize": [
+       1000,
+       845
+      ],
+      "frames": [
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/hue-flood/P047_F080_DESC_2026-09-09.webp"
+       },
+       {
+        "date": "2026-09-21",
+        "src": "/analysis-extra/hue-flood/P047_F080_DESC_2026-09-21.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/hue-flood/P047_F080_DESC_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-15",
+        "src": "/analysis-extra/hue-flood/P047_F080_DESC_2026-10-15.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03"
+      ],
+      "peakDate": "2026-10-15",
+      "peakFloodKm2": 5.87,
+      "peakNewWaterKm2": 3.57,
+      "peakFloodedVegKm2": 2.3,
+      "maxExtentKm2": 5.87,
+      "maxExtentOpenWaterKm2": 3.57,
+      "maxExtentFloodedVegKm2": 2.3,
+      "permanentWaterKm2": 23.37,
+      "series": [
+       {
+        "date": "2026-09-09",
+        "baseline": true,
+        "coDb": -8.34,
+        "crossDb": -15.105,
+        "validPct": 100,
+        "newWaterKm2": 3.318,
+        "floodedVegKm2": 15.574,
+        "permanentWaterKm2": 20.549,
+        "floodKm2": 18.892
+       },
+       {
+        "date": "2026-09-21",
+        "baseline": true,
+        "coDb": -7.907,
+        "crossDb": -14.741,
+        "validPct": 100,
+        "newWaterKm2": 18.722,
+        "floodedVegKm2": 1.632,
+        "permanentWaterKm2": 22.816,
+        "floodKm2": 20.354
+       },
+       {
+        "date": "2026-10-03",
+        "baseline": true,
+        "coDb": -8.645,
+        "crossDb": -15.541,
+        "validPct": 100,
+        "newWaterKm2": 1.262,
+        "floodedVegKm2": 2.73,
+        "permanentWaterKm2": 5.802,
+        "floodKm2": 3.992
+       },
+       {
+        "date": "2026-10-15",
+        "baseline": false,
+        "coDb": -8.061,
+        "crossDb": -14.869,
+        "validPct": 100,
+        "newWaterKm2": 3.57,
+        "floodedVegKm2": 2.3,
+        "permanentWaterKm2": 3.302,
+        "floodKm2": 5.87
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
    "id": "paso-patria-flood",
    "type": "flood",
    "name": "Paso de la Patria flooding",
@@ -13535,6 +15777,643 @@
    }
   },
   {
+   "id": "denia-flood",
+   "type": "flood",
+   "name": "Dénia flooding",
+   "region": "Dénia, Alicante",
+   "country": "Spain",
+   "lat": 38.83,
+   "lon": 0.07,
+   "startDate": "2026-09-10",
+   "endDate": "2026-10-28",
+   "footprint": [
+    [
+     0,
+     38.88
+    ],
+    [
+     0.14,
+     38.88
+    ],
+    [
+     0.14,
+     38.78
+    ],
+    [
+     0,
+     38.78
+    ]
+   ],
+   "thumb": "/analysis-extra/denia-flood/thumb.webp",
+   "changedAreaKm2": 18.86,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P066_F069_DESC",
+      "label": "Track 66 · frame 69 · descending",
+      "track": 66,
+      "frame": 69,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32631",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-10",
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16",
+       "2026-10-28"
+      ],
+      "map": "/analysis-extra/denia-flood/P066_F069_DESC_map.webp",
+      "mapSize": [
+       1000,
+       909
+      ],
+      "frames": [
+       {
+        "date": "2026-09-10",
+        "src": "/analysis-extra/denia-flood/P066_F069_DESC_2026-09-10.webp"
+       },
+       {
+        "date": "2026-09-22",
+        "src": "/analysis-extra/denia-flood/P066_F069_DESC_2026-09-22.webp"
+       },
+       {
+        "date": "2026-10-04",
+        "src": "/analysis-extra/denia-flood/P066_F069_DESC_2026-10-04.webp"
+       },
+       {
+        "date": "2026-10-16",
+        "src": "/analysis-extra/denia-flood/P066_F069_DESC_2026-10-16.webp"
+       },
+       {
+        "date": "2026-10-28",
+        "src": "/analysis-extra/denia-flood/P066_F069_DESC_2026-10-28.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-10",
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16"
+      ],
+      "peakDate": "2026-10-28",
+      "peakFloodKm2": 18.86,
+      "peakNewWaterKm2": 18.77,
+      "peakFloodedVegKm2": 0.09,
+      "maxExtentKm2": 18.86,
+      "maxExtentOpenWaterKm2": 18.77,
+      "maxExtentFloodedVegKm2": 0.09,
+      "permanentWaterKm2": 4.04,
+      "series": [
+       {
+        "date": "2026-09-10",
+        "baseline": true,
+        "coDb": -6.84,
+        "crossDb": -14.372,
+        "validPct": 100,
+        "newWaterKm2": 0.186,
+        "floodedVegKm2": 0.094,
+        "permanentWaterKm2": 0.73,
+        "floodKm2": 0.28
+       },
+       {
+        "date": "2026-09-22",
+        "baseline": true,
+        "coDb": -7.134,
+        "crossDb": -14.602,
+        "validPct": 100,
+        "newWaterKm2": 1.552,
+        "floodedVegKm2": 0.008,
+        "permanentWaterKm2": 2.149,
+        "floodKm2": 1.56
+       },
+       {
+        "date": "2026-10-04",
+        "baseline": true,
+        "coDb": -6.737,
+        "crossDb": -14.194,
+        "validPct": 100,
+        "newWaterKm2": 11.581,
+        "floodedVegKm2": 0.05,
+        "permanentWaterKm2": 3.299,
+        "floodKm2": 11.631
+       },
+       {
+        "date": "2026-10-16",
+        "baseline": true,
+        "coDb": -7.604,
+        "crossDb": -14.965,
+        "validPct": 100,
+        "newWaterKm2": 16.386,
+        "floodedVegKm2": 0.034,
+        "permanentWaterKm2": 4.005,
+        "floodKm2": 16.42
+       },
+       {
+        "date": "2026-10-28",
+        "baseline": false,
+        "coDb": -7.383,
+        "crossDb": -14.714,
+        "validPct": 100,
+        "newWaterKm2": 18.774,
+        "floodedVegKm2": 0.09,
+        "permanentWaterKm2": 3.534,
+        "floodKm2": 18.864
+       }
+      ]
+     },
+     {
+      "key": "P058_F021_ASCE",
+      "label": "Track 58 · frame 21 · ascending",
+      "track": 58,
+      "frame": 21,
+      "direction": "ascending",
+      "pixelM": 40,
+      "crs": "EPSG:32631",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-10",
+       "2026-10-04",
+       "2026-10-16",
+       "2026-10-28"
+      ],
+      "map": "/analysis-extra/denia-flood/P058_F021_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       909
+      ],
+      "frames": [
+       {
+        "date": "2026-09-10",
+        "src": "/analysis-extra/denia-flood/P058_F021_ASCE_2026-09-10.webp"
+       },
+       {
+        "date": "2026-10-04",
+        "src": "/analysis-extra/denia-flood/P058_F021_ASCE_2026-10-04.webp"
+       },
+       {
+        "date": "2026-10-16",
+        "src": "/analysis-extra/denia-flood/P058_F021_ASCE_2026-10-16.webp"
+       },
+       {
+        "date": "2026-10-28",
+        "src": "/analysis-extra/denia-flood/P058_F021_ASCE_2026-10-28.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-10",
+       "2026-10-04",
+       "2026-10-16"
+      ],
+      "peakDate": "2026-10-28",
+      "peakFloodKm2": 0.06,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 0.06,
+      "maxExtentKm2": 0.06,
+      "maxExtentOpenWaterKm2": 0,
+      "maxExtentFloodedVegKm2": 0.06,
+      "permanentWaterKm2": 0.01,
+      "series": [
+       {
+        "date": "2026-09-10",
+        "baseline": true,
+        "coDb": -6.282,
+        "crossDb": -13.947,
+        "validPct": 99.99,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.4,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.4
+       },
+       {
+        "date": "2026-10-04",
+        "baseline": true,
+        "coDb": -6.505,
+        "crossDb": -14.021,
+        "validPct": 99.99,
+        "newWaterKm2": 0.15,
+        "floodedVegKm2": 0.016,
+        "permanentWaterKm2": 0.01,
+        "floodKm2": 0.166
+       },
+       {
+        "date": "2026-10-16",
+        "baseline": true,
+        "coDb": -7.315,
+        "crossDb": -14.579,
+        "validPct": 99.99,
+        "newWaterKm2": 4.616,
+        "floodedVegKm2": 0.037,
+        "permanentWaterKm2": 0.01,
+        "floodKm2": 4.653
+       },
+       {
+        "date": "2026-10-28",
+        "baseline": false,
+        "coDb": -7.469,
+        "crossDb": -14.53,
+        "validPct": 99.99,
+        "newWaterKm2": 0.003,
+        "floodedVegKm2": 0.058,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.061
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "gandia-flood",
+   "type": "flood",
+   "name": "Gandia and Oliva flooding",
+   "region": "La Safor, Valencia",
+   "country": "Spain",
+   "lat": 38.92,
+   "lon": -0.145,
+   "startDate": "2026-09-10",
+   "endDate": "2026-10-28",
+   "footprint": [
+    [
+     -0.24,
+     39.02
+    ],
+    [
+     -0.05,
+     39.02
+    ],
+    [
+     -0.05,
+     38.82
+    ],
+    [
+     -0.24,
+     38.82
+    ]
+   ],
+   "thumb": "/analysis-extra/gandia-flood/thumb.webp",
+   "changedAreaKm2": 12,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P066_F069_DESC",
+      "label": "Track 66 · frame 69 · descending",
+      "track": 66,
+      "frame": 69,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32631",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-10",
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16",
+       "2026-10-28"
+      ],
+      "map": "/analysis-extra/gandia-flood/P066_F069_DESC_map.webp",
+      "mapSize": [
+       703,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-10",
+        "src": "/analysis-extra/gandia-flood/P066_F069_DESC_2026-09-10.webp"
+       },
+       {
+        "date": "2026-09-22",
+        "src": "/analysis-extra/gandia-flood/P066_F069_DESC_2026-09-22.webp"
+       },
+       {
+        "date": "2026-10-04",
+        "src": "/analysis-extra/gandia-flood/P066_F069_DESC_2026-10-04.webp"
+       },
+       {
+        "date": "2026-10-16",
+        "src": "/analysis-extra/gandia-flood/P066_F069_DESC_2026-10-16.webp"
+       },
+       {
+        "date": "2026-10-28",
+        "src": "/analysis-extra/gandia-flood/P066_F069_DESC_2026-10-28.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-10",
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16"
+      ],
+      "peakDate": "2026-10-28",
+      "peakFloodKm2": 12,
+      "peakNewWaterKm2": 11.45,
+      "peakFloodedVegKm2": 0.56,
+      "maxExtentKm2": 12,
+      "maxExtentOpenWaterKm2": 11.45,
+      "maxExtentFloodedVegKm2": 0.56,
+      "permanentWaterKm2": 16.9,
+      "series": [
+       {
+        "date": "2026-09-10",
+        "baseline": true,
+        "coDb": -6.494,
+        "crossDb": -13.827,
+        "validPct": 100,
+        "newWaterKm2": 0.102,
+        "floodedVegKm2": 0.55,
+        "permanentWaterKm2": 0.117,
+        "floodKm2": 0.652
+       },
+       {
+        "date": "2026-09-22",
+        "baseline": true,
+        "coDb": -7.353,
+        "crossDb": -14.545,
+        "validPct": 100,
+        "newWaterKm2": 3.634,
+        "floodedVegKm2": 1.798,
+        "permanentWaterKm2": 11.107,
+        "floodKm2": 5.432
+       },
+       {
+        "date": "2026-10-04",
+        "baseline": true,
+        "coDb": -6.463,
+        "crossDb": -13.765,
+        "validPct": 100,
+        "newWaterKm2": 68.334,
+        "floodedVegKm2": 0.373,
+        "permanentWaterKm2": 16.738,
+        "floodKm2": 68.707
+       },
+       {
+        "date": "2026-10-16",
+        "baseline": true,
+        "coDb": -7.327,
+        "crossDb": -14.656,
+        "validPct": 100,
+        "newWaterKm2": 12.202,
+        "floodedVegKm2": 0.048,
+        "permanentWaterKm2": 15.504,
+        "floodKm2": 12.25
+       },
+       {
+        "date": "2026-10-28",
+        "baseline": false,
+        "coDb": -7.167,
+        "crossDb": -14.235,
+        "validPct": 100,
+        "newWaterKm2": 11.446,
+        "floodedVegKm2": 0.555,
+        "permanentWaterKm2": 12.99,
+        "floodKm2": 12.001
+       }
+      ]
+     },
+     {
+      "key": "P058_F021_ASCE",
+      "label": "Track 58 · frame 21 · ascending",
+      "track": 58,
+      "frame": 21,
+      "direction": "ascending",
+      "pixelM": 40,
+      "crs": "EPSG:32631",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-10",
+       "2026-10-04",
+       "2026-10-16",
+       "2026-10-28"
+      ],
+      "map": "/analysis-extra/gandia-flood/P058_F021_ASCE_map.webp",
+      "mapSize": [
+       703,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-10",
+        "src": "/analysis-extra/gandia-flood/P058_F021_ASCE_2026-09-10.webp"
+       },
+       {
+        "date": "2026-10-04",
+        "src": "/analysis-extra/gandia-flood/P058_F021_ASCE_2026-10-04.webp"
+       },
+       {
+        "date": "2026-10-16",
+        "src": "/analysis-extra/gandia-flood/P058_F021_ASCE_2026-10-16.webp"
+       },
+       {
+        "date": "2026-10-28",
+        "src": "/analysis-extra/gandia-flood/P058_F021_ASCE_2026-10-28.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-10",
+       "2026-10-04",
+       "2026-10-16"
+      ],
+      "peakDate": "2026-10-28",
+      "peakFloodKm2": 16.61,
+      "peakNewWaterKm2": 16.39,
+      "peakFloodedVegKm2": 0.22,
+      "maxExtentKm2": 16.61,
+      "maxExtentOpenWaterKm2": 16.39,
+      "maxExtentFloodedVegKm2": 0.22,
+      "permanentWaterKm2": 2.29,
+      "series": [
+       {
+        "date": "2026-09-10",
+        "baseline": true,
+        "coDb": -5.26,
+        "crossDb": -12.954,
+        "validPct": 100,
+        "newWaterKm2": 3.336,
+        "floodedVegKm2": 4.126,
+        "permanentWaterKm2": 2.234,
+        "floodKm2": 7.462
+       },
+       {
+        "date": "2026-10-04",
+        "baseline": true,
+        "coDb": -5.786,
+        "crossDb": -13.452,
+        "validPct": 100,
+        "newWaterKm2": 0.043,
+        "floodedVegKm2": 0.088,
+        "permanentWaterKm2": 0.075,
+        "floodKm2": 0.131
+       },
+       {
+        "date": "2026-10-16",
+        "baseline": true,
+        "coDb": -6.673,
+        "crossDb": -14.209,
+        "validPct": 100,
+        "newWaterKm2": 18.891,
+        "floodedVegKm2": 0.013,
+        "permanentWaterKm2": 2.29,
+        "floodKm2": 18.904
+       },
+       {
+        "date": "2026-10-28",
+        "baseline": false,
+        "coDb": -6.848,
+        "crossDb": -14.077,
+        "validPct": 100,
+        "newWaterKm2": 16.389,
+        "floodedVegKm2": 0.224,
+        "permanentWaterKm2": 1.424,
+        "floodKm2": 16.613
+       }
+      ]
+     },
+     {
+      "key": "P167_F069_DESC",
+      "label": "Track 167 · frame 69 · descending",
+      "track": 167,
+      "frame": 69,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32630",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-17",
+       "2026-09-29",
+       "2026-10-11",
+       "2026-10-23"
+      ],
+      "map": "/analysis-extra/gandia-flood/P167_F069_DESC_map.webp",
+      "mapSize": [
+       701,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-17",
+        "src": "/analysis-extra/gandia-flood/P167_F069_DESC_2026-09-17.webp"
+       },
+       {
+        "date": "2026-09-29",
+        "src": "/analysis-extra/gandia-flood/P167_F069_DESC_2026-09-29.webp"
+       },
+       {
+        "date": "2026-10-11",
+        "src": "/analysis-extra/gandia-flood/P167_F069_DESC_2026-10-11.webp"
+       },
+       {
+        "date": "2026-10-23",
+        "src": "/analysis-extra/gandia-flood/P167_F069_DESC_2026-10-23.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-17",
+       "2026-09-29",
+       "2026-10-11"
+      ],
+      "peakDate": "2026-10-23",
+      "peakFloodKm2": 13.17,
+      "peakNewWaterKm2": 12.08,
+      "peakFloodedVegKm2": 1.09,
+      "maxExtentKm2": 13.17,
+      "maxExtentOpenWaterKm2": 12.08,
+      "maxExtentFloodedVegKm2": 1.09,
+      "permanentWaterKm2": 54.89,
+      "series": [
+       {
+        "date": "2026-09-17",
+        "baseline": true,
+        "coDb": -6.993,
+        "crossDb": -14.211,
+        "validPct": 94.06,
+        "newWaterKm2": 3.037,
+        "floodedVegKm2": 0.053,
+        "permanentWaterKm2": 50.262,
+        "floodKm2": 3.09
+       },
+       {
+        "date": "2026-09-29",
+        "baseline": true,
+        "coDb": -7.279,
+        "crossDb": -14.446,
+        "validPct": 93.79,
+        "newWaterKm2": 0.91,
+        "floodedVegKm2": 0.048,
+        "permanentWaterKm2": 30.984,
+        "floodKm2": 0.958
+       },
+       {
+        "date": "2026-10-11",
+        "baseline": true,
+        "coDb": -6.797,
+        "crossDb": -14.158,
+        "validPct": 93.87,
+        "newWaterKm2": 16.877,
+        "floodedVegKm2": 0.125,
+        "permanentWaterKm2": 54.006,
+        "floodKm2": 17.002
+       },
+       {
+        "date": "2026-10-23",
+        "baseline": false,
+        "coDb": -6.669,
+        "crossDb": -13.795,
+        "validPct": 93.96,
+        "newWaterKm2": 12.082,
+        "floodedVegKm2": 1.086,
+        "permanentWaterKm2": 43.227,
+        "floodKm2": 13.168
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
    "id": "ayolas-flood",
    "type": "flood",
    "name": "Ayolas river flooding",
@@ -13987,6 +16866,393 @@
         "floodedVegKm2": 0.49,
         "permanentWaterKm2": 40.338,
         "floodKm2": 42.754
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "hurricane-utah-flood",
+   "type": "flood",
+   "name": "Hurricane flash flooding",
+   "region": "Hurricane, Utah",
+   "country": "United States",
+   "lat": 37.17,
+   "lon": -113.29,
+   "startDate": "2026-09-12",
+   "endDate": "2026-11-04",
+   "footprint": [
+    [
+     -113.36,
+     37.22
+    ],
+    [
+     -113.22,
+     37.22
+    ],
+    [
+     -113.22,
+     37.12
+    ],
+    [
+     -113.36,
+     37.12
+    ]
+   ],
+   "thumb": "/analysis-extra/hurricane-utah-flood/thumb.webp",
+   "changedAreaKm2": 47.82,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P157_F070_DESC",
+      "label": "Track 157 · frame 70 · descending",
+      "track": 157,
+      "frame": 70,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32612",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-17",
+       "2026-09-29",
+       "2026-10-11",
+       "2026-10-23",
+       "2026-11-04"
+      ],
+      "map": "/analysis-extra/hurricane-utah-flood/P157_F070_DESC_map.webp",
+      "mapSize": [
+       1000,
+       890
+      ],
+      "frames": [
+       {
+        "date": "2026-09-17",
+        "src": "/analysis-extra/hurricane-utah-flood/P157_F070_DESC_2026-09-17.webp"
+       },
+       {
+        "date": "2026-09-29",
+        "src": "/analysis-extra/hurricane-utah-flood/P157_F070_DESC_2026-09-29.webp"
+       },
+       {
+        "date": "2026-10-11",
+        "src": "/analysis-extra/hurricane-utah-flood/P157_F070_DESC_2026-10-11.webp"
+       },
+       {
+        "date": "2026-10-23",
+        "src": "/analysis-extra/hurricane-utah-flood/P157_F070_DESC_2026-10-23.webp"
+       },
+       {
+        "date": "2026-11-04",
+        "src": "/analysis-extra/hurricane-utah-flood/P157_F070_DESC_2026-11-04.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-17",
+       "2026-09-29",
+       "2026-10-11"
+      ],
+      "peakDate": "2026-10-23",
+      "peakFloodKm2": 47.82,
+      "peakNewWaterKm2": 0.06,
+      "peakFloodedVegKm2": 47.77,
+      "maxExtentKm2": 49.51,
+      "maxExtentOpenWaterKm2": 0.14,
+      "maxExtentFloodedVegKm2": 49.36,
+      "permanentWaterKm2": 0.81,
+      "series": [
+       {
+        "date": "2026-09-17",
+        "baseline": true,
+        "coDb": -12.179,
+        "crossDb": -20.711,
+        "validPct": 99.99,
+        "newWaterKm2": 0.623,
+        "floodedVegKm2": 0.059,
+        "permanentWaterKm2": 0.808,
+        "floodKm2": 0.682
+       },
+       {
+        "date": "2026-09-29",
+        "baseline": true,
+        "coDb": -9.013,
+        "crossDb": -17.577,
+        "validPct": 99.99,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 66.969,
+        "permanentWaterKm2": 0.009,
+        "floodKm2": 66.969
+       },
+       {
+        "date": "2026-10-11",
+        "baseline": true,
+        "coDb": -12.889,
+        "crossDb": -21.061,
+        "validPct": 99.99,
+        "newWaterKm2": 1.277,
+        "floodedVegKm2": 0.028,
+        "permanentWaterKm2": 0.809,
+        "floodKm2": 1.305
+       },
+       {
+        "date": "2026-10-23",
+        "baseline": false,
+        "coDb": -9.721,
+        "crossDb": -18.215,
+        "validPct": 99.99,
+        "newWaterKm2": 0.055,
+        "floodedVegKm2": 47.767,
+        "permanentWaterKm2": 0.098,
+        "floodKm2": 47.822
+       },
+       {
+        "date": "2026-11-04",
+        "baseline": false,
+        "coDb": -10.817,
+        "crossDb": -20.432,
+        "validPct": 99.99,
+        "newWaterKm2": 0.1,
+        "floodedVegKm2": 20.583,
+        "permanentWaterKm2": 0.178,
+        "floodKm2": 20.683
+       }
+      ]
+     },
+     {
+      "key": "P085_F070_DESC",
+      "label": "Track 85 · frame 70 · descending",
+      "track": 85,
+      "frame": 70,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32611",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-12",
+       "2026-09-24",
+       "2026-10-06",
+       "2026-10-18",
+       "2026-10-30"
+      ],
+      "map": "/analysis-extra/hurricane-utah-flood/P085_F070_DESC_map.webp",
+      "mapSize": [
+       1000,
+       893
+      ],
+      "frames": [
+       {
+        "date": "2026-09-12",
+        "src": "/analysis-extra/hurricane-utah-flood/P085_F070_DESC_2026-09-12.webp"
+       },
+       {
+        "date": "2026-09-24",
+        "src": "/analysis-extra/hurricane-utah-flood/P085_F070_DESC_2026-09-24.webp"
+       },
+       {
+        "date": "2026-10-06",
+        "src": "/analysis-extra/hurricane-utah-flood/P085_F070_DESC_2026-10-06.webp"
+       },
+       {
+        "date": "2026-10-18",
+        "src": "/analysis-extra/hurricane-utah-flood/P085_F070_DESC_2026-10-18.webp"
+       },
+       {
+        "date": "2026-10-30",
+        "src": "/analysis-extra/hurricane-utah-flood/P085_F070_DESC_2026-10-30.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-12",
+       "2026-09-24",
+       "2026-10-06",
+       "2026-10-18"
+      ],
+      "peakDate": "2026-10-30",
+      "peakFloodKm2": 2.34,
+      "peakNewWaterKm2": 0.43,
+      "peakFloodedVegKm2": 1.91,
+      "maxExtentKm2": 2.34,
+      "maxExtentOpenWaterKm2": 0.43,
+      "maxExtentFloodedVegKm2": 1.91,
+      "permanentWaterKm2": 0.57,
+      "series": [
+       {
+        "date": "2026-09-12",
+        "baseline": true,
+        "coDb": -13.247,
+        "crossDb": -19.809,
+        "validPct": 99.95,
+        "newWaterKm2": 0.715,
+        "floodedVegKm2": 0.071,
+        "permanentWaterKm2": 0.475,
+        "floodKm2": 0.786
+       },
+       {
+        "date": "2026-09-24",
+        "baseline": true,
+        "coDb": -13.225,
+        "crossDb": -19.793,
+        "validPct": 99.95,
+        "newWaterKm2": 0.528,
+        "floodedVegKm2": 0.059,
+        "permanentWaterKm2": 0.484,
+        "floodKm2": 0.587
+       },
+       {
+        "date": "2026-10-06",
+        "baseline": true,
+        "coDb": -13.25,
+        "crossDb": -19.874,
+        "validPct": 99.96,
+        "newWaterKm2": 0.458,
+        "floodedVegKm2": 0.04,
+        "permanentWaterKm2": 0.465,
+        "floodKm2": 0.498
+       },
+       {
+        "date": "2026-10-18",
+        "baseline": true,
+        "coDb": -12.547,
+        "crossDb": -19.607,
+        "validPct": 99.96,
+        "newWaterKm2": 0.14,
+        "floodedVegKm2": 1.203,
+        "permanentWaterKm2": 0.26,
+        "floodKm2": 1.343
+       },
+       {
+        "date": "2026-10-30",
+        "baseline": false,
+        "coDb": -12.734,
+        "crossDb": -19.889,
+        "validPct": 99.95,
+        "newWaterKm2": 0.429,
+        "floodedVegKm2": 1.91,
+        "permanentWaterKm2": 0.329,
+        "floodKm2": 2.339
+       }
+      ]
+     },
+     {
+      "key": "P077_F020_ASCE",
+      "label": "Track 77 · frame 20 · ascending",
+      "track": 77,
+      "frame": 20,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32612",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17",
+       "2026-10-29"
+      ],
+      "map": "/analysis-extra/hurricane-utah-flood/P077_F020_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       890
+      ],
+      "frames": [
+       {
+        "date": "2026-09-23",
+        "src": "/analysis-extra/hurricane-utah-flood/P077_F020_ASCE_2026-09-23.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/hurricane-utah-flood/P077_F020_ASCE_2026-10-05.webp"
+       },
+       {
+        "date": "2026-10-17",
+        "src": "/analysis-extra/hurricane-utah-flood/P077_F020_ASCE_2026-10-17.webp"
+       },
+       {
+        "date": "2026-10-29",
+        "src": "/analysis-extra/hurricane-utah-flood/P077_F020_ASCE_2026-10-29.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17"
+      ],
+      "peakDate": "2026-10-29",
+      "peakFloodKm2": 4.4,
+      "peakNewWaterKm2": 0.98,
+      "peakFloodedVegKm2": 3.42,
+      "maxExtentKm2": 4.4,
+      "maxExtentOpenWaterKm2": 0.98,
+      "maxExtentFloodedVegKm2": 3.42,
+      "permanentWaterKm2": 2.35,
+      "series": [
+       {
+        "date": "2026-09-23",
+        "baseline": true,
+        "coDb": -13.165,
+        "crossDb": -21.454,
+        "validPct": 99.98,
+        "newWaterKm2": 0.906,
+        "floodedVegKm2": 0.093,
+        "permanentWaterKm2": 2.059,
+        "floodKm2": 0.999
+       },
+       {
+        "date": "2026-10-05",
+        "baseline": true,
+        "coDb": -13.214,
+        "crossDb": -21.443,
+        "validPct": 99.98,
+        "newWaterKm2": 1.426,
+        "floodedVegKm2": 0.065,
+        "permanentWaterKm2": 2.216,
+        "floodKm2": 1.491
+       },
+       {
+        "date": "2026-10-17",
+        "baseline": true,
+        "coDb": -12.336,
+        "crossDb": -20.993,
+        "validPct": 99.98,
+        "newWaterKm2": 0.297,
+        "floodedVegKm2": 2.758,
+        "permanentWaterKm2": 1.386,
+        "floodKm2": 3.055
+       },
+       {
+        "date": "2026-10-29",
+        "baseline": false,
+        "coDb": -12.503,
+        "crossDb": -20.973,
+        "validPct": 99.98,
+        "newWaterKm2": 0.976,
+        "floodedVegKm2": 3.423,
+        "permanentWaterKm2": 1.247,
+        "floodKm2": 4.399
        }
       ]
      }
@@ -14485,6 +17751,1435 @@
         "floodedVegKm2": 1.19,
         "permanentWaterKm2": 1.601,
         "floodKm2": 6.491
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "turbaco-flood",
+   "type": "flood",
+   "name": "Turbaco flooding",
+   "region": "Turbaco, Bolívar",
+   "country": "Colombia",
+   "lat": 10.325,
+   "lon": -75.405,
+   "startDate": "2026-09-14",
+   "endDate": "2026-11-01",
+   "footprint": [
+    [
+     -75.45,
+     10.37
+    ],
+    [
+     -75.36,
+     10.37
+    ],
+    [
+     -75.36,
+     10.28
+    ],
+    [
+     -75.45,
+     10.28
+    ]
+   ],
+   "thumb": "/analysis-extra/turbaco-flood/thumb.webp",
+   "changedAreaKm2": 0.09,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P119_F007_ASCE",
+      "label": "Track 119 · frame 7 · ascending",
+      "track": 119,
+      "frame": 7,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32618",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20",
+       "2026-11-01"
+      ],
+      "map": "/analysis-extra/turbaco-flood/P119_F007_ASCE_map.webp",
+      "mapSize": [
+       919,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-14",
+        "src": "/analysis-extra/turbaco-flood/P119_F007_ASCE_2026-09-14.webp"
+       },
+       {
+        "date": "2026-09-26",
+        "src": "/analysis-extra/turbaco-flood/P119_F007_ASCE_2026-09-26.webp"
+       },
+       {
+        "date": "2026-10-08",
+        "src": "/analysis-extra/turbaco-flood/P119_F007_ASCE_2026-10-08.webp"
+       },
+       {
+        "date": "2026-10-20",
+        "src": "/analysis-extra/turbaco-flood/P119_F007_ASCE_2026-10-20.webp"
+       },
+       {
+        "date": "2026-11-01",
+        "src": "/analysis-extra/turbaco-flood/P119_F007_ASCE_2026-11-01.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20"
+      ],
+      "peakDate": "2026-11-01",
+      "peakFloodKm2": 0.09,
+      "peakNewWaterKm2": 0.01,
+      "peakFloodedVegKm2": 0.08,
+      "maxExtentKm2": 0.09,
+      "maxExtentOpenWaterKm2": 0.01,
+      "maxExtentFloodedVegKm2": 0.08,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-14",
+        "baseline": true,
+        "coDb": -7.277,
+        "crossDb": -13.026,
+        "validPct": 100,
+        "newWaterKm2": 0.008,
+        "floodedVegKm2": 0.024,
+        "permanentWaterKm2": 0.004,
+        "floodKm2": 0.032
+       },
+       {
+        "date": "2026-09-26",
+        "baseline": true,
+        "coDb": -6.766,
+        "crossDb": -12.526,
+        "validPct": 100,
+        "newWaterKm2": 0.01,
+        "floodedVegKm2": 0.043,
+        "permanentWaterKm2": 0.004,
+        "floodKm2": 0.053
+       },
+       {
+        "date": "2026-10-08",
+        "baseline": true,
+        "coDb": -6.667,
+        "crossDb": -12.456,
+        "validPct": 100,
+        "newWaterKm2": 0.002,
+        "floodedVegKm2": 0.024,
+        "permanentWaterKm2": 0.002,
+        "floodKm2": 0.026
+       },
+       {
+        "date": "2026-10-20",
+        "baseline": true,
+        "coDb": -6.727,
+        "crossDb": -12.495,
+        "validPct": 100,
+        "newWaterKm2": 0.001,
+        "floodedVegKm2": 0.06,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.061
+       },
+       {
+        "date": "2026-11-01",
+        "baseline": false,
+        "coDb": -7.112,
+        "crossDb": -12.742,
+        "validPct": 100,
+        "newWaterKm2": 0.01,
+        "floodedVegKm2": 0.08,
+        "permanentWaterKm2": 0.003,
+        "floodKm2": 0.09
+       }
+      ]
+     },
+     {
+      "key": "P011_F083_DESC",
+      "label": "Track 11 · frame 83 · descending",
+      "track": 11,
+      "frame": 83,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32618",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-18",
+       "2026-09-30",
+       "2026-10-12",
+       "2026-10-24"
+      ],
+      "map": "/analysis-extra/turbaco-flood/P011_F083_DESC_map.webp",
+      "mapSize": [
+       919,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-18",
+        "src": "/analysis-extra/turbaco-flood/P011_F083_DESC_2026-09-18.webp"
+       },
+       {
+        "date": "2026-09-30",
+        "src": "/analysis-extra/turbaco-flood/P011_F083_DESC_2026-09-30.webp"
+       },
+       {
+        "date": "2026-10-12",
+        "src": "/analysis-extra/turbaco-flood/P011_F083_DESC_2026-10-12.webp"
+       },
+       {
+        "date": "2026-10-24",
+        "src": "/analysis-extra/turbaco-flood/P011_F083_DESC_2026-10-24.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-18",
+       "2026-09-30",
+       "2026-10-12"
+      ],
+      "peakDate": "2026-10-24",
+      "peakFloodKm2": 1.01,
+      "peakNewWaterKm2": 0.01,
+      "peakFloodedVegKm2": 1,
+      "maxExtentKm2": 1.01,
+      "maxExtentOpenWaterKm2": 0.01,
+      "maxExtentFloodedVegKm2": 1,
+      "permanentWaterKm2": 0.04,
+      "series": [
+       {
+        "date": "2026-09-18",
+        "baseline": true,
+        "coDb": -7.836,
+        "crossDb": -13.834,
+        "validPct": 100,
+        "newWaterKm2": 0.025,
+        "floodedVegKm2": 0.016,
+        "permanentWaterKm2": 0.035,
+        "floodKm2": 0.041
+       },
+       {
+        "date": "2026-09-30",
+        "baseline": true,
+        "coDb": -6.85,
+        "crossDb": -12.887,
+        "validPct": 100,
+        "newWaterKm2": 0.006,
+        "floodedVegKm2": 0.467,
+        "permanentWaterKm2": 0.032,
+        "floodKm2": 0.473
+       },
+       {
+        "date": "2026-10-12",
+        "baseline": true,
+        "coDb": -7.171,
+        "crossDb": -13.193,
+        "validPct": 100,
+        "newWaterKm2": 0.004,
+        "floodedVegKm2": 0.109,
+        "permanentWaterKm2": 0.028,
+        "floodKm2": 0.113
+       },
+       {
+        "date": "2026-10-24",
+        "baseline": false,
+        "coDb": -6.915,
+        "crossDb": -12.634,
+        "validPct": 100,
+        "newWaterKm2": 0.014,
+        "floodedVegKm2": 0.996,
+        "permanentWaterKm2": 0.026,
+        "floodKm2": 1.01
+       }
+      ]
+     },
+     {
+      "key": "P047_F007_ASCE",
+      "label": "Track 47 · frame 7 · ascending",
+      "track": 47,
+      "frame": 7,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32618",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15",
+       "2026-10-27"
+      ],
+      "map": "/analysis-extra/turbaco-flood/P047_F007_ASCE_map.webp",
+      "mapSize": [
+       919,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-21",
+        "src": "/analysis-extra/turbaco-flood/P047_F007_ASCE_2026-09-21.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/turbaco-flood/P047_F007_ASCE_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-15",
+        "src": "/analysis-extra/turbaco-flood/P047_F007_ASCE_2026-10-15.webp"
+       },
+       {
+        "date": "2026-10-27",
+        "src": "/analysis-extra/turbaco-flood/P047_F007_ASCE_2026-10-27.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15"
+      ],
+      "peakDate": "2026-10-27",
+      "peakFloodKm2": 0.88,
+      "peakNewWaterKm2": 0.01,
+      "peakFloodedVegKm2": 0.87,
+      "maxExtentKm2": 0.88,
+      "maxExtentOpenWaterKm2": 0.01,
+      "maxExtentFloodedVegKm2": 0.87,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-21",
+        "baseline": true,
+        "coDb": -7.524,
+        "crossDb": -13.263,
+        "validPct": 100,
+        "newWaterKm2": 0.004,
+        "floodedVegKm2": 0.583,
+        "permanentWaterKm2": 0.004,
+        "floodKm2": 0.587
+       },
+       {
+        "date": "2026-10-03",
+        "baseline": true,
+        "coDb": -7.503,
+        "crossDb": -13.124,
+        "validPct": 100,
+        "newWaterKm2": 0.007,
+        "floodedVegKm2": 0.022,
+        "permanentWaterKm2": 0.004,
+        "floodKm2": 0.029
+       },
+       {
+        "date": "2026-10-15",
+        "baseline": true,
+        "coDb": -7.278,
+        "crossDb": -12.998,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.238,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.238
+       },
+       {
+        "date": "2026-10-27",
+        "baseline": false,
+        "coDb": -7.172,
+        "crossDb": -12.56,
+        "validPct": 100,
+        "newWaterKm2": 0.008,
+        "floodedVegKm2": 0.874,
+        "permanentWaterKm2": 0.001,
+        "floodKm2": 0.882
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "durango-flood",
+   "type": "flood",
+   "name": "Animas River flooding at Durango",
+   "region": "Durango, Colorado",
+   "country": "United States",
+   "lat": 37.28,
+   "lon": -107.87,
+   "startDate": "2026-09-14",
+   "endDate": "2026-11-02",
+   "footprint": [
+    [
+     -107.92,
+     37.34
+    ],
+    [
+     -107.82,
+     37.34
+    ],
+    [
+     -107.82,
+     37.22
+    ],
+    [
+     -107.92,
+     37.22
+    ]
+   ],
+   "thumb": "/analysis-extra/durango-flood/thumb.webp",
+   "changedAreaKm2": 2.46,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "river",
+    "orbits": [
+     {
+      "key": "P120_F020_ASCE",
+      "label": "Track 120 · frame 20 · ascending",
+      "track": 120,
+      "frame": 20,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20",
+       "2026-11-01"
+      ],
+      "map": "/analysis-extra/durango-flood/P120_F020_ASCE_map.webp",
+      "mapSize": [
+       633,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-14",
+        "src": "/analysis-extra/durango-flood/P120_F020_ASCE_2026-09-14.webp"
+       },
+       {
+        "date": "2026-09-26",
+        "src": "/analysis-extra/durango-flood/P120_F020_ASCE_2026-09-26.webp"
+       },
+       {
+        "date": "2026-10-08",
+        "src": "/analysis-extra/durango-flood/P120_F020_ASCE_2026-10-08.webp"
+       },
+       {
+        "date": "2026-10-20",
+        "src": "/analysis-extra/durango-flood/P120_F020_ASCE_2026-10-20.webp"
+       },
+       {
+        "date": "2026-11-01",
+        "src": "/analysis-extra/durango-flood/P120_F020_ASCE_2026-11-01.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20"
+      ],
+      "peakDate": "2026-11-01",
+      "peakFloodKm2": 2.46,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 2.46,
+      "maxExtentKm2": 2.46,
+      "maxExtentOpenWaterKm2": 0,
+      "maxExtentFloodedVegKm2": 2.46,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-14",
+        "baseline": true,
+        "coDb": -6.172,
+        "crossDb": -13.254,
+        "validPct": 99.99,
+        "newWaterKm2": 0.043,
+        "floodedVegKm2": 0.112,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.155
+       },
+       {
+        "date": "2026-09-26",
+        "baseline": true,
+        "coDb": -5.368,
+        "crossDb": -12.376,
+        "validPct": 99.99,
+        "newWaterKm2": 0.001,
+        "floodedVegKm2": 0.289,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.29
+       },
+       {
+        "date": "2026-10-08",
+        "baseline": true,
+        "coDb": -6.402,
+        "crossDb": -13.308,
+        "validPct": 99.99,
+        "newWaterKm2": 0.027,
+        "floodedVegKm2": 0.029,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.056
+       },
+       {
+        "date": "2026-10-20",
+        "baseline": true,
+        "coDb": -6.054,
+        "crossDb": -13.089,
+        "validPct": 99.99,
+        "newWaterKm2": 0.072,
+        "floodedVegKm2": 0.07,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.142
+       },
+       {
+        "date": "2026-11-01",
+        "baseline": false,
+        "coDb": -5.066,
+        "crossDb": -11.536,
+        "validPct": 99.99,
+        "newWaterKm2": 0.002,
+        "floodedVegKm2": 2.456,
+        "permanentWaterKm2": 0,
+        "floodKm2": 2.458
+       }
+      ]
+     },
+     {
+      "key": "P128_F070_DESC",
+      "label": "Track 128 · frame 70 · descending",
+      "track": 128,
+      "frame": 70,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32612",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-15",
+       "2026-09-27",
+       "2026-10-09",
+       "2026-10-21",
+       "2026-11-02"
+      ],
+      "map": "/analysis-extra/durango-flood/P128_F070_DESC_map.webp",
+      "mapSize": [
+       635,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-15",
+        "src": "/analysis-extra/durango-flood/P128_F070_DESC_2026-09-15.webp"
+       },
+       {
+        "date": "2026-09-27",
+        "src": "/analysis-extra/durango-flood/P128_F070_DESC_2026-09-27.webp"
+       },
+       {
+        "date": "2026-10-09",
+        "src": "/analysis-extra/durango-flood/P128_F070_DESC_2026-10-09.webp"
+       },
+       {
+        "date": "2026-10-21",
+        "src": "/analysis-extra/durango-flood/P128_F070_DESC_2026-10-21.webp"
+       },
+       {
+        "date": "2026-11-02",
+        "src": "/analysis-extra/durango-flood/P128_F070_DESC_2026-11-02.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-15",
+       "2026-09-27",
+       "2026-10-09",
+       "2026-10-21"
+      ],
+      "peakDate": "2026-11-02",
+      "peakFloodKm2": 2.42,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 2.42,
+      "maxExtentKm2": 2.42,
+      "maxExtentOpenWaterKm2": 0,
+      "maxExtentFloodedVegKm2": 2.42,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-15",
+        "baseline": true,
+        "coDb": -5.22,
+        "crossDb": -12.008,
+        "validPct": 99.99,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.424,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.424
+       },
+       {
+        "date": "2026-09-27",
+        "baseline": true,
+        "coDb": -5.288,
+        "crossDb": -12.213,
+        "validPct": 99.99,
+        "newWaterKm2": 0.006,
+        "floodedVegKm2": 0.052,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.058
+       },
+       {
+        "date": "2026-10-09",
+        "baseline": true,
+        "coDb": -6.128,
+        "crossDb": -12.962,
+        "validPct": 99.99,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.27,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.27
+       },
+       {
+        "date": "2026-10-21",
+        "baseline": true,
+        "coDb": -5.887,
+        "crossDb": -12.623,
+        "validPct": 99.99,
+        "newWaterKm2": 0.082,
+        "floodedVegKm2": 0.044,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.126
+       },
+       {
+        "date": "2026-11-02",
+        "baseline": false,
+        "coDb": -4.856,
+        "crossDb": -11.299,
+        "validPct": 99.99,
+        "newWaterKm2": 0.001,
+        "floodedVegKm2": 2.417,
+        "permanentWaterKm2": 0,
+        "floodKm2": 2.418
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "south-fork-flood",
+   "type": "flood",
+   "name": "South Fork river flooding",
+   "region": "South Fork, Colorado",
+   "country": "United States",
+   "lat": 37.68,
+   "lon": -106.64,
+   "startDate": "2026-09-14",
+   "endDate": "2026-11-06",
+   "footprint": [
+    [
+     -106.7,
+     37.72
+    ],
+    [
+     -106.58,
+     37.72
+    ],
+    [
+     -106.58,
+     37.64
+    ],
+    [
+     -106.7,
+     37.64
+    ]
+   ],
+   "thumb": "/analysis-extra/south-fork-flood/thumb.webp",
+   "changedAreaKm2": 1.07,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "river",
+    "orbits": [
+     {
+      "key": "P120_F020_ASCE",
+      "label": "Track 120 · frame 20 · ascending",
+      "track": 120,
+      "frame": 20,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20",
+       "2026-11-01"
+      ],
+      "map": "/analysis-extra/south-fork-flood/P120_F020_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       836
+      ],
+      "frames": [
+       {
+        "date": "2026-09-14",
+        "src": "/analysis-extra/south-fork-flood/P120_F020_ASCE_2026-09-14.webp"
+       },
+       {
+        "date": "2026-09-26",
+        "src": "/analysis-extra/south-fork-flood/P120_F020_ASCE_2026-09-26.webp"
+       },
+       {
+        "date": "2026-10-08",
+        "src": "/analysis-extra/south-fork-flood/P120_F020_ASCE_2026-10-08.webp"
+       },
+       {
+        "date": "2026-10-20",
+        "src": "/analysis-extra/south-fork-flood/P120_F020_ASCE_2026-10-20.webp"
+       },
+       {
+        "date": "2026-11-01",
+        "src": "/analysis-extra/south-fork-flood/P120_F020_ASCE_2026-11-01.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20"
+      ],
+      "peakDate": "2026-11-01",
+      "peakFloodKm2": 1.07,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 1.07,
+      "maxExtentKm2": 1.07,
+      "maxExtentOpenWaterKm2": 0,
+      "maxExtentFloodedVegKm2": 1.07,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-14",
+        "baseline": true,
+        "coDb": -7.22,
+        "crossDb": -13.582,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.029,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.029
+       },
+       {
+        "date": "2026-09-26",
+        "baseline": true,
+        "coDb": -5.872,
+        "crossDb": -12.501,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.17,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.17
+       },
+       {
+        "date": "2026-10-08",
+        "baseline": true,
+        "coDb": -6.644,
+        "crossDb": -13.148,
+        "validPct": 100,
+        "newWaterKm2": 0.001,
+        "floodedVegKm2": 0.01,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.011
+       },
+       {
+        "date": "2026-10-20",
+        "baseline": true,
+        "coDb": -6.416,
+        "crossDb": -13.03,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.01,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.01
+       },
+       {
+        "date": "2026-11-01",
+        "baseline": false,
+        "coDb": -5.744,
+        "crossDb": -11.922,
+        "validPct": 100,
+        "newWaterKm2": 0.001,
+        "floodedVegKm2": 1.065,
+        "permanentWaterKm2": 0,
+        "floodKm2": 1.066
+       }
+      ]
+     },
+     {
+      "key": "P019_F021_ASCE",
+      "label": "Track 19 · frame 21 · ascending",
+      "track": 19,
+      "frame": 21,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-19",
+       "2026-10-01",
+       "2026-10-13",
+       "2026-10-25",
+       "2026-11-06"
+      ],
+      "map": "/analysis-extra/south-fork-flood/P019_F021_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       836
+      ],
+      "frames": [
+       {
+        "date": "2026-09-19",
+        "src": "/analysis-extra/south-fork-flood/P019_F021_ASCE_2026-09-19.webp"
+       },
+       {
+        "date": "2026-10-01",
+        "src": "/analysis-extra/south-fork-flood/P019_F021_ASCE_2026-10-01.webp"
+       },
+       {
+        "date": "2026-10-13",
+        "src": "/analysis-extra/south-fork-flood/P019_F021_ASCE_2026-10-13.webp"
+       },
+       {
+        "date": "2026-10-25",
+        "src": "/analysis-extra/south-fork-flood/P019_F021_ASCE_2026-10-25.webp"
+       },
+       {
+        "date": "2026-11-06",
+        "src": "/analysis-extra/south-fork-flood/P019_F021_ASCE_2026-11-06.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-19",
+       "2026-10-01",
+       "2026-10-13"
+      ],
+      "peakDate": "2026-10-25",
+      "peakFloodKm2": 0.27,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 0.27,
+      "maxExtentKm2": 0.33,
+      "maxExtentOpenWaterKm2": 0.01,
+      "maxExtentFloodedVegKm2": 0.32,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-19",
+        "baseline": true,
+        "coDb": -5.943,
+        "crossDb": -12.407,
+        "validPct": 99.96,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.014,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.014
+       },
+       {
+        "date": "2026-10-01",
+        "baseline": true,
+        "coDb": -4.943,
+        "crossDb": -11.244,
+        "validPct": 99.96,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.62,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.62
+       },
+       {
+        "date": "2026-10-13",
+        "baseline": true,
+        "coDb": -5.384,
+        "crossDb": -11.757,
+        "validPct": 99.96,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.014,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.014
+       },
+       {
+        "date": "2026-10-25",
+        "baseline": false,
+        "coDb": -5.148,
+        "crossDb": -11.226,
+        "validPct": 99.96,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.265,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.265
+       },
+       {
+        "date": "2026-11-06",
+        "baseline": false,
+        "coDb": -6.302,
+        "crossDb": -12.861,
+        "validPct": 99.96,
+        "newWaterKm2": 0.009,
+        "floodedVegKm2": 0.081,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.09
+       }
+      ]
+     },
+     {
+      "key": "P027_F070_DESC",
+      "label": "Track 27 · frame 70 · descending",
+      "track": 27,
+      "frame": 70,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-20",
+       "2026-10-02",
+       "2026-10-14",
+       "2026-10-26"
+      ],
+      "map": "/analysis-extra/south-fork-flood/P027_F070_DESC_map.webp",
+      "mapSize": [
+       1000,
+       836
+      ],
+      "frames": [
+       {
+        "date": "2026-09-20",
+        "src": "/analysis-extra/south-fork-flood/P027_F070_DESC_2026-09-20.webp"
+       },
+       {
+        "date": "2026-10-02",
+        "src": "/analysis-extra/south-fork-flood/P027_F070_DESC_2026-10-02.webp"
+       },
+       {
+        "date": "2026-10-14",
+        "src": "/analysis-extra/south-fork-flood/P027_F070_DESC_2026-10-14.webp"
+       },
+       {
+        "date": "2026-10-26",
+        "src": "/analysis-extra/south-fork-flood/P027_F070_DESC_2026-10-26.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-20",
+       "2026-10-02",
+       "2026-10-14"
+      ],
+      "peakDate": "2026-10-26",
+      "peakFloodKm2": 0.39,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 0.39,
+      "maxExtentKm2": 0.39,
+      "maxExtentOpenWaterKm2": 0,
+      "maxExtentFloodedVegKm2": 0.39,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-20",
+        "baseline": true,
+        "coDb": -6.449,
+        "crossDb": -12.777,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.017,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.017
+       },
+       {
+        "date": "2026-10-02",
+        "baseline": true,
+        "coDb": -5.454,
+        "crossDb": -11.971,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.018,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.018
+       },
+       {
+        "date": "2026-10-14",
+        "baseline": true,
+        "coDb": -5.369,
+        "crossDb": -11.91,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.078,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.078
+       },
+       {
+        "date": "2026-10-26",
+        "baseline": false,
+        "coDb": -5.367,
+        "crossDb": -11.605,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.386,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.386
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "farmington-flood",
+   "type": "flood",
+   "name": "Farmington flooding",
+   "region": "Farmington, New Mexico",
+   "country": "United States",
+   "lat": 36.74,
+   "lon": -108.2,
+   "startDate": "2026-09-14",
+   "endDate": "2026-11-02",
+   "footprint": [
+    [
+     -108.3,
+     36.8
+    ],
+    [
+     -108.1,
+     36.8
+    ],
+    [
+     -108.1,
+     36.68
+    ],
+    [
+     -108.3,
+     36.68
+    ]
+   ],
+   "thumb": "/analysis-extra/farmington-flood/thumb.webp",
+   "changedAreaKm2": 100.45,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P120_F020_ASCE",
+      "label": "Track 120 · frame 20 · ascending",
+      "track": 120,
+      "frame": 20,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20",
+       "2026-11-01"
+      ],
+      "map": "/analysis-extra/farmington-flood/P120_F020_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       754
+      ],
+      "frames": [
+       {
+        "date": "2026-09-14",
+        "src": "/analysis-extra/farmington-flood/P120_F020_ASCE_2026-09-14.webp"
+       },
+       {
+        "date": "2026-09-26",
+        "src": "/analysis-extra/farmington-flood/P120_F020_ASCE_2026-09-26.webp"
+       },
+       {
+        "date": "2026-10-08",
+        "src": "/analysis-extra/farmington-flood/P120_F020_ASCE_2026-10-08.webp"
+       },
+       {
+        "date": "2026-10-20",
+        "src": "/analysis-extra/farmington-flood/P120_F020_ASCE_2026-10-20.webp"
+       },
+       {
+        "date": "2026-11-01",
+        "src": "/analysis-extra/farmington-flood/P120_F020_ASCE_2026-11-01.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-14",
+       "2026-09-26",
+       "2026-10-08",
+       "2026-10-20"
+      ],
+      "peakDate": "2026-11-01",
+      "peakFloodKm2": 100.45,
+      "peakNewWaterKm2": 0.04,
+      "peakFloodedVegKm2": 100.41,
+      "maxExtentKm2": 100.45,
+      "maxExtentOpenWaterKm2": 0.04,
+      "maxExtentFloodedVegKm2": 100.41,
+      "permanentWaterKm2": 8.12,
+      "series": [
+       {
+        "date": "2026-09-14",
+        "baseline": true,
+        "coDb": -12.207,
+        "crossDb": -18.956,
+        "validPct": 100,
+        "newWaterKm2": 5.103,
+        "floodedVegKm2": 1.31,
+        "permanentWaterKm2": 6.144,
+        "floodKm2": 6.413
+       },
+       {
+        "date": "2026-09-26",
+        "baseline": true,
+        "coDb": -11.545,
+        "crossDb": -18.591,
+        "validPct": 100,
+        "newWaterKm2": 2.166,
+        "floodedVegKm2": 1.401,
+        "permanentWaterKm2": 6.54,
+        "floodKm2": 3.567
+       },
+       {
+        "date": "2026-10-08",
+        "baseline": true,
+        "coDb": -12.159,
+        "crossDb": -18.895,
+        "validPct": 100,
+        "newWaterKm2": 3.124,
+        "floodedVegKm2": 0.164,
+        "permanentWaterKm2": 7.008,
+        "floodKm2": 3.288
+       },
+       {
+        "date": "2026-10-20",
+        "baseline": true,
+        "coDb": -11.878,
+        "crossDb": -18.839,
+        "validPct": 100,
+        "newWaterKm2": 1.607,
+        "floodedVegKm2": 0.221,
+        "permanentWaterKm2": 5.802,
+        "floodKm2": 1.828
+       },
+       {
+        "date": "2026-11-01",
+        "baseline": false,
+        "coDb": -8.878,
+        "crossDb": -16.079,
+        "validPct": 100,
+        "newWaterKm2": 0.041,
+        "floodedVegKm2": 100.411,
+        "permanentWaterKm2": 0.28,
+        "floodKm2": 100.452
+       }
+      ]
+     },
+     {
+      "key": "P128_F070_DESC",
+      "label": "Track 128 · frame 70 · descending",
+      "track": 128,
+      "frame": 70,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32612",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-15",
+       "2026-09-27",
+       "2026-10-09",
+       "2026-10-21",
+       "2026-11-02"
+      ],
+      "map": "/analysis-extra/farmington-flood/P128_F070_DESC_map.webp",
+      "mapSize": [
+       1000,
+       753
+      ],
+      "frames": [
+       {
+        "date": "2026-09-15",
+        "src": "/analysis-extra/farmington-flood/P128_F070_DESC_2026-09-15.webp"
+       },
+       {
+        "date": "2026-09-27",
+        "src": "/analysis-extra/farmington-flood/P128_F070_DESC_2026-09-27.webp"
+       },
+       {
+        "date": "2026-10-09",
+        "src": "/analysis-extra/farmington-flood/P128_F070_DESC_2026-10-09.webp"
+       },
+       {
+        "date": "2026-10-21",
+        "src": "/analysis-extra/farmington-flood/P128_F070_DESC_2026-10-21.webp"
+       },
+       {
+        "date": "2026-11-02",
+        "src": "/analysis-extra/farmington-flood/P128_F070_DESC_2026-11-02.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-15",
+       "2026-09-27",
+       "2026-10-09",
+       "2026-10-21"
+      ],
+      "peakDate": "2026-11-02",
+      "peakFloodKm2": 77.91,
+      "peakNewWaterKm2": 0.08,
+      "peakFloodedVegKm2": 77.83,
+      "maxExtentKm2": 77.91,
+      "maxExtentOpenWaterKm2": 0.08,
+      "maxExtentFloodedVegKm2": 77.83,
+      "permanentWaterKm2": 9.01,
+      "series": [
+       {
+        "date": "2026-09-15",
+        "baseline": true,
+        "coDb": -11.588,
+        "crossDb": -19.05,
+        "validPct": 100,
+        "newWaterKm2": 1.823,
+        "floodedVegKm2": 9.037,
+        "permanentWaterKm2": 2.995,
+        "floodKm2": 10.86
+       },
+       {
+        "date": "2026-09-27",
+        "baseline": true,
+        "coDb": -11.572,
+        "crossDb": -19.266,
+        "validPct": 100,
+        "newWaterKm2": 5.657,
+        "floodedVegKm2": 0.404,
+        "permanentWaterKm2": 8.623,
+        "floodKm2": 6.061
+       },
+       {
+        "date": "2026-10-09",
+        "baseline": true,
+        "coDb": -11.729,
+        "crossDb": -19.304,
+        "validPct": 100,
+        "newWaterKm2": 0.992,
+        "floodedVegKm2": 1.624,
+        "permanentWaterKm2": 5.969,
+        "floodKm2": 2.616
+       },
+       {
+        "date": "2026-10-21",
+        "baseline": true,
+        "coDb": -11.704,
+        "crossDb": -19.269,
+        "validPct": 100,
+        "newWaterKm2": 4.378,
+        "floodedVegKm2": 0.237,
+        "permanentWaterKm2": 8.438,
+        "floodKm2": 4.615
+       },
+       {
+        "date": "2026-11-02",
+        "baseline": false,
+        "coDb": -9.044,
+        "crossDb": -16.92,
+        "validPct": 100,
+        "newWaterKm2": 0.078,
+        "floodedVegKm2": 77.832,
+        "permanentWaterKm2": 0.311,
+        "floodKm2": 77.91
+       }
+      ]
+     },
+     {
+      "key": "P048_F020_ASCE",
+      "label": "Track 48 · frame 20 · ascending",
+      "track": 48,
+      "frame": 20,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32612",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15",
+       "2026-10-27"
+      ],
+      "map": "/analysis-extra/farmington-flood/P048_F020_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       753
+      ],
+      "frames": [
+       {
+        "date": "2026-09-21",
+        "src": "/analysis-extra/farmington-flood/P048_F020_ASCE_2026-09-21.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/farmington-flood/P048_F020_ASCE_2026-10-03.webp"
+       },
+       {
+        "date": "2026-10-15",
+        "src": "/analysis-extra/farmington-flood/P048_F020_ASCE_2026-10-15.webp"
+       },
+       {
+        "date": "2026-10-27",
+        "src": "/analysis-extra/farmington-flood/P048_F020_ASCE_2026-10-27.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-21",
+       "2026-10-03",
+       "2026-10-15"
+      ],
+      "peakDate": "2026-10-27",
+      "peakFloodKm2": 4.22,
+      "peakNewWaterKm2": 0.9,
+      "peakFloodedVegKm2": 3.32,
+      "maxExtentKm2": 4.22,
+      "maxExtentOpenWaterKm2": 0.9,
+      "maxExtentFloodedVegKm2": 3.32,
+      "permanentWaterKm2": 3.73,
+      "series": [
+       {
+        "date": "2026-09-21",
+        "baseline": true,
+        "coDb": -11.711,
+        "crossDb": -19.694,
+        "validPct": 100,
+        "newWaterKm2": 4.048,
+        "floodedVegKm2": 0.089,
+        "permanentWaterKm2": 3.718,
+        "floodKm2": 4.137
+       },
+       {
+        "date": "2026-10-03",
+        "baseline": true,
+        "coDb": -11.268,
+        "crossDb": -19.343,
+        "validPct": 100,
+        "newWaterKm2": 0.858,
+        "floodedVegKm2": 0.094,
+        "permanentWaterKm2": 3.693,
+        "floodKm2": 0.952
+       },
+       {
+        "date": "2026-10-15",
+        "baseline": true,
+        "coDb": -10.446,
+        "crossDb": -18.654,
+        "validPct": 100,
+        "newWaterKm2": 0.034,
+        "floodedVegKm2": 7.362,
+        "permanentWaterKm2": 0.204,
+        "floodKm2": 7.396
+       },
+       {
+        "date": "2026-10-27",
+        "baseline": false,
+        "coDb": -11.079,
+        "crossDb": -18.894,
+        "validPct": 100,
+        "newWaterKm2": 0.899,
+        "floodedVegKm2": 3.319,
+        "permanentWaterKm2": 1.69,
+        "floodKm2": 4.218
        }
       ]
      }
@@ -17420,6 +22115,162 @@
         "validPct": 100,
         "dropKm2": 0.72,
         "riseKm2": 4.203
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "kakinada-wind",
+   "type": "storm",
+   "name": "Kakinada cyclone wind damage",
+   "region": "Kakinada and Yanam",
+   "country": "India",
+   "lat": 16.825,
+   "lon": 82.225,
+   "startDate": "2026-09-22",
+   "endDate": "2026-11-09",
+   "footprint": [
+    [
+     82.1,
+     17
+    ],
+    [
+     82.35,
+     17
+    ],
+    [
+     82.35,
+     16.65
+    ],
+    [
+     82.1,
+     16.65
+    ]
+   ],
+   "thumb": "/analysis-extra/kakinada-wind/thumb.webp",
+   "changedAreaKm2": 138.1,
+   "changedPct": 0,
+   "extra": {
+    "kind": "change",
+    "cause": "wind",
+    "eventDate": "2026-10-28",
+    "orbits": [
+     {
+      "key": "P055_F010_ASCE",
+      "label": "Track 55 · frame 10 · ascending",
+      "track": 55,
+      "frame": 10,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32644",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16",
+       "2026-10-28",
+       "2026-11-09"
+      ],
+      "map": "/analysis-extra/kakinada-wind/P055_F010_ASCE_map.webp",
+      "mapSize": [
+       641,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-22",
+        "src": "/analysis-extra/kakinada-wind/P055_F010_ASCE_2026-09-22.webp"
+       },
+       {
+        "date": "2026-10-04",
+        "src": "/analysis-extra/kakinada-wind/P055_F010_ASCE_2026-10-04.webp"
+       },
+       {
+        "date": "2026-10-16",
+        "src": "/analysis-extra/kakinada-wind/P055_F010_ASCE_2026-10-16.webp"
+       },
+       {
+        "date": "2026-10-28",
+        "src": "/analysis-extra/kakinada-wind/P055_F010_ASCE_2026-10-28.webp"
+       },
+       {
+        "date": "2026-11-09",
+        "src": "/analysis-extra/kakinada-wind/P055_F010_ASCE_2026-11-09.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16"
+      ],
+      "firstPostDate": "2026-10-28",
+      "firstPostDropKm2": 51.8,
+      "firstPostRiseKm2": 422.51,
+      "peakDropDate": "2026-11-09",
+      "peakDropKm2": 138.1,
+      "lastDate": "2026-11-09",
+      "lastDropKm2": 138.1,
+      "lastRiseKm2": 187.4,
+      "series": [
+       {
+        "date": "2026-09-22",
+        "baseline": true,
+        "coDb": -8.925,
+        "crossDb": -19.091,
+        "coChangeDb": -0.104,
+        "crossChangeDb": -0.23,
+        "validPct": 100,
+        "dropKm2": 67.879,
+        "riseKm2": 4.749
+       },
+       {
+        "date": "2026-10-04",
+        "baseline": true,
+        "coDb": -8.554,
+        "crossDb": -17.752,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 19.528,
+        "riseKm2": 4.914
+       },
+       {
+        "date": "2026-10-16",
+        "baseline": true,
+        "coDb": -7.926,
+        "crossDb": -17.184,
+        "coChangeDb": 0.26,
+        "crossChangeDb": 0.217,
+        "validPct": 100,
+        "dropKm2": 1.666,
+        "riseKm2": 60.477
+       },
+       {
+        "date": "2026-10-28",
+        "baseline": false,
+        "coDb": -7.347,
+        "crossDb": -14.014,
+        "coChangeDb": 1.088,
+        "crossChangeDb": 1.926,
+        "validPct": 100,
+        "dropKm2": 51.796,
+        "riseKm2": 422.508
+       },
+       {
+        "date": "2026-11-09",
+        "baseline": false,
+        "coDb": -8.566,
+        "crossDb": -15.543,
+        "coChangeDb": -0.047,
+        "crossChangeDb": 0.935,
+        "validPct": 100,
+        "dropKm2": 138.103,
+        "riseKm2": 187.402
        }
       ]
      }

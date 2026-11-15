@@ -105,6 +105,19 @@ CASES = {
     "petapa-landslide": ("deslizamientos/deslizamiento_guatemala_san_miguel_petapa", "change"),
     "yojoa-landslide": ("deslizamientos/deslizamiento_honduras_santa_cruz_yojoa", "change"),
     "santa-maria-wind": ("vientos/viento_brasil_santa_maria", "change"),
+    "baglung-flood": ("inundaciones/inundacion_nepal_nisikhola_baglung", "extent"),
+    "turbaco-flood": ("inundaciones/inundacion_colombia_turbaco", "extent"),
+    "quininde-flood": ("inundaciones/inundacion_ecuador_quininde", "extent"),
+    "durango-flood": ("inundaciones/inundacion_eeuu_durango", "extent"),
+    "south-fork-flood": ("inundaciones/inundacion_eeuu_south_fork", "extent"),
+    "farmington-flood": ("inundaciones/inundacion_eeuu_farmington", "extent"),
+    "hurricane-utah-flood": ("inundaciones/inundacion_eeuu_hurricane_utah", "extent"),
+    "denia-flood": ("inundaciones/inundacion_espana_denia", "extent"),
+    "gandia-flood": ("inundaciones/inundacion_espana_gandia_oliva", "extent"),
+    "da-nang-flood": ("inundaciones/inundacion_vietnam_da_nang", "extent"),
+    "hue-flood": ("inundaciones/inundacion_vietnam_hue", "extent"),
+    "tegucigalpa-landslide": ("deslizamientos/deslizamiento_honduras_tegucigalpa", "change"),
+    "kakinada-wind": ("vientos/viento_india_kakinada_yanam", "change"),
     # Reservoirs and lakes have no change mask: only the people living around them.
 }
 

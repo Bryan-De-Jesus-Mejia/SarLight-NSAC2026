@@ -122,6 +122,22 @@ const names: Record<string, string> = {
   "Pagosa Springs river flooding": "Crecida de ríos en Pagosa Springs",
   "Jammu flash flooding": "Inundación repentina en Jammu",
   "Budhi Gandaki flash flood": "Crecida repentina del Budhi Gandaki",
+  "Nisikhola flash flood": "Crecida repentina en Nisikhola",
+  "Turbaco flooding": "Inundación en Turbaco",
+  "Quinindé river flooding": "Crecida de ríos en Quinindé",
+  "Animas River flooding at Durango": "Crecida del río Animas en Durango",
+  "South Fork river flooding": "Crecida del río en South Fork",
+  "Farmington flooding": "Inundación en Farmington",
+  "Hurricane flash flooding": "Inundación repentina en Hurricane",
+  "Dénia flooding": "Inundación en Dénia",
+  "Gandia and Oliva flooding": "Inundación en Gandia y Oliva",
+  "Da Nang urban flooding": "Inundación urbana en Da Nang",
+  "Hue flooding": "Inundación en Hue",
+  "Tegucigalpa landslide watch": "Vigilancia de deslizamientos en Tegucigalpa",
+  "Kakinada cyclone wind damage": "Daños por el viento del ciclón en Kakinada",
+  "La Plata reservoir": "Embalse La Plata",
+  "Gatún Lake": "Lago Gatún",
+  "Lake Titicaca at Puno Bay": "Lago Titicaca en la bahía de Puno",
 };
 
 const regions: Record<string, string> = {
@@ -152,6 +168,11 @@ const regions: Record<string, string> = {
   "Puerto Plata and Sosúa": "Puerto Plata y Sosúa",
   "Resistencia and Barranqueras, Chaco": "Resistencia y Barranqueras, Chaco",
   "Sula Valley, Cortés": "Valle de Sula, Cortés",
+  "Farmington, New Mexico": "Farmington, Nuevo México",
+  "Kakinada and Yanam": "Kakinada y Yanam",
+  "Toa Alta, Naranjito and Bayamón": "Toa Alta, Naranjito y Bayamón",
+  "Colón and Panamá Oeste": "Colón y Panamá Oeste",
+  "Puno Bay, Puno": "Bahía de Puno, Puno",
 };
 
 const countries: Record<string, string> = {
@@ -166,6 +187,8 @@ const countries: Record<string, string> = {
   Panama: "Panamá",
   "Dominican Republic": "República Dominicana",
   "Haiti": "Haití",
+  "Spain": "España",
+  "Peru": "Perú",
 };
 
 /** Proper nouns that read the same in both languages, so the lookup finds them without a warning. */
@@ -241,6 +264,18 @@ const same = [
   "Argentina",
   "Paraguay",
   "Honduras",
+  "Nisikhola, Baglung",
+  "Turbaco, Bolívar",
+  "Quinindé, Esmeraldas",
+  "South Fork, Colorado",
+  "Hurricane, Utah",
+  "Dénia, Alicante",
+  "La Safor, Valencia",
+  "Da Nang",
+  "Hue",
+  "Comayagüela, Tegucigalpa",
+  "Puerto Rico",
+  "Durango, Colorado",
 ];
 
 const land: Record<string, string> = {
