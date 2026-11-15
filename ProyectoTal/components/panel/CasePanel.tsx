@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
+import { ExtraBody } from "@/components/panel/ExtraCase";
 import { GeneralView } from "@/components/panel/GeneralView";
 import { SarViewer } from "@/components/panel/SarViewer";
 import { CHANGE_TYPES } from "@/data/changeTypes";
@@ -32,6 +33,7 @@ const READING: Record<ChangeType, string> = {
   earthquake: "Phase changes between passes show how far the ground moved along the satellite's line of sight.",
   agriculture: "Backscatter changes with crop growth, harvest and tillage, so shifts mark changes in what is planted.",
   deformation: "Phase changes between passes reveal slow sinking or uplift of the ground.",
+  landslide: "Phase changes between passes show how far a slope moved along the satellite's line of sight.",
 };
 
 function SectionTitle({ children }: { children: ReactNode }) {
@@ -227,6 +229,8 @@ function PanelBody({ detail }: { detail: EventDetail }) {
   const technical = useAppStore((s) => s.audience === "technical");
   const analysis = (technical ? detail.analyses.find((a) => a.key === picked) : undefined) ?? detail.analyses[0];
 
+  if (detail.extra) return <ExtraBody detail={detail} />;
+
   return (
     <div className="space-y-5">
       {technical && detail.analyses.length > 1 && (
@@ -356,6 +360,7 @@ export function CasePanel() {
           </div>
         ) : detail && detail.id === selectedId ? (
           <>
+            {!detail.extra && (
             <button
               type="button"
               onClick={() => setStory(true)}
@@ -371,6 +376,7 @@ export function CasePanel() {
                 <span className="block text-xs text-muted">A step-by-step walk through what the radar saw</span>
               </span>
             </button>
+            )}
             <PanelBody key={detail.id} detail={detail} />
           </>
         ) : (
