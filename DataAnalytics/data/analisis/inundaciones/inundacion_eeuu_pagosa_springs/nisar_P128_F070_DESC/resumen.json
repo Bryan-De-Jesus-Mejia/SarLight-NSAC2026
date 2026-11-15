@@ -1,0 +1,39 @@
+{
+  "collection": "inundacion_eeuu_pagosa_springs",
+  "source": "nisar",
+  "orbit": "P128_F070_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-27T02:06:42Z",
+    "2026-10-09T02:06:42Z",
+    "2026-10-21T02:06:42Z",
+    "2026-11-02T02:06:42Z",
+    "2026-11-14T02:06:43Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32612",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-11-01",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-27T02:06:42Z",
+    "2026-10-09T02:06:42Z",
+    "2026-10-21T02:06:42Z"
+  ],
+  "peak_date": "2026-11-02T02:06:42Z",
+  "peak_flood_km2": 2.407,
+  "peak_new_water_km2": 0.0,
+  "peak_flooded_veg_km2": 2.407,
+  "max_extent_km2": 4.05,
+  "max_extent_open_water_km2": 0.018,
+  "max_extent_flooded_veg_km2": 4.032,
+  "permanent_water_km2": 0.0
+}
