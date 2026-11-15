@@ -14,6 +14,8 @@ import type {
   FramePoint,
   GlacierExtra,
   IceGroup,
+  WaterExtra,
+  WaterOrbit,
 } from "@/data/extraTypes";
 import type { EventDetail } from "@/data/types";
 import { getLang, msg, useT, type TFunction } from "@/i18n/core";
@@ -22,7 +24,7 @@ import { useAppStore } from "@/store/useAppStore";
 
 /**
  * The case panel for the analyses that are not radar change maps: farming, ice
- * flow and ground movement. The same measured numbers appear in both views;
+ * flow, ground movement, dated events and the water of reservoirs and lakes. The same measured numbers appear in both views;
  * the simple view says them in plain words, the technical one adds the method.
  */
 
@@ -180,6 +182,7 @@ const SETTING_NOTE: Record<NonNullable<FarmExtra["setting"]>, string> = {
   town: msg("This is a dense neighbourhood: even a small flooded area here means streets and homes under water."),
   coast: msg("Here the river meets the sea, among towns, cane fields and roads."),
   valley: msg("In a mountain valley, water gathers fast in the low land along the river."),
+  rural: msg("This is farmland and small villages, where a flooded road can cut a whole community off."),
 };
 
 const ACTIVITY_WORD: Record<FarmExtra["activity"], string> = {
@@ -586,6 +589,7 @@ function DisplacementView({ detail, extra, technical }: { detail: EventDetail; e
 const CAUSE_WORD: Record<ChangeExtra["cause"], { event: string; weaker: string }> = {
   wind: { event: msg("the windstorm"), weaker: msg("standing crops and trees that lost their echo, as if knocked down") },
   heat: { event: msg("the start of the heat wave"), weaker: msg("land whose echo weakened, as soil and plants dried") },
+  drought: { event: msg("the start of the dry spell"), weaker: msg("land whose echo weakened, as soil and plants dried") },
   landslide: { event: msg("the date of the landslide reports"), weaker: msg("slopes whose echo changed, where ground may have moved") },
 };
 
@@ -644,7 +648,7 @@ function ChangeView({ extra, technical }: { extra: ChangeExtra; technical: boole
           },
           {
             key: "passes",
-            label: "Each pass",
+            label: t("Each pass"),
             body: (
               <Passes
                 frames={orbit.frames}
@@ -688,6 +692,119 @@ function ChangeView({ extra, technical }: { extra: ChangeExtra; technical: boole
   );
 }
 
+/* ------------------------- reservoirs and lakes (water mode) -------------- */
+
+/** Passes jump this much (largest − smallest, as % of the largest) when wind hides part of the water. */
+const JUMPY_PCT = 50;
+
+function WaterView({ extra, technical }: { extra: WaterExtra; technical: boolean }) {
+  const t = useT();
+  const [picked, setPicked] = useState(extra.orbits[0].key);
+  const orbit: WaterOrbit = extra.orbits.find((o) => o.key === picked) ?? extra.orbits[0];
+  const jumpy = orbit.rangePctOfMax !== null && orbit.rangePctOfMax >= JUMPY_PCT;
+  const summary = t(
+    "The satellite counted the calm open water here on {n} passes. The most it saw was {max} km², on {max_date}; the least, {min} km², on {min_date}. From the first pass ({d1}) to the last ({d2}) it went from {first} to {last} km².",
+    {
+      n: orbit.dates.length,
+      max: km(orbit.maxWaterKm2),
+      max_date: formatDate(orbit.maxDate),
+      min: km(orbit.minWaterKm2),
+      min_date: formatDate(orbit.minDate),
+      d1: formatDate(orbit.firstDate),
+      d2: formatDate(orbit.lastDate),
+      first: km(orbit.firstWaterKm2),
+      last: km(orbit.lastWaterKm2),
+    },
+  );
+
+  return (
+    <div className="space-y-5">
+      <p className="text-[15px] leading-relaxed text-ink/90">{summary}</p>
+      {jumpy && (
+        <p className="rounded-xl border border-[#fbbf24]/40 bg-[#fbbf24]/10 px-3 py-2 text-xs leading-relaxed text-ink/90">
+          {t(
+            "The count jumps a lot from pass to pass. Wind ruffles the water, and ruffled water sends the pulse back like land, so part of the water can vanish from one pass. Trust the trend over many passes more than any single one.",
+          )}
+        </p>
+      )}
+      {technical && (
+        <Switcher items={extra.orbits} value={orbit.key} label={t("Satellite track")} onPick={setPicked} text={(o) => trackLabel(t, o.label)} />
+      )}
+      <dl className="grid grid-cols-2 gap-2.5">
+        <Stat label={t("Most water seen")} note={formatDate(orbit.maxDate)}>
+          {km(orbit.maxWaterKm2)} <Unit>km²</Unit>
+        </Stat>
+        <Stat label={t("Least water seen")} note={formatDate(orbit.minDate)}>
+          {km(orbit.minWaterKm2)} <Unit>km²</Unit>
+        </Stat>
+        <Stat label={t("Last pass")} note={formatDate(orbit.lastDate)}>
+          {km(orbit.lastWaterKm2)} <Unit>km²</Unit>
+        </Stat>
+        <Stat label={t("Passes used")} note={`${formatDate(orbit.firstDate)} – ${formatDate(orbit.lastDate)}`}>
+          {orbit.dates.length}
+        </Stat>
+      </dl>
+      <Tabs
+        key={orbit.key}
+        tabs={[
+          {
+            key: "map",
+            label: t("Map of the water"),
+            body: (
+              <Figure
+                src={orbit.map}
+                size={orbit.mapSize}
+                alt={t("Map of the water on the passes with the most and the least water")}
+                caption={t(
+                  "Dark blue: water on both the pass with the most water and the one with the least. Light blue: water only on the pass with the most. On a grey radar image, the median of all passes.",
+                )}
+              />
+            ),
+          },
+          {
+            key: "passes",
+            label: t("Each pass"),
+            body: (
+              <Passes
+                frames={orbit.frames}
+                caption={t("False colour: red and blue carry the co-polarised echo, green the cross-polarised one. Calm water looks black; dry shore and bare soil look purple.")}
+              />
+            ),
+          },
+        ]}
+      />
+      <div>
+        <Title>{t("Calm water by pass")}</Title>
+        <div className="mt-2">
+          <SeriesChart
+            unit="km²"
+            zero
+            decimals={1}
+            series={[{ name: t("Calm open water"), color: COLORS.water, points: orbit.series.map((p) => ({ x: p.date, y: p.waterKm2 })) }]}
+          />
+        </div>
+      </div>
+      <p className="text-xs leading-relaxed text-muted">
+        {extra.body === "reservoir"
+          ? t("A reservoir rises and falls with the rain, and with the water taken out for electricity, farms and cities. The radar sees how much water there is; why it changed is our reading, not something the radar tells apart.")
+          : t("A lake rises and falls with the rain, evaporation and the water people take from its rivers. The radar sees how much water there is; why it changed is our reading, not something the radar tells apart.")}
+      </p>
+      {technical && (
+        <Facts
+          rows={[
+            [t("Satellite"), `NISAR, ${trackLabel(t, orbit.label)}`],
+            [t("Polarisations"), t("{a} and {b}", { a: orbit.coPol, b: orbit.crossPol })],
+            [t("Water below"), orbit.waterMaxDb === null ? "—" : `${orbit.waterMaxDb} dB (${orbit.coPol})`],
+            [t("Median filter"), orbit.medianFilterPx === null ? "—" : `${orbit.medianFilterPx} px`],
+            [t("Pixel"), `${orbit.pixelM} m · ${orbit.crs}`],
+            [t("Range between passes"), orbit.rangePctOfMax === null ? "—" : t("{pct}% of the largest", { pct: orbit.rangePctOfMax })],
+          ]}
+        />
+      )}
+    </div>
+  );
+}
+
 export function ExtraBody({ detail }: { detail: EventDetail }) {
   const technical = useAppStore((s) => s.audience === "technical");
   const extra = detail.extra;
@@ -699,6 +816,8 @@ export function ExtraBody({ detail }: { detail: EventDetail }) {
       <GlacierView extra={extra} technical={technical} />
     ) : extra.kind === "change" ? (
       <ChangeView extra={extra} technical={technical} />
+    ) : extra.kind === "water" ? (
+      <WaterView extra={extra} technical={technical} />
     ) : (
       <DisplacementView detail={detail} extra={extra} technical={technical} />
     );

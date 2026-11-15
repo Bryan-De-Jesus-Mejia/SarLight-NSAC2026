@@ -6,6 +6,7 @@ import { panel } from "./panel";
 import { shell } from "./shell";
 import { story } from "./story";
 import { ui } from "./ui";
+import { water } from "./water";
 
 /**
  * Spanish, keyed by the English sentence. One file per area keeps three
@@ -20,4 +21,5 @@ export const es: Record<string, string> = {
   ...methods,
   ...more,
   ...people,
+  ...water,
 };

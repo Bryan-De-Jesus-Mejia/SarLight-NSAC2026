@@ -10,7 +10,7 @@ import { globeApi } from "@/lib/globeApi";
 
 /**
  * Story steps for the analyses that are not change maps (floods and farming
- * over time, wind, heat, landslides, earthquakes, glaciers). Same promise as
+ * over time, wind, heat, landslides, earthquakes, glaciers, reservoirs and lakes). Same promise as
  * the other stories: every figure is read from the analysis.
  */
 
@@ -50,6 +50,7 @@ const PEOPLE: Record<string, string> = {
   earthquake: msg("Seeing exactly where the ground moved, and by how much, guides rescuers and engineers to the places that need them most."),
   glacier: msg("Ice that slides into the sea raises the ocean everywhere, including the Caribbean coast. Watching glaciers is watching our own shorelines."),
   agriculture: msg("Fields are food. Seeing when and where they change helps forecast harvests, and spot burning and clearing that harm air and forest."),
+  wetland: msg("A reservoir is the tap of a whole region: drinking water, irrigation and electricity. Watching its water from space, every 12 days, shows a shortage coming before the taps run dry."),
 };
 
 const INTRO: Record<string, string> = {
@@ -57,6 +58,7 @@ const INTRO: Record<string, string> = {
   glacier: msg("We tracked the ice, pass after pass, to measure how fast it slides to the sea."),
   displacement: msg("We compared radar passes from before and after the shaking, to see how far the ground moved."),
   change: msg("We let the satellite learn what normal looks like here, then compared it with the passes after the event."),
+  water: msg("We counted the calm open water here on every pass, to see it rise and fall."),
 };
 
 export function buildExtraSteps(detail: EventDetail, setDrape: (d: null) => void): StoryStep[] {
@@ -125,6 +127,27 @@ export function buildExtraSteps(detail: EventDetail, setDrape: (d: null) => void
       extra: <Pictures items={[{ src: o.map, caption: t("Map from our analysis") }]} />,
       enter: look(MID),
     });
+  } else if (x.kind === "water") {
+    const o = x.orbits[0];
+    const first = o.frames[0];
+    const last = o.frames[o.frames.length - 1];
+    steps.push({
+      key: "passes",
+      kicker: t("What the radar saw"),
+      title: t("{n} visits, one place", { n: o.dates.length }),
+      body: <p>{t("Calm water is a mirror for the radar: the pulse bounces away and the water looks black. Dry shore and bare soil look purple. Compare the first visit with the last.")}</p>,
+      extra: first && last ? <Pictures items={[{ src: first.src, caption: formatDate(first.date) }, { src: last.src, caption: formatDate(last.date) }]} /> : undefined,
+      enter: look(MID),
+    });
+    steps.push({
+      key: "map",
+      kicker: t("The change"),
+      title: t("How much water there was"),
+      figure: { value: km(o.maxWaterKm2), unit: "km²", note: t("of calm water at most, on {date} · {min} km² at least", { date: formatDate(o.maxDate), min: km(o.minWaterKm2) }) },
+      body: <p>{t("Light blue is water the satellite saw only on the pass with the most water. Wind can ruffle the surface and hide part of it, so the trend over many passes matters more than one.")}</p>,
+      extra: <Pictures items={[{ src: o.map, caption: t("Map from our analysis") }]} />,
+      enter: look(MID),
+    });
   } else if (x.kind === "displacement") {
     const p = x.pairs[0];
     steps.push({
@@ -186,7 +209,7 @@ export function buildExtraSteps(detail: EventDetail, setDrape: (d: null) => void
     title: t("What this means for people"),
     body: (
       <>
-        <p>{t(PEOPLE[x.kind === "displacement" ? detail.type : x.kind === "change" ? detail.type : x.kind === "agriculture" && detail.type === "flood" ? "flood" : x.kind])}</p>
+        <p>{t(PEOPLE[x.kind === "displacement" || x.kind === "change" || x.kind === "water" ? detail.type : x.kind === "agriculture" && detail.type === "flood" ? "flood" : x.kind])}</p>
         <div className="mt-4">
           <Impact detail={detail} compact />
         </div>

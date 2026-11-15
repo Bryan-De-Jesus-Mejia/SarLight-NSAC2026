@@ -18,14 +18,18 @@ Every case has a **"Why it happened"** chain: cause → what happens on the grou
 live through. Where the world left a record, the cause comes with evidence: rain, heat and wind from the ERA5 reanalysis,
 earthquakes from the USGS catalogue.
 
-## The cases (31)
+## The cases (82)
 
-- **Dominican Republic (13):** floods in Capotillo, Santo Domingo Norte (Ozama), San Pedro de Macorís, San José de Ocoa,
-  Azua and Monte Plata; wind damage in the Cibao and Valverde; heat and drought on the Línea Noroeste; landslide watch in
-  Los Cacaos and Miches; fire analyses in Sierra de Bahoruco and Pelempito.
-- **World (18):** earthquakes in Venezuela, Mexico, Indonesia and Panama; the Langtang collapse in Nepal; glaciers
-  (Jakobshavn, Hubbard, Pine Island); harvests, rice flooding, crop burning and forest clearing in the US, Canada, Ukraine,
-  Egypt, Vietnam, Bangladesh, India, Indonesia and Brazil.
+- **Dominican Republic (24):** floods in Capotillo, Santo Domingo Norte (Ozama), San Pedro de Macorís, San José de Ocoa,
+  Azua, Monte Plata, Puerto Plata, Hoya de Caimito (Santiago), Tamayo, Matanzas and Cambita Garabitos; wind damage in the
+  Cibao and Valverde; heat and drought on the Línea Noroeste and in the San Juan Valley; landslide watch in Los Cacaos and
+  Miches; fire analyses in Sierra de Bahoruco and Pelempito; the water of the Sabana Yegua, Monte Grande, Jigüey and
+  Sabaneta reservoirs and of Lake Enriquillo.
+- **World (58):** floods in Haiti, Honduras, Panama, Colombia, Ecuador, Argentina, Paraguay, Mexico, the US, India and Nepal;
+  landslide watch in Guatemala and Honduras; a windstorm in southern Brazil; reservoirs and lakes in Mexico, Ecuador,
+  Colombia and El Salvador; earthquakes in Venezuela, Mexico, Indonesia and Panama; the Langtang collapse in Nepal;
+  glaciers (Jakobshavn, Hubbard, Pine Island); harvests, rice flooding, crop burning and forest clearing in the US, Canada,
+  Ukraine, Egypt, Vietnam, Bangladesh, India, Indonesia and Brazil.
 
 ## Honesty
 
@@ -54,7 +58,7 @@ python pipeline/analisis_temporal.py --collection data/collections/<case> --mode
 # 2. Export for the app
 cd ../ProyectoTal
 python ../DataAnalytics/pipeline/export_web.py     # change maps
-node scripts/export-extra.mjs                      # floods over time, wind, heat, landslides, quakes, glaciers, farming
+node scripts/export-extra.mjs                      # floods over time, wind, heat, drought, landslides, reservoirs, quakes, glaciers, farming
 node scripts/export-context.mjs                    # weather (Open-Meteo/ERA5) and earthquakes (USGS)
 python ../DataAnalytics/pipeline/export_people.py  # people on the changed land (GHSL population grid)
 python ../DataAnalytics/pipeline/export_passes.py  # the 12-day dance

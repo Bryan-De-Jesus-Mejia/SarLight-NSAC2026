@@ -1,6 +1,6 @@
 /**
- * The analyses that are not radar change maps: farming, ice flow, and ground
- * movement from earthquakes and landslides. Produced by DataAnalytics and
+ * The analyses that are not radar change maps: farming, ice flow, ground
+ * movement from earthquakes and landslides, and the water of reservoirs and lakes. Produced by DataAnalytics and
  * exported by scripts/export-extra.mjs. Every number comes from the pipeline's
  * own summaries and CSV series.
  */
@@ -100,7 +100,7 @@ export interface FarmExtra {
   /** What the place is believed to show: our reading of the site, not something the radar tells apart. */
   activity: "harvest" | "flood" | "burning" | "clearing";
   /** Set for floods outside farmland: where the water was. */
-  setting?: "river" | "town" | "coast" | "valley";
+  setting?: "river" | "town" | "coast" | "valley" | "rural";
   orbits: FarmOrbit[];
 }
 
@@ -219,9 +219,48 @@ export interface ChangeOrbit extends OrbitBase {
 export interface ChangeExtra {
   kind: "change";
   /** What the team was looking for on that date. */
-  cause: "wind" | "heat" | "landslide";
+  cause: "wind" | "heat" | "drought" | "landslide";
   eventDate: string;
   orbits: ChangeOrbit[];
 }
 
-export type ExtraAnalysis = FarmExtra | GlacierExtra | DisplacementExtra | ChangeExtra;
+/* ------------------------- reservoirs and lakes (water mode) -------------- */
+
+export interface WaterPoint {
+  date: string;
+  coDb: number | null;
+  crossDb: number | null;
+  validPct: number | null;
+  /** Calm open water: co-pol echo below the water threshold. */
+  waterKm2: number | null;
+}
+
+/** Calm open water counted on every pass, with no event and no baseline. */
+export interface WaterOrbit extends OrbitBase {
+  coPol: string;
+  crossPol: string;
+  waterMaxDb: number | null;
+  medianFilterPx: number | null;
+  dates: string[];
+  firstDate: string;
+  firstWaterKm2: number;
+  lastDate: string;
+  lastWaterKm2: number;
+  changeKm2: number;
+  changePct: number | null;
+  minDate: string;
+  minWaterKm2: number;
+  maxDate: string;
+  maxWaterKm2: number;
+  /** (largest − smallest) / largest, in %. */
+  rangePctOfMax: number | null;
+  series: WaterPoint[];
+}
+
+export interface WaterExtra {
+  kind: "water";
+  body: "reservoir" | "lake";
+  orbits: WaterOrbit[];
+}
+
+export type ExtraAnalysis = FarmExtra | GlacierExtra | DisplacementExtra | ChangeExtra | WaterExtra;

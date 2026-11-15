@@ -47,7 +47,7 @@ export function fieldWatchOf(detail: EventDetail): FieldWatch | null {
   const x = detail.extra;
   if (!x) return null;
   const km = (v: number) => `${formatValue(v)} km²`;
-  if (x.kind === "change" && (x.cause === "wind" || x.cause === "heat")) {
+  if (x.kind === "change" && (x.cause === "wind" || x.cause === "heat" || x.cause === "drought")) {
     const o = x.orbits[0];
     const params = { area: km(o.peakDropKm2), event: formatDate(x.eventDate), peak: formatDate(o.peakDropDate) };
     return x.cause === "wind"
@@ -62,10 +62,16 @@ export function fieldWatchOf(detail: EventDetail): FieldWatch | null {
       : {
           level: "alert",
           title: t("Fields drying"),
-          body: t(
-            "{area} of land lost echo during the heat, the most by {peak}. Dry soil and wilting crops send back less. Watch for a weaker harvest and thirsty livestock.",
-            params,
-          ),
+          body:
+            x.cause === "drought"
+              ? t(
+                  "{area} of land lost echo during the dry spell, the most by {peak}. Dry soil and wilting crops send back less. Watch for a weaker harvest and thirsty livestock.",
+                  params,
+                )
+              : t(
+                  "{area} of land lost echo during the heat, the most by {peak}. Dry soil and wilting crops send back less. Watch for a weaker harvest and thirsty livestock.",
+                  params,
+                ),
         };
   }
   if (x.kind !== "agriculture" || detail.type !== "agriculture") return null;
@@ -136,6 +142,11 @@ export const ACTIONS: Partial<Record<ChangeType, string[]>> = {
     msg("During the shaking: drop, cover under a sturdy table, and hold on."),
     msg("Agree on a meeting point with your family before it happens."),
     msg("Afterwards, expect aftershocks, check for gas leaks and stay out of cracked buildings."),
+  ],
+  wetland: [
+    msg("Use water sparingly when the reservoir runs low: fix leaks and water crops early or late."),
+    msg("Store drinking water covered: open containers breed the mosquitoes that carry dengue."),
+    msg("Follow the water and power authority's notices about rationing."),
   ],
   agriculture: [
     msg("Share these maps with your cooperative or extension office to plan the next season."),

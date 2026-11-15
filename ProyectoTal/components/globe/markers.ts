@@ -153,6 +153,7 @@ const METRIC_NOTE = {
   glacier: msg("ice moving fast"),
   displacement: msg("ground moved over 5 cm"),
   change: msg("land that changed after the event"),
+  water: msg("calm water at most"),
 } as const;
 
 export const htmlElement = (d: object): HTMLElement =>
