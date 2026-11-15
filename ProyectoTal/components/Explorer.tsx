@@ -50,18 +50,23 @@ export function Explorer() {
   const linkedRef = useRef(false);
   useEffect(() => {
     if (status !== "ready" || !globeReady || linkedRef.current) return;
-    linkedRef.current = true;
     // ?story=<id> opens the case straight in story mode.
     const params = new URLSearchParams(window.location.search);
     const storyId = params.get("story");
     const id = storyId ?? params.get("case");
-    if (id && useAppStore.getState().events.some((e) => e.id === id)) {
-      const timer = setTimeout(() => {
-        useAppStore.getState().select(id);
-        if (storyId) useAppStore.getState().setStory(true);
-      }, 600);
-      return () => clearTimeout(timer);
+    if (!id || !useAppStore.getState().events.some((e) => e.id === id)) {
+      linkedRef.current = true;
+      return;
     }
+    // Only mark the link as handled once the case is really open: if this
+    // effect re-runs before the timer fires, it must try again, not give up
+    // (the address sync below would then erase ?case from the URL).
+    const timer = setTimeout(() => {
+      linkedRef.current = true;
+      useAppStore.getState().select(id);
+      if (storyId) useAppStore.getState().setStory(true);
+    }, 600);
+    return () => clearTimeout(timer);
   }, [status, globeReady]);
   useEffect(() => {
     if (!linkedRef.current) return;
