@@ -3,8 +3,6 @@ export const shell: Record<string, string> = {
   /* Top bar */
   Language: "Idioma",
   "Who is reading": "Quién está leyendo",
-  "Simple view": "Vista sencilla",
-  "Technical view": "Vista técnica",
   "Where the land changed most": "Dónde cambió más la tierra",
   "Guided demo": "Demo guiada",
   "The day as a camera saw it, with the radar inside a circle":

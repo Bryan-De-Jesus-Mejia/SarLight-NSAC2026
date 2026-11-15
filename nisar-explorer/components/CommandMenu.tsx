@@ -364,7 +364,7 @@ function MenuPanel() {
 
   const groupNames: Record<Group, string> = {
     explore: t("Explore"),
-    study: t("Study"),
+    study: t("Ask and study"),
     settings: t("Settings"),
     learn: t("Learn"),
   };

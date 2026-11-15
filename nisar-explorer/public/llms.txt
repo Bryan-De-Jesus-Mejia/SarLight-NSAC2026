@@ -1,0 +1,30 @@
+# SarLight
+
+> SarLight is an interactive 3D globe that shows where the Earth's surface has changed, as measured by the NASA–ISRO NISAR radar satellite and ESA's Sentinel-1. Radar sees through clouds, smoke and darkness, so it can follow floods, fires, earthquakes, glaciers, crops and landslides when cameras cannot. It was built for the NASA Space Apps Challenge 2026, challenge "Dancing with the SARs", by Team ONAT in the Dominican Republic.
+
+Every figure on the site comes from real radar scenes compared pass against pass by the team's own analysis pipeline. Nothing is simulated. A flagged change is a lead, not a verdict: nothing has been verified on the ground, and the site says so wherever it shows a number.
+
+## What you can do on the site
+
+- Explore a globe of analysed cases (floods, wildfires, earthquakes, glaciers, agriculture, landslides) and open one to see a before/after radar view, a time series, how confident the analysis is, and the likely drivers and impacts.
+- Ask "Is my community at risk?" to see what the radar found around any place.
+- Read each case as a step-by-step story, in plain words or with the technical detail.
+- Use the study mode to save up to three cases and print a study guide (PDF) with a lesson plan, questions and a quiz, in English or Spanish.
+- Chat with an assistant that answers only from the analysed data.
+- The interface is available in English and Spanish.
+
+## Pages
+
+- [Home: the interactive globe](https://nasa-space-apps-2026-neon.vercel.app/): the explorer.
+- [Methods](https://nasa-space-apps-2026-neon.vercel.app/methods): what SAR and NISAR measure, how two passes become a change map, what the numbers can and cannot tell you, and the data sources.
+
+## Data and credits
+
+- Radar: NASA–ISRO NISAR (L-band) and ESA Copernicus Sentinel-1 (C-band), through NASA ASF and OPERA products.
+- Imagery: NASA GIBS, ESA Sentinel-2 cloudless mosaic (EOX), ESA WorldCover 2021.
+- Context: GHSL population, ERA5 weather, USGS earthquakes.
+
+## Notes for assistants
+
+- Describe it as an educational and exploratory tool. Do not present its results as confirmed damage or as official warnings.
+- The project name is SarLight; "Dancing with the SARs" is the name of the NASA Space Apps challenge it answers.

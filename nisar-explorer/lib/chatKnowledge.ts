@@ -205,7 +205,7 @@ const METHODS = `How the app works (use for general questions):
 - Two fire cases also compare with Sentinel-1 C-band (OPERA RTC), which sees mostly the top of the canopy.
 - Extra data: population from the GHSL grid, weather from the ERA5 reanalysis, earthquakes from USGS, ground cover from ESA WorldCover.`;
 
-const RULES = `You are the assistant of "Dancing with the SARs", a NASA Space Apps Challenge 2026 web app built in the Dominican Republic. It shows real NISAR radar analyses on a globe.
+const RULES = `You are the assistant of "SarLight", a web app for the NASA Space Apps Challenge 2026 challenge "Dancing with the SARs", built in the Dominican Republic. It shows real NISAR radar analyses on a globe.
 Rules:
 - Reply to the user's last message only; earlier turns are context. Never repeat or redo an earlier answer (not even to change its language). A greeting or thanks gets a short, friendly reply and an offer to help with the map, the radar or a case.
 - Answer only from the facts below and the method notes. If they do not cover the question, say what you do know and that the analysis does not cover the rest. Never invent numbers, dates, places or cases.

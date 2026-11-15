@@ -40,7 +40,7 @@ function attempts(): Attempt[] {
       name: "openrouter",
       baseURL: "https://openrouter.ai/api/v1",
       apiKey: process.env.OPENROUTER_API_KEY,
-      headers: { "X-Title": "Dancing with the SARs" },
+      headers: { "X-Title": "SarLight" },
     });
     const ids = (process.env.OPENROUTER_MODELS ?? "google/gemma-4-31b-it:free,nvidia/nemotron-3.5-super-vl:free").split(",");
     for (const id of ids.map((s) => s.trim()).filter(Boolean)) list.push({ label: `openrouter:${id}`, model: openrouter.chatModel(id) });

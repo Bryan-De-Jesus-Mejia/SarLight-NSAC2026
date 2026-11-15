@@ -4,7 +4,7 @@ import { es } from "./es";
 /**
  * Two languages, one rule: the English sentence IS the key.
  *
- *   t("Simple view")                          → "Vista sencilla" in Spanish
+ *   t("Exploration")                          → "Exploración" in Spanish
  *   t("{n} days later", { n: 12 })            → "12 días después"
  *   t("{n, plural, one {# pass} other {# passes}}", { n })
  *

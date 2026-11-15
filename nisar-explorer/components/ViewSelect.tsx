@@ -19,9 +19,9 @@ export function ViewIcon({ audience, size = 16 }: { audience: Audience; size?: n
 export function useViewOptions(): SelectOption<Audience>[] {
   const t = useT();
   return [
-    { value: "general", label: t("Simple view"), hint: t("Plain words and pictures for everyone"), icon: <ViewIcon audience="general" /> },
-    { value: "technical", label: t("Technical view"), hint: t("Radar figures, methods and evidence"), icon: <ViewIcon audience="technical" /> },
-    { value: "student", label: t("Student view"), hint: t("Plain words, plus the classroom tools"), icon: <ViewIcon audience="student" /> },
+    { value: "general", label: t("Exploration"), hint: t("Plain words and pictures for everyone"), icon: <ViewIcon audience="general" /> },
+    { value: "technical", label: t("Analysis"), hint: t("Radar figures, methods and evidence"), icon: <ViewIcon audience="technical" /> },
+    { value: "student", label: t("Study"), hint: t("Plain words, plus the classroom tools"), icon: <ViewIcon audience="student" /> },
   ];
 }
 

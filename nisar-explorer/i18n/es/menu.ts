@@ -1,6 +1,9 @@
 /** Spanish for the top bar pickers and the menu with every command (Ctrl+K). */
 export const menu: Record<string, string> = {
-  "Student view": "Vista estudiantil",
+  Exploration: "Exploración",
+  Analysis: "Análisis",
+  Study: "Estudio",
+  "Ask and study": "Preguntar y estudiar",
   "Plain words and pictures for everyone": "Palabras sencillas e imágenes para todos",
   "Radar figures, methods and evidence": "Cifras de radar, métodos y evidencia",
   "Plain words, plus the classroom tools": "Palabras sencillas, más las herramientas del aula",
@@ -13,7 +16,6 @@ export const menu: Record<string, string> = {
   "Use the arrow keys to move, Enter to open, Esc to close.": "Usa las flechas para moverte, Enter para abrir y Esc para cerrar.",
 
   Explore: "Explorar",
-  Study: "Estudiar",
   Settings: "Ajustes",
   Learn: "Aprender",
 

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { LangSync } from "@/components/LangSync";
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 // next/font downloads these at build time and self-hosts them: no runtime CDN.
@@ -45,13 +46,52 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  applicationName: "Dancing with the SARs",
-  appleWebApp: { capable: true, title: "SARs", statusBarStyle: "black-translucent" },
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  title: { default: `${SITE_NAME}: ${SITE_TAGLINE}`, template: `%s · ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: "Team ONAT" }],
+  creator: "Team ONAT",
+  category: "science",
+  alternates: { canonical: "/" },
+  appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: "black-translucent" },
   formatDetection: { telephone: false },
-  title: "ONAT: Dancing With the SARs for NASA Space Apps Challenge 2026",
-  description:
-    "An interactive globe for following how Earth's surface changes, as seen by the NASA–ISRO NISAR radar mission and Sentinel-1. Every figure comes from real radar scenes compared pass against pass; nothing has been verified on the ground yet.",
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME}: ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+    alternateLocale: ["es_DO"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME}: ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
 };
+
+/** Structured data: tells search engines and AI assistants what this site is. */
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: SITE_NAME,
+  alternateName: "Dancing with the SARs",
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  applicationCategory: "EducationalApplication",
+  applicationSubCategory: "Earth observation",
+  operatingSystem: "Any (web browser)",
+  inLanguage: ["en", "es"],
+  isAccessibleForFree: true,
+  creator: { "@type": "Organization", name: "Team ONAT" },
+  about: ["Synthetic aperture radar", "NISAR", "Sentinel-1", "Floods", "Wildfires", "Earthquakes", "Glaciers", "Agriculture"],
+  isBasedOn: "https://nisar.jpl.nasa.gov/",
+};
+
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -60,6 +100,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${sans.variable} ${guideSerif.variable} ${guideSans.variable} ${guideMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }} />
         <LangSync />
         {children}
       </body>

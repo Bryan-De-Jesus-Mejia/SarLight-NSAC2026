@@ -8,7 +8,7 @@ La interfaz está en inglés y español. El visitante empieza en el idioma de su
 
 ```tsx
 const t = useT();                       // en componentes
-t("Simple view")                        // "Vista sencilla"
+t("Exploration")                        // "Exploración"
 t("{n} days later", { n: 12 })          // "12 días después"
 t("{n, plural, one {# pass} other {# passes}}", { n })
 rich(t("It flags <b>{area} km²</b>.", { area }), { b: (c) => <b>{c}</b> })   // negritas que se mueven con el idioma

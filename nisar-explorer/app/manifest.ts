@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
+import { SITE_DESCRIPTION } from "@/lib/site";
 
 /** Lets the site be installed on a phone or desktop, with the right icon for each. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Dancing with the SARs",
-    short_name: "SARs",
-    description: "An interactive globe of how Earth's surface changes, seen by the NASA–ISRO NISAR radar mission.",
+    name: "SarLight",
+    short_name: "SarLight",
+    description: SITE_DESCRIPTION,
     start_url: "/",
     scope: "/",
     display: "standalone",

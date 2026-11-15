@@ -4,7 +4,7 @@ import { getDataProvider } from "@/data/providers";
 import type { EventDetail } from "@/data/types";
 
 export const metadata: Metadata = {
-  title: "Methods — Dancing with the SARs",
+  title: "Methods",
   description:
     "How this explorer works: what SAR and NISAR measure, how two radar passes become a change map, what the numbers can and cannot tell you, and which data they come from.",
 };
