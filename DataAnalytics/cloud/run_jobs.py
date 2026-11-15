@@ -18,12 +18,13 @@ Con --commit: en la PC local basta con git pull. Sin él: descarga resultados/re
 """
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 import tarfile
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -31,7 +32,7 @@ ROOT = HERE.parent
 sys.path.insert(0, str(ROOT / "pipeline"))
 
 from progress import Progress, fmt_dur, log, setup_stdout  # noqa: E402
-from rutas import case_dirs  # noqa: E402
+from rutas import analysis_dir, case_dirs  # noqa: E402
 
 LOGS = HERE / "logs"
 DATA = ROOT / "data"
@@ -96,6 +97,12 @@ def package(include_raw: list[str]) -> Path:
     return out
 
 
+def has_analysis(name: str) -> bool:
+    """El trabajo ya está hecho si su carpeta de análisis tiene algún resumen*.json."""
+    d = analysis_dir(name)
+    return d.exists() and any(d.rglob("resumen*.json"))
+
+
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
     r = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
     if check and r.returncode:
@@ -133,8 +140,15 @@ def main():
     ap.add_argument("--incluir-datos", nargs="*", default=[],
                     help="Meter también los datos crudos de estas colecciones (por defecto no van; pesan mucho)")
     ap.add_argument("--solo-empaquetar", action="store_true")
+    ap.add_argument("--listar", action="store_true", help="Muestra los grupos y trabajos disponibles y sale")
     ap.add_argument("--commit", action="store_true",
-                    help="Al terminar, commit + push de data/analisis (en vez de crear el .tar.gz)")
+                    help="Commit + push de data/analisis tras cada trabajo (en vez de crear el .tar.gz)")
+    ap.add_argument("--pendientes", action="store_true",
+                    help="Solo los trabajos que aún no tienen análisis en data/analisis (lo usa GitHub Actions)")
+    ap.add_argument("--limpiar-crudos", action="store_true",
+                    help="Borra data/collections/<trabajo> al terminar cada trabajo (ahorra disco)")
+    ap.add_argument("--tiempo-max-min", type=float,
+                    help="No empezar trabajos nuevos pasados estos minutos; los que queden van a logs/quedan.txt")
     args = ap.parse_args()
 
     if args.solo_empaquetar:
@@ -142,6 +156,12 @@ def main():
         return
 
     jobs, groups = read_jobs(args.jobs_file)
+    if args.listar:
+        for g in dict.fromkeys(groups.values()):
+            print(f"[{g}]")
+            for name in (k for k in jobs if groups[k] == g):
+                print(f"   {name}")
+        return
     if args.grupo:
         unknown = set(args.grupo) - set(groups.values())
         if unknown:
@@ -152,12 +172,20 @@ def main():
         if missing:
             raise SystemExit(f"No están en {args.jobs_file.name}: {missing}. Hay: {sorted(jobs)}")
         jobs = {k: v for k, v in jobs.items() if any(k.startswith(s) for s in args.solo)}
+    if args.pendientes:
+        done = [k for k in jobs if has_analysis(k)]
+        jobs = {k: v for k, v in jobs.items() if k not in done}
+        log(f"{len(done)} trabajos ya tienen análisis; pendientes: {', '.join(jobs) or 'ninguno'}")
+    LOGS.mkdir(parents=True, exist_ok=True)
+    (LOGS / "quedan.txt").unlink(missing_ok=True)
+    if not jobs:
+        log("Nada que procesar.")
+        return
 
     from earthdata_auth import get_token
     get_token()  # falla aquí, y no a mitad de camino, si faltan los secretos de Earthdata
     log("Credenciales de Earthdata OK")
 
-    LOGS.mkdir(exist_ok=True)
     log(f"{len(jobs)} trabajos, {args.paralelo} a la vez. Logs en {LOGS}/<trabajo>.log")
     running: dict[str, float] = {}
     lock = threading.Lock()
@@ -180,20 +208,46 @@ def main():
 
     threading.Thread(target=status_loop, daemon=True).start()
     prog = Progress(len(jobs), "Trabajos en la nube", unit="trabajos")
+    deadline = time.time() + args.tiempo_max_min * 60 if args.tiempo_max_min else None
+    queue, failed = list(jobs), []
     with ThreadPoolExecutor(args.paralelo) as pool:
-        futures = {pool.submit(task, name): name for name in jobs}
-        for fut in as_completed(futures):
-            name = futures[fut]
-            code, dt = fut.result()
-            status = "OK" if code == 0 else "ERROR"
-            prog.step(f"{name} en {fmt_dur(dt)} | {last_line(LOGS / f'{name}.log')}", status=status)
+        futures = {}
+
+        def fill():
+            while queue and len(futures) < args.paralelo and (deadline is None or time.time() < deadline):
+                name = queue.pop(0)
+                futures[pool.submit(task, name)] = name
+
+        fill()
+        while futures:
+            finished, _ = wait(futures, return_when=FIRST_COMPLETED)
+            for fut in finished:
+                name = futures.pop(fut)
+                code, dt = fut.result()
+                if code:
+                    failed.append(name)
+                prog.step(f"{name} en {fmt_dur(dt)} | {last_line(LOGS / f'{name}.log')}",
+                          status="OK" if code == 0 else "ERROR")
+                if args.limpiar_crudos:
+                    shutil.rmtree(DATA / "collections" / name, ignore_errors=True)
+                if args.commit:  # uno por uno: si algo corta la corrida, lo terminado ya está en GitHub
+                    try:
+                        commit_analysis([name])
+                    except RuntimeError as e:
+                        log(f"   AVISO: no se pudo subir {name}: {e}")
+            fill()
     stop.set()
     prog.summary(final=True)
+    if queue:
+        (LOGS / "quedan.txt").write_text("\n".join(queue) + "\n")
+        log(f"Tiempo agotado: {len(queue)} trabajos sin empezar ({', '.join(queue)}). Lista en {LOGS / 'quedan.txt'}")
     if args.commit:
-        commit_analysis(list(jobs))
+        commit_analysis(list(jobs))  # por si algún push intermedio falló
     else:
         package(args.incluir_datos)
-
+    if failed:
+        log(f"Trabajos con error: {', '.join(failed)} (ver {LOGS}/<trabajo>.log)")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
