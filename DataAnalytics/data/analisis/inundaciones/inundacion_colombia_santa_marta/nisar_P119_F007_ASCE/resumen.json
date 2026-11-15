@@ -1,0 +1,40 @@
+{
+  "collection": "inundacion_colombia_santa_marta",
+  "source": "nisar",
+  "orbit": "P119_F007_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-14T10:31:47Z",
+    "2026-09-26T10:31:47Z",
+    "2026-10-08T10:31:48Z",
+    "2026-10-20T10:31:48Z",
+    "2026-11-01T10:31:48Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32618",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-23",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-14T10:31:47Z",
+    "2026-09-26T10:31:47Z",
+    "2026-10-08T10:31:48Z",
+    "2026-10-20T10:31:48Z"
+  ],
+  "peak_date": "2026-11-01T10:31:48Z",
+  "peak_flood_km2": 1.448,
+  "peak_new_water_km2": 1.036,
+  "peak_flooded_veg_km2": 0.412,
+  "max_extent_km2": 1.447,
+  "max_extent_open_water_km2": 1.036,
+  "max_extent_flooded_veg_km2": 0.412,
+  "permanent_water_km2": 0.132
+}
