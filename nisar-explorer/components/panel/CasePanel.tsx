@@ -6,6 +6,7 @@ import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { SaveToClassroom } from "@/components/Classroom";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
+import { ExportMenu } from "@/components/panel/ExportMenu";
 import { ExtraBody } from "@/components/panel/ExtraCase";
 import { Drivers } from "@/components/panel/Drivers";
 import { Impact } from "@/components/panel/Impact";
@@ -405,6 +406,9 @@ export function CasePanel() {
           </p>
         </div>
         <SaveToClassroom className="-mt-1" />
+        <div className="-mt-1">
+          <ExportMenu detail={detail && detail.id === selectedId ? detail : null} />
+        </div>
         <button
           type="button"
           onClick={() => select(null)}

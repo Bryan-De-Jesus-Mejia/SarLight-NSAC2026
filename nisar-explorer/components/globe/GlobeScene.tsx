@@ -406,8 +406,15 @@ export default function GlobeScene() {
     if (country) {
       selectProvince(null);
       const trail = trailForCountry(country, aspect);
+      const target = trail[trail.length - 1].view;
+      const here = globeRef.current?.pointOfView();
+      if (here && here.altitude >= target.altitude * 0.95) {
+        // The visitor already moved away on their own: leave the camera where they put it.
+        setTrail(useAppStore.getState().trail.filter((item) => item.kind !== "event"));
+        return;
+      }
       setTrail(trail);
-      goTo(trail[trail.length - 1].view);
+      goTo(target);
       return;
     }
 
