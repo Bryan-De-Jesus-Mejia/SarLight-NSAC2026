@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
 
 /** Only the most recent chats are kept. */
 export const MAX_CHATS = 3;
@@ -22,7 +21,7 @@ export interface Chat {
 interface ChatState {
   chats: Chat[];
   activeId: string | null;
-  /** Whether the side panel is showing (not saved). */
+  /** Whether the side panel is showing. */
   open: boolean;
 
   openChat: () => void;
@@ -45,67 +44,67 @@ const titleFrom = (text: string): string => {
   return line.length > 34 ? `${line.slice(0, 33)}…` : line;
 };
 
-export const useChatStore = create<ChatState>()(
-  persist(
-    (set, get) => ({
-      chats: [],
-      activeId: null,
-      open: false,
+// Chats live only in memory: nothing is saved in the browser, a reload starts clean.
+// Earlier versions saved them under "ge-chats"; remove what may be left there.
+if (typeof window !== "undefined") {
+  try {
+    window.localStorage.removeItem("ge-chats");
+  } catch {
+    // Storage blocked (private mode, disabled cookies): nothing to clean.
+  }
+}
 
-      openChat: () => set({ open: true }),
-      closeChat: () => set({ open: false }),
+export const useChatStore = create<ChatState>()((set, get) => ({
+    chats: [],
+    activeId: null,
+    open: false,
 
-      newChat: () => {
-        const { chats, activeId } = get();
-        const current = chats.find((c) => c.id === activeId);
-        if (current && current.messages.length === 0) return current.id;
+    openChat: () => set({ open: true }),
+    closeChat: () => set({ open: false }),
 
-        const chat: Chat = { id: makeId(), title: NEW_CHAT_TITLE, messages: [], updatedAt: Date.now() };
-        // Newest first; whatever falls past the limit is the oldest one.
-        const kept = [chat, ...chats].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_CHATS);
-        set({ chats: kept, activeId: chat.id });
-        return chat.id;
-      },
+    newChat: () => {
+      const { chats, activeId } = get();
+      const current = chats.find((c) => c.id === activeId);
+      if (current && current.messages.length === 0) return current.id;
 
-      selectChat: (id) => {
-        if (get().chats.some((c) => c.id === id)) set({ activeId: id });
-      },
-
-      deleteChat: (id) =>
-        set((state) => {
-          const chats = state.chats.filter((c) => c.id !== id);
-          const activeId =
-            state.activeId === id
-              ? ([...chats].sort((a, b) => b.updatedAt - a.updatedAt)[0]?.id ?? null)
-              : state.activeId;
-          return { chats, activeId };
-        }),
-
-      addMessage: (chatId, role, text) =>
-        set((state) => ({
-          chats: state.chats.map((chat) => {
-            if (chat.id !== chatId) return chat;
-            const message: ChatMessage = { id: makeId(), role, text, at: Date.now() };
-            return {
-              ...chat,
-              title: chat.title === NEW_CHAT_TITLE && role === "user" ? titleFrom(text) : chat.title,
-              messages: [...chat.messages, message],
-              updatedAt: message.at,
-            };
-          }),
-        })),
-    }),
-    {
-      name: "ge-chats",
-      version: 1,
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ chats: state.chats, activeId: state.activeId }),
+      const chat: Chat = { id: makeId(), title: NEW_CHAT_TITLE, messages: [], updatedAt: Date.now() };
+      // Newest first; whatever falls past the limit is the oldest one.
+      const kept = [chat, ...chats].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_CHATS);
+      set({ chats: kept, activeId: chat.id });
+      return chat.id;
     },
-  ),
-);
+
+    selectChat: (id) => {
+      if (get().chats.some((c) => c.id === id)) set({ activeId: id });
+    },
+
+    deleteChat: (id) =>
+      set((state) => {
+        const chats = state.chats.filter((c) => c.id !== id);
+        const activeId =
+          state.activeId === id
+            ? ([...chats].sort((a, b) => b.updatedAt - a.updatedAt)[0]?.id ?? null)
+            : state.activeId;
+        return { chats, activeId };
+      }),
+
+    addMessage: (chatId, role, text) =>
+      set((state) => ({
+        chats: state.chats.map((chat) => {
+          if (chat.id !== chatId) return chat;
+          const message: ChatMessage = { id: makeId(), role, text, at: Date.now() };
+          return {
+            ...chat,
+            title: chat.title === NEW_CHAT_TITLE && role === "user" ? titleFrom(text) : chat.title,
+            messages: [...chat.messages, message],
+            updatedAt: message.at,
+          };
+        }),
+      })),
+}));
 
 /**
- * The reply being written right now. Kept apart (and never saved) because it
+ * The reply being written right now. Kept apart because it
  * changes many times a second; it joins the chat once it is finished.
  */
 interface StreamState {

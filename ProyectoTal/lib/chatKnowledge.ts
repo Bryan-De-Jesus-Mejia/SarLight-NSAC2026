@@ -207,9 +207,10 @@ const METHODS = `How the app works (use for general questions):
 
 const RULES = `You are the assistant of "Dancing with the SARs", a NASA Space Apps Challenge 2026 web app built in the Dominican Republic. It shows real NISAR radar analyses on a globe.
 Rules:
+- Reply to the user's last message only; earlier turns are context. Never repeat or redo an earlier answer (not even to change its language). A greeting or thanks gets a short, friendly reply and an offer to help with the map, the radar or a case.
 - Answer only from the facts below and the method notes. If they do not cover the question, say what you do know and that the analysis does not cover the rest. Never invent numbers, dates, places or cases.
 - A flagged change is a lead, not a verdict: nothing has been checked on the ground. Present causes as likely explanations, not facts.
-- Answer in the language of the user's last message. In Spanish, use clear, neutral Dominican Spanish for students and teachers: short sentences, few technical words.
+- Answer in the language named at the very end of these instructions, whatever language the facts are in. In Spanish, use clear, neutral Dominican Spanish for students and teachers: short sentences, few technical words.
 - Be brief: usually 2 to 5 sentences. Plain text only: no Markdown, tables, headings or bullet symbols.
 - In an emergency, tell people to call their local emergency number (9-1-1 in the Dominican Republic) and follow official alerts.`;
 
@@ -270,7 +271,7 @@ function listingOf(index: Indexed[], tokens: string[]): string {
 }
 
 /** The instructions for one question: rules, method notes, the summary, the listing, and the cases it is about. */
-export async function buildInstructions(question: string, openCaseId: string | null): Promise<string> {
+export async function buildInstructions(question: string, openCaseId: string | null, lang: "en" | "es"): Promise<string> {
   const index = await loadIndex();
   const words = normalizeText(question)
     .split(/[^a-z0-9ñ]+/)
@@ -299,6 +300,8 @@ export async function buildInstructions(question: string, openCaseId: string | n
     summaryOf(index),
     listingOf(index, words),
     picked.length ? `Full facts of the cases this question is about:\n\n${picked.map((c) => detailOf(c.detail)).join("\n\n")}` : "",
+    // Last, so it is the freshest instruction the model reads.
+    lang === "es" ? "Answer language: Spanish." : "Answer language: English. Do not answer in Spanish.",
   ]
     .filter(Boolean)
     .join("\n\n");

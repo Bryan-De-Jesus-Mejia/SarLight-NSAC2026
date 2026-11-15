@@ -62,6 +62,7 @@ function allowed(ip: string): boolean {
 interface Body {
   messages?: Array<{ role?: string; text?: string }>;
   caseId?: string | null;
+  lang?: string;
 }
 
 const error = (status: number, code: string) => Response.json({ error: { code } }, { status });
@@ -82,7 +83,8 @@ export async function POST(request: Request): Promise<Response> {
   if (!list.length) return error(503, "NOT_CONFIGURED");
 
   const caseId = typeof body?.caseId === "string" ? body.caseId : null;
-  const instructions = await buildInstructions(last.content as string, caseId);
+  const lang = body?.lang === "es" ? "es" : "en";
+  const instructions = await buildInstructions(last.content as string, caseId, lang);
 
   for (const attempt of list) {
     try {
