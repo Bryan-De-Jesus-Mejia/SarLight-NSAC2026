@@ -1,0 +1,40 @@
+{
+  "collection": "inundacion_panama_tocumen",
+  "source": "nisar",
+  "orbit": "P040_F084_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-08T23:44:43Z",
+    "2026-09-20T23:44:43Z",
+    "2026-10-02T23:44:44Z",
+    "2026-10-14T23:44:44Z",
+    "2026-10-26T23:44:44Z",
+    "2026-10-26T23:44:52Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32617",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-13",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-08T23:44:43Z",
+    "2026-09-20T23:44:43Z",
+    "2026-10-02T23:44:44Z"
+  ],
+  "peak_date": "2026-10-14T23:44:44Z",
+  "peak_flood_km2": 5.462,
+  "peak_new_water_km2": 0.28,
+  "peak_flooded_veg_km2": 5.182,
+  "max_extent_km2": 7.428,
+  "max_extent_open_water_km2": 0.538,
+  "max_extent_flooded_veg_km2": 6.89,
+  "permanent_water_km2": 0.57
+}
