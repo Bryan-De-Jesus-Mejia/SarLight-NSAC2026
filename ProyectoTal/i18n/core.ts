@@ -42,6 +42,13 @@ const isLang = (value: unknown): value is Lang => value === "en" || value === "e
 /** ?lang= in the address, then what the visitor chose before, then the browser's language. */
 export function detectLang(): Lang {
   try {
+    // The study guide lives at /aula/es/… or /aula/en/…: the address decides.
+    const fromPath = /^\/aula\/(es|en)\//.exec(window.location.pathname)?.[1];
+    if (isLang(fromPath)) return fromPath;
+  } catch {
+    // Nothing to read on the server.
+  }
+  try {
     const fromUrl = new URLSearchParams(window.location.search).get("lang");
     if (isLang(fromUrl)) return fromUrl;
   } catch {

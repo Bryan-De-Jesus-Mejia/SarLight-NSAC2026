@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
+import { SaveToClassroom } from "@/components/Classroom";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
 import { ExtraBody } from "@/components/panel/ExtraCase";
@@ -403,6 +404,7 @@ export function CasePanel() {
             {t(summary.region)} · {t(summary.country)}
           </p>
         </div>
+        <SaveToClassroom className="-mt-1" />
         <button
           type="button"
           onClick={() => select(null)}

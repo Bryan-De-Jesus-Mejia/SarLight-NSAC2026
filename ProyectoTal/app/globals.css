@@ -1274,3 +1274,36 @@ body:has(.ge-callout-anchor) .ge-marker {
     animation: none;
   }
 }
+
+/* ---- Printable study guide (/aula/[lang]/[id]) ---- */
+.guide {
+  min-height: 100dvh;
+  background: #fff;
+  color: #171717;
+}
+
+.guide-block {
+  break-inside: avoid;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .guide {
+    min-height: 0;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

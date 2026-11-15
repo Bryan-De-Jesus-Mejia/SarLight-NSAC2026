@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ChatButton } from "@/components/chat/ChatButton";
+import { ClassroomButton } from "@/components/Classroom";
 import { GeneralIntro } from "@/components/GeneralIntro";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { LayersPanel } from "@/components/LayersPanel";
@@ -214,6 +215,7 @@ export function Hud() {
           </>
         )}
 
+{hasEvents && !demoActive && <ClassroomButton />}
 {hasEvents && !demoActive && <ChatButton />}
 
 {!story && (

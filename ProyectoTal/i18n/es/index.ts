@@ -1,3 +1,4 @@
+import { classroom } from "./classroom";
 import { data } from "./data";
 import { methods } from "./methods";
 import { more } from "./more";
@@ -20,4 +21,5 @@ export const es: Record<string, string> = {
   ...methods,
   ...more,
   ...people,
+  ...classroom,
 };
