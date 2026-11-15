@@ -1,7 +1,7 @@
 # Correr el pipeline en la nube (GitHub Codespaces)
 
 La PC local baja de ASF a ~1 MB/s. En un Codespace la descarga es mucho más rápida, así que allí se
-baja y se analiza todo, y a casa solo viene un `.tar.gz` con los resultados.
+baja y se analiza todo, y a casa solo viene un `.tar.gz` con el análisis (los datos crudos se quedan en la nube).
 
 Plan gratis de GitHub: 120 horas-núcleo/mes (60 h en la máquina de 2 núcleos) y 15 GB de disco.
 
@@ -39,8 +39,8 @@ Plan gratis de GitHub: 120 horas-núcleo/mes (60 h en la máquina de 2 núcleos)
 
 - `data/analisis/<colección>/`: mapas PNG, `estadisticas.json`, GeoTIFF de resultados.
 - `catalog.csv`, `manifest.json` y `errors.log` de cada colección.
-- Datos crudos solo de las colecciones sin análisis (hoy: glaciares). Para forzar otras:
-  `python cloud/run_jobs.py --incluir-datos terremoto_indonesia`
+- Nunca los datos crudos, salvo que los pidas: `python cloud/run_jobs.py --solo-empaquetar --incluir-datos glaciar_jakobshavn`
+- Si una colección se bajó pero no tiene análisis, el empaquetado lo avisa (falta el `&& python pipeline/analisis_...`).
 - `cloud/logs/<trabajo>.log`.
 
 ## Añadir trabajos

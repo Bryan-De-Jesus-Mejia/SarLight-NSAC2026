@@ -8,7 +8,7 @@ terremoto_indonesia: python pipeline/fetch_quake.py --name terremoto_indonesia -
 # Colapso de hielo y roca del Langtang Lirung (Nepal), 26 de agosto de 2026
 colapso_langtang: python pipeline/fetch_quake.py --name colapso_langtang --event-date 2026-08-26 --bbox 85.4 28.1 85.9 28.4 --max-days 24 --workers 4 && python pipeline/analisis_sismo.py --collection data/collections/colapso_langtang
 
-# Flujo de glaciares: series de pares de 12 días (aún sin script de análisis; se empaquetan los datos crudos)
-glaciar_jakobshavn: python pipeline/fetch_glacier.py --name glaciar_jakobshavn --bbox -50.6 69.0 -48.8 69.35 --start 2026-06-01 --workers 4
-glaciar_hubbard_alaska: python pipeline/fetch_glacier.py --name glaciar_hubbard_alaska --bbox -140.2 59.8 -139.0 60.4 --start 2026-06-01 --workers 4
-glaciar_pine_island: python pipeline/fetch_glacier.py --name glaciar_pine_island --bbox -102.0 -75.5 -98.0 -74.8 --start 2026-06-01 --workers 4
+# Flujo de glaciares: series de pares de 12 días -> velocidad del hielo (m/día)
+glaciar_jakobshavn: python pipeline/fetch_glacier.py --name glaciar_jakobshavn --bbox -50.6 69.0 -48.8 69.35 --start 2026-06-01 --workers 4 && python pipeline/analisis_glaciar.py --collection data/collections/glaciar_jakobshavn
+glaciar_hubbard_alaska: python pipeline/fetch_glacier.py --name glaciar_hubbard_alaska --bbox -140.2 59.8 -139.0 60.4 --start 2026-06-01 --workers 4 && python pipeline/analisis_glaciar.py --collection data/collections/glaciar_hubbard_alaska
+glaciar_pine_island: python pipeline/fetch_glacier.py --name glaciar_pine_island --bbox -102.0 -75.5 -98.0 -74.8 --start 2026-06-01 --workers 4 && python pipeline/analisis_glaciar.py --collection data/collections/glaciar_pine_island

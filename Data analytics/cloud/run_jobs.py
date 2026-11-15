@@ -1,11 +1,11 @@
 """Corre en la nube (GitHub Codespaces) los trabajos de cloud/trabajos.txt y empaqueta los resultados.
 
 La PC local tiene ~1 MB/s de internet; en la nube la descarga desde ASF es mucho más rápida. Aquí se
-baja y se analiza todo, y solo se trae a casa un .tar.gz con los resultados:
+baja y se analiza todo, y solo se trae a casa un .tar.gz con el ANÁLISIS (los datos crudos se quedan en la nube):
   - data/analisis/<colección>/            (mapas PNG, estadísticas JSON, GeoTIFF de resultados)
-  - catalog.csv / manifest.json / errors.log de cada colección
-  - los datos crudos de las colecciones que aún no tienen análisis (p.ej. glaciares)
+  - catalog.csv / manifest.json / errors.log de cada colección (sin las imágenes)
   - cloud/logs/ (un log por trabajo)
+Si una colección no tiene análisis, se avisa y queda fuera del paquete.
 
 Uso (desde "Data analytics"):
   python cloud/run_jobs.py                       # todos los trabajos, 3 a la vez
@@ -69,17 +69,14 @@ def package(include_raw: list[str]) -> Path:
     out_dir.mkdir(exist_ok=True)
     out = out_dir / f"resultados_{time.strftime('%Y%m%d_%H%M')}.tar.gz"
     analyzed = {p.name for p in (DATA / "analisis").glob("*") if p.is_dir()}
-    files = []
-    for p in sorted((DATA / "analisis").rglob("*")):
-        if p.is_file():
-            files.append(p)
+    files = [p for p in sorted((DATA / "analisis").rglob("*")) if p.is_file()]
     for coll in sorted(p for p in (DATA / "collections").glob("*") if p.is_dir()):
-        raw = coll.name not in analyzed or coll.name in include_raw
+        if coll.name not in analyzed:
+            log(f"   AVISO: {coll.name} no tiene análisis en data/analisis; sus datos se quedan en la nube")
+        raw = coll.name in include_raw
         for p in sorted(coll.rglob("*")):
             if p.is_file() and (raw or p.name in ("catalog.csv", "manifest.json", "errors.log")):
                 files.append(p)
-        if raw:
-            log(f"   {coll.name}: sin análisis, se incluyen los datos crudos")
     files += sorted(LOGS.glob("*.log"))
     total = sum(p.stat().st_size for p in files)
     log(f"Empaquetando {len(files)} archivos ({total / 2**20:.0f} MB) ...")
@@ -97,7 +94,7 @@ def main():
     ap.add_argument("--solo", nargs="+", help="Solo estos trabajos (por nombre)")
     ap.add_argument("--paralelo", type=int, default=3, help="Trabajos a la vez (def. 3)")
     ap.add_argument("--incluir-datos", nargs="*", default=[],
-                    help="Incluir también los datos crudos de estas colecciones aunque tengan análisis")
+                    help="Meter también los datos crudos de estas colecciones (por defecto no van; pesan mucho)")
     ap.add_argument("--solo-empaquetar", action="store_true")
     args = ap.parse_args()
 
