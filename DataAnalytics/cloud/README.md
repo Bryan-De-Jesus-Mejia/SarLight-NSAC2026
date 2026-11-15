@@ -11,7 +11,7 @@ Plan gratis de GitHub: 120 horas-núcleo/mes (60 h en la máquina de 2 núcleos)
 análisis (no hay `resumen*.json` en `data/analisis/<tipo>/<trabajo>/`) y sube **solo `data/analisis/`**,
 un commit por trabajo. Se dispara:
 - al subir un cambio a `cloud/trabajos.txt` → **añadir un evento = añadir su línea y hacer push**;
-- una vez al día (reintenta lo que falló);
+- cada 30 minutos (reintenta lo que falló);
 - a mano: pestaña **Actions → Procesar eventos SAR → Run workflow**.
 
 Si se acerca el límite de 6 h de GitHub, deja de empezar trabajos y se relanza solo para seguir.

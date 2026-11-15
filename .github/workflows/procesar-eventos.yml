@@ -2,7 +2,7 @@ name: Procesar eventos SAR
 
 # Corre solo, sin Codespace:
 #   - cuando se sube un cambio a DataAnalytics/cloud/trabajos.txt (p.ej. un evento nuevo),
-#   - una vez al día (reintenta lo que haya fallado),
+#   - cada 30 minutos (reintenta lo que haya fallado),
 #   - o a mano desde la pestaña Actions (Run workflow).
 # Procesa los trabajos que aún no tienen análisis y sube SOLO DataAnalytics/data/analisis.
 # Necesita los secrets de Actions EARTHDATA_USERNAME y EARTHDATA_PASSWORD (Settings -> Secrets and variables -> Actions).
@@ -11,7 +11,7 @@ on:
     branches: [main]
     paths: ["DataAnalytics/cloud/trabajos.txt"]
   schedule:
-    - cron: "0 9 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
