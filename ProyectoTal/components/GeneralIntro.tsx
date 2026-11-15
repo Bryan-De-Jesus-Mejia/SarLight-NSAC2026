@@ -36,8 +36,7 @@ export function GeneralIntro({ onClose }: { onClose: () => void }) {
 
   const open = (id: string) => {
     select(id);
-    // Only the radar change maps have a story to tell.
-    if (!events.find((e) => e.id === id)?.kind) setStory(true);
+    setStory(true);
   };
 
   return (
