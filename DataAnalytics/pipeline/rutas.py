@@ -9,11 +9,17 @@ from earthdata_auth import ROOT
 ANALISIS = ROOT / "data" / "analisis"
 TIPOS = {
     "agricola": "agricultura",
+    "calor": "calor_extremo",
     "colapso": "deslizamientos",
+    "deslizamiento": "deslizamientos",
+    "embalse": "embalses_y_lagos",
     "glaciar": "glaciares",
     "incendio": "incendios",
     "inundacion": "inundaciones",
+    "lago": "embalses_y_lagos",
+    "sequia": "sequias",
     "terremoto": "terremotos",
+    "viento": "vientos",
 }
 
 
