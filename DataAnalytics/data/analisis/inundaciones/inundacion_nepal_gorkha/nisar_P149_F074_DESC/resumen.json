@@ -1,0 +1,39 @@
+{
+  "collection": "inundacion_nepal_gorkha",
+  "source": "nisar",
+  "orbit": "P149_F074_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-04T13:06:31Z",
+    "2026-09-16T13:06:31Z",
+    "2026-09-28T13:06:31Z",
+    "2026-10-10T13:06:31Z",
+    "2026-10-22T13:06:31Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32644",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-09",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-04T13:06:31Z",
+    "2026-09-16T13:06:31Z",
+    "2026-09-28T13:06:31Z"
+  ],
+  "peak_date": "2026-10-10T13:06:31Z",
+  "peak_flood_km2": 27.149,
+  "peak_new_water_km2": 16.496,
+  "peak_flooded_veg_km2": 10.653,
+  "max_extent_km2": 31.738,
+  "max_extent_open_water_km2": 18.557,
+  "max_extent_flooded_veg_km2": 13.181,
+  "permanent_water_km2": 2.313
+}
