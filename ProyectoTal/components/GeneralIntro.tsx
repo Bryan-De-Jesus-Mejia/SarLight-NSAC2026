@@ -16,6 +16,7 @@ const PLAIN: Partial<Record<ChangeType, string>> = {
   earthquake: "Ground shaken",
   deformation: "Ground sinking",
   glacier: "Ice moving",
+  landslide: "Slope collapsed",
 };
 
 const placeOf = (name: string): string => name.replace(/ (flood|fire)? ?analysis$/i, "");
@@ -35,7 +36,8 @@ export function GeneralIntro({ onClose }: { onClose: () => void }) {
 
   const open = (id: string) => {
     select(id);
-    setStory(true);
+    // Only the radar change maps have a story to tell.
+    if (!events.find((e) => e.id === id)?.kind) setStory(true);
   };
 
   return (
