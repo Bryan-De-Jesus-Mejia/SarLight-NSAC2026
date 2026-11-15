@@ -1,0 +1,41 @@
+{
+  "collection": "embalse_ecuador_mazar",
+  "source": "nisar",
+  "orbit": "P003_F176_ASCE",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-26T11:01:14Z",
+    "2026-07-08T11:01:13Z",
+    "2026-07-20T11:01:13Z",
+    "2026-08-13T11:01:12Z",
+    "2026-08-25T11:01:12Z",
+    "2026-09-06T11:01:11Z",
+    "2026-09-18T11:01:11Z",
+    "2026-09-30T11:01:12Z",
+    "2026-10-12T11:01:12Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32717",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-26T11:01:14Z",
+  "first_water_km2": 2.249,
+  "last_date": "2026-10-12T11:01:12Z",
+  "last_water_km2": 2.426,
+  "change_km2": 0.177,
+  "change_pct": 7.9,
+  "min_date": "2026-09-18T11:01:11Z",
+  "min_water_km2": 2.028,
+  "max_date": "2026-07-08T11:01:13Z",
+  "max_water_km2": 2.501,
+  "range_pct_of_max": 18.9
+}
