@@ -4,5 +4,5 @@
   "installCommand": "cd ProyectoTal && npm ci",
   "buildCommand": "cd ProyectoTal && npm run build",
   "outputDirectory": "ProyectoTal/.next",
-  "ignoreCommand": "if git log -1 --format=%ae | grep -q 'github-actions\\[bot\\]'; then exit 0; fi; if [ -n \"$VERCEL_GIT_PREVIOUS_SHA\" ] && git cat-file -e \"$VERCEL_GIT_PREVIOUS_SHA^{commit}\" 2>/dev/null && git diff --quiet \"$VERCEL_GIT_PREVIOUS_SHA\" HEAD -- ':/ProyectoTal' 2>/dev/null; then exit 0; fi; exit 1"
+  "ignoreCommand": "git log -1 --format=%ae | grep -q 'github-actions\\[bot\\]' && exit 0; git diff --quiet \"${VERCEL_GIT_PREVIOUS_SHA:-none}\" HEAD -- ':/ProyectoTal' 2>/dev/null && exit 0; exit 1"
 }
