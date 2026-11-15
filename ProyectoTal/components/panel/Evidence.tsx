@@ -2,12 +2,16 @@
 
 import { useState, type ReactNode } from "react";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
-import { formatDate, formatValue } from "@/lib/format";
+import { getLang, msg, useT } from "@/i18n/core";
+import { rich } from "@/i18n/rich";
+import { formatDate, formatNumber, formatValue } from "@/lib/format";
 
 const km = (v: number): string => formatValue(v);
-const pct = (v: number): string => v.toLocaleString("en-US", { maximumFractionDigits: 1 });
+const pct = (v: number): string => formatNumber(v, 1);
 const day = (iso: string): string => iso.slice(0, 10);
-const signed = (v: number): string => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(1)}`;
+const signed = (v: number): string => `${v > 0 ? "+" : v < 0 ? "−" : ""}${formatNumber(Math.abs(v), 1, 1)}`;
+
+const bold = { b: (chunk: string) => <b className="font-medium text-ink">{chunk}</b> };
 
 function Title({ children }: { children: ReactNode }) {
   return <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{children}</h3>;
@@ -31,6 +35,7 @@ function Bar({ value, max, color, muted = false }: { value: number; max: number;
 /* ------------------------------------------------------------------ */
 
 export function LocalChange({ analysis }: { analysis: SensorAnalysis }) {
+  const t = useT();
   const pre = analysis.series.find((p) => p.date === day(analysis.pre.date));
   const post = analysis.series.find((p) => p.date === day(analysis.post.date));
   if (!pre || !post || pre.insideDb === null || post.insideDb === null || pre.outsideDb === null || post.outsideDb === null) {
@@ -41,11 +46,16 @@ export function LocalChange({ analysis }: { analysis: SensorAnalysis }) {
   const local = Math.abs(inside) >= 3 * Math.max(Math.abs(outside), 0.2);
   return (
     <p className="rounded-lg border border-line bg-white/[0.03] px-3 py-2.5 text-sm leading-relaxed text-ink/90">
-      Between the two passes the flagged land moved <b className="font-medium text-ink">{signed(inside)} dB</b>,
-      while the rest of the land moved <b className="font-medium text-ink">{signed(outside)} dB</b>.{" "}
+      {rich(
+        t("Between the two passes the flagged land moved <b>{inside} dB</b>, while the rest of the land moved <b>{outside} dB</b>.", {
+          inside: signed(inside),
+          outside: signed(outside),
+        }),
+        bold,
+      )}{" "}
       {local
-        ? "The change is local: it did not come from something that shifted the whole scene."
-        : "The whole scene shifted by a comparable amount, so part of this may be scene-wide (rain, season or calibration)."}
+        ? t("The change is local: it did not come from something that shifted the whole scene.")
+        : t("The whole scene shifted by a comparable amount, so part of this may be scene-wide (rain, season or calibration).")}
     </p>
   );
 }
@@ -55,13 +65,14 @@ export function LocalChange({ analysis }: { analysis: SensorAnalysis }) {
 /* ------------------------------------------------------------------ */
 
 const POL_NOTE: Record<string, string> = {
-  HH: "co-polarised: sensitive to surfaces, soil moisture and water under vegetation",
-  VV: "co-polarised: sensitive to surfaces, soil moisture and rough water",
-  HV: "cross-polarised: sensitive to vegetation volume (leaves, branches)",
-  VH: "cross-polarised: sensitive to vegetation volume (leaves, branches)",
+  HH: msg("co-polarised: sensitive to surfaces, soil moisture and water under vegetation"),
+  VV: msg("co-polarised: sensitive to surfaces, soil moisture and rough water"),
+  HV: msg("cross-polarised: sensitive to vegetation volume (leaves, branches)"),
+  VH: msg("cross-polarised: sensitive to vegetation volume (leaves, branches)"),
 };
 
 export function Channels({ detail, analysis, color }: { detail: EventDetail; analysis: SensorAnalysis; color: string }) {
+  const t = useT();
   const rows = analysis.polarisations;
   const others = detail.analyses.filter((a) => a.key !== analysis.key);
   if (rows.length < 2 && others.length === 0) return null;
@@ -72,16 +83,26 @@ export function Channels({ detail, analysis, color }: { detail: EventDetail; ana
     const big = a.flaggedAreaKm2 >= b.flaggedAreaKm2 ? a : b;
     const small = big === a ? b : a;
     const ratio = small.flaggedAreaKm2 > 0 ? big.flaggedAreaKm2 / small.flaggedAreaKm2 : Infinity;
-    verdict =
-      ratio < 1.3
-        ? `Both channels flag a similar area, which points to a change that affects the surface and the vegetation alike.`
-        : `${big.pol} flags ${Number.isFinite(ratio) ? `${ratio.toFixed(1)}×` : "far"} more land than ${small.pol}: the change is mostly in what ${big.pol} responds to.`;
+    if (ratio < 1.3) {
+      verdict = t("Both channels flag a similar area, which points to a change that affects the surface and the vegetation alike.");
+    } else if (Number.isFinite(ratio)) {
+      verdict = t("{big} flags {ratio}× more land than {small}: the change is mostly in what {big} responds to.", {
+        big: big.pol,
+        small: small.pol,
+        ratio: formatNumber(ratio, 1, 1),
+      });
+    } else {
+      verdict = t("{big} flags far more land than {small}: the change is mostly in what {big} responds to.", {
+        big: big.pol,
+        small: small.pol,
+      });
+    }
   }
 
   return (
     <section aria-labelledby="case-channels">
       <Title>
-        <span id="case-channels">Which channel sees it</span>
+        <span id="case-channels">{t("Which channel sees it")}</span>
       </Title>
       {rows.length >= 2 && (
         <>
@@ -91,35 +112,45 @@ export function Channels({ detail, analysis, color }: { detail: EventDetail; ana
                 <span className="flex items-baseline justify-between gap-3 text-sm">
                   <span className="text-ink">
                     <span className="font-mono">{r.pol}</span>
-                    {r.analysed && <span className="ml-1.5 text-xs text-muted">(analysed)</span>}
+                    {r.analysed && <span className="ml-1.5 text-xs text-muted">({t("analysed")})</span>}
                   </span>
                   <span className="font-mono text-xs tabular-nums text-ink">{km(r.flaggedAreaKm2)} km²</span>
                 </span>
                 <span className="mt-1 block">
                   <Bar value={r.flaggedAreaKm2} max={max} color={color} muted={!r.analysed} />
                 </span>
-                <span className="mt-1 block text-[11px] leading-snug text-muted">{POL_NOTE[r.pol]}</span>
+                <span className="mt-1 block text-[11px] leading-snug text-muted">{t(POL_NOTE[r.pol])}</span>
               </li>
             ))}
           </ul>
           <p className="mt-2.5 text-sm leading-relaxed text-ink/85">
-            Same two passes, same land, same {analysis.method.thresholdDb} dB threshold. {verdict}
+            {t("Same two passes, same land, same {thr} dB threshold.", { thr: analysis.method.thresholdDb })} {verdict}
           </p>
         </>
       )}
       {others.length > 0 && (
         <p className="mt-2.5 text-sm leading-relaxed text-ink/85">
-          Other wavelength:{" "}
+          {t("Other wavelength:")}{" "}
           {others.map((o, i) => (
             <span key={o.key}>
               {i > 0 && "; "}
-              {o.label} ({o.band}-band, {o.pol}) flags <b className="font-medium text-ink">{km(o.land.changedAreaKm2)} km²</b> on land
-              between {formatDate(day(o.pre.date))} and {formatDate(day(o.post.date))}
+              {rich(
+                t("{label} ({band}-band, {pol}) flags <b>{area} km²</b> on land between {d1} and {d2}", {
+                  label: o.label,
+                  band: o.band,
+                  pol: o.pol,
+                  area: km(o.land.changedAreaKm2),
+                  d1: formatDate(day(o.pre.date)),
+                  d2: formatDate(day(o.post.date)),
+                }),
+                bold,
+              )}
             </span>
           ))}
-          , against {km(analysis.land.changedAreaKm2)} km² here. The dates differ, so read it as a second opinion, not a
-          like-for-like test. L-band (24 cm) passes through leaves to trunks and soil; C-band (5.6 cm) mostly sees the
-          top of the canopy.
+          {t(
+            ", against {area} km² here. The dates differ, so read it as a second opinion, not a like-for-like test. L-band (24 cm) passes through leaves to trunks and soil; C-band (5.6 cm) mostly sees the top of the canopy.",
+            { area: km(analysis.land.changedAreaKm2) },
+          )}
         </p>
       )}
     </section>
@@ -143,6 +174,7 @@ const COVER_COLOR: Record<number, string> = {
 };
 
 export function GroundCover({ analysis }: { analysis: SensorAnalysis }) {
+  const t = useT();
   const cover = analysis.landCover;
   if (!cover) return null;
   const rows = cover.classes.filter((c) => c.flaggedPct >= 0.5 || c.scenePct >= 5).slice(0, 6);
@@ -158,7 +190,7 @@ export function GroundCover({ analysis }: { analysis: SensorAnalysis }) {
   return (
     <section aria-labelledby="case-cover">
       <Title>
-        <span id="case-cover">What was on the ground</span>
+        <span id="case-cover">{t("What was on the ground")}</span>
       </Title>
       <ul className="mt-2.5 space-y-2.5">
         {rows.map((c) => (
@@ -166,7 +198,7 @@ export function GroundCover({ analysis }: { analysis: SensorAnalysis }) {
             <span className="flex items-baseline justify-between gap-3 text-sm">
               <span className="flex items-center gap-2 text-ink">
                 <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: COVER_COLOR[c.code] ?? "#9ba7bb" }} aria-hidden="true" />
-                {c.label}
+                {t(c.label)}
               </span>
               <span className="font-mono text-xs tabular-nums text-ink">
                 {pct(c.flaggedPct)}% <span className="text-muted">· {km(c.flaggedKm2)} km²</span>
@@ -181,20 +213,27 @@ export function GroundCover({ analysis }: { analysis: SensorAnalysis }) {
       </ul>
       <p className="mt-2 flex flex-wrap gap-x-4 text-[11px] text-muted">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-1.5 w-4 rounded-full bg-ink" /> share of the flagged land
+          <span className="inline-block h-1.5 w-4 rounded-full bg-ink" /> {t("share of the flagged land")}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-1.5 w-4 rounded-full bg-muted/50" /> share of all the land analysed
+          <span className="inline-block h-1.5 w-4 rounded-full bg-muted/50" /> {t("share of all the land analysed")}
         </span>
       </p>
       {standout && standout.lift >= 1.5 && (
         <p className="mt-2.5 text-sm leading-relaxed text-ink/85">
-          <b className="font-medium text-ink">{standout.c.label}</b> is {pct(standout.c.scenePct)}% of the land analysed
-          but {pct(standout.c.flaggedPct)}% of what changed: {standout.lift.toFixed(1)}× over-represented.
+          {rich(
+            t("<b>{label}</b> is {scene}% of the land analysed but {flagged}% of what changed: {lift}× over-represented.", {
+              label: t(standout.c.label),
+              scene: pct(standout.c.scenePct),
+              flagged: pct(standout.c.flaggedPct),
+              lift: formatNumber(standout.lift, 1, 1),
+            }),
+            bold,
+          )}
         </p>
       )}
       <p className="mt-1.5 text-[11px] leading-snug text-muted">
-        Land cover: {cover.source}, a 2021 map. The ground may have changed since.
+        {t("Land cover: {source}, a 2021 map. The ground may have changed since.", { source: cover.source })}
       </p>
     </section>
   );
@@ -205,33 +244,41 @@ export function GroundCover({ analysis }: { analysis: SensorAnalysis }) {
 /* ------------------------------------------------------------------ */
 
 export function Baseline({ analysis }: { analysis: SensorAnalysis }) {
+  const t = useT();
   const b = analysis.baseline;
   const passes = analysis.series.filter((p) => p.usable).length;
   return (
     <section aria-labelledby="case-baseline">
       <Title>
-        <span id="case-baseline">Compared with normal variation</span>
+        <span id="case-baseline">{t("Compared with normal variation")}</span>
       </Title>
       {b ? (
         <>
           <p className="mt-2.5 text-sm leading-relaxed text-ink/85">
-            This track has {b.passes} passes. From {b.pairs} other pairs of consecutive passes we measured how much
-            each pixel normally moves from one pass to the next (typically ±{b.sigmaMedianDb?.toFixed(1)} dB).
+            {t(
+              "This track has {passes} passes. From {pairs} other pairs of consecutive passes we measured how much each pixel normally moves from one pass to the next (typically ±{sigma} dB).",
+              { passes: b.passes, pairs: b.pairs, sigma: b.sigmaMedianDb === null ? "?" : formatNumber(b.sigmaMedianDb, 1, 1) },
+            )}
           </p>
           <p className="mt-2 rounded-lg border border-line bg-white/[0.03] px-3 py-2.5 text-sm leading-relaxed text-ink/90">
-            <b className="font-medium text-ink">
-              {pct(b.beyond3SigmaPct)}% of the flagged land ({km(b.beyond3SigmaKm2)} km²)
-            </b>{" "}
-            changed by more than 3 times its own normal variation.{" "}
+            {rich(
+              t("<b>{pct}% of the flagged land ({area} km²)</b> changed by more than 3 times its own normal variation.", {
+                pct: pct(b.beyond3SigmaPct),
+                area: km(b.beyond3SigmaKm2),
+              }),
+              bold,
+            )}{" "}
             {b.beyond3SigmaPct >= 50
-              ? "For those pixels this is unusual behaviour, not their ordinary flicker."
-              : "The rest sits on pixels that often move this much, so it is weaker evidence."}
+              ? t("For those pixels this is unusual behaviour, not their ordinary flicker.")
+              : t("The rest sits on pixels that often move this much, so it is weaker evidence.")}
           </p>
         </>
       ) : (
         <p className="mt-2.5 text-sm leading-relaxed text-ink/85">
-          Not measured here: this track has only {passes} passes over the area, and a per-pixel baseline needs at least
-          7. As NISAR keeps returning every 12 days, this check becomes possible.
+          {t(
+            "Not measured here: this track has only {passes} passes over the area, and a per-pixel baseline needs at least 7. As NISAR keeps returning every 12 days, this check becomes possible.",
+            { passes },
+          )}
         </p>
       )}
     </section>
@@ -249,29 +296,30 @@ interface Hypothesis {
 
 export const HYPOTHESES: Partial<Record<ChangeType, Hypothesis[]>> = {
   wildfire: [
-    { cause: "Fire removed leaves and branches, so less energy is scattered back in the cross-polarised channel.", check: "Thermal hot spots (NASA FIRMS) or a burn scar in optical imagery on the same dates." },
-    { cause: "Clearing or logging, a human driver, would look much the same to the radar.", check: "Straight edges and roads nearby in optical imagery; local land-use records." },
-    { cause: "Drying: less water in soil and plants lowers the echo without any loss of vegetation.", check: "Rainfall and soil-moisture records. Drying affects wide areas, not sharp patches." },
+    { cause: msg("Fire removed leaves and branches, so less energy is scattered back in the cross-polarised channel."), check: msg("Thermal hot spots (NASA FIRMS) or a burn scar in optical imagery on the same dates.") },
+    { cause: msg("Clearing or logging, a human driver, would look much the same to the radar."), check: msg("Straight edges and roads nearby in optical imagery; local land-use records.") },
+    { cause: msg("Drying: less water in soil and plants lowers the echo without any loss of vegetation."), check: msg("Rainfall and soil-moisture records. Drying affects wide areas, not sharp patches.") },
   ],
   flood: [
-    { cause: "Standing water on open ground or crops turned a rough surface into a mirror, so the echo dropped.", check: "Rainfall and river records, NASA's OPERA surface-water product (DSWx), local reports." },
-    { cause: "Wetter soil and growing crops raise the echo: a stronger return is not flooding.", check: "Crop calendars and rainfall. Rises that follow field boundaries point to farming." },
-    { cause: "Farming itself: irrigation, harvest or ploughing between the two passes.", check: "Whether the patches match field shapes and the local crop cycle (rice paddies are flooded on purpose)." },
+    { cause: msg("Standing water on open ground or crops turned a rough surface into a mirror, so the echo dropped."), check: msg("Rainfall and river records, NASA's OPERA surface-water product (DSWx), local reports.") },
+    { cause: msg("Wetter soil and growing crops raise the echo: a stronger return is not flooding."), check: msg("Crop calendars and rainfall. Rises that follow field boundaries point to farming.") },
+    { cause: msg("Farming itself: irrigation, harvest or ploughing between the two passes."), check: msg("Whether the patches match field shapes and the local crop cycle (rice paddies are flooded on purpose).") },
   ],
   wetland: [
-    { cause: "Open water expanded or retreated with the seasons.", check: "Rainfall and river levels; OPERA surface-water maps." },
+    { cause: msg("Open water expanded or retreated with the seasons."), check: msg("Rainfall and river levels; OPERA surface-water maps.") },
   ],
 };
 
 export function Hypotheses({ type }: { type: ChangeType }) {
+  const t = useT();
   const list = HYPOTHESES[type];
   if (!list) return null;
   return (
     <section aria-labelledby="case-hypotheses">
       <Title>
-        <span id="case-hypotheses">What could be driving it</span>
+        <span id="case-hypotheses">{t("What could be driving it")}</span>
       </Title>
-      <p className="mt-1.5 text-xs text-muted">Hypotheses, each with the evidence that would confirm or rule it out.</p>
+      <p className="mt-1.5 text-xs text-muted">{t("Hypotheses, each with the evidence that would confirm or rule it out.")}</p>
       <ol className="mt-2.5 space-y-3">
         {list.map((h, i) => (
           <li key={h.cause} className="flex gap-3 text-sm leading-relaxed">
@@ -279,8 +327,8 @@ export function Hypotheses({ type }: { type: ChangeType }) {
               {i + 1}
             </span>
             <span>
-              <span className="text-ink/90">{h.cause}</span>
-              <span className="mt-0.5 block text-xs text-muted">To check: {h.check}</span>
+              <span className="text-ink/90">{t(h.cause)}</span>
+              <span className="mt-0.5 block text-xs text-muted">{t("To check: {check}", { check: t(h.check) })}</span>
             </span>
           </li>
         ))}
@@ -303,17 +351,20 @@ function download(name: string, text: string, type: string): void {
 }
 
 export function ShareBar({ detail, analysis }: { detail: EventDetail; analysis: SensorAnalysis }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
 
   const copyLink = async () => {
     const url = new URL(window.location.href);
     url.searchParams.set("case", detail.id);
+    // The link opens in the language of whoever shares it.
+    url.searchParams.set("lang", getLang());
     try {
       await navigator.clipboard.writeText(url.toString());
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      window.prompt("Copy this link", url.toString());
+      window.prompt(t("Copy this link"), url.toString());
     }
   };
 
@@ -343,17 +394,17 @@ export function ShareBar({ detail, analysis }: { detail: EventDetail; analysis: 
   return (
     <div className="flex flex-wrap gap-2 border-t border-line pt-4">
       <button type="button" onClick={() => void copyLink()} className="ge-pill">
-        {copied ? "Link copied" : "Copy link to this case"}
+        {copied ? t("Link copied") : t("Copy link to this case")}
       </button>
       <button
         type="button"
         onClick={() => download(`${detail.id}.json`, JSON.stringify(detail, null, 2), "application/json")}
         className="ge-pill"
       >
-        Download data (JSON)
+        {t("Download data (JSON)")}
       </button>
       <button type="button" onClick={geojson} className="ge-pill">
-        Download area (GeoJSON)
+        {t("Download area (GeoJSON)")}
       </button>
     </div>
   );

@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PASS_CLOCK, loadPassCycle, type PassCycle } from "@/components/globe/passes";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { formatDate } from "@/lib/format";
+import { useT } from "@/i18n/core";
+import { formatDate, formatNumber } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 
 /** How long the 12 days take on screen. */
@@ -18,6 +19,7 @@ const addDays = (iso: string, days: number): string =>
  * drawn by the globe (components/globe/passes); this is the clock and caption.
  */
 export function PassDance() {
+  const t = useT();
   const on = useAppStore((s) => s.dance);
   const setDance = useAppStore((s) => s.setDance);
   const reducedMotion = usePrefersReducedMotion();
@@ -119,7 +121,7 @@ export function PassDance() {
 
   return (
     <section
-      aria-label="NISAR's 12-day cycle"
+      aria-label={t("NISAR's 12-day cycle")}
       className="ge-surface pointer-events-auto absolute bottom-6 left-1/2 z-20 flex w-[min(34rem,calc(100vw-2rem))] -translate-x-1/2 items-center gap-4 p-4"
     >
       <div className="relative h-24 w-24 shrink-0">
@@ -151,30 +153,31 @@ export function PassDance() {
           })}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">Day</span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">{t("Day")}</span>
           <span className="font-display text-3xl leading-none text-ink">{dayNumber}</span>
-          <span className="font-mono text-[9px] text-muted">of {days}</span>
+          <span className="font-mono text-[9px] text-muted">{t("of {days}", { days })}</span>
         </div>
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">The satellite&rsquo;s dance</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">{t("The satellite’s dance")}</p>
         {failed ? (
-          <p className="mt-1 text-sm text-muted">The list of NISAR scenes could not be loaded.</p>
+          <p className="mt-1 text-sm text-muted">{t("The list of NISAR scenes could not be loaded.")}</p>
         ) : (
           <>
-            <p className="mt-0.5 font-display text-2xl leading-tight text-ink">{date ? formatDate(date) : "Loading…"}</p>
+            <p className="mt-0.5 font-display text-2xl leading-tight text-ink">{date ? formatDate(date) : t("Loading…")}</p>
             <p className="mt-1 text-xs leading-relaxed text-muted" aria-live="off">
-              <span className="font-mono tabular-nums text-ink">{lo.toLocaleString("en-US")}</span> of{" "}
-              {(cycle?.count ?? 0).toLocaleString("en-US")} real scenes. Every 12 days NISAR returns to the same track,
-              so each place gets a new look on a fixed beat.
+              <span className="font-mono tabular-nums text-ink">{formatNumber(lo)}</span>{" "}
+              {t("of {count} real scenes. Every 12 days NISAR returns to the same track, so each place gets a new look on a fixed beat.", {
+                count: formatNumber(cycle?.count ?? 0),
+              })}
             </p>
             <p className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[11px] text-muted">
               <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-sm" style={{ background: "#f2b866" }} aria-hidden="true" /> heading north
+                <span className="h-2 w-2 rounded-sm" style={{ background: "#f2b866" }} aria-hidden="true" /> {t("heading north")}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-sm" style={{ background: "#5c9eff" }} aria-hidden="true" /> heading south
+                <span className="h-2 w-2 rounded-sm" style={{ background: "#5c9eff" }} aria-hidden="true" /> {t("heading south")}
               </span>
             </p>
           </>
@@ -185,7 +188,7 @@ export function PassDance() {
         <button
           type="button"
           onClick={toggle}
-          aria-label={finished ? "Play again" : playing ? "Pause" : "Play"}
+          aria-label={finished ? t("Play again") : playing ? t("Pause") : t("Play")}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-accent/70 bg-accent/10 text-accent transition-colors hover:bg-accent/20"
         >
           <svg viewBox="0 0 24 24" width="15" height="15" fill={finished ? "none" : "currentColor"} stroke={finished ? "currentColor" : "none"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -199,7 +202,7 @@ export function PassDance() {
           </svg>
         </button>
         <button type="button" onClick={() => setDance(false)} className="ge-link text-[11px]">
-          Close
+          {t("Close")}
         </button>
       </div>
     </section>

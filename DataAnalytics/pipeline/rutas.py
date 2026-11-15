@@ -4,8 +4,8 @@ El tipo sale del prefijo del nombre de la colección (terremoto_venezuela -> ter
 """
 from pathlib import Path
 
-from earthdata_auth import ROOT
-
+# Sin dependencias externas: GitHub Actions lo usa para ver si hay trabajos pendientes antes de instalar nada.
+ROOT = Path(__file__).resolve().parent.parent
 ANALISIS = ROOT / "data" / "analisis"
 TIPOS = {
     "agricola": "agricultura",

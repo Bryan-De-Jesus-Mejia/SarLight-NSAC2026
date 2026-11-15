@@ -1,0 +1,40 @@
+{
+  "collection": "agricola_inundacion_bangladesh",
+  "source": "nisar",
+  "orbit": "P069_F013_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-18T23:21:02Z",
+    "2026-06-30T23:21:01Z",
+    "2026-07-12T23:21:00Z",
+    "2026-07-24T23:20:59Z",
+    "2026-08-17T23:20:58Z",
+    "2026-08-29T23:20:58Z",
+    "2026-09-10T23:20:58Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32646",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-07-05",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-06-18T23:21:02Z",
+    "2026-06-30T23:21:01Z"
+  ],
+  "peak_date": "2026-09-10T23:20:58Z",
+  "peak_flood_km2": 205.488,
+  "peak_new_water_km2": 23.377,
+  "peak_flooded_veg_km2": 182.111,
+  "max_extent_km2": 422.68,
+  "max_extent_open_water_km2": 74.071,
+  "max_extent_flooded_veg_km2": 348.609,
+  "permanent_water_km2": 190.642
+}

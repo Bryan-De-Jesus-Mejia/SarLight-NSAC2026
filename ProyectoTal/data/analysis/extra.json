@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-15T02:23:30.026Z",
+ "generatedAt": "2026-11-15T05:23:52.969Z",
  "cases": [
   {
    "id": "venezuela-quake",
@@ -111,6 +111,550 @@
         468
        ]
       }
+     }
+    ]
+   }
+  },
+  {
+   "id": "riau-palm-clearing",
+   "type": "agriculture",
+   "name": "Riau oil-palm clearing",
+   "region": "Riau, Sumatra",
+   "country": "Indonesia",
+   "lat": 0.5,
+   "lon": 101.7,
+   "startDate": "2026-06-16",
+   "endDate": "2026-10-31",
+   "footprint": [
+    [
+     101.5,
+     0.7
+    ],
+    [
+     101.9,
+     0.7
+    ],
+    [
+     101.9,
+     0.3
+    ],
+    [
+     101.5,
+     0.3
+    ]
+   ],
+   "thumb": "/analysis-extra/riau-palm-clearing/thumb.webp",
+   "changedAreaKm2": 43.35,
+   "changedPct": 3.17,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "clearing",
+    "orbits": [
+     {
+      "key": "P040_F002_ASCE",
+      "label": "Track 40 · frame 2 · ascending",
+      "track": 40,
+      "frame": 2,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32647",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-16",
+       "2026-06-28",
+       "2026-07-10",
+       "2026-07-22",
+       "2026-08-15",
+       "2026-08-27",
+       "2026-09-08",
+       "2026-09-20",
+       "2026-10-02",
+       "2026-10-14",
+       "2026-10-26"
+      ],
+      "map": "/analysis-extra/riau-palm-clearing/P040_F002_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       815
+      ],
+      "frames": [
+       {
+        "date": "2026-06-16",
+        "src": "/analysis-extra/riau-palm-clearing/P040_F002_ASCE_2026-06-16.webp"
+       },
+       {
+        "date": "2026-07-22",
+        "src": "/analysis-extra/riau-palm-clearing/P040_F002_ASCE_2026-07-22.webp"
+       },
+       {
+        "date": "2026-08-27",
+        "src": "/analysis-extra/riau-palm-clearing/P040_F002_ASCE_2026-08-27.webp"
+       },
+       {
+        "date": "2026-10-02",
+        "src": "/analysis-extra/riau-palm-clearing/P040_F002_ASCE_2026-10-02.webp"
+       },
+       {
+        "date": "2026-10-26",
+        "src": "/analysis-extra/riau-palm-clearing/P040_F002_ASCE_2026-10-26.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1368.06,
+      "harvestedKm2": 43.35,
+      "harvestedPct": 3.17,
+      "peakIntervalEnd": "2026-08-15",
+      "peakIntervalDropKm2": 17.91,
+      "medianHarvestDoy": 227,
+      "meanMaxDropDb": -3.62,
+      "series": [
+       {
+        "date": "2026-06-16",
+        "coDb": -7.022,
+        "crossDb": -14.091,
+        "validPct": 73.32,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-06-28",
+        "coDb": -6.939,
+        "crossDb": -13.999,
+        "validPct": 73.36,
+        "dropKm2": 1.938,
+        "riseKm2": 6.89,
+        "cumulativeKm2": 1.702,
+        "cumulativePct": 0.12
+       },
+       {
+        "date": "2026-07-10",
+        "coDb": -6.785,
+        "crossDb": -13.782,
+        "validPct": 73.35,
+        "dropKm2": 2.849,
+        "riseKm2": 12.856,
+        "cumulativeKm2": 4.151,
+        "cumulativePct": 0.3
+       },
+       {
+        "date": "2026-07-22",
+        "coDb": -6.732,
+        "crossDb": -13.77,
+        "validPct": 73.38,
+        "dropKm2": 3.879,
+        "riseKm2": 19.396,
+        "cumulativeKm2": 7.845,
+        "cumulativePct": 0.57
+       },
+       {
+        "date": "2026-08-15",
+        "coDb": -7.223,
+        "crossDb": -14.266,
+        "validPct": 73.13,
+        "dropKm2": 17.91,
+        "riseKm2": 6.872,
+        "cumulativeKm2": 25.287,
+        "cumulativePct": 1.85
+       },
+       {
+        "date": "2026-08-27",
+        "coDb": -7.41,
+        "crossDb": -14.54,
+        "validPct": 73.3,
+        "dropKm2": 4.759,
+        "riseKm2": 3.966,
+        "cumulativeKm2": 29.806,
+        "cumulativePct": 2.18
+       },
+       {
+        "date": "2026-09-08",
+        "coDb": -7.618,
+        "crossDb": -14.655,
+        "validPct": 73.37,
+        "dropKm2": 2.643,
+        "riseKm2": 11.863,
+        "cumulativeKm2": 32.249,
+        "cumulativePct": 2.36
+       },
+       {
+        "date": "2026-09-20",
+        "coDb": -7.062,
+        "crossDb": -14.196,
+        "validPct": 73.34,
+        "dropKm2": 0.978,
+        "riseKm2": 14.826,
+        "cumulativeKm2": 33.121,
+        "cumulativePct": 2.42
+       },
+       {
+        "date": "2026-10-02",
+        "coDb": -7.04,
+        "crossDb": -14.005,
+        "validPct": 73.36,
+        "dropKm2": 1.704,
+        "riseKm2": 12.274,
+        "cumulativeKm2": 34.619,
+        "cumulativePct": 2.53
+       },
+       {
+        "date": "2026-10-14",
+        "coDb": -6.852,
+        "crossDb": -13.853,
+        "validPct": 73.45,
+        "dropKm2": 1.76,
+        "riseKm2": 13.956,
+        "cumulativeKm2": 36.236,
+        "cumulativePct": 2.65
+       },
+       {
+        "date": "2026-10-26",
+        "coDb": -7.48,
+        "crossDb": -14.097,
+        "validPct": 73.26,
+        "dropKm2": 7.451,
+        "riseKm2": 1.388,
+        "cumulativeKm2": 43.351,
+        "cumulativePct": 3.17
+       }
+      ]
+     },
+     {
+      "key": "P148_F088_DESC",
+      "label": "Track 148 · frame 88 · descending",
+      "track": 148,
+      "frame": 88,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32647",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-24",
+       "2026-07-06",
+       "2026-07-18",
+       "2026-08-11",
+       "2026-08-23",
+       "2026-09-04",
+       "2026-09-16",
+       "2026-09-28",
+       "2026-10-10",
+       "2026-10-22"
+      ],
+      "map": "/analysis-extra/riau-palm-clearing/P148_F088_DESC_map.webp",
+      "mapSize": [
+       1000,
+       815
+      ],
+      "frames": [
+       {
+        "date": "2026-06-24",
+        "src": "/analysis-extra/riau-palm-clearing/P148_F088_DESC_2026-06-24.webp"
+       },
+       {
+        "date": "2026-07-18",
+        "src": "/analysis-extra/riau-palm-clearing/P148_F088_DESC_2026-07-18.webp"
+       },
+       {
+        "date": "2026-09-04",
+        "src": "/analysis-extra/riau-palm-clearing/P148_F088_DESC_2026-09-04.webp"
+       },
+       {
+        "date": "2026-09-28",
+        "src": "/analysis-extra/riau-palm-clearing/P148_F088_DESC_2026-09-28.webp"
+       },
+       {
+        "date": "2026-10-22",
+        "src": "/analysis-extra/riau-palm-clearing/P148_F088_DESC_2026-10-22.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1972.64,
+      "harvestedKm2": 61.47,
+      "harvestedPct": 3.12,
+      "peakIntervalEnd": "2026-08-11",
+      "peakIntervalDropKm2": 14.15,
+      "medianHarvestDoy": 271,
+      "meanMaxDropDb": -3.98,
+      "series": [
+       {
+        "date": "2026-06-24",
+        "coDb": -6.122,
+        "crossDb": -13.235,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-06",
+        "coDb": -6.521,
+        "crossDb": -13.533,
+        "validPct": 100,
+        "dropKm2": 9.115,
+        "riseKm2": 2.753,
+        "cumulativeKm2": 7.828,
+        "cumulativePct": 0.4
+       },
+       {
+        "date": "2026-07-18",
+        "coDb": -6.615,
+        "crossDb": -13.798,
+        "validPct": 100,
+        "dropKm2": 5.36,
+        "riseKm2": 2.804,
+        "cumulativeKm2": 12.602,
+        "cumulativePct": 0.64
+       },
+       {
+        "date": "2026-08-11",
+        "coDb": -6.876,
+        "crossDb": -14.044,
+        "validPct": 100,
+        "dropKm2": 14.147,
+        "riseKm2": 1.306,
+        "cumulativeKm2": 25.178,
+        "cumulativePct": 1.28
+       },
+       {
+        "date": "2026-08-23",
+        "coDb": -7.227,
+        "crossDb": -14.145,
+        "validPct": 100,
+        "dropKm2": 1.797,
+        "riseKm2": 1.604,
+        "cumulativeKm2": 26.616,
+        "cumulativePct": 1.35
+       },
+       {
+        "date": "2026-09-04",
+        "coDb": -7.255,
+        "crossDb": -14.151,
+        "validPct": 100,
+        "dropKm2": 2.655,
+        "riseKm2": 2.371,
+        "cumulativeKm2": 28.631,
+        "cumulativePct": 1.45
+       },
+       {
+        "date": "2026-09-16",
+        "coDb": -7.271,
+        "crossDb": -14.219,
+        "validPct": 100,
+        "dropKm2": 1.908,
+        "riseKm2": 1.739,
+        "cumulativeKm2": 30.161,
+        "cumulativePct": 1.53
+       },
+       {
+        "date": "2026-09-28",
+        "coDb": -6.721,
+        "crossDb": -13.696,
+        "validPct": 100,
+        "dropKm2": 12.198,
+        "riseKm2": 35.602,
+        "cumulativeKm2": 41.952,
+        "cumulativePct": 2.13
+       },
+       {
+        "date": "2026-10-10",
+        "coDb": -6.504,
+        "crossDb": -13.293,
+        "validPct": 100,
+        "dropKm2": 11.973,
+        "riseKm2": 40.301,
+        "cumulativeKm2": 53.448,
+        "cumulativePct": 2.71
+       },
+       {
+        "date": "2026-10-22",
+        "coDb": -7.056,
+        "crossDb": -13.64,
+        "validPct": 100,
+        "dropKm2": 9.756,
+        "riseKm2": 0.787,
+        "cumulativeKm2": 61.473,
+        "cumulativePct": 3.12
+       }
+      ]
+     },
+     {
+      "key": "P112_F002_ASCE",
+      "label": "Track 112 · frame 2 · ascending",
+      "track": 112,
+      "frame": 2,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32648",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-21",
+       "2026-07-03",
+       "2026-07-15",
+       "2026-08-20",
+       "2026-09-01",
+       "2026-09-13",
+       "2026-09-25",
+       "2026-10-07",
+       "2026-10-19",
+       "2026-10-31"
+      ],
+      "map": "/analysis-extra/riau-palm-clearing/P112_F002_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       815
+      ],
+      "frames": [
+       {
+        "date": "2026-06-21",
+        "src": "/analysis-extra/riau-palm-clearing/P112_F002_ASCE_2026-06-21.webp"
+       },
+       {
+        "date": "2026-07-15",
+        "src": "/analysis-extra/riau-palm-clearing/P112_F002_ASCE_2026-07-15.webp"
+       },
+       {
+        "date": "2026-09-13",
+        "src": "/analysis-extra/riau-palm-clearing/P112_F002_ASCE_2026-09-13.webp"
+       },
+       {
+        "date": "2026-10-07",
+        "src": "/analysis-extra/riau-palm-clearing/P112_F002_ASCE_2026-10-07.webp"
+       },
+       {
+        "date": "2026-10-31",
+        "src": "/analysis-extra/riau-palm-clearing/P112_F002_ASCE_2026-10-31.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1845.97,
+      "harvestedKm2": 22.69,
+      "harvestedPct": 1.23,
+      "peakIntervalEnd": "2026-07-03",
+      "peakIntervalDropKm2": 12,
+      "medianHarvestDoy": 184,
+      "meanMaxDropDb": -3.66,
+      "series": [
+       {
+        "date": "2026-06-21",
+        "coDb": -6.209,
+        "crossDb": -13.158,
+        "validPct": 93.24,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-03",
+        "coDb": -6.604,
+        "crossDb": -13.623,
+        "validPct": 93.33,
+        "dropKm2": 11.995,
+        "riseKm2": 0.53,
+        "cumulativeKm2": 11.788,
+        "cumulativePct": 0.64
+       },
+       {
+        "date": "2026-07-15",
+        "coDb": -6.785,
+        "crossDb": -13.787,
+        "validPct": 93.27,
+        "dropKm2": 1.688,
+        "riseKm2": 0.594,
+        "cumulativeKm2": 13.323,
+        "cumulativePct": 0.72
+       },
+       {
+        "date": "2026-08-20",
+        "coDb": -6.744,
+        "crossDb": -13.73,
+        "validPct": 93.24,
+        "dropKm2": 3.26,
+        "riseKm2": 1.326,
+        "cumulativeKm2": 16.424,
+        "cumulativePct": 0.89
+       },
+       {
+        "date": "2026-09-01",
+        "coDb": -6.733,
+        "crossDb": -13.782,
+        "validPct": 93.35,
+        "dropKm2": 1.212,
+        "riseKm2": 2.562,
+        "cumulativeKm2": 17.482,
+        "cumulativePct": 0.95
+       },
+       {
+        "date": "2026-09-13",
+        "coDb": -6.816,
+        "crossDb": -13.824,
+        "validPct": 93.29,
+        "dropKm2": 1.788,
+        "riseKm2": 0.802,
+        "cumulativeKm2": 19.078,
+        "cumulativePct": 1.03
+       },
+       {
+        "date": "2026-09-25",
+        "coDb": -6.91,
+        "crossDb": -13.927,
+        "validPct": 93.34,
+        "dropKm2": 1.108,
+        "riseKm2": 0.736,
+        "cumulativeKm2": 20.047,
+        "cumulativePct": 1.09
+       },
+       {
+        "date": "2026-10-07",
+        "coDb": -6.738,
+        "crossDb": -13.673,
+        "validPct": 93.33,
+        "dropKm2": 0.745,
+        "riseKm2": 1.315,
+        "cumulativeKm2": 20.694,
+        "cumulativePct": 1.12
+       },
+       {
+        "date": "2026-10-19",
+        "coDb": -6.635,
+        "crossDb": -13.544,
+        "validPct": 93.23,
+        "dropKm2": 0.727,
+        "riseKm2": 1.081,
+        "cumulativeKm2": 21.306,
+        "cumulativePct": 1.15
+       },
+       {
+        "date": "2026-10-31",
+        "coDb": -6.76,
+        "crossDb": -13.531,
+        "validPct": 93.3,
+        "dropKm2": 1.531,
+        "riseKm2": 0.641,
+        "cumulativeKm2": 22.687,
+        "cumulativePct": 1.23
+       }
+      ]
      }
     ]
    }
@@ -434,6 +978,423 @@
         "fastMedian": 2.24,
         "reliablePct": 60.44,
         "coherence": 0.131
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "chattogram-rice-flood",
+   "type": "agriculture",
+   "name": "Chattogram rice-field flooding",
+   "region": "Chattogram coast",
+   "country": "Bangladesh",
+   "lat": 22.575,
+   "lon": 91.775,
+   "startDate": "2026-06-18",
+   "endDate": "2026-09-12",
+   "footprint": [
+    [
+     91.55,
+     22.85
+    ],
+    [
+     92,
+     22.85
+    ],
+    [
+     92,
+     22.3
+    ],
+    [
+     91.55,
+     22.3
+    ]
+   ],
+   "thumb": "/analysis-extra/chattogram-rice-flood/thumb.webp",
+   "changedAreaKm2": 205.49,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "orbits": [
+     {
+      "key": "P069_F013_ASCE",
+      "label": "Track 69 · frame 13 · ascending",
+      "track": 69,
+      "frame": 13,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32646",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-18",
+       "2026-06-30",
+       "2026-07-12",
+       "2026-07-24",
+       "2026-08-17",
+       "2026-08-29",
+       "2026-09-10"
+      ],
+      "map": "/analysis-extra/chattogram-rice-flood/P069_F013_ASCE_map.webp",
+      "mapSize": [
+       709,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-06-18",
+        "src": "/analysis-extra/chattogram-rice-flood/P069_F013_ASCE_2026-06-18.webp"
+       },
+       {
+        "date": "2026-07-12",
+        "src": "/analysis-extra/chattogram-rice-flood/P069_F013_ASCE_2026-07-12.webp"
+       },
+       {
+        "date": "2026-07-24",
+        "src": "/analysis-extra/chattogram-rice-flood/P069_F013_ASCE_2026-07-24.webp"
+       },
+       {
+        "date": "2026-08-29",
+        "src": "/analysis-extra/chattogram-rice-flood/P069_F013_ASCE_2026-08-29.webp"
+       },
+       {
+        "date": "2026-09-10",
+        "src": "/analysis-extra/chattogram-rice-flood/P069_F013_ASCE_2026-09-10.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-06-18",
+       "2026-06-30"
+      ],
+      "peakDate": "2026-09-10",
+      "peakFloodKm2": 205.49,
+      "peakNewWaterKm2": 23.38,
+      "peakFloodedVegKm2": 182.11,
+      "maxExtentKm2": 422.68,
+      "maxExtentOpenWaterKm2": 74.07,
+      "maxExtentFloodedVegKm2": 348.61,
+      "permanentWaterKm2": 190.64,
+      "series": [
+       {
+        "date": "2026-06-18",
+        "baseline": true,
+        "coDb": -7.561,
+        "crossDb": -14.162,
+        "validPct": 100,
+        "newWaterKm2": 9.214,
+        "floodedVegKm2": 1.046,
+        "permanentWaterKm2": 60.364,
+        "floodKm2": 10.26
+       },
+       {
+        "date": "2026-06-30",
+        "baseline": true,
+        "coDb": -7.502,
+        "crossDb": -13.939,
+        "validPct": 100,
+        "newWaterKm2": 78.854,
+        "floodedVegKm2": 2.035,
+        "permanentWaterKm2": 185.106,
+        "floodKm2": 80.889
+       },
+       {
+        "date": "2026-07-12",
+        "baseline": false,
+        "coDb": -6.474,
+        "crossDb": -12.818,
+        "validPct": 100,
+        "newWaterKm2": 29.507,
+        "floodedVegKm2": 74.049,
+        "permanentWaterKm2": 51.46,
+        "floodKm2": 103.556
+       },
+       {
+        "date": "2026-07-24",
+        "baseline": false,
+        "coDb": -7.015,
+        "crossDb": -13.377,
+        "validPct": 100,
+        "newWaterKm2": 20.706,
+        "floodedVegKm2": 37.116,
+        "permanentWaterKm2": 40.129,
+        "floodKm2": 57.822
+       },
+       {
+        "date": "2026-08-17",
+        "baseline": false,
+        "coDb": -6.504,
+        "crossDb": -13.166,
+        "validPct": 100,
+        "newWaterKm2": 20.468,
+        "floodedVegKm2": 129.51,
+        "permanentWaterKm2": 32.794,
+        "floodKm2": 149.978
+       },
+       {
+        "date": "2026-08-29",
+        "baseline": false,
+        "coDb": -6.757,
+        "crossDb": -13.516,
+        "validPct": 100,
+        "newWaterKm2": 10.596,
+        "floodedVegKm2": 101.412,
+        "permanentWaterKm2": 34.117,
+        "floodKm2": 112.008
+       },
+       {
+        "date": "2026-09-10",
+        "baseline": false,
+        "coDb": -6.525,
+        "crossDb": -13.528,
+        "validPct": 100,
+        "newWaterKm2": 23.377,
+        "floodedVegKm2": 182.111,
+        "permanentWaterKm2": 45.774,
+        "floodKm2": 205.488
+       }
+      ]
+     },
+     {
+      "key": "P163_F077_DESC",
+      "label": "Track 163 · frame 77 · descending",
+      "track": 163,
+      "frame": 77,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32646",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-25",
+       "2026-07-07",
+       "2026-07-19",
+       "2026-08-12",
+       "2026-08-24",
+       "2026-09-05"
+      ],
+      "map": "/analysis-extra/chattogram-rice-flood/P163_F077_DESC_map.webp",
+      "mapSize": [
+       709,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-06-25",
+        "src": "/analysis-extra/chattogram-rice-flood/P163_F077_DESC_2026-06-25.webp"
+       },
+       {
+        "date": "2026-07-07",
+        "src": "/analysis-extra/chattogram-rice-flood/P163_F077_DESC_2026-07-07.webp"
+       },
+       {
+        "date": "2026-08-12",
+        "src": "/analysis-extra/chattogram-rice-flood/P163_F077_DESC_2026-08-12.webp"
+       },
+       {
+        "date": "2026-08-24",
+        "src": "/analysis-extra/chattogram-rice-flood/P163_F077_DESC_2026-08-24.webp"
+       },
+       {
+        "date": "2026-09-05",
+        "src": "/analysis-extra/chattogram-rice-flood/P163_F077_DESC_2026-09-05.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-06-25"
+      ],
+      "peakDate": "2026-07-07",
+      "peakFloodKm2": 391.4,
+      "peakNewWaterKm2": 33.24,
+      "peakFloodedVegKm2": 358.16,
+      "maxExtentKm2": 724.59,
+      "maxExtentOpenWaterKm2": 43.71,
+      "maxExtentFloodedVegKm2": 680.88,
+      "permanentWaterKm2": 49.36,
+      "series": [
+       {
+        "date": "2026-06-25",
+        "baseline": true,
+        "coDb": -8.385,
+        "crossDb": -13.701,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0,
+        "permanentWaterKm2": 49.358,
+        "floodKm2": 0
+       },
+       {
+        "date": "2026-07-07",
+        "baseline": false,
+        "coDb": -6.533,
+        "crossDb": -12.681,
+        "validPct": 99.97,
+        "newWaterKm2": 33.244,
+        "floodedVegKm2": 358.156,
+        "permanentWaterKm2": 7.499,
+        "floodKm2": 391.4
+       },
+       {
+        "date": "2026-07-19",
+        "baseline": false,
+        "coDb": -8.102,
+        "crossDb": -13.566,
+        "validPct": 100,
+        "newWaterKm2": 5.272,
+        "floodedVegKm2": 55.211,
+        "permanentWaterKm2": 7.548,
+        "floodKm2": 60.483
+       },
+       {
+        "date": "2026-08-12",
+        "baseline": false,
+        "coDb": -7.787,
+        "crossDb": -13.802,
+        "validPct": 100,
+        "newWaterKm2": 4.27,
+        "floodedVegKm2": 147.829,
+        "permanentWaterKm2": 18.682,
+        "floodKm2": 152.099
+       },
+       {
+        "date": "2026-08-24",
+        "baseline": false,
+        "coDb": -6.727,
+        "crossDb": -12.177,
+        "validPct": 99.97,
+        "newWaterKm2": 7.423,
+        "floodedVegKm2": 383.054,
+        "permanentWaterKm2": 18.582,
+        "floodKm2": 390.477
+       },
+       {
+        "date": "2026-09-05",
+        "baseline": false,
+        "coDb": -7.378,
+        "crossDb": -13.278,
+        "validPct": 100,
+        "newWaterKm2": 1.668,
+        "floodedVegKm2": 183.883,
+        "permanentWaterKm2": 8.018,
+        "floodKm2": 185.551
+       }
+      ]
+     },
+     {
+      "key": "P091_F077_DESC",
+      "label": "Track 91 · frame 77 · descending",
+      "track": 91,
+      "frame": 77,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32646",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-20",
+       "2026-07-02",
+       "2026-08-31",
+       "2026-09-12"
+      ],
+      "map": "/analysis-extra/chattogram-rice-flood/P091_F077_DESC_map.webp",
+      "mapSize": [
+       709,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-06-20",
+        "src": "/analysis-extra/chattogram-rice-flood/P091_F077_DESC_2026-06-20.webp"
+       },
+       {
+        "date": "2026-07-02",
+        "src": "/analysis-extra/chattogram-rice-flood/P091_F077_DESC_2026-07-02.webp"
+       },
+       {
+        "date": "2026-08-31",
+        "src": "/analysis-extra/chattogram-rice-flood/P091_F077_DESC_2026-08-31.webp"
+       },
+       {
+        "date": "2026-09-12",
+        "src": "/analysis-extra/chattogram-rice-flood/P091_F077_DESC_2026-09-12.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-06-20",
+       "2026-07-02"
+      ],
+      "peakDate": "2026-09-12",
+      "peakFloodKm2": 148.61,
+      "peakNewWaterKm2": 47.3,
+      "peakFloodedVegKm2": 101.31,
+      "maxExtentKm2": 164.15,
+      "maxExtentOpenWaterKm2": 70.43,
+      "maxExtentFloodedVegKm2": 93.72,
+      "permanentWaterKm2": 528.69,
+      "series": [
+       {
+        "date": "2026-06-20",
+        "baseline": true,
+        "coDb": -8.282,
+        "crossDb": -14.029,
+        "validPct": 77.31,
+        "newWaterKm2": 36.795,
+        "floodedVegKm2": 0.616,
+        "permanentWaterKm2": 499.896,
+        "floodKm2": 37.411
+       },
+       {
+        "date": "2026-07-02",
+        "baseline": true,
+        "coDb": -7.662,
+        "crossDb": -13.456,
+        "validPct": 76.73,
+        "newWaterKm2": 18.411,
+        "floodedVegKm2": 41.866,
+        "permanentWaterKm2": 455.259,
+        "floodKm2": 60.277
+       },
+       {
+        "date": "2026-08-31",
+        "baseline": false,
+        "coDb": -7.596,
+        "crossDb": -13.379,
+        "validPct": 77.05,
+        "newWaterKm2": 30.382,
+        "floodedVegKm2": 26.259,
+        "permanentWaterKm2": 363.149,
+        "floodKm2": 56.641
+       },
+       {
+        "date": "2026-09-12",
+        "baseline": false,
+        "coDb": -7.054,
+        "crossDb": -12.882,
+        "validPct": 76.75,
+        "newWaterKm2": 47.302,
+        "floodedVegKm2": 101.309,
+        "permanentWaterKm2": 451.243,
+        "floodKm2": 148.611
        }
       ]
      }
@@ -772,6 +1733,581 @@
         "fastMedian": 1.24,
         "reliablePct": 84.19,
         "coherence": 0.121
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "cibao-wind",
+   "type": "storm",
+   "name": "Cibao wind damage",
+   "region": "Cibao Valley",
+   "country": "Dominican Republic",
+   "lat": 19.375,
+   "lon": -70.44,
+   "startDate": "2026-06-19",
+   "endDate": "2026-08-30",
+   "footprint": [
+    [
+     -70.58,
+     19.45
+    ],
+    [
+     -70.3,
+     19.45
+    ],
+    [
+     -70.3,
+     19.3
+    ],
+    [
+     -70.58,
+     19.3
+    ]
+   ],
+   "thumb": "/analysis-extra/cibao-wind/thumb.webp",
+   "changedAreaKm2": 9.97,
+   "changedPct": 0,
+   "extra": {
+    "kind": "change",
+    "cause": "wind",
+    "eventDate": "2026-08-02",
+    "orbits": [
+     {
+      "key": "P083_F079_DESC",
+      "label": "Track 83 · frame 79 · descending",
+      "track": 83,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-19",
+       "2026-07-01",
+       "2026-07-13",
+       "2026-07-25",
+       "2026-08-18",
+       "2026-08-30"
+      ],
+      "map": "/analysis-extra/cibao-wind/P083_F079_DESC_map.webp",
+      "mapSize": [
+       1000,
+       593
+      ],
+      "frames": [
+       {
+        "date": "2026-06-19",
+        "src": "/analysis-extra/cibao-wind/P083_F079_DESC_2026-06-19.webp"
+       },
+       {
+        "date": "2026-07-01",
+        "src": "/analysis-extra/cibao-wind/P083_F079_DESC_2026-07-01.webp"
+       },
+       {
+        "date": "2026-07-13",
+        "src": "/analysis-extra/cibao-wind/P083_F079_DESC_2026-07-13.webp"
+       },
+       {
+        "date": "2026-07-25",
+        "src": "/analysis-extra/cibao-wind/P083_F079_DESC_2026-07-25.webp"
+       },
+       {
+        "date": "2026-08-18",
+        "src": "/analysis-extra/cibao-wind/P083_F079_DESC_2026-08-18.webp"
+       },
+       {
+        "date": "2026-08-30",
+        "src": "/analysis-extra/cibao-wind/P083_F079_DESC_2026-08-30.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-06-19",
+       "2026-07-01",
+       "2026-07-13",
+       "2026-07-25"
+      ],
+      "firstPostDate": "2026-08-18",
+      "firstPostDropKm2": 6.72,
+      "firstPostRiseKm2": 1.76,
+      "peakDropDate": "2026-08-30",
+      "peakDropKm2": 9.97,
+      "lastDate": "2026-08-30",
+      "lastDropKm2": 9.97,
+      "lastRiseKm2": 2.67,
+      "series": [
+       {
+        "date": "2026-06-19",
+        "baseline": true,
+        "coDb": -6.923,
+        "crossDb": -13.192,
+        "coChangeDb": -0.119,
+        "crossChangeDb": -0.127,
+        "validPct": 100,
+        "dropKm2": 0.722,
+        "riseKm2": 1.099
+       },
+       {
+        "date": "2026-07-01",
+        "baseline": true,
+        "coDb": -6.727,
+        "crossDb": -12.952,
+        "coChangeDb": 0,
+        "crossChangeDb": 0.006,
+        "validPct": 100,
+        "dropKm2": 0.139,
+        "riseKm2": 0.277
+       },
+       {
+        "date": "2026-07-13",
+        "baseline": true,
+        "coDb": -6.428,
+        "crossDb": -12.732,
+        "coChangeDb": 0.22,
+        "crossChangeDb": 0.167,
+        "validPct": 100,
+        "dropKm2": 0.078,
+        "riseKm2": 0.658
+       },
+       {
+        "date": "2026-07-25",
+        "baseline": true,
+        "coDb": -6.852,
+        "crossDb": -13.025,
+        "coChangeDb": -0.084,
+        "crossChangeDb": -0.042,
+        "validPct": 100,
+        "dropKm2": 1.344,
+        "riseKm2": 0.796
+       },
+       {
+        "date": "2026-08-18",
+        "baseline": false,
+        "coDb": -6.68,
+        "crossDb": -12.928,
+        "coChangeDb": 0.058,
+        "crossChangeDb": 0.046,
+        "validPct": 100,
+        "dropKm2": 6.717,
+        "riseKm2": 1.763
+       },
+       {
+        "date": "2026-08-30",
+        "baseline": false,
+        "coDb": -6.651,
+        "crossDb": -13.091,
+        "coChangeDb": 0.097,
+        "crossChangeDb": -0.112,
+        "validPct": 100,
+        "dropKm2": 9.97,
+        "riseKm2": 2.666
+       }
+      ]
+     },
+     {
+      "key": "P162_F011_ASCE",
+      "label": "Track 162 · frame 11 · ascending",
+      "track": 162,
+      "frame": 11,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-25",
+       "2026-07-07",
+       "2026-07-19",
+       "2026-08-12",
+       "2026-08-24"
+      ],
+      "map": "/analysis-extra/cibao-wind/P162_F011_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       593
+      ],
+      "frames": [
+       {
+        "date": "2026-06-25",
+        "src": "/analysis-extra/cibao-wind/P162_F011_ASCE_2026-06-25.webp"
+       },
+       {
+        "date": "2026-07-07",
+        "src": "/analysis-extra/cibao-wind/P162_F011_ASCE_2026-07-07.webp"
+       },
+       {
+        "date": "2026-07-19",
+        "src": "/analysis-extra/cibao-wind/P162_F011_ASCE_2026-07-19.webp"
+       },
+       {
+        "date": "2026-08-12",
+        "src": "/analysis-extra/cibao-wind/P162_F011_ASCE_2026-08-12.webp"
+       },
+       {
+        "date": "2026-08-24",
+        "src": "/analysis-extra/cibao-wind/P162_F011_ASCE_2026-08-24.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-06-25",
+       "2026-07-07",
+       "2026-07-19"
+      ],
+      "firstPostDate": "2026-08-12",
+      "firstPostDropKm2": 1.7,
+      "firstPostRiseKm2": 56.55,
+      "peakDropDate": "2026-08-24",
+      "peakDropKm2": 7.67,
+      "lastDate": "2026-08-24",
+      "lastDropKm2": 7.67,
+      "lastRiseKm2": 6.11,
+      "series": [
+       {
+        "date": "2026-06-25",
+        "baseline": true,
+        "coDb": -6.999,
+        "crossDb": -13.099,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.289,
+        "riseKm2": 1.134
+       },
+       {
+        "date": "2026-07-07",
+        "baseline": true,
+        "coDb": -6.805,
+        "crossDb": -12.928,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.088,
+        "riseKm2": 0.185
+       },
+       {
+        "date": "2026-07-19",
+        "baseline": true,
+        "coDb": -6.892,
+        "crossDb": -12.99,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.987,
+        "riseKm2": 0.508
+       },
+       {
+        "date": "2026-08-12",
+        "baseline": false,
+        "coDb": -5.853,
+        "crossDb": -12.027,
+        "coChangeDb": 1.058,
+        "crossChangeDb": 0.857,
+        "validPct": 100,
+        "dropKm2": 1.696,
+        "riseKm2": 56.55
+       },
+       {
+        "date": "2026-08-24",
+        "baseline": false,
+        "coDb": -6.554,
+        "crossDb": -12.643,
+        "coChangeDb": 0.305,
+        "crossChangeDb": 0.301,
+        "validPct": 100,
+        "dropKm2": 7.666,
+        "riseKm2": 6.111
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "noroeste-heat",
+   "type": "drought",
+   "name": "Northwest Line heat and drought",
+   "region": "Línea Noroeste",
+   "country": "Dominican Republic",
+   "lat": 19.5,
+   "lon": -71.35,
+   "startDate": "2026-06-19",
+   "endDate": "2026-08-30",
+   "footprint": [
+    [
+     -71.55,
+     19.65
+    ],
+    [
+     -71.15,
+     19.65
+    ],
+    [
+     -71.15,
+     19.35
+    ],
+    [
+     -71.55,
+     19.35
+    ]
+   ],
+   "thumb": "/analysis-extra/noroeste-heat/thumb.webp",
+   "changedAreaKm2": 35.14,
+   "changedPct": 0,
+   "extra": {
+    "kind": "change",
+    "cause": "heat",
+    "eventDate": "2026-06-29",
+    "orbits": [
+     {
+      "key": "P083_F079_DESC",
+      "label": "Track 83 · frame 79 · descending",
+      "track": 83,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-19",
+       "2026-07-01",
+       "2026-07-13",
+       "2026-07-25",
+       "2026-08-18",
+       "2026-08-30"
+      ],
+      "map": "/analysis-extra/noroeste-heat/P083_F079_DESC_map.webp",
+      "mapSize": [
+       1000,
+       789
+      ],
+      "frames": [
+       {
+        "date": "2026-06-19",
+        "src": "/analysis-extra/noroeste-heat/P083_F079_DESC_2026-06-19.webp"
+       },
+       {
+        "date": "2026-07-01",
+        "src": "/analysis-extra/noroeste-heat/P083_F079_DESC_2026-07-01.webp"
+       },
+       {
+        "date": "2026-07-13",
+        "src": "/analysis-extra/noroeste-heat/P083_F079_DESC_2026-07-13.webp"
+       },
+       {
+        "date": "2026-07-25",
+        "src": "/analysis-extra/noroeste-heat/P083_F079_DESC_2026-07-25.webp"
+       },
+       {
+        "date": "2026-08-18",
+        "src": "/analysis-extra/noroeste-heat/P083_F079_DESC_2026-08-18.webp"
+       },
+       {
+        "date": "2026-08-30",
+        "src": "/analysis-extra/noroeste-heat/P083_F079_DESC_2026-08-30.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-06-19"
+      ],
+      "firstPostDate": "2026-07-01",
+      "firstPostDropKm2": 2.37,
+      "firstPostRiseKm2": 156.67,
+      "peakDropDate": "2026-08-30",
+      "peakDropKm2": 35.14,
+      "lastDate": "2026-08-30",
+      "lastDropKm2": 35.14,
+      "lastRiseKm2": 18.92,
+      "series": [
+       {
+        "date": "2026-06-19",
+        "baseline": true,
+        "coDb": -9.017,
+        "crossDb": -14.12,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0
+       },
+       {
+        "date": "2026-07-01",
+        "baseline": false,
+        "coDb": -8.029,
+        "crossDb": -13.292,
+        "coChangeDb": 0.946,
+        "crossChangeDb": 0.798,
+        "validPct": 100,
+        "dropKm2": 2.372,
+        "riseKm2": 156.67
+       },
+       {
+        "date": "2026-07-13",
+        "baseline": false,
+        "coDb": -8.973,
+        "crossDb": -14.064,
+        "coChangeDb": 0.048,
+        "crossChangeDb": 0.067,
+        "validPct": 100,
+        "dropKm2": 9.904,
+        "riseKm2": 13.536
+       },
+       {
+        "date": "2026-07-25",
+        "baseline": false,
+        "coDb": -9.249,
+        "crossDb": -14.212,
+        "coChangeDb": -0.251,
+        "crossChangeDb": -0.094,
+        "validPct": 100,
+        "dropKm2": 19.188,
+        "riseKm2": 12.279
+       },
+       {
+        "date": "2026-08-18",
+        "baseline": false,
+        "coDb": -8.783,
+        "crossDb": -14.058,
+        "coChangeDb": 0.198,
+        "crossChangeDb": 0.043,
+        "validPct": 100,
+        "dropKm2": 19.054,
+        "riseKm2": 23.634
+       },
+       {
+        "date": "2026-08-30",
+        "baseline": false,
+        "coDb": -8.889,
+        "crossDb": -14.425,
+        "coChangeDb": 0.099,
+        "crossChangeDb": -0.317,
+        "validPct": 100,
+        "dropKm2": 35.14,
+        "riseKm2": 18.921
+       }
+      ]
+     },
+     {
+      "key": "P162_F011_ASCE",
+      "label": "Track 162 · frame 11 · ascending",
+      "track": 162,
+      "frame": 11,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-06-25",
+       "2026-07-07",
+       "2026-07-19",
+       "2026-08-12",
+       "2026-08-24"
+      ],
+      "map": "/analysis-extra/noroeste-heat/P162_F011_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       789
+      ],
+      "frames": [
+       {
+        "date": "2026-06-25",
+        "src": "/analysis-extra/noroeste-heat/P162_F011_ASCE_2026-06-25.webp"
+       },
+       {
+        "date": "2026-07-07",
+        "src": "/analysis-extra/noroeste-heat/P162_F011_ASCE_2026-07-07.webp"
+       },
+       {
+        "date": "2026-07-19",
+        "src": "/analysis-extra/noroeste-heat/P162_F011_ASCE_2026-07-19.webp"
+       },
+       {
+        "date": "2026-08-12",
+        "src": "/analysis-extra/noroeste-heat/P162_F011_ASCE_2026-08-12.webp"
+       },
+       {
+        "date": "2026-08-24",
+        "src": "/analysis-extra/noroeste-heat/P162_F011_ASCE_2026-08-24.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-06-25"
+      ],
+      "firstPostDate": "2026-07-07",
+      "firstPostDropKm2": 1.69,
+      "firstPostRiseKm2": 23.31,
+      "peakDropDate": "2026-08-24",
+      "peakDropKm2": 13.96,
+      "lastDate": "2026-08-24",
+      "lastDropKm2": 13.96,
+      "lastRiseKm2": 16.22,
+      "series": [
+       {
+        "date": "2026-06-25",
+        "baseline": true,
+        "coDb": -8.306,
+        "crossDb": -13.734,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0
+       },
+       {
+        "date": "2026-07-07",
+        "baseline": false,
+        "coDb": -7.529,
+        "crossDb": -13.207,
+        "coChangeDb": 0.706,
+        "crossChangeDb": 0.461,
+        "validPct": 100,
+        "dropKm2": 1.688,
+        "riseKm2": 23.313
+       },
+       {
+        "date": "2026-07-19",
+        "baseline": false,
+        "coDb": -8.326,
+        "crossDb": -13.745,
+        "coChangeDb": -0.04,
+        "crossChangeDb": -0.019,
+        "validPct": 100,
+        "dropKm2": 7.593,
+        "riseKm2": 7.121
+       },
+       {
+        "date": "2026-08-12",
+        "baseline": false,
+        "coDb": -8.154,
+        "crossDb": -13.587,
+        "coChangeDb": 0.106,
+        "crossChangeDb": 0.125,
+        "validPct": 100,
+        "dropKm2": 12.745,
+        "riseKm2": 13.79
+       },
+       {
+        "date": "2026-08-24",
+        "baseline": false,
+        "coDb": -8.113,
+        "crossDb": -13.536,
+        "coChangeDb": 0.147,
+        "crossChangeDb": 0.171,
+        "validPct": 100,
+        "dropKm2": 13.964,
+        "riseKm2": 16.22
        }
       ]
      }
@@ -2095,6 +3631,278 @@
    }
   },
   {
+   "id": "valverde-wind",
+   "type": "storm",
+   "name": "Valverde wind damage",
+   "region": "Valverde",
+   "country": "Dominican Republic",
+   "lat": 19.55,
+   "lon": -71.075,
+   "startDate": "2026-07-25",
+   "endDate": "2026-09-29",
+   "footprint": [
+    [
+     -71.2,
+     19.65
+    ],
+    [
+     -70.95,
+     19.65
+    ],
+    [
+     -70.95,
+     19.45
+    ],
+    [
+     -71.2,
+     19.45
+    ]
+   ],
+   "thumb": "/analysis-extra/valverde-wind/thumb.webp",
+   "changedAreaKm2": 16.71,
+   "changedPct": 0,
+   "extra": {
+    "kind": "change",
+    "cause": "wind",
+    "eventDate": "2026-08-31",
+    "orbits": [
+     {
+      "key": "P083_F079_DESC",
+      "label": "Track 83 · frame 79 · descending",
+      "track": 83,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-07-25",
+       "2026-08-18",
+       "2026-08-30",
+       "2026-09-11",
+       "2026-09-23"
+      ],
+      "map": "/analysis-extra/valverde-wind/P083_F079_DESC_map.webp",
+      "mapSize": [
+       1000,
+       839
+      ],
+      "frames": [
+       {
+        "date": "2026-07-25",
+        "src": "/analysis-extra/valverde-wind/P083_F079_DESC_2026-07-25.webp"
+       },
+       {
+        "date": "2026-08-18",
+        "src": "/analysis-extra/valverde-wind/P083_F079_DESC_2026-08-18.webp"
+       },
+       {
+        "date": "2026-08-30",
+        "src": "/analysis-extra/valverde-wind/P083_F079_DESC_2026-08-30.webp"
+       },
+       {
+        "date": "2026-09-11",
+        "src": "/analysis-extra/valverde-wind/P083_F079_DESC_2026-09-11.webp"
+       },
+       {
+        "date": "2026-09-23",
+        "src": "/analysis-extra/valverde-wind/P083_F079_DESC_2026-09-23.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-07-25",
+       "2026-08-18",
+       "2026-08-30"
+      ],
+      "firstPostDate": "2026-09-11",
+      "firstPostDropKm2": 13.44,
+      "firstPostRiseKm2": 14.32,
+      "peakDropDate": "2026-09-23",
+      "peakDropKm2": 16.71,
+      "lastDate": "2026-09-23",
+      "lastDropKm2": 16.71,
+      "lastRiseKm2": 87.98,
+      "series": [
+       {
+        "date": "2026-07-25",
+        "baseline": true,
+        "coDb": -8.42,
+        "crossDb": -14.278,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 10.168,
+        "riseKm2": 10.779
+       },
+       {
+        "date": "2026-08-18",
+        "baseline": true,
+        "coDb": -8.138,
+        "crossDb": -14.08,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 1.337,
+        "riseKm2": 2.601
+       },
+       {
+        "date": "2026-08-30",
+        "baseline": true,
+        "coDb": -8.14,
+        "crossDb": -14.329,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 8.009,
+        "riseKm2": 4.446
+       },
+       {
+        "date": "2026-09-11",
+        "baseline": false,
+        "coDb": -7.906,
+        "crossDb": -14.022,
+        "coChangeDb": 0.301,
+        "crossChangeDb": 0.089,
+        "validPct": 100,
+        "dropKm2": 13.441,
+        "riseKm2": 14.317
+       },
+       {
+        "date": "2026-09-23",
+        "baseline": false,
+        "coDb": -7.05,
+        "crossDb": -13.591,
+        "coChangeDb": 0.819,
+        "crossChangeDb": 0.498,
+        "validPct": 100,
+        "dropKm2": 16.714,
+        "riseKm2": 87.977
+       }
+      ]
+     },
+     {
+      "key": "P162_F011_ASCE",
+      "label": "Track 162 · frame 11 · ascending",
+      "track": 162,
+      "frame": 11,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-08-12",
+       "2026-08-24",
+       "2026-09-05",
+       "2026-09-17",
+       "2026-09-29"
+      ],
+      "map": "/analysis-extra/valverde-wind/P162_F011_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       839
+      ],
+      "frames": [
+       {
+        "date": "2026-08-12",
+        "src": "/analysis-extra/valverde-wind/P162_F011_ASCE_2026-08-12.webp"
+       },
+       {
+        "date": "2026-08-24",
+        "src": "/analysis-extra/valverde-wind/P162_F011_ASCE_2026-08-24.webp"
+       },
+       {
+        "date": "2026-09-05",
+        "src": "/analysis-extra/valverde-wind/P162_F011_ASCE_2026-09-05.webp"
+       },
+       {
+        "date": "2026-09-17",
+        "src": "/analysis-extra/valverde-wind/P162_F011_ASCE_2026-09-17.webp"
+       },
+       {
+        "date": "2026-09-29",
+        "src": "/analysis-extra/valverde-wind/P162_F011_ASCE_2026-09-29.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-08-12",
+       "2026-08-24"
+      ],
+      "firstPostDate": "2026-09-05",
+      "firstPostDropKm2": 7.99,
+      "firstPostRiseKm2": 14.19,
+      "peakDropDate": "2026-09-17",
+      "peakDropKm2": 15.47,
+      "lastDate": "2026-09-29",
+      "lastDropKm2": 15.31,
+      "lastRiseKm2": 35.68,
+      "series": [
+       {
+        "date": "2026-08-12",
+        "baseline": true,
+        "coDb": -7.748,
+        "crossDb": -13.297,
+        "coChangeDb": 0.031,
+        "crossChangeDb": -0.003,
+        "validPct": 100,
+        "dropKm2": 0.474,
+        "riseKm2": 1.138
+       },
+       {
+        "date": "2026-08-24",
+        "baseline": true,
+        "coDb": -7.8,
+        "crossDb": -13.301,
+        "coChangeDb": -0.031,
+        "crossChangeDb": 0.003,
+        "validPct": 100,
+        "dropKm2": 1.138,
+        "riseKm2": 0.474
+       },
+       {
+        "date": "2026-09-05",
+        "baseline": false,
+        "coDb": -7.289,
+        "crossDb": -12.955,
+        "coChangeDb": 0.405,
+        "crossChangeDb": 0.287,
+        "validPct": 100,
+        "dropKm2": 7.988,
+        "riseKm2": 14.189
+       },
+       {
+        "date": "2026-09-17",
+        "baseline": false,
+        "coDb": -7.734,
+        "crossDb": -13.231,
+        "coChangeDb": 0.06,
+        "crossChangeDb": 0.058,
+        "validPct": 100,
+        "dropKm2": 15.472,
+        "riseKm2": 18.576
+       },
+       {
+        "date": "2026-09-29",
+        "baseline": false,
+        "coDb": -6.863,
+        "crossDb": -12.706,
+        "coChangeDb": 0.809,
+        "crossChangeDb": 0.557,
+        "validPct": 100,
+        "dropKm2": 15.308,
+        "riseKm2": 35.676
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
    "id": "nile-delta-rice",
    "type": "agriculture",
    "name": "Nile Delta rice harvest",
@@ -3336,6 +5144,236 @@
    }
   },
   {
+   "id": "san-pedro-flood",
+   "type": "flood",
+   "name": "San Pedro de Macorís flooding",
+   "region": "San Pedro de Macorís",
+   "country": "Dominican Republic",
+   "lat": 18.47,
+   "lon": -69.285,
+   "startDate": "2026-08-11",
+   "endDate": "2026-09-17",
+   "footprint": [
+    [
+     -69.35,
+     18.52
+    ],
+    [
+     -69.22,
+     18.52
+    ],
+    [
+     -69.22,
+     18.42
+    ],
+    [
+     -69.35,
+     18.42
+    ]
+   ],
+   "thumb": "/analysis-extra/san-pedro-flood/thumb.webp",
+   "changedAreaKm2": 13.65,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "coast",
+    "orbits": [
+     {
+      "key": "P162_F011_ASCE",
+      "label": "Track 162 · frame 11 · ascending",
+      "track": 162,
+      "frame": 11,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-12",
+       "2026-08-24",
+       "2026-09-05",
+       "2026-09-17"
+      ],
+      "map": "/analysis-extra/san-pedro-flood/P162_F011_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       801
+      ],
+      "frames": [
+       {
+        "date": "2026-08-12",
+        "src": "/analysis-extra/san-pedro-flood/P162_F011_ASCE_2026-08-12.webp"
+       },
+       {
+        "date": "2026-08-24",
+        "src": "/analysis-extra/san-pedro-flood/P162_F011_ASCE_2026-08-24.webp"
+       },
+       {
+        "date": "2026-09-05",
+        "src": "/analysis-extra/san-pedro-flood/P162_F011_ASCE_2026-09-05.webp"
+       },
+       {
+        "date": "2026-09-17",
+        "src": "/analysis-extra/san-pedro-flood/P162_F011_ASCE_2026-09-17.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-08-12",
+       "2026-08-24"
+      ],
+      "peakDate": "2026-09-17",
+      "peakFloodKm2": 13.65,
+      "peakNewWaterKm2": 0.51,
+      "peakFloodedVegKm2": 13.15,
+      "maxExtentKm2": 17.61,
+      "maxExtentOpenWaterKm2": 2.91,
+      "maxExtentFloodedVegKm2": 14.71,
+      "permanentWaterKm2": 1.3,
+      "series": [
+       {
+        "date": "2026-08-12",
+        "baseline": true,
+        "coDb": -10.106,
+        "crossDb": -16.876,
+        "validPct": 100,
+        "newWaterKm2": 0.26,
+        "floodedVegKm2": 0.029,
+        "permanentWaterKm2": 0.946,
+        "floodKm2": 0.289
+       },
+       {
+        "date": "2026-08-24",
+        "baseline": true,
+        "coDb": -10.357,
+        "crossDb": -17.044,
+        "validPct": 100,
+        "newWaterKm2": 1.106,
+        "floodedVegKm2": 0.057,
+        "permanentWaterKm2": 1.212,
+        "floodKm2": 1.163
+       },
+       {
+        "date": "2026-09-05",
+        "baseline": false,
+        "coDb": -9.134,
+        "crossDb": -15.954,
+        "validPct": 100,
+        "newWaterKm2": 2.552,
+        "floodedVegKm2": 5.42,
+        "permanentWaterKm2": 0.657,
+        "floodKm2": 7.972
+       },
+       {
+        "date": "2026-09-17",
+        "baseline": false,
+        "coDb": -8.941,
+        "crossDb": -15.777,
+        "validPct": 100,
+        "newWaterKm2": 0.509,
+        "floodedVegKm2": 13.145,
+        "permanentWaterKm2": 0.458,
+        "floodKm2": 13.654
+       }
+      ]
+     },
+     {
+      "key": "P155_F079_DESC",
+      "label": "Track 155 · frame 79 · descending",
+      "track": 155,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-11",
+       "2026-09-04",
+       "2026-09-16"
+      ],
+      "map": "/analysis-extra/san-pedro-flood/P155_F079_DESC_map.webp",
+      "mapSize": [
+       1000,
+       801
+      ],
+      "frames": [
+       {
+        "date": "2026-08-11",
+        "src": "/analysis-extra/san-pedro-flood/P155_F079_DESC_2026-08-11.webp"
+       },
+       {
+        "date": "2026-09-04",
+        "src": "/analysis-extra/san-pedro-flood/P155_F079_DESC_2026-09-04.webp"
+       },
+       {
+        "date": "2026-09-16",
+        "src": "/analysis-extra/san-pedro-flood/P155_F079_DESC_2026-09-16.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-08-11"
+      ],
+      "peakDate": "2026-09-16",
+      "peakFloodKm2": 10.15,
+      "peakNewWaterKm2": 6.6,
+      "peakFloodedVegKm2": 3.55,
+      "maxExtentKm2": 12.08,
+      "maxExtentOpenWaterKm2": 6.95,
+      "maxExtentFloodedVegKm2": 5.13,
+      "permanentWaterKm2": 0.86,
+      "series": [
+       {
+        "date": "2026-08-11",
+        "baseline": true,
+        "coDb": -9.425,
+        "crossDb": -15.985,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0,
+        "permanentWaterKm2": 0.858,
+        "floodKm2": 0
+       },
+       {
+        "date": "2026-09-04",
+        "baseline": false,
+        "coDb": -8.864,
+        "crossDb": -15.717,
+        "validPct": 100,
+        "newWaterKm2": 1.036,
+        "floodedVegKm2": 3.425,
+        "permanentWaterKm2": 0.515,
+        "floodKm2": 4.461
+       },
+       {
+        "date": "2026-09-16",
+        "baseline": false,
+        "coDb": -8.992,
+        "crossDb": -15.926,
+        "validPct": 100,
+        "newWaterKm2": 6.602,
+        "floodedVegKm2": 3.546,
+        "permanentWaterKm2": 0.596,
+        "floodKm2": 10.148
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
    "id": "indonesia-quake",
    "type": "earthquake",
    "name": "Indonesia earthquake",
@@ -4204,6 +6242,718 @@
         "riseKm2": 14.762,
         "cumulativeKm2": 23.382,
         "cumulativePct": 2.91
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "miches-landslide",
+   "type": "landslide",
+   "name": "Miches landslide watch",
+   "region": "Miches, El Seibo",
+   "country": "Dominican Republic",
+   "lat": 18.89,
+   "lon": -69.05,
+   "startDate": "2026-09-22",
+   "endDate": "2026-10-28",
+   "footprint": [
+    [
+     -69.15,
+     18.98
+    ],
+    [
+     -68.95,
+     18.98
+    ],
+    [
+     -68.95,
+     18.8
+    ],
+    [
+     -69.15,
+     18.8
+    ]
+   ],
+   "thumb": "/analysis-extra/miches-landslide/thumb.webp",
+   "changedAreaKm2": 0.72,
+   "changedPct": 0,
+   "extra": {
+    "kind": "change",
+    "cause": "landslide",
+    "eventDate": "2026-10-25",
+    "orbits": [
+     {
+      "key": "P061_F011_ASCE",
+      "label": "Track 61 · frame 11 · ascending",
+      "track": 61,
+      "frame": 11,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16",
+       "2026-10-28"
+      ],
+      "map": "/analysis-extra/miches-landslide/P061_F011_ASCE_map.webp",
+      "mapSize": [
+       979,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-22",
+        "src": "/analysis-extra/miches-landslide/P061_F011_ASCE_2026-09-22.webp"
+       },
+       {
+        "date": "2026-10-04",
+        "src": "/analysis-extra/miches-landslide/P061_F011_ASCE_2026-10-04.webp"
+       },
+       {
+        "date": "2026-10-16",
+        "src": "/analysis-extra/miches-landslide/P061_F011_ASCE_2026-10-16.webp"
+       },
+       {
+        "date": "2026-10-28",
+        "src": "/analysis-extra/miches-landslide/P061_F011_ASCE_2026-10-28.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-09-22",
+       "2026-10-04",
+       "2026-10-16"
+      ],
+      "firstPostDate": "2026-10-28",
+      "firstPostDropKm2": 0.72,
+      "firstPostRiseKm2": 4.2,
+      "peakDropDate": "2026-10-28",
+      "peakDropKm2": 0.72,
+      "lastDate": "2026-10-28",
+      "lastDropKm2": 0.72,
+      "lastRiseKm2": 4.2,
+      "series": [
+       {
+        "date": "2026-09-22",
+        "baseline": true,
+        "coDb": -6.98,
+        "crossDb": -12.439,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.139,
+        "riseKm2": 0.416
+       },
+       {
+        "date": "2026-10-04",
+        "baseline": true,
+        "coDb": -7.243,
+        "crossDb": -12.701,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.356,
+        "riseKm2": 0.05
+       },
+       {
+        "date": "2026-10-16",
+        "baseline": true,
+        "coDb": -7.218,
+        "crossDb": -12.689,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.202,
+        "riseKm2": 0.125
+       },
+       {
+        "date": "2026-10-28",
+        "baseline": false,
+        "coDb": -7.097,
+        "crossDb": -12.396,
+        "coChangeDb": 0.15,
+        "crossChangeDb": 0.301,
+        "validPct": 100,
+        "dropKm2": 0.72,
+        "riseKm2": 4.203
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "ozama-flood",
+   "type": "flood",
+   "name": "Ozama riverside flooding",
+   "region": "Santo Domingo Norte",
+   "country": "Dominican Republic",
+   "lat": 18.56,
+   "lon": -69.885,
+   "startDate": "2026-09-23",
+   "endDate": "2026-10-29",
+   "footprint": [
+    [
+     -69.95,
+     18.62
+    ],
+    [
+     -69.82,
+     18.62
+    ],
+    [
+     -69.82,
+     18.5
+    ],
+    [
+     -69.95,
+     18.5
+    ]
+   ],
+   "thumb": "/analysis-extra/ozama-flood/thumb.webp",
+   "changedAreaKm2": 0.89,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "river",
+    "orbits": [
+     {
+      "key": "P083_F079_DESC",
+      "label": "Track 83 · frame 79 · descending",
+      "track": 83,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17",
+       "2026-10-29"
+      ],
+      "map": "/analysis-extra/ozama-flood/P083_F079_DESC_map.webp",
+      "mapSize": [
+       957,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-23",
+        "src": "/analysis-extra/ozama-flood/P083_F079_DESC_2026-09-23.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/ozama-flood/P083_F079_DESC_2026-10-05.webp"
+       },
+       {
+        "date": "2026-10-17",
+        "src": "/analysis-extra/ozama-flood/P083_F079_DESC_2026-10-17.webp"
+       },
+       {
+        "date": "2026-10-29",
+        "src": "/analysis-extra/ozama-flood/P083_F079_DESC_2026-10-29.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17"
+      ],
+      "peakDate": "2026-10-29",
+      "peakFloodKm2": 0.89,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 0.88,
+      "maxExtentKm2": 0.89,
+      "maxExtentOpenWaterKm2": 0,
+      "maxExtentFloodedVegKm2": 0.88,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-23",
+        "baseline": true,
+        "coDb": -5.977,
+        "crossDb": -12.119,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.082,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.082
+       },
+       {
+        "date": "2026-10-05",
+        "baseline": true,
+        "coDb": -5.856,
+        "crossDb": -11.982,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.068,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.068
+       },
+       {
+        "date": "2026-10-17",
+        "baseline": true,
+        "coDb": -5.707,
+        "crossDb": -11.771,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.27,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.27
+       },
+       {
+        "date": "2026-10-29",
+        "baseline": false,
+        "coDb": -5.626,
+        "crossDb": -11.885,
+        "validPct": 100,
+        "newWaterKm2": 0.002,
+        "floodedVegKm2": 0.883,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.885
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "capotillo-flood",
+   "type": "flood",
+   "name": "Capotillo urban flooding",
+   "region": "Capotillo, Santo Domingo",
+   "country": "Dominican Republic",
+   "lat": 18.495,
+   "lon": -69.905,
+   "startDate": "2026-09-23",
+   "endDate": "2026-10-29",
+   "footprint": [
+    [
+     -69.93,
+     18.51
+    ],
+    [
+     -69.88,
+     18.51
+    ],
+    [
+     -69.88,
+     18.48
+    ],
+    [
+     -69.93,
+     18.48
+    ]
+   ],
+   "thumb": "/analysis-extra/capotillo-flood/thumb.webp",
+   "changedAreaKm2": 0.09,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "town",
+    "orbits": [
+     {
+      "key": "P083_F079_DESC",
+      "label": "Track 83 · frame 79 · descending",
+      "track": 83,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17",
+       "2026-10-29"
+      ],
+      "map": "/analysis-extra/capotillo-flood/P083_F079_DESC_map.webp",
+      "mapSize": [
+       1000,
+       656
+      ],
+      "frames": [
+       {
+        "date": "2026-09-23",
+        "src": "/analysis-extra/capotillo-flood/P083_F079_DESC_2026-09-23.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/capotillo-flood/P083_F079_DESC_2026-10-05.webp"
+       },
+       {
+        "date": "2026-10-17",
+        "src": "/analysis-extra/capotillo-flood/P083_F079_DESC_2026-10-17.webp"
+       },
+       {
+        "date": "2026-10-29",
+        "src": "/analysis-extra/capotillo-flood/P083_F079_DESC_2026-10-29.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17"
+      ],
+      "peakDate": "2026-10-29",
+      "peakFloodKm2": 0.09,
+      "peakNewWaterKm2": 0,
+      "peakFloodedVegKm2": 0.09,
+      "maxExtentKm2": 0.09,
+      "maxExtentOpenWaterKm2": 0,
+      "maxExtentFloodedVegKm2": 0.09,
+      "permanentWaterKm2": 0,
+      "series": [
+       {
+        "date": "2026-09-23",
+        "baseline": true,
+        "coDb": -4.041,
+        "crossDb": -10.577,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.059,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.059
+       },
+       {
+        "date": "2026-10-05",
+        "baseline": true,
+        "coDb": -4.095,
+        "crossDb": -10.606,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.018,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.018
+       },
+       {
+        "date": "2026-10-17",
+        "baseline": true,
+        "coDb": -4.011,
+        "crossDb": -10.471,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.053,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.053
+       },
+       {
+        "date": "2026-10-29",
+        "baseline": false,
+        "coDb": -4.053,
+        "crossDb": -10.549,
+        "validPct": 100,
+        "newWaterKm2": 0,
+        "floodedVegKm2": 0.088,
+        "permanentWaterKm2": 0,
+        "floodKm2": 0.088
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "ocoa-flood",
+   "type": "flood",
+   "name": "San José de Ocoa flooding",
+   "region": "San José de Ocoa",
+   "country": "Dominican Republic",
+   "lat": 18.55,
+   "lon": -70.5,
+   "startDate": "2026-09-23",
+   "endDate": "2026-10-29",
+   "footprint": [
+    [
+     -70.6,
+     18.65
+    ],
+    [
+     -70.4,
+     18.65
+    ],
+    [
+     -70.4,
+     18.45
+    ],
+    [
+     -70.6,
+     18.45
+    ]
+   ],
+   "thumb": "/analysis-extra/ocoa-flood/thumb.webp",
+   "changedAreaKm2": 0.7,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "setting": "valley",
+    "orbits": [
+     {
+      "key": "P083_F079_DESC",
+      "label": "Track 83 · frame 79 · descending",
+      "track": 83,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17",
+       "2026-10-29"
+      ],
+      "map": "/analysis-extra/ocoa-flood/P083_F079_DESC_map.webp",
+      "mapSize": [
+       885,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-09-23",
+        "src": "/analysis-extra/ocoa-flood/P083_F079_DESC_2026-09-23.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/ocoa-flood/P083_F079_DESC_2026-10-05.webp"
+       },
+       {
+        "date": "2026-10-17",
+        "src": "/analysis-extra/ocoa-flood/P083_F079_DESC_2026-10-17.webp"
+       },
+       {
+        "date": "2026-10-29",
+        "src": "/analysis-extra/ocoa-flood/P083_F079_DESC_2026-10-29.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17"
+      ],
+      "peakDate": "2026-10-29",
+      "peakFloodKm2": 0.7,
+      "peakNewWaterKm2": 0.08,
+      "peakFloodedVegKm2": 0.62,
+      "maxExtentKm2": 0.7,
+      "maxExtentOpenWaterKm2": 0.08,
+      "maxExtentFloodedVegKm2": 0.62,
+      "permanentWaterKm2": 0.22,
+      "series": [
+       {
+        "date": "2026-09-23",
+        "baseline": true,
+        "coDb": -5.734,
+        "crossDb": -10.913,
+        "validPct": 99.99,
+        "newWaterKm2": 0.06,
+        "floodedVegKm2": 0.182,
+        "permanentWaterKm2": 0.202,
+        "floodKm2": 0.242
+       },
+       {
+        "date": "2026-10-05",
+        "baseline": true,
+        "coDb": -5.519,
+        "crossDb": -10.738,
+        "validPct": 99.99,
+        "newWaterKm2": 0.025,
+        "floodedVegKm2": 0.702,
+        "permanentWaterKm2": 0.176,
+        "floodKm2": 0.727
+       },
+       {
+        "date": "2026-10-17",
+        "baseline": true,
+        "coDb": -6.359,
+        "crossDb": -11.417,
+        "validPct": 99.99,
+        "newWaterKm2": 0.057,
+        "floodedVegKm2": 0.188,
+        "permanentWaterKm2": 0.187,
+        "floodKm2": 0.245
+       },
+       {
+        "date": "2026-10-29",
+        "baseline": false,
+        "coDb": -6.324,
+        "crossDb": -11.215,
+        "validPct": 99.99,
+        "newWaterKm2": 0.08,
+        "floodedVegKm2": 0.622,
+        "permanentWaterKm2": 0.174,
+        "floodKm2": 0.702
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "los-cacaos-landslide",
+   "type": "landslide",
+   "name": "Los Cacaos landslide watch",
+   "region": "Los Cacaos, San Cristóbal",
+   "country": "Dominican Republic",
+   "lat": 18.58,
+   "lon": -70.28,
+   "startDate": "2026-09-23",
+   "endDate": "2026-10-29",
+   "footprint": [
+    [
+     -70.38,
+     18.66
+    ],
+    [
+     -70.18,
+     18.66
+    ],
+    [
+     -70.18,
+     18.5
+    ],
+    [
+     -70.38,
+     18.5
+    ]
+   ],
+   "thumb": "/analysis-extra/los-cacaos-landslide/thumb.webp",
+   "changedAreaKm2": 0.83,
+   "changedPct": 0,
+   "extra": {
+    "kind": "change",
+    "cause": "landslide",
+    "eventDate": "2026-10-25",
+    "orbits": [
+     {
+      "key": "P083_F079_DESC",
+      "label": "Track 83 · frame 79 · descending",
+      "track": 83,
+      "frame": 79,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32619",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "medianFilterPx": 3,
+      "dates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17",
+       "2026-10-29"
+      ],
+      "map": "/analysis-extra/los-cacaos-landslide/P083_F079_DESC_map.webp",
+      "mapSize": [
+       1000,
+       835
+      ],
+      "frames": [
+       {
+        "date": "2026-09-23",
+        "src": "/analysis-extra/los-cacaos-landslide/P083_F079_DESC_2026-09-23.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/los-cacaos-landslide/P083_F079_DESC_2026-10-05.webp"
+       },
+       {
+        "date": "2026-10-17",
+        "src": "/analysis-extra/los-cacaos-landslide/P083_F079_DESC_2026-10-17.webp"
+       },
+       {
+        "date": "2026-10-29",
+        "src": "/analysis-extra/los-cacaos-landslide/P083_F079_DESC_2026-10-29.webp"
+       }
+      ],
+      "baselineDates": [
+       "2026-09-23",
+       "2026-10-05",
+       "2026-10-17"
+      ],
+      "firstPostDate": "2026-10-29",
+      "firstPostDropKm2": 0.83,
+      "firstPostRiseKm2": 0.39,
+      "peakDropDate": "2026-10-29",
+      "peakDropKm2": 0.83,
+      "lastDate": "2026-10-29",
+      "lastDropKm2": 0.83,
+      "lastRiseKm2": 0.39,
+      "series": [
+       {
+        "date": "2026-09-23",
+        "baseline": true,
+        "coDb": -6.013,
+        "crossDb": -11.306,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.878,
+        "riseKm2": 0.057
+       },
+       {
+        "date": "2026-10-05",
+        "baseline": true,
+        "coDb": -5.882,
+        "crossDb": -11.16,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.112,
+        "riseKm2": 0.122
+       },
+       {
+        "date": "2026-10-17",
+        "baseline": true,
+        "coDb": -5.795,
+        "crossDb": -11.033,
+        "coChangeDb": 0,
+        "crossChangeDb": 0,
+        "validPct": 100,
+        "dropKm2": 0.076,
+        "riseKm2": 0.434
+       },
+       {
+        "date": "2026-10-29",
+        "baseline": false,
+        "coDb": -6.283,
+        "crossDb": -11.4,
+        "coChangeDb": -0.376,
+        "crossChangeDb": -0.222,
+        "validPct": 100,
+        "dropKm2": 0.828,
+        "riseKm2": 0.394
        }
       ]
      }

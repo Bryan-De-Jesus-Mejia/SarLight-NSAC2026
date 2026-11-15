@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo } from "react";
 import { useVisibleEvents } from "@/hooks/useVisibleEvents";
-import { formatDate } from "@/lib/format";
+import { useT } from "@/i18n/core";
+import { formatDate, monthName } from "@/lib/format";
 import { dayCount, dayToIso, isoToDay } from "@/lib/time";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -15,14 +16,13 @@ const STEP_DAYS = 2;
 const STEP_MS = 110;
 const CHART_HEIGHT = 100;
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 /**
  * Timeline scrubber with play/pause. When a date is set, the globe shows the
  * signals active on that date; "Show all" returns to the whole period.
  * Everything is applied client-side — moving through time never hits the network.
  */
 export function Timeline({ className = "" }: TimelineProps) {
+  const t = useT();
   const events = useAppStore((s) => s.events);
   const meta = useAppStore((s) => s.meta);
   const day = useAppStore((s) => s.timelineDay);
@@ -73,14 +73,16 @@ export function Timeline({ className = "" }: TimelineProps) {
         ticks.push({
           left: (d / lastDay) * 100,
           label: withYear
-            ? `${MONTHS[month]} ’${String(cursor.getUTCFullYear()).slice(2)}`
-            : MONTHS[month],
+            ? `${monthName(month)} ’${String(cursor.getUTCFullYear()).slice(2)}`
+            : monthName(month),
         });
       }
       cursor.setUTCMonth(cursor.getUTCMonth() + 1);
     }
     return ticks;
-  }, [range, lastDay]);
+    // `t` changes with the language, which is what redraws the month names.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [range, lastDay, t]);
 
   // Playback clock.
   useEffect(() => {
@@ -115,13 +117,13 @@ export function Timeline({ className = "" }: TimelineProps) {
   return (
     <section
       className={`ge-surface pointer-events-auto min-w-0 px-4 pb-3 pt-3.5 ${className}`}
-      aria-label="Timeline"
+      aria-label={t("Timeline")}
     >
       <div className="flex items-center gap-3.5">
         <button
           type="button"
           onClick={togglePlay}
-          aria-label={playing ? "Pause timeline" : "Play timeline"}
+          aria-label={playing ? t("Pause timeline") : t("Play timeline")}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-line bg-white/[0.04] text-ink transition-colors hover:bg-white/10"
         >
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
@@ -131,7 +133,7 @@ export function Timeline({ className = "" }: TimelineProps) {
 
         <div className="min-w-0 flex-1">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-            {currentIso ? "Signals active on" : "Whole period"}
+            {currentIso ? t("Signals active on") : t("Whole period")}
           </p>
           <p className="truncate font-display text-2xl leading-tight text-ink">
             {currentIso
@@ -142,7 +144,8 @@ export function Timeline({ className = "" }: TimelineProps) {
 
         <div className="shrink-0 text-right">
           <p className="font-mono text-xs tabular-nums text-ink">
-            {visible.length} <span className="text-muted">{visible.length === 1 ? "signal" : "signals"}</span>
+            {visible.length}{" "}
+            <span className="text-muted">{t("{n, plural, one {signal} other {signals}}", { n: visible.length })}</span>
           </p>
           {day !== null && (
             <button
@@ -150,7 +153,7 @@ export function Timeline({ className = "" }: TimelineProps) {
               onClick={() => setDay(null)}
               className="mt-0.5 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-accent transition-colors hover:bg-accent/15"
             >
-              Show all
+              {t("Show all")}
             </button>
           )}
         </div>
@@ -183,8 +186,8 @@ export function Timeline({ className = "" }: TimelineProps) {
             setPlaying(false);
             setDay(Number(e.target.value));
           }}
-          aria-label="Timeline date"
-          aria-valuetext={currentIso ? formatDate(currentIso) : "Whole period"}
+          aria-label={t("Timeline date")}
+          aria-valuetext={currentIso ? formatDate(currentIso) : t("Whole period")}
           className={`ge-range absolute inset-0 ${day === null ? "ge-range--idle" : ""}`}
         />
       </div>

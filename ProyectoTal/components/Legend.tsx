@@ -5,7 +5,8 @@ import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
 import type { ChangeType } from "@/data/types";
 import { useVisibleEvents } from "@/hooks/useVisibleEvents";
-import { formatDate, formatValue } from "@/lib/format";
+import { useT } from "@/i18n/core";
+import { formatDate, formatNumber, formatValue } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 
 interface LegendProps {
@@ -18,6 +19,7 @@ interface LegendProps {
  * Only the types the data actually contains are listed.
  */
 export function Legend({ className = "" }: LegendProps) {
+  const t = useT();
   const events = useAppStore((s) => s.events);
   const activeTypes = useAppStore((s) => s.activeTypes);
   const toggleType = useAppStore((s) => s.toggleType);
@@ -45,7 +47,7 @@ export function Legend({ className = "" }: LegendProps) {
     <section className={`ge-surface pointer-events-auto w-64 shrink-0 p-3 ${className}`} aria-labelledby="legend-title">
       <div className="flex h-6 items-center justify-between px-1">
         <h2 id="legend-title" className="whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-          Radar change analyses
+          {t("Radar change analyses")}
         </h2>
         {filtering && (
           <button
@@ -53,12 +55,12 @@ export function Legend({ className = "" }: LegendProps) {
             onClick={clearFilters}
             className="-mr-1 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
           >
-            Clear
+            {t("Clear")}
           </button>
         )}
       </div>
 
-      <ul className="mt-2" aria-label="Filter by what the analysis looked for">
+      <ul className="mt-2" aria-label={t("Filter by what the analysis looked for")}>
         {present.map((type) => {
           const info = CHANGE_TYPES[type];
           const selected = activeTypes.includes(type);
@@ -76,7 +78,7 @@ export function Legend({ className = "" }: LegendProps) {
                 <span className="flex w-5 shrink-0 justify-center" style={{ color: info.color }}>
                   <ChangeTypeIcon type={type} size={16} />
                 </span>
-                <span className="flex-1 text-ink">{info.label}</span>
+                <span className="flex-1 text-ink">{t(info.label)}</span>
                 <span className="font-mono text-xs tabular-nums text-muted">{counts[type] ?? 0}</span>
               </button>
             </li>
@@ -85,7 +87,7 @@ export function Legend({ className = "" }: LegendProps) {
       </ul>
 
       {/* Every analysed area: the same cases as the markers, reachable without the globe. */}
-      <ul className="mt-2 max-h-56 space-y-0.5 overflow-y-auto border-t border-line pt-2" aria-label="Analysed areas">
+      <ul className="mt-2 max-h-56 space-y-0.5 overflow-y-auto border-t border-line pt-2" aria-label={t("Analysed areas")}>
         {visible.map((event) => (
           <li key={event.id}>
             <button
@@ -98,7 +100,7 @@ export function Legend({ className = "" }: LegendProps) {
               <img src={event.thumb} alt="" loading="lazy" />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[13px] leading-tight text-ink">
-                  {event.name.replace(" analysis", "")}
+                  {t(event.name.replace(" analysis", ""))}
                 </span>
                 <span className="block truncate font-mono text-[10px] leading-snug text-muted">
                   {formatValue(event.changedAreaKm2)} km² · {formatDate(event.endDate)}
@@ -111,17 +113,15 @@ export function Legend({ className = "" }: LegendProps) {
 
       <p className="mt-2 border-t border-line px-1 pt-2.5 text-xs leading-relaxed text-muted" aria-live="polite">
         {visible.length === total ? (
-          <>
-            {total} areas analysed with NISAR and Sentinel-1 radar
-          </>
+          <>{t("{total} areas analysed with NISAR and Sentinel-1 radar", { total })}</>
         ) : (
           <>
-            Showing <span className="text-ink">{visible.length}</span> of {total} areas
+            {t("Showing")} <span className="text-ink">{visible.length}</span> {t("of {total} areas", { total })}
           </>
         )}
         {visible.length > 0 && (
           <span className="mt-0.5 block text-[11px]">
-            {areas.toLocaleString("en-US", { maximumFractionDigits: 1 })} km² of change flagged on land
+            {t("{area} km² of change flagged on land", { area: formatNumber(areas, 1) })}
           </span>
         )}
       </p>

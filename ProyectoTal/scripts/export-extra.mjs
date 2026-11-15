@@ -37,6 +37,8 @@ const AGRICULTURE = {
   agricola_cosecha_saskatchewan: { id: "saskatchewan-harvest", name: "Saskatchewan crop harvest", region: "Saskatchewan", country: "Canada", activity: "harvest" },
   agricola_deforestacion_amazonia: { id: "amazon-clearing", name: "Amazon forest clearing", region: "Pará, Amazon", country: "Brazil", activity: "clearing" },
   agricola_girasol_ucrania: { id: "ukraine-sunflower", name: "Ukraine sunflower harvest", region: "Central Ukraine", country: "Ukraine", activity: "harvest" },
+  agricola_inundacion_bangladesh: { id: "chattogram-rice-flood", name: "Chattogram rice-field flooding", region: "Chattogram coast", country: "Bangladesh", activity: "flood" },
+  agricola_palma_riau: { id: "riau-palm-clearing", name: "Riau oil-palm clearing", region: "Riau, Sumatra", country: "Indonesia", activity: "clearing" },
   agricola_quema_punjab: { id: "punjab-burning", name: "Punjab crop-residue burning", region: "Punjab", country: "India", activity: "burning" },
 };
 const GLACIERS = {
@@ -50,6 +52,22 @@ const DISPLACEMENT = {
   "terremotos/terremoto_panama": { id: "panama-quake", type: "earthquake", name: "Panama earthquake", region: "Southwestern Panama", country: "Panama" },
   "terremotos/terremoto_venezuela": { id: "venezuela-quake", type: "earthquake", name: "Venezuela earthquake", region: "Central coast", country: "Venezuela" },
   "deslizamientos/colapso_langtang": { id: "langtang-collapse", type: "landslide", name: "Langtang Lirung collapse", region: "Langtang, Rasuwa", country: "Nepal" },
+};
+
+/* Dominican Republic: floods analysed against a dry baseline of earlier passes. */
+const DR_FLOODS = {
+  inundacion_ozama_sdn: { id: "ozama-flood", name: "Ozama riverside flooding", region: "Santo Domingo Norte", country: "Dominican Republic", setting: "river" },
+  inundacion_urbana_capotillo: { id: "capotillo-flood", name: "Capotillo urban flooding", region: "Capotillo, Santo Domingo", country: "Dominican Republic", setting: "town" },
+  inundacion_san_pedro_macoris: { id: "san-pedro-flood", name: "San Pedro de Macorís flooding", region: "San Pedro de Macorís", country: "Dominican Republic", setting: "coast" },
+  inundacion_san_jose_ocoa: { id: "ocoa-flood", name: "San José de Ocoa flooding", region: "San José de Ocoa", country: "Dominican Republic", setting: "valley" },
+};
+/* Dominican Republic: the ground before and after a dated event (date chosen by the team). */
+const DR_EVENTS = {
+  "deslizamientos/deslizamiento_los_cacaos": { id: "los-cacaos-landslide", type: "landslide", cause: "landslide", name: "Los Cacaos landslide watch", region: "Los Cacaos, San Cristóbal", country: "Dominican Republic" },
+  "deslizamientos/deslizamiento_miches_el_seibo": { id: "miches-landslide", type: "landslide", cause: "landslide", name: "Miches landslide watch", region: "Miches, El Seibo", country: "Dominican Republic" },
+  "vientos/viento_cibao": { id: "cibao-wind", type: "storm", cause: "wind", name: "Cibao wind damage", region: "Cibao Valley", country: "Dominican Republic" },
+  "vientos/viento_valverde": { id: "valverde-wind", type: "storm", cause: "wind", name: "Valverde wind damage", region: "Valverde", country: "Dominican Republic" },
+  "calor_extremo/calor_linea_noroeste": { id: "noroeste-heat", type: "drought", cause: "heat", name: "Northwest Line heat and drought", region: "Línea Noroeste", country: "Dominican Republic" },
 };
 
 /* ------------------------------ helpers ---------------------------------- */
@@ -120,7 +138,7 @@ const centreOf = ([w, s, e, n]) => ({ lat: round((s + n) / 2, 3), lon: round((w 
 async function agricultureBoxes() {
   const boxes = {};
   for (const line of (await readFile(path.join(ROOT, "cloud/trabajos.txt"), "utf8")).split(/\r?\n/)) {
-    const m = line.match(/^(agricola_\w+):.*--bbox\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)/);
+    const m = line.match(/^(\w+):.*--bbox\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)/);
     if (m) boxes[m[1]] = [Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5])];
   }
   return boxes;
@@ -131,8 +149,8 @@ const dirs = async (dir) =>
 
 /* ------------------------------ agriculture ------------------------------ */
 
-async function exportAgriculture(name, meta, bbox) {
-  const base = path.join(ANALYSIS, "agricultura", name);
+async function exportAgriculture(name, meta, bbox, folder0 = "agricultura", type = "agriculture") {
+  const base = path.join(ANALYSIS, folder0, name);
   const orbits = [];
   for (const dir of await dirs(base)) {
     const folder = path.join(base, dir);
@@ -198,11 +216,11 @@ async function exportAgriculture(name, meta, bbox) {
   await figure(path.join(base, `nisar_${main.key}`, "frames", `${thumbFrame.date}.png`), path.join(PUBLIC, meta.id, "thumb.webp"), { width: 360, quality: 70 });
 
   return {
-    id: meta.id, type: "agriculture", name: meta.name, region: meta.region, country: meta.country,
+    id: meta.id, type, name: meta.name, region: meta.region, country: meta.country,
     ...centreOf(bbox), startDate: allDates[0], endDate: allDates[allDates.length - 1],
     footprint: polygonOf(bbox), thumb: rel(meta.id, "thumb.webp"),
     changedAreaKm2: signal(main), changedPct: main.mode === "harvest" ? main.harvestedPct : 0,
-    extra: { kind: "agriculture", activity: meta.activity, orbits },
+    extra: { kind: "agriculture", activity: meta.activity, ...(meta.setting ? { setting: meta.setting } : {}), orbits },
   };
 }
 
@@ -306,6 +324,58 @@ async function exportDisplacement(rel0, meta) {
   };
 }
 
+/* ------------------------- dated events (change mode) -------------------- */
+
+async function exportEvent(rel0, meta, bbox) {
+  const base = path.join(ANALYSIS, rel0);
+  const orbits = [];
+  for (const dir of await dirs(base)) {
+    const folder = path.join(base, dir);
+    if (!existsSync(path.join(folder, "resumen.json"))) continue;
+    const s = await readJson(path.join(folder, "resumen.json"));
+    const rows = await readCsv(path.join(folder, "serie_temporal.csv"));
+    const key = dir.replace(/^nisar_/, "");
+    const map = await figure(path.join(folder, "mapa_cambio.png"), path.join(PUBLIC, meta.id, `${key}_map.webp`), {
+      width: 1000, crop: { top: 0.04 }, trim: true,
+    });
+    const frameFiles = spread((await readdir(path.join(folder, "frames"))).filter((f) => f.endsWith(".png")).sort(), 6);
+    const frames = [];
+    for (const f of frameFiles) {
+      const date = f.replace(".png", "");
+      await figure(path.join(folder, "frames", f), path.join(PUBLIC, meta.id, `${key}_${date}.webp`), { width: 640, quality: 62 });
+      frames.push({ date, src: rel(meta.id, `${key}_${date}.webp`) });
+    }
+    orbits.push({
+      key, label: groupLabel(key), ...parseGroup(key), pixelM: s.pixel_size_m, crs: s.crs,
+      coPol: s.co_pol, crossPol: s.cross_pol, thresholdDb: s.params?.threshold ?? null,
+      medianFilterPx: s.params?.median ?? null, dates: s.dates.map(day),
+      map: rel(meta.id, `${key}_map.webp`), mapSize: [map.w, map.h], frames,
+      baselineDates: (s.baseline_dates ?? []).map(day),
+      firstPostDate: day(s.first_post_date), firstPostDropKm2: round(s.first_post_drop_km2), firstPostRiseKm2: round(s.first_post_rise_km2),
+      peakDropDate: day(s.peak_drop_date), peakDropKm2: round(s.peak_drop_km2),
+      lastDate: day(s.last_date), lastDropKm2: round(s.last_drop_km2), lastRiseKm2: round(s.last_rise_km2),
+      series: rows.map((r) => ({
+        date: day(r.date), baseline: r.is_baseline === "True", coDb: num(r.co_median_db), crossDb: num(r.cross_median_db),
+        coChangeDb: num(r.co_change_median_db), crossChangeDb: num(r.cross_change_median_db), validPct: num(r.valid_pct),
+        dropKm2: num(r.drop_km2), riseKm2: num(r.rise_km2),
+      })),
+    });
+  }
+  if (!orbits.length) return null;
+  orbits.sort((a, b) => b.dates.length - a.dates.length || b.peakDropKm2 - a.peakDropKm2);
+  const main = orbits[0];
+  const allDates = orbits.flatMap((o) => o.dates).sort();
+  const thumbFrame = main.frames[main.frames.length - 1];
+  await figure(path.join(base, `nisar_${main.key}`, "frames", `${thumbFrame.date}.png`), path.join(PUBLIC, meta.id, "thumb.webp"), { width: 360, quality: 70 });
+  const eventDate = (await readJson(path.join(base, `nisar_${main.key}`, "resumen.json"))).event_date;
+  return {
+    id: meta.id, type: meta.type, name: meta.name, region: meta.region, country: meta.country,
+    ...centreOf(bbox), startDate: allDates[0], endDate: allDates[allDates.length - 1],
+    footprint: polygonOf(bbox), thumb: rel(meta.id, "thumb.webp"), changedAreaKm2: main.peakDropKm2, changedPct: 0,
+    extra: { kind: "change", cause: meta.cause, eventDate, orbits },
+  };
+}
+
 /* -------------------------------- main ----------------------------------- */
 
 const cases = [];
@@ -317,6 +387,21 @@ for (const [name, meta] of Object.entries(AGRICULTURE)) {
   log(`agriculture · ${name}`);
   await rm(path.join(PUBLIC, meta.id), { recursive: true, force: true });
   const c = await exportAgriculture(name, meta, boxes[name]);
+  if (c) cases.push(c);
+}
+for (const [name, meta] of Object.entries(DR_FLOODS)) {
+  if (!want(name) || !boxes[name]) continue;
+  log(`flood · ${name}`);
+  await rm(path.join(PUBLIC, meta.id), { recursive: true, force: true });
+  const c = await exportAgriculture(name, { ...meta, activity: "flood" }, boxes[name], "inundaciones", "flood");
+  if (c) cases.push(c);
+}
+for (const [rel0, meta] of Object.entries(DR_EVENTS)) {
+  const name = path.basename(rel0);
+  if (!want(name) || !boxes[name]) continue;
+  log(`event · ${rel0}`);
+  await rm(path.join(PUBLIC, meta.id), { recursive: true, force: true });
+  const c = await exportEvent(rel0, meta, boxes[name]);
   if (c) cases.push(c);
 }
 for (const [name, meta] of Object.entries(GLACIERS)) {

@@ -1,0 +1,40 @@
+{
+  "collection": "inundacion_india_jammu",
+  "source": "nisar",
+  "orbit": "P135_F072_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-03T13:47:01Z",
+    "2026-09-15T13:47:01Z",
+    "2026-09-27T13:47:01Z",
+    "2026-10-09T13:47:01Z",
+    "2026-10-21T13:47:01Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32643",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-10",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-03T13:47:01Z",
+    "2026-09-15T13:47:01Z",
+    "2026-09-27T13:47:01Z",
+    "2026-10-09T13:47:01Z"
+  ],
+  "peak_date": "2026-10-21T13:47:01Z",
+  "peak_flood_km2": 1.747,
+  "peak_new_water_km2": 0.0,
+  "peak_flooded_veg_km2": 1.747,
+  "max_extent_km2": 1.747,
+  "max_extent_open_water_km2": 0.0,
+  "max_extent_flooded_veg_km2": 1.747,
+  "permanent_water_km2": 0.05
+}

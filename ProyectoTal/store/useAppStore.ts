@@ -78,6 +78,13 @@ interface AppState {
   /** Radar lens: the day as a camera saw it, with the radar inside a circle that follows the pointer. */
   lens: boolean;
   setLens: (on: boolean) => void;
+  /** "Is my community at risk?": the panel, whether the next globe tap picks the place, and the place. */
+  community: boolean;
+  communityPicking: boolean;
+  communityPoint: { lat: number; lng: number } | null;
+  setCommunity: (on: boolean) => void;
+  setCommunityPicking: (on: boolean) => void;
+  setCommunityPoint: (point: { lat: number; lng: number } | null) => void;
   /** "The satellite's dance": one real 12-day cycle of NISAR scenes painted on the planet. */
   dance: boolean;
   setDance: (on: boolean) => void;
@@ -184,6 +191,12 @@ export const useAppStore = create<AppState>((set, get) => ({
   setStory: (on) => set(on ? { story: true, lens: false, dance: false, overlay: "none", compare: false } : { story: false }),
   lens: false,
   setLens: (on) => set(on ? { lens: true, overlay: "none", compare: false, dance: false } : { lens: false }),
+  community: false,
+  communityPicking: false,
+  communityPoint: null,
+  setCommunity: (on) => set(on ? { community: true, story: false } : { community: false, communityPicking: false }),
+  setCommunityPicking: (on) => set({ communityPicking: on }),
+  setCommunityPoint: (point) => set({ communityPoint: point, communityPicking: false }),
   dance: false,
   setDance: (on) => set(on ? { dance: true, lens: false, overlay: "none", compare: false } : { dance: false }),
   drape: null,

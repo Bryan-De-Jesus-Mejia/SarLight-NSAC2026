@@ -5,6 +5,23 @@ baja y se analiza todo, y a casa solo viene un `.tar.gz` con el análisis (los d
 
 Plan gratis de GitHub: 120 horas-núcleo/mes (60 h en la máquina de 2 núcleos) y 15 GB de disco.
 
+## Automático (sin tocar nada): GitHub Actions
+
+`.github/workflows/procesar-eventos.yml` procesa solo los trabajos de `cloud/trabajos.txt` que aún no tienen
+análisis (no hay `resumen*.json` en `data/analisis/<tipo>/<trabajo>/`) y sube **solo `data/analisis/`**,
+un commit por trabajo. Se dispara:
+- al subir un cambio a `cloud/trabajos.txt` → **añadir un evento = añadir su línea y hacer push**;
+- cada 30 minutos (reintenta lo que falló);
+- a mano: pestaña **Actions → Procesar eventos SAR → Run workflow**.
+
+Si se acerca el límite de 6 h de GitHub, deja de empezar trabajos y se relanza solo para seguir.
+Cuando un trabajo falla, la ejecución sale en rojo (GitHub te avisa por correo) y el log queda como
+artefacto `logs` en esa ejecución. Para reprocesar algo ya hecho, borra su carpeta de `data/analisis` y haz push.
+
+Configuración (una vez): repo → **Settings → Secrets and variables → Actions → New repository secret**:
+`EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD` (son distintos de los secrets de Codespaces).
+Coste: repo privado = minutos de Actions del plan (2,000/mes en GitHub Free).
+
 ## Una sola vez
 
 1. **Secretos de Earthdata** (en la nube no se usa `.env`):
@@ -18,15 +35,17 @@ Plan gratis de GitHub: 120 horas-núcleo/mes (60 h en la máquina de 2 núcleos)
 ## Cada vez (un solo comando)
 
 1. En el repo en GitHub: **Code → Codespaces** → abre tu Codespace (o **Create codespace on main**).
-2. En la terminal del Codespace (**Ctrl+`**):
+2. En la terminal del Codespace (**Ctrl+`**), desde `/workspaces/Nasa-space-apps-2026/DataAnalytics`:
    ```bash
-   cd /workspaces/Nasa-space-apps-2026 && git pull && cd DataAnalytics && python cloud/run_jobs.py --grupo meteo_rd --commit
+   cloud/correr.sh embalse_sabaneta lago_enriquillo
    ```
-   - `--grupo` corre un bloque de `cloud/trabajos.txt`: `meteo_rd` (15 incidencias en RD), `agricultura` (10),
-     `eventos_globales` (terremotos, Langtang, glaciares). `--solo` filtra por nombre o prefijo (`embalse_`).
-     Sin filtros corre todo.
-   - `--commit` hace commit + push **solo de `data/analisis/`** (nunca los datos crudos ni los logs;
-     archivos de más de 95 MB se saltan con un aviso).
+   Hace `git pull`, descarga y analiza esos trabajos, y hace commit + push **solo de `data/analisis/`**
+   (nunca los datos crudos ni los logs; archivos de más de 95 MB se saltan con un aviso).
+   - Nombres completos o prefijos: `cloud/correr.sh embalse_` corre todos los embalses.
+   - Un bloque entero de `cloud/trabajos.txt`: `cloud/correr.sh --grupo meteo_rd`
+     (`meteo_rd` = 15 incidencias en RD, `agricultura` = 10, `eventos_globales` = terremotos y glaciares).
+   - Sin argumentos lista los grupos y trabajos disponibles.
+   - Para un evento nuevo, añade su línea a `cloud/trabajos.txt` (en tu PC o en el Codespace) y córrelo por nombre.
 3. En la PC local: `git pull`. Los análisis quedan en `data/analisis/<tipo>/<colección>/`.
 4. Para no gastar horas: en github.com/codespaces → **Stop** (los datos crudos se conservan).
 

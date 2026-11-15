@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { CHANGE_TYPES } from "@/data/changeTypes";
+import { useT } from "@/i18n/core";
 import { matchesQuery, queryTokens } from "@/lib/search";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -17,6 +18,7 @@ const MAX_RESULTS = 7;
  * live; picking a result opens that case and clears the search.
  */
 export function SearchBox({ className = "" }: SearchBoxProps) {
+  const t = useT();
   const events = useAppStore((s) => s.events);
   const query = useAppStore((s) => s.query);
   const setQuery = useAppStore((s) => s.setQuery);
@@ -101,14 +103,14 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
           ref={inputRef}
           type="text"
           role="combobox"
-          aria-label="Search signals by name, place or type"
+          aria-label={t("Search signals by name, place or type")}
           aria-expanded={showList}
           aria-controls={listId}
           aria-autocomplete="list"
           aria-activedescendant={showList && results.length > 0 ? `${listId}-${active}` : undefined}
           autoComplete="off"
           spellCheck={false}
-          placeholder="Search a place or signal"
+          placeholder={t("Search a place or signal")}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -123,7 +125,7 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
           <button
             type="button"
             onClick={clear}
-            aria-label="Clear search"
+            aria-label={t("Clear search")}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-ink"
           >
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
@@ -137,7 +139,7 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
         <div className="glass ge-search-list absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-lg p-1.5">
           {results.length > 0 ? (
             <>
-              <ul id={listId} role="listbox" aria-label="Matching signals">
+              <ul id={listId} role="listbox" aria-label={t("Matching signals")}>
                 {results.map((event, i) => {
                   const info = CHANGE_TYPES[event.type];
                   return (
@@ -167,9 +169,9 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
                         <ChangeTypeIcon type={event.type} size={14} />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm text-ink">{event.name}</span>
+                        <span className="block truncate text-sm text-ink">{t(event.name)}</span>
                         <span className="block truncate text-xs text-muted">
-                          {event.region} · {event.country}
+                          {t(event.region)} · {t(event.country)}
                         </span>
                       </span>
                       <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-muted">
@@ -181,13 +183,13 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
               </ul>
               <p className="px-2 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
                 {matchCount > results.length
-                  ? `Top ${results.length} of ${matchCount} matches · all shown on the globe`
-                  : `${matchCount} ${matchCount === 1 ? "match" : "matches"} · shown on the globe`}
+                  ? t("Top {shown} of {total} matches · all shown on the globe", { shown: results.length, total: matchCount })
+                  : t("{n, plural, one {# match} other {# matches}} · shown on the globe", { n: matchCount })}
               </p>
             </>
           ) : (
             <p id={listId} className="px-3 py-3 text-sm text-muted">
-              No signal matches “{query.trim()}”. Try a country, a region or a type such as “glacier”.
+              {t("No signal matches “{query}”. Try a country, a region or a type such as “glacier”.", { query: query.trim() })}
             </p>
           )}
         </div>

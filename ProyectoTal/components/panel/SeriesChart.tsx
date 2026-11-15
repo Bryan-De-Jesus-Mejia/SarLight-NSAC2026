@@ -1,6 +1,7 @@
 "use client";
 
-import { formatDate } from "@/lib/format";
+import { useT } from "@/i18n/core";
+import { formatDate, formatNumber } from "@/lib/format";
 
 export interface ChartPoint {
   /** ISO date. */
@@ -32,6 +33,7 @@ const toMs = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
 
 /** A small, readable time series: one or more lines over dates, with the legend above it. */
 export function SeriesChart({ series, unit, height = 130, zero = false, decimals = 1 }: SeriesChartProps) {
+  const t = useT();
   const all = series.flatMap((s) => s.points.filter((p): p is ChartPoint & { y: number } => p.y !== null));
   if (all.length < 2) return null;
 
@@ -67,12 +69,12 @@ export function SeriesChart({ series, unit, height = 130, zero = false, decimals
           </li>
         ))}
       </ul>
-      <svg viewBox={`0 0 ${W} ${height}`} className="w-full" role="img" aria-label={`${series.map((s) => s.name).join(", ")} over time, in ${unit}`}>
-        {yTicks.map((t) => (
-          <g key={t.v}>
-            <line x1={PAD.left} x2={W - PAD.right} y1={t.y} y2={t.y} stroke="rgb(255 255 255 / 0.1)" />
-            <text x={PAD.left - 6} y={t.y + 3.5} textAnchor="end" className="ge-chart-tick">
-              {t.v.toLocaleString("en-US", { maximumFractionDigits: decimals })}
+      <svg viewBox={`0 0 ${W} ${height}`} className="w-full" role="img" aria-label={t("{names} over time, in {unit}", { names: series.map((s) => s.name).join(", "), unit })}>
+        {yTicks.map((tick) => (
+          <g key={tick.v}>
+            <line x1={PAD.left} x2={W - PAD.right} y1={tick.y} y2={tick.y} stroke="rgb(255 255 255 / 0.1)" />
+            <text x={PAD.left - 6} y={tick.y + 3.5} textAnchor="end" className="ge-chart-tick">
+              {formatNumber(tick.v, decimals)}
             </text>
           </g>
         ))}
@@ -84,7 +86,7 @@ export function SeriesChart({ series, unit, height = 130, zero = false, decimals
             textAnchor={i === 0 ? "start" : i === xTicks.length - 1 ? "end" : "middle"}
             className="ge-chart-tick"
           >
-            {formatDate(d).replace(/, \d{4}$/, "")}
+            {formatDate(d).replace(/,?\s*\d{4}$/, "")}
           </text>
         ))}
         {series.map((s) => {
@@ -103,7 +105,7 @@ export function SeriesChart({ series, unit, height = 130, zero = false, decimals
                   stroke={s.color}
                   strokeWidth="1.5"
                 >
-                  <title>{`${formatDate(p.x)}: ${p.y.toLocaleString("en-US", { maximumFractionDigits: 2 })} ${unit}`}</title>
+                  <title>{`${formatDate(p.x)}: ${formatNumber(p.y, 2)} ${unit}`}</title>
                 </circle>
               ))}
             </g>

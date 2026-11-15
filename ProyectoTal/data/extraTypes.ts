@@ -99,6 +99,8 @@ export interface FarmExtra {
   kind: "agriculture";
   /** What the place is believed to show: our reading of the site, not something the radar tells apart. */
   activity: "harvest" | "flood" | "burning" | "clearing";
+  /** Set for floods outside farmland: where the water was. */
+  setting?: "river" | "town" | "coast" | "valley";
   orbits: FarmOrbit[];
 }
 
@@ -181,4 +183,45 @@ export interface DisplacementExtra {
   pairs: DisplacementPair[];
 }
 
-export type ExtraAnalysis = FarmExtra | GlacierExtra | DisplacementExtra;
+/* ------------------------ dated events (change mode) ---------------------- */
+
+export interface ChangePoint {
+  date: string;
+  baseline: boolean;
+  coDb: number | null;
+  crossDb: number | null;
+  coChangeDb: number | null;
+  crossChangeDb: number | null;
+  validPct: number | null;
+  dropKm2: number | null;
+  riseKm2: number | null;
+}
+
+/** The ground before and after a dated event, against a baseline of earlier passes. */
+export interface ChangeOrbit extends OrbitBase {
+  coPol: string;
+  crossPol: string;
+  thresholdDb: number | null;
+  medianFilterPx: number | null;
+  dates: string[];
+  baselineDates: string[];
+  firstPostDate: string;
+  firstPostDropKm2: number;
+  firstPostRiseKm2: number;
+  peakDropDate: string;
+  peakDropKm2: number;
+  lastDate: string;
+  lastDropKm2: number;
+  lastRiseKm2: number;
+  series: ChangePoint[];
+}
+
+export interface ChangeExtra {
+  kind: "change";
+  /** What the team was looking for on that date. */
+  cause: "wind" | "heat" | "landslide";
+  eventDate: string;
+  orbits: ChangeOrbit[];
+}
+
+export type ExtraAnalysis = FarmExtra | GlacierExtra | DisplacementExtra | ChangeExtra;

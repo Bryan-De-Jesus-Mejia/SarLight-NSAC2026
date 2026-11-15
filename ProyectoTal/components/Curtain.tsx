@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useT } from "@/i18n/core";
 import { formatDate } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -13,6 +14,7 @@ const clamp = (value: number) => Math.min(MAX, Math.max(MIN, value));
  * the map shader; this only moves the number the shader reads.
  */
 export function Curtain() {
+  const t = useT();
   const on = useAppStore((s) => s.compare && s.overlay !== "none");
   const position = useAppStore((s) => s.curtain);
   const before = useAppStore((s) => s.compareBefore);
@@ -31,12 +33,12 @@ export function Curtain() {
   return (
     <div ref={root} className="pointer-events-none absolute inset-0 z-[8]">
       <div className="absolute inset-y-0 w-px bg-white/80 shadow-[0_0_12px_rgb(255_255_255/0.6)]" style={{ left: `${position * 100}%` }}>
-        <span className="ge-curtain-tag right-3">{before ? formatDate(before) : "Satellite"}</span>
+        <span className="ge-curtain-tag right-3">{before ? formatDate(before) : t("Satellite")}</span>
         <span className="ge-curtain-tag left-3">{formatDate(after)}</span>
         <div
           role="slider"
           tabIndex={0}
-          aria-label="Before and after curtain"
+          aria-label={t("Before and after curtain")}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(position * 100)}

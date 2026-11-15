@@ -1,0 +1,44 @@
+{
+  "collection": "sequia_valle_san_juan",
+  "source": "nisar",
+  "orbit": "P162_F011_ASCE",
+  "mode": "cambio",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-25T10:09:10Z",
+    "2026-07-07T10:09:09Z",
+    "2026-07-19T10:09:09Z",
+    "2026-08-12T10:09:08Z",
+    "2026-08-24T10:09:08Z",
+    "2026-09-05T10:09:07Z",
+    "2026-09-17T10:09:07Z",
+    "2026-09-29T10:09:08Z",
+    "2026-10-11T10:09:08Z",
+    "2026-10-23T10:09:08Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32619",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": "2026-07-10"
+  },
+  "event_date": "2026-07-10",
+  "baseline_dates": [
+    "2026-06-25T10:09:10Z",
+    "2026-07-07T10:09:09Z"
+  ],
+  "first_post_date": "2026-07-19T10:09:09Z",
+  "first_post_drop_km2": 10.345,
+  "first_post_rise_km2": 5.166,
+  "peak_drop_date": "2026-10-23T10:09:08Z",
+  "peak_drop_km2": 35.258,
+  "last_date": "2026-10-23T10:09:08Z",
+  "last_drop_km2": 35.258,
+  "last_rise_km2": 37.362
+}

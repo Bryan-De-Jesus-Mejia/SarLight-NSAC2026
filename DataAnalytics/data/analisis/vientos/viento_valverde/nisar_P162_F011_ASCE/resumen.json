@@ -1,0 +1,39 @@
+{
+  "collection": "viento_valverde",
+  "source": "nisar",
+  "orbit": "P162_F011_ASCE",
+  "mode": "cambio",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-08-12T10:09:08Z",
+    "2026-08-24T10:09:08Z",
+    "2026-09-05T10:09:07Z",
+    "2026-09-17T10:09:07Z",
+    "2026-09-29T10:09:08Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32619",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": "2026-08-31"
+  },
+  "event_date": "2026-08-31",
+  "baseline_dates": [
+    "2026-08-12T10:09:08Z",
+    "2026-08-24T10:09:08Z"
+  ],
+  "first_post_date": "2026-09-05T10:09:07Z",
+  "first_post_drop_km2": 7.988,
+  "first_post_rise_km2": 14.189,
+  "peak_drop_date": "2026-09-17T10:09:07Z",
+  "peak_drop_km2": 15.472,
+  "last_date": "2026-09-29T10:09:08Z",
+  "last_drop_km2": 15.308,
+  "last_rise_km2": 35.676
+}

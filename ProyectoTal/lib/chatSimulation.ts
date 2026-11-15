@@ -1,3 +1,4 @@
+import { getLang } from "@/i18n/core";
 import { useChatStore, useChatStream } from "@/store/useChatStore";
 
 /**
@@ -69,10 +70,16 @@ const normalise = (text: string): string =>
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "");
 
+/**
+ * Answer in the language the question is written in; when it gives no clue
+ * ("NISAR?"), use the language of the interface.
+ */
 function languageOf(text: string): Lang {
-  return /[¿¡áéíóúñ]|\b(que|como|cuando|donde|por que|para que|cual|cuales|hola|gracias|el|los|las|una|del)\b/i.test(text)
-    ? "es"
-    : "en";
+  if (/[¿¡áéíóúñ]|\b(que|como|cuando|donde|por que|para que|cual|cuales|hola|gracias|el|los|las|una|del)\b/i.test(text)) {
+    return "es";
+  }
+  if (/\b(the|what|how|why|when|where|which|is|are|does|do|can|hello|hi|thanks|this|that)\b/i.test(text)) return "en";
+  return getLang();
 }
 
 export function replyFor(question: string): string {

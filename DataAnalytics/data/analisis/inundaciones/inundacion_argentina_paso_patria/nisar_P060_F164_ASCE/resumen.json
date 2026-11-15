@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_argentina_paso_patria",
+  "source": "nisar",
+  "orbit": "P060_F164_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-10T09:47:56Z",
+    "2026-10-04T09:47:56Z",
+    "2026-10-16T09:47:56Z",
+    "2026-10-28T09:47:56Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32721",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-18",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-10T09:47:56Z",
+    "2026-10-04T09:47:56Z",
+    "2026-10-16T09:47:56Z"
+  ],
+  "peak_date": "2026-10-28T09:47:56Z",
+  "peak_flood_km2": 44.018,
+  "peak_new_water_km2": 43.778,
+  "peak_flooded_veg_km2": 0.24,
+  "max_extent_km2": 44.018,
+  "max_extent_open_water_km2": 43.778,
+  "max_extent_flooded_veg_km2": 0.24,
+  "permanent_water_km2": 41.125
+}

@@ -1,3 +1,5 @@
+import { msg } from "@/i18n/core";
+
 /** Real map imagery drawn over the globe: sources, tile URLs and zoom limits. */
 
 export type TileUrl = (x: number, y: number, level: number) => string;
@@ -22,22 +24,22 @@ export interface OverlayInfo {
 
 export const OVERLAYS: Record<Exclude<OverlayKind, "none">, OverlayInfo> = {
   radar: {
-    label: "NISAR radar",
-    note: "L-band backscatter, false colour",
+    label: msg("NISAR radar"),
+    note: msg("L-band backscatter, false colour"),
     maxLevel: 13,
     url: (date) => (x, y, level) =>
       `${GIBS}/NISAR_L2_Geocoded_Polarimetric_Covariance/default/${date}/GoogleMapsCompatible_Level13/${level}/${y}/${x}.png`,
   },
   optical: {
-    label: "Camera view, same day",
-    note: "VIIRS true colour, clouds included",
+    label: msg("Camera view, same day"),
+    note: msg("VIIRS true colour, clouds included"),
     maxLevel: 9,
     url: (date) => (x, y, level) =>
       `${GIBS}/VIIRS_NOAA20_CorrectedReflectance_TrueColor/default/${date}/GoogleMapsCompatible_Level9/${level}/${y}/${x}.jpg`,
   },
   water: {
-    label: "Surface water",
-    note: "OPERA, from Sentinel-1 radar",
+    label: msg("Surface water"),
+    note: msg("OPERA, from Sentinel-1 radar"),
     maxLevel: 12,
     url: (date) => (x, y, level) =>
       `${GIBS}/OPERA_L3_Dynamic_Surface_Water_Extent-Sentinel-1/default/${date}/GoogleMapsCompatible_Level12/${level}/${y}/${x}.png`,

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif } from "next/font/google";
+import { LangSync } from "@/components/LangSync";
 import "./globals.css";
 
 // next/font downloads these at build time and self-hosts them: no runtime CDN.
@@ -34,7 +35,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${display.variable} ${sans.variable} ${mono.variable} h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <LangSync />
+        {children}
+      </body>
     </html>
   );
 }

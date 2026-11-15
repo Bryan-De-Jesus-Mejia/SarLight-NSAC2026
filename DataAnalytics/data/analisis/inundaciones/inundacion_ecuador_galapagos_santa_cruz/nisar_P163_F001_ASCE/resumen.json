@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_ecuador_galapagos_santa_cruz",
+  "source": "nisar",
+  "orbit": "P163_F001_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-29T11:43:36Z",
+    "2026-10-11T11:43:36Z",
+    "2026-10-23T11:43:32Z",
+    "2026-11-04T11:43:37Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32715",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-29",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-29T11:43:36Z",
+    "2026-10-11T11:43:36Z",
+    "2026-10-23T11:43:32Z"
+  ],
+  "peak_date": "2026-11-04T11:43:37Z",
+  "peak_flood_km2": 0.88,
+  "peak_new_water_km2": 0.358,
+  "peak_flooded_veg_km2": 0.522,
+  "max_extent_km2": 0.88,
+  "max_extent_open_water_km2": 0.358,
+  "max_extent_flooded_veg_km2": 0.522,
+  "permanent_water_km2": 1.392
+}

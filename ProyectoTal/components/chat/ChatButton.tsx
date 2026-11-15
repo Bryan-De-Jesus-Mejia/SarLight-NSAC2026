@@ -1,9 +1,11 @@
 "use client";
 
+import { useT } from "@/i18n/core";
 import { useChatStore } from "@/store/useChatStore";
 
 /** Top-bar button that opens (or hides) the assistant panel. */
 export function ChatButton() {
+  const t = useT();
   const open = useChatStore((s) => s.open);
   const openChat = useChatStore((s) => s.openChat);
   const closeChat = useChatStore((s) => s.closeChat);
@@ -13,8 +15,8 @@ export function ChatButton() {
       id="ge-chat-button"
       type="button"
       aria-pressed={open}
-      aria-label="Ask the assistant"
-      title="Ask the assistant"
+      aria-label={t("Ask the assistant")}
+      title={t("Ask the assistant")}
       onClick={open ? closeChat : openChat}
       className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center transition-colors hover:text-accent ${open ? "text-accent" : "text-ink"}`}
     >

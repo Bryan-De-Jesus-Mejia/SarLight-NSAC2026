@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useLang, useT, type TFunction } from "@/i18n/core";
 import { MAX_LENGTH, SUGGESTIONS, dropReplyFor, sendMessage, stopReply } from "@/lib/chatSimulation";
+import { formatClock, formatDayMonth } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
-import { MAX_CHATS, useChatStore, useChatStream, type Chat, type ChatMessage } from "@/store/useChatStore";
+import { MAX_CHATS, NEW_CHAT_TITLE, useChatStore, useChatStream, type Chat, type ChatMessage } from "@/store/useChatStore";
 
 const MAX_INPUT_HEIGHT = 140;
 const NEAR_BOTTOM_PX = 120;
@@ -16,12 +18,11 @@ function Icon({ children, size = 16 }: { children: React.ReactNode; size?: numbe
   );
 }
 
-const when = (at: number): string => {
-  const date = new Date(at);
-  const time = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  return date.toDateString() === new Date().toDateString()
-    ? `Today, ${time}`
-    : `${date.toLocaleDateString([], { month: "short", day: "numeric" })}, ${time}`;
+const when = (at: number, t: TFunction): string => {
+  const time = formatClock(at);
+  return new Date(at).toDateString() === new Date().toDateString()
+    ? t("Today, {time}", { time })
+    : t("{date}, {time}", { date: formatDayMonth(at), time });
 };
 
 /** Close a popover on an outside click or Escape. */
@@ -49,6 +50,7 @@ function usePopover(onClose: () => void, active: boolean) {
 }
 
 function Bubble({ message }: { message: ChatMessage }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
 
   if (message.role === "user") {
@@ -82,7 +84,7 @@ function Bubble({ message }: { message: ChatMessage }) {
             <rect x="8.500" y="8.500" width="11" height="11" rx="2" />
             <path d="M5.500 15.500h-.5a1.500 1.500 0 0 1-1.500-1.500V5A1.500 1.500 0 0 1 5 3.500h9A1.500 1.500 0 0 1 15.500 5v.5" />
           </Icon>
-          {copied ? "Copied" : "Copy"}
+          {copied ? t("Copied") : t("Copy")}
         </button>
       </div>
     </div>
@@ -90,8 +92,9 @@ function Bubble({ message }: { message: ChatMessage }) {
 }
 
 function Typing({ text, thinking }: { text: string; thinking: boolean }) {
+  const t = useT();
   return (
-    <div className="flex gap-2.5" role="status" aria-label={thinking ? "The assistant is thinking" : undefined}>
+    <div className="flex gap-2.5" role="status" aria-label={thinking ? t("The assistant is thinking") : undefined}>
       <span className="mt-1 h-full min-h-4 w-[2px] shrink-0 rounded-full bg-accent/60" aria-hidden="true" />
       {thinking ? (
         <span className="ge-typing mt-2" aria-hidden="true">
@@ -111,6 +114,8 @@ function Typing({ text, thinking }: { text: string; thinking: boolean }) {
 
 /** Side panel with the assistant. The answers are simulated for now (lib/chatSimulation). */
 export function ChatPanel() {
+  const t = useT();
+  const lang = useLang();
   const open = useChatStore((s) => s.open);
   const chats = useChatStore((s) => s.chats);
   const activeId = useChatStore((s) => s.activeId);
@@ -232,13 +237,13 @@ export function ChatPanel() {
     if (log) stick.current = log.scrollHeight - log.scrollTop - log.clientHeight < NEAR_BOTTOM_PX;
   };
 
-  const lang = /[¿¡áéíóúñ]/i.test(value) ? "es" : "en";
   const left = MAX_LENGTH - value.length;
+  const titleOf = (chat: Chat): string => (chat.title === NEW_CHAT_TITLE ? t("New chat") : chat.title);
 
   return (
     <aside
       role="dialog"
-      aria-label="Assistant chat"
+      aria-label={t("Assistant chat")}
       className="ge-chat ge-surface pointer-events-auto absolute inset-x-0 bottom-0 z-30 flex max-h-[85dvh] flex-col rounded-b-none md:inset-x-auto md:bottom-5 md:right-5 md:top-[4.75rem] md:max-h-none md:w-[27rem] md:rounded-lg"
     >
       <header className="relative flex items-center gap-2 border-b border-line px-3 py-2.5">
@@ -251,10 +256,11 @@ export function ChatPanel() {
             className="flex w-full min-w-0 items-center gap-2 rounded px-2 py-1.5 text-left transition-colors hover:bg-white/[0.06]"
           >
             <span className="min-w-0 flex-1">
-              <span className="block truncate font-display text-[1.15rem] leading-tight text-ink">{active?.title ?? "Ask the globe"}</span>
-              {chats.length > 1 && (
-                <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{chats.length} chats</span>
-              )}
+              <span className="block truncate font-display text-[1.15rem] leading-tight text-ink">{active ? titleOf(active) : t("Ask the globe")}</span>
+              <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+                {t("Guided answers · offline, not an AI")}
+                {chats.length > 1 ? ` · ${t("{n} chats", { n: chats.length })}` : ""}
+              </span>
             </span>
             <Icon size={14}>
               <path d="m6 9 6 6 6-6" />
@@ -262,7 +268,7 @@ export function ChatPanel() {
           </button>
 
           {listOpen && (
-            <ul role="listbox" aria-label="Your chats" className="ge-surface absolute left-0 top-[calc(100%+4px)] z-10 w-full overflow-hidden p-1 shadow-xl">
+            <ul role="listbox" aria-label={t("Your chats")} className="ge-surface absolute left-0 top-[calc(100%+4px)] z-10 w-full overflow-hidden p-1 shadow-xl">
               {sorted.map((chat) => (
                 <li key={chat.id}>
                   <button
@@ -272,9 +278,9 @@ export function ChatPanel() {
                     onClick={() => switchTo(chat.id)}
                     className={`flex w-full flex-col rounded px-2.5 py-2 text-left transition-colors hover:bg-white/[0.07] ${chat.id === activeId ? "bg-white/[0.07]" : ""}`}
                   >
-                    <span className="truncate text-sm text-ink">{chat.title}</span>
+                    <span className="truncate text-sm text-ink">{titleOf(chat)}</span>
                     <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted">
-                      {chat.messages.length} message{chat.messages.length === 1 ? "" : "s"} · {when(chat.updatedAt)}
+                      {t("{n, plural, one {# message} other {# messages}}", { n: chat.messages.length })} · {when(chat.updatedAt, t)}
                     </span>
                   </button>
                 </li>
@@ -284,9 +290,9 @@ export function ChatPanel() {
                   <Icon size={14}>
                     <path d="M12 5v14M5 12h14" />
                   </Icon>
-                  New chat
+                  {t("New chat")}
                 </button>
-                <p className="px-2.5 pb-1.5 pt-0.5 text-[11px] leading-snug text-muted">The last {MAX_CHATS} chats are kept.</p>
+                <p className="px-2.5 pb-1.5 pt-0.5 text-[11px] leading-snug text-muted">{t("The last {max} chats are kept.", { max: MAX_CHATS })}</p>
               </li>
             </ul>
           )}
@@ -295,7 +301,7 @@ export function ChatPanel() {
         <div ref={menuRef} className="relative shrink-0">
           <button
             type="button"
-            aria-label="Chat options"
+            aria-label={t("Chat options")}
             aria-haspopup="menu"
             aria-expanded={menuOpen}
             onClick={() => (menuOpen ? closeMenu() : setMenuOpen(true))}
@@ -309,16 +315,16 @@ export function ChatPanel() {
           </button>
 
           {menuOpen && (
-            <div role="menu" aria-label="Chat options" className="ge-surface absolute right-0 top-[calc(100%+4px)] z-10 w-52 p-1 shadow-xl">
+            <div role="menu" aria-label={t("Chat options")} className="ge-surface absolute right-0 top-[calc(100%+4px)] z-10 w-52 p-1 shadow-xl">
               {confirming ? (
                 <div className="p-2.5">
-                  <p className="text-sm leading-snug text-ink">Delete this chat for good?</p>
+                  <p className="text-sm leading-snug text-ink">{t("Delete this chat for good?")}</p>
                   <div className="mt-2.5 flex justify-end gap-1.5">
                     <button type="button" onClick={() => setConfirming(false)} className="ge-demo-text-button">
-                      Cancel
+                      {t("Cancel")}
                     </button>
                     <button type="button" onClick={remove} className="ge-demo-text-button ge-demo-text-button--danger">
-                      Delete
+                      {t("Delete")}
                     </button>
                   </div>
                 </div>
@@ -328,19 +334,19 @@ export function ChatPanel() {
                     <Icon size={14}>
                       <path d="M12 5v14M5 12h14" />
                     </Icon>
-                    New chat
+                    {t("New chat")}
                   </button>
                   <button type="button" role="menuitem" onClick={hide} className="ge-menu-item">
                     <Icon size={14}>
                       <path d="M6 6l12 12M18 6 6 18" />
                     </Icon>
-                    Close chat
+                    {t("Close chat")}
                   </button>
                   <button type="button" role="menuitem" disabled={!active} onClick={() => setConfirming(true)} className="ge-menu-item ge-menu-item--danger">
                     <Icon size={14}>
                       <path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12" />
                     </Icon>
-                    Delete chat
+                    {t("Delete chat")}
                   </button>
                 </>
               )}
@@ -349,11 +355,11 @@ export function ChatPanel() {
         </div>
       </header>
 
-      <div ref={logRef} onScroll={onScroll} role="log" aria-live="polite" aria-label="Conversation" className="ge-scroll min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
+      <div ref={logRef} onScroll={onScroll} role="log" aria-live="polite" aria-label={t("Conversation")} className="ge-scroll min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
         {messages.length === 0 && !showStream ? (
           <div className="pt-2">
-            <p className="font-display text-[1.6rem] leading-[1.1] text-ink">Ask about what you see on the map.</p>
-            <ul className="mt-4 space-y-1.5" aria-label="Suggested questions">
+            <p className="font-display text-[1.6rem] leading-[1.1] text-ink">{t("Ask about what you see on the map.")}</p>
+            <ul className="mt-4 space-y-1.5" aria-label={t("Suggested questions")}>
               {SUGGESTIONS[lang].map((question) => (
                 <li key={question}>
                   <button
@@ -389,18 +395,18 @@ export function ChatPanel() {
             maxLength={MAX_LENGTH}
             onChange={(event) => setValue(event.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="Ask about radar, NISAR or what you see…"
-            aria-label="Message"
+            placeholder={t("Ask about radar, NISAR or what you see…")}
+            aria-label={t("Message")}
             className="ge-scroll max-h-[140px] min-h-[2.25rem] flex-1 resize-none bg-transparent px-2 py-1.5 text-sm leading-relaxed text-ink outline-none placeholder:text-muted/70"
           />
           {replying ? (
-            <button type="button" onClick={() => stopReply()} aria-label="Stop the reply" title="Stop" className="ge-send">
+            <button type="button" onClick={() => stopReply()} aria-label={t("Stop the reply")} title={t("Stop")} className="ge-send">
               <Icon size={14}>
                 <rect x="6.500" y="6.500" width="11" height="11" rx="1.500" fill="currentColor" />
               </Icon>
             </button>
           ) : (
-            <button type="button" onClick={() => submit()} disabled={!value.trim()} aria-label="Send message" title="Send" className="ge-send">
+            <button type="button" onClick={() => submit()} disabled={!value.trim()} aria-label={t("Send message")} title={t("Send")} className="ge-send">
               <Icon size={15}>
                 <path d="M12 19V5M6 11l6-6 6 6" />
               </Icon>

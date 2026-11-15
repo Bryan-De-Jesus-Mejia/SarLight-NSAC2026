@@ -1,18 +1,19 @@
+"use client";
+
 import type { ReactNode } from "react";
-import type { EventDetail, ExtraAnalysis } from "@/data/types";
+import { Drivers } from "@/components/panel/Drivers";
+import { Impact } from "@/components/panel/Impact";
+import type { EventDetail } from "@/data/types";
 import { formatDate, formatValue } from "@/lib/format";
 import { globeApi } from "@/lib/globeApi";
 
 /**
- * Story steps for the analyses that are not radar change maps (farming, ice,
- * ground movement). Same shape as the change-map story, built from the
- * measurements in `detail.extra`; no hand-written numbers.
+ * Story steps for the analyses that are not change maps (floods and farming
+ * over time, wind, heat, landslides, earthquakes, glaciers). Same promise as
+ * the other stories: every figure is read from the analysis.
  */
 
-const WIDE = 0.42;
-const MID = 0.034;
-
-export interface ExtraStep {
+export interface StoryStep {
   key: string;
   kicker: string;
   title: string;
@@ -22,178 +23,161 @@ export interface ExtraStep {
   enter: () => void | (() => void);
 }
 
-const km = (v: number): string => formatValue(v);
+const WIDE = 0.42;
+const MID = 0.06;
+const km = (v: number) => formatValue(v);
 
-function Picture({ src, size, alt }: { src: string; size: [number, number]; alt: string }) {
+function Pictures({ items }: { items: Array<{ src: string; caption: string }> }) {
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      width={size[0]}
-      height={size[1]}
-      alt={alt}
-      loading="lazy"
-      className="w-full rounded-lg border border-line bg-black/30"
-    />
+    <div className={`grid gap-2 ${items.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
+      {items.map((it) => (
+        <figure key={it.src}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={it.src} alt={it.caption} className="w-full rounded-lg border border-line bg-black" loading="lazy" />
+          <figcaption className="mt-1 font-mono text-[10px] text-muted">{it.caption}</figcaption>
+        </figure>
+      ))}
+    </div>
   );
 }
 
-export function buildExtraSteps(
-  detail: EventDetail,
-  extra: ExtraAnalysis,
-  setDrape: (image: { url: string; opacity: number } | null) => void,
-): ExtraStep[] {
-  const fly = (altitude: number) => () => {
+const PEOPLE: Record<string, string> = {
+  flood: "Behind every square kilometre of water there are streets, homes and fields. Knowing where the water went, even through storm clouds, is how help reaches the right door.",
+  storm: "A flattened banana field is a family's income for the year. Mapping where the wind hit, field by field, tells farmers and insurers where to look first.",
+  drought: "Dry land means smaller harvests and thirsty animals. Seeing drought spread week by week gives farmers and water managers time to act.",
+  landslide: "A slope that moves can bury a road or a home. Watching the slopes after heavy rain helps decide where people should not stay.",
+  earthquake: "Seeing exactly where the ground moved, and by how much, guides rescuers and engineers to the places that need them most.",
+  glacier: "Ice that slides into the sea raises the ocean everywhere, including the Caribbean coast. Watching glaciers is watching our own shorelines.",
+  agriculture: "Fields are food. Seeing when and where they change helps forecast harvests, and spot burning and clearing that harm air and forest.",
+};
+
+export function buildExtraSteps(detail: EventDetail, setDrape: (d: null) => void): StoryStep[] {
+  const x = detail.extra;
+  if (!x) return [];
+  const place = `${detail.region}, ${detail.country}`;
+  const look = (altitude: number) => () => {
     setDrape(null);
     globeApi.current?.frameCase(altitude);
   };
+  const steps: StoryStep[] = [];
 
-  const place: ExtraStep = {
+  const intro: Record<string, string> = {
+    agriculture: "We followed these fields pass after pass, to see when they changed.",
+    glacier: "We tracked the ice, pass after pass, to measure how fast it slides to the sea.",
+    displacement: "We compared radar passes from before and after the shaking, to see how far the ground moved.",
+    change: "We let the satellite learn what normal looks like here, then compared it with the passes after the event.",
+  };
+  steps.push({
     key: "place",
     kicker: "The place",
-    title: detail.name.replace(" analysis", ""),
+    title: detail.name,
     body: (
       <>
         <p>
-          {detail.region}, {detail.country}.{" "}
-          {extra.kind === "agriculture"
-            ? "We followed this area pass after pass, to see when its fields change."
-            : extra.kind === "glacier"
-              ? "We measured how fast this ice moves by following its pattern from one pass to the next."
-              : "We compared the radar phase of two passes to measure how far the ground moved."}
+          {place}. {detail.type === "flood" ? "We followed this area pass after pass, to see when water came and how far it spread." : intro[x.kind]}
         </p>
         <p className="mt-3 text-muted">Scroll, or press Next, to follow what the radar saw.</p>
       </>
     ),
-    enter: fly(WIDE),
-  };
-
-  const care = (text: string): ExtraStep => ({
-    key: "care",
-    kicker: "Read with care",
-    title: "What this does not tell us",
-    body: (
-      <>
-        <p>{text}</p>
-        <p className="mt-3 text-muted">None of this has been verified on the ground.</p>
-      </>
-    ),
-    enter: fly(MID),
+    enter: look(WIDE),
   });
 
-  if (extra.kind === "displacement") {
-    const pair = extra.pairs[0];
-    return [
-      place,
-      {
-        key: "moved",
-        kicker: `${formatDate(pair.ref)} → ${formatDate(pair.sec)}`,
-        title: "How far the ground moved",
-        figure: { value: String(pair.towardMaxCm), unit: "cm", note: "toward the satellite, at most" },
-        body: (
-          <p>
-            Along the satellite&rsquo;s line of sight the ground moved up to {pair.towardMaxCm} cm toward it and{" "}
-            {Math.abs(pair.awayMaxCm)} cm away from it, between two passes {pair.days} days apart.
-          </p>
-        ),
-        extra: <Picture src={pair.images.displacement} size={pair.images.displacementSize} alt="Map of the ground movement" />,
-        enter: fly(MID),
-      },
-      {
-        key: "area",
-        kicker: "How much ground",
-        title: "Where it moved over 5 cm",
-        figure: { value: km(pair.area5Km2), unit: "km²", note: `of ground moved more than 5 cm (${km(pair.area10Km2)} km² over 10 cm)` },
-        body: (
-          <p>
-            The coloured fringes are the raw measurement: each full colour cycle is {pair.fringeCm} cm of movement.
-            The more cycles packed together, the more the ground moved.
-          </p>
-        ),
-        extra: <Picture src={pair.images.fringes} size={pair.images.fringesSize} alt="Interferogram fringes" />,
-        enter: fly(MID),
-      },
-      care(
-        pair.reliablePct < 30
-          ? `Only ${pair.reliablePct}% of this picture could be measured reliably. Over water, steep or leafy ground the radar lost the thread, so this is a partial view.`
-          : `${pair.reliablePct}% of this picture could be measured reliably. The rest, such as water or dense vegetation, is left blank.`,
+  if (x.kind === "agriculture" || x.kind === "change") {
+    const o = x.orbits[0];
+    const frames = o.frames;
+    const first = frames[0];
+    const last = frames[frames.length - 1];
+    steps.push({
+      key: "passes",
+      kicker: "What the radar saw",
+      title: `${o.dates.length} visits, one place`,
+      body: (
+        <p>
+          Every 12 days NISAR came back. In false colour, standing plants look green, bare or dry ground looks purple
+          and calm water looks black. Compare the first visit with the last.
+        </p>
       ),
-    ];
+      extra: first && last ? <Pictures items={[{ src: first.src, caption: formatDate(first.date) }, { src: last.src, caption: formatDate(last.date) }]} /> : undefined,
+      enter: look(MID),
+    });
+    const farm = x.kind === "agriculture" ? x.orbits[0] : null;
+    const figure =
+      x.kind === "change"
+        ? { value: km(x.orbits[0].peakDropKm2), unit: "km²", note: `lost their echo by ${formatDate(x.orbits[0].peakDropDate)}` }
+        : farm?.mode === "flood"
+          ? { value: km(farm.peakFloodKm2), unit: "km²", note: `under water at the peak, ${formatDate(farm.peakDate)}` }
+          : farm?.mode === "harvest"
+            ? { value: km(farm.harvestedKm2), unit: "km²", note: `of fields changed (${farm.harvestedPct}% of the vegetation)` }
+            : undefined;
+    steps.push({
+      key: "map",
+      kicker: "The change",
+      title: x.kind === "change" ? "Where the ground changed" : farm?.mode === "flood" ? "Where the water went" : "When each field changed",
+      figure,
+      body: <p>Each coloured patch is a piece of land whose radar echo changed enough to count, compared with the visits before.</p>,
+      extra: <Pictures items={[{ src: o.map, caption: "Map from our analysis" }]} />,
+      enter: look(MID),
+    });
+  } else if (x.kind === "displacement") {
+    const p = x.pairs[0];
+    steps.push({
+      key: "fringes",
+      kicker: "Rainbow rings",
+      title: "Each ring is 12 centimetres",
+      body: (
+        <p>
+          The radar wave is about {Math.round(p.wavelengthCm)} cm long. Comparing it before and after the earthquake
+          draws rings of colour: every full cycle means the ground moved about {Math.round(p.fringeCm)} cm closer to or
+          further from the satellite.
+        </p>
+      ),
+      extra: <Pictures items={[{ src: p.images.fringes, caption: `${formatDate(p.ref)} → ${formatDate(p.sec)}` }]} />,
+      enter: look(0.3),
+    });
+    steps.push({
+      key: "moved",
+      kicker: "How far it moved",
+      title: "The ground rose and sank",
+      figure: { value: `${Math.round(p.towardMaxCm)}`, unit: "cm", note: `toward the satellite at most · ${km(p.area5Km2)} km² moved more than 5 cm` },
+      body: <p>Red moved toward the satellite, blue away from it. Blank areas could not be measured, often because they are water or dense forest.</p>,
+      extra: <Pictures items={[{ src: p.images.displacement, caption: "Ground movement from our analysis" }]} />,
+      enter: look(0.3),
+    });
+  } else if (x.kind === "glacier") {
+    const g = x.groups[0];
+    steps.push({
+      key: "speed",
+      kicker: "A river of ice",
+      title: "How fast the ice slides",
+      figure: { value: `${x.maxSpeedMDay}`, unit: "m/day", note: `fastest measured · typical ${g.typicalSpeedMDay} m/day` },
+      body: <p>The radar recognises the same cracks and textures on the ice in two visits and measures how far they travelled, even in the months of polar night.</p>,
+      extra: <Pictures items={[{ src: g.map, caption: "Ice speed from our analysis" }]} />,
+      enter: look(0.3),
+    });
   }
 
-  if (extra.kind === "glacier") {
-    const group = extra.groups[0];
-    return [
-      place,
-      {
-        key: "speed",
-        kicker: "The speed",
-        title: "How fast the ice moves",
-        figure: { value: String(group.maxSpeedMDay), unit: "m/day", note: `fastest point · typical ${group.typicalSpeedMDay} m/day` },
-        body: (
-          <p>
-            Following the surface pattern between passes, the fastest ice moved {group.maxSpeedMDay} m a day. Most of
-            the area was far slower.
-          </p>
-        ),
-        extra: <Picture src={group.map} size={group.mapSize} alt="Map of ice speed" />,
-        enter: fly(MID),
-      },
-      {
-        key: "fast",
-        kicker: "How much ice",
-        title: "The fast part",
-        figure: { value: km(group.fastAreaKm2), unit: "km²", note: `moving faster than ${group.fastThresholdMs} m/day` },
-        body: (
-          <p>
-            Across {extra.pairsAnalysed} pairs of passes, this is the area that moved faster than the threshold. It
-            shows where the glacier flows quickest.
-          </p>
-        ),
-        enter: fly(MID),
-      },
-      care(
-        `The measurement noise is about ${group.noiseMDay} m/day, so very slow ice cannot be told apart from standing still.`,
-      ),
-    ];
-  }
+  steps.push({
+    key: "why",
+    kicker: "Why it happened",
+    title: "From the sky to the ground",
+    body: <Drivers detail={detail} compact />,
+    enter: look(MID),
+  });
 
-  const orbit = extra.orbits[0];
-  const lead: ExtraStep =
-    orbit.mode === "harvest"
-      ? {
-          key: "changed",
-          kicker: "Along the season",
-          title: "Fields that dropped",
-          figure: { value: km(orbit.harvestedKm2), unit: "km²", note: `${orbit.harvestedPct}% of the ${km(orbit.vegetatedKm2)} km² of vegetation` },
-          body: (
-            <p>
-              The echo of these fields fell between passes, which is what harvest, burning or clearing tends to
-              look like. The biggest drop came in the interval ending {formatDate(orbit.peakIntervalEnd)}.
-            </p>
-          ),
-          extra: <Picture src={orbit.map} size={orbit.mapSize} alt="Map of the fields that changed" />,
-          enter: fly(MID),
-        }
-      : {
-          key: "changed",
-          kicker: `Peak · ${formatDate(orbit.peakDate)}`,
-          title: "Land under water",
-          figure: { value: km(orbit.peakFloodKm2), unit: "km²", note: `${km(orbit.peakNewWaterKm2)} km² new open water, ${km(orbit.peakFloodedVegKm2)} km² flooded vegetation` },
-          body: (
-            <p>
-              Compared with the passes before, this much land turned to open water or to flooded vegetation at the
-              peak of the season.
-            </p>
-          ),
-          extra: <Picture src={orbit.map} size={orbit.mapSize} alt="Map of the flooded area" />,
-          enter: fly(MID),
-        };
-  return [
-    place,
-    lead,
-    care(
-      "The radar sees the echo change, not the reason. What this place is doing, farming, burning or flooding, is our reading of the site.",
+  steps.push({
+    key: "people",
+    kicker: "Why it matters",
+    title: "What this means for people",
+    body: (
+      <>
+        <p>{PEOPLE[x.kind === "displacement" ? detail.type : x.kind === "change" ? detail.type : x.kind === "agriculture" && detail.type === "flood" ? "flood" : x.kind]}</p>
+        <div className="mt-4">
+          <Impact detail={detail} compact />
+        </div>
+        <p className="mt-3 text-muted">This is a reading of real radar images. Nobody has checked it on the ground yet.</p>
+      </>
     ),
-  ];
+    enter: look(WIDE),
+  });
+  return steps;
 }

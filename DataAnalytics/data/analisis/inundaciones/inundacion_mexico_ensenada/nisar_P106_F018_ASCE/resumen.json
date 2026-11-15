@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_mexico_ensenada",
+  "source": "nisar",
+  "orbit": "P106_F018_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-25T12:59:29Z",
+    "2026-10-07T12:59:29Z",
+    "2026-10-19T12:59:30Z",
+    "2026-10-31T12:59:30Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32611",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-30",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-25T12:59:29Z",
+    "2026-10-07T12:59:29Z",
+    "2026-10-19T12:59:30Z"
+  ],
+  "peak_date": "2026-10-31T12:59:30Z",
+  "peak_flood_km2": 5.044,
+  "peak_new_water_km2": 1.851,
+  "peak_flooded_veg_km2": 3.193,
+  "max_extent_km2": 5.044,
+  "max_extent_open_water_km2": 1.851,
+  "max_extent_flooded_veg_km2": 3.193,
+  "permanent_water_km2": 16.706
+}

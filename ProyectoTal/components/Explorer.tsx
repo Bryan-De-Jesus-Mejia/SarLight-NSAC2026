@@ -9,13 +9,17 @@ import { Hud } from "@/components/Hud";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { PassDance } from "@/components/PassDance";
 import { Story } from "@/components/Story";
+import { Welcome } from "@/components/Welcome";
+import { Community } from "@/components/Community";
 import { CasePanel } from "@/components/panel/CasePanel";
+import { useT } from "@/i18n/core";
 import { useAppStore } from "@/store/useAppStore";
 
 // The globe needs WebGL and `window`: client only.
 const GlobeScene = dynamic(() => import("@/components/globe/GlobeScene"), { ssr: false });
 
 export function Explorer() {
+  const t = useT();
   const status = useAppStore((s) => s.status);
   const errorMessage = useAppStore((s) => s.errorMessage);
   const globeReady = useAppStore((s) => s.globeReady);
@@ -92,20 +96,22 @@ export function Explorer() {
       <DemoPlayer />
       <PassDance />
       <Story />
+      <Welcome />
+      <Community />
       <CasePanel />
       <ChatPanel />
 
       {failed && (
         <div className="absolute inset-0 z-20 flex items-center justify-center p-6">
           <div className="glass w-full max-w-sm rounded-2xl p-6" role="alert">
-            <h2 className="font-display text-2xl text-ink">Change signals did not load</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{errorMessage}</p>
+            <h2 className="font-display text-2xl text-ink">{t("Change signals did not load")}</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{errorMessage ? t(errorMessage) : null}</p>
             <button
               type="button"
               onClick={() => void loadEvents()}
               className="mt-5 rounded-full border border-accent/70 bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
             >
-              Try again
+              {t("Try again")}
             </button>
           </div>
         </div>

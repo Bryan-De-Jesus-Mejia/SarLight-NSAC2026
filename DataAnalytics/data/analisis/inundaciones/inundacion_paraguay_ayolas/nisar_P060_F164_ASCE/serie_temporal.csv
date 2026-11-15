@@ -1,0 +1,4 @@
+date,is_baseline,co_median_db,cross_median_db,valid_pct,new_water_km2,flooded_veg_km2,permanent_water_km2,flood_total_km2
+2026-10-04T09:47:56Z,True,-8.453,-17.268,100.0,4.227,22.429,35.891,26.656
+2026-10-16T09:47:56Z,True,-11.24,-20.31,100.0,9.872,0.005,38.386,9.877
+2026-10-28T09:47:56Z,False,-11.182,-19.918,100.0,42.264,0.49,40.338,42.754

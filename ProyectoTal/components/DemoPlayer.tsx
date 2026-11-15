@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { useT } from "@/i18n/core";
 import { DEMO_SCENES } from "@/lib/demoScript";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -29,6 +30,7 @@ function IconButton({
 
 /** Captions and controls of the guided demo. The scenes themselves live in lib/demoScript. */
 export function DemoPlayer() {
+  const t = useT();
   const active = useAppStore((s) => s.demoActive);
   const step = useAppStore((s) => s.demoStep);
   const paused = useAppStore((s) => s.demoPaused);
@@ -104,28 +106,28 @@ export function DemoPlayer() {
     <div
       className={`pointer-events-none absolute inset-x-5 bottom-5 z-20 max-md:top-auto ${caseOpen ? "md:right-[28.5rem]" : ""} ${caseOpen ? "max-md:bottom-auto max-md:top-[5.5rem]" : ""}`}
     >
-      <section className="ge-surface ge-demo pointer-events-auto relative mx-auto max-w-xl overflow-hidden" aria-live="polite" aria-label="Guided demo">
+      <section className="ge-surface ge-demo pointer-events-auto relative mx-auto max-w-xl overflow-hidden" aria-live="polite" aria-label={t("Guided demo")}>
         {!last && (
           <div className="absolute inset-x-0 top-0 h-[2px] bg-white/10">
             <div ref={bar} className="h-full origin-left bg-accent" style={{ transform: "scaleX(0)", transition: `transform ${TICK_MS}ms linear` }} />
           </div>
         )}
         <div key={step} className="ge-demo-text px-5 pb-4 pt-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">{scene.kicker}</p>
-          <h2 className="mt-1.5 font-display text-[1.7rem] leading-[1.1] text-ink">{scene.title}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-ink/80">{scene.body}</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">{t(scene.kicker)}</p>
+          <h2 className="mt-1.5 font-display text-[1.7rem] leading-[1.1] text-ink">{t(scene.title)}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-ink/80">{t(scene.body)}</p>
         </div>
         <div className="flex items-center justify-between gap-3 border-t border-line px-3 py-2">
           <div className="flex items-center gap-1">
-            <IconButton label="Previous scene" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>
+            <IconButton label={t("Previous scene")} onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>
               <path d="M15 5 8 12l7 7" />
             </IconButton>
             {!last && (
-              <IconButton label={paused ? "Play" : "Pause"} onClick={() => setPaused(!paused)}>
+              <IconButton label={paused ? t("Play") : t("Pause")} onClick={() => setPaused(!paused)}>
                 {paused ? <path d="M8 5.5v13l10-6.5z" /> : <path d="M8 5.5v13M16 5.5v13" />}
               </IconButton>
             )}
-            <IconButton label="Next scene" onClick={() => setStep(Math.min(LAST, step + 1))} disabled={last}>
+            <IconButton label={t("Next scene")} onClick={() => setStep(Math.min(LAST, step + 1))} disabled={last}>
               <path d="m9 5 7 7-7 7" />
             </IconButton>
           </div>
@@ -140,15 +142,15 @@ export function DemoPlayer() {
                   }}
                   className="ge-demo-text-button"
                 >
-                  Replay
+                  {t("Replay")}
                 </button>
                 <button type="button" onClick={stop} className="ge-demo-text-button ge-demo-text-button--primary">
-                  Explore
+                  {t("Explore")}
                 </button>
               </>
             ) : (
               <button type="button" onClick={stop} className="ge-demo-text-button">
-                Exit demo
+                {t("Exit demo")}
               </button>
             )}
           </div>

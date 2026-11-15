@@ -3,12 +3,16 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
+import { Drivers } from "@/components/panel/Drivers";
+import { Impact } from "@/components/panel/Impact";
+import { WhyButton, whyFor } from "@/components/WhyCard";
 import { HYPOTHESES } from "@/components/panel/Evidence";
+import { buildExtraSteps } from "@/components/storyExtra";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
-import { formatDate, formatValue } from "@/lib/format";
+import { msg, useT, type TFunction } from "@/i18n/core";
+import { formatDate, formatNumber, formatValue } from "@/lib/format";
 import { globeApi } from "@/lib/globeApi";
-import { buildExtraSteps } from "@/components/storyExtra";
 import { useAppStore } from "@/store/useAppStore";
 
 /**
@@ -26,14 +30,18 @@ const DAY_MS = 86_400_000;
 
 const day = (iso: string): string => iso.slice(0, 10);
 const km = (v: number): string => formatValue(v);
-const signed = (v: number): string => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(1)}`;
-const pct = (v: number): string => v.toLocaleString("en-US", { maximumFractionDigits: 1 });
+const signed = (v: number): string => `${v > 0 ? "+" : v < 0 ? "−" : ""}${formatNumber(Math.abs(v), 1, 1)}`;
+const pct = (v: number): string => formatNumber(v, 1);
+/** "Dominican Republic fire analysis" → "Dominican Republic fire", in the language on screen. */
+const shortName = (t: TFunction, name: string): string => t(name.replace(" analysis", ""));
 
 const LOOKING_FOR: Partial<Record<ChangeType, string>> = {
-  wildfire:
+  wildfire: msg(
     "We went looking for the mark a fire leaves. When leaves and branches are gone, so is the radar echo they used to send back.",
-  flood:
+  ),
+  flood: msg(
     "We went looking for water where there was land. A flooded field turns from rough to mirror-smooth, and its echo collapses.",
+  ),
 };
 
 interface Step {
@@ -49,6 +57,7 @@ interface Step {
 }
 
 function buildSteps(
+  t: TFunction,
   detail: EventDetail,
   a: SensorAnalysis,
   setDrape: (image: { url: string; opacity: number } | null) => void,
@@ -77,18 +86,21 @@ function buildSteps(
   const other = a.polarisations.find((r) => !r.analysed);
   const main = a.polarisations.find((r) => r.analysed);
   const hypotheses = HYPOTHESES[detail.type] ?? [];
+  const lower = (label: string): string => t(label).toLowerCase();
+
+  const looking = LOOKING_FOR[detail.type];
 
   const steps: Step[] = [
     {
       key: "place",
-      kicker: "The place",
-      title: detail.name.replace(" analysis", ""),
+      kicker: t("The place"),
+      title: shortName(t, detail.name),
       body: (
         <>
           <p>
-            {detail.region}, {detail.country}. {LOOKING_FOR[detail.type] ?? "We compared two radar passes over this area."}
+            {t(detail.region)}, {t(detail.country)}. {looking ? t(looking) : t("We compared two radar passes over this area.")}
           </p>
-          <p className="mt-3 text-muted">Scroll, or press Next, to follow what the radar saw.</p>
+          <p className="mt-3 text-muted">{t("Scroll, or press Next, to follow what the radar saw.")}</p>
         </>
       ),
       enter: () => {
@@ -98,67 +110,77 @@ function buildSteps(
     },
     {
       key: "before",
-      kicker: `Before · ${before}`,
-      title: "The first look",
+      kicker: t("Before · {date}", { date: before }),
+      title: t("The first look"),
       body: (
         <p>
-          On {before}, {sensor} imaged these {km(a.land.validAreaKm2)} km² of land in the {a.pol} channel. Bright is
-          rough: forest, crops, buildings. Dark is smooth: calm water, bare flat ground.
+          {t(
+            "On {date}, {sensor} imaged these {area} km² of land in the {pol} channel. Bright is rough: forest, crops, buildings. Dark is smooth: calm water, bare flat ground.",
+            { date: before, sensor, area: km(a.land.validAreaKm2), pol: a.pol },
+          )}
         </p>
       ),
       enter: show(a.images.pre, MID),
     },
     {
       key: "after",
-      kicker: `After · ${after}`,
-      title: `${span} days later`,
+      kicker: t("After · {date}", { date: after }),
+      title: t("{span} days later", { span }),
       body: (
         <p>
-          The same satellite, on the same track, looked again. To the eye almost nothing moved. That is the point: the
-          change hides in the numbers, not in the picture.
+          {t(
+            "The same satellite, on the same track, looked again. To the eye almost nothing moved. That is the point: the change hides in the numbers, not in the picture.",
+          )}
         </p>
       ),
       enter: show(a.images.post, MID),
     },
     {
       key: "difference",
-      kicker: "The difference",
-      title: "Subtract one from the other",
+      kicker: t("The difference"),
+      title: t("Subtract one from the other"),
       figure: {
         value: km(a.land.changedAreaKm2),
         unit: "km²",
-        note: `of land changed by at least ${a.method.thresholdDb} dB`,
+        note: t("of land changed by at least {thr} dB", { thr: a.method.thresholdDb }),
       },
       body: (
         <p>
-          Red is where the echo got weaker, blue where it got stronger. Three decibels is about half, or double, the
-          energy. It weakened over {km(a.land.decreaseAreaKm2)} km² and strengthened over{" "}
-          {km(a.land.increaseAreaKm2)} km².
+          {t(
+            "Red is where the echo got weaker, blue where it got stronger. Three decibels is about half, or double, the energy. It weakened over {down} km² and strengthened over {up} km².",
+            { down: km(a.land.decreaseAreaKm2), up: km(a.land.increaseAreaKm2) },
+          )}
         </p>
       ),
       enter: show(a.images.diff, MID, 0.94),
     },
     {
       key: "flagged",
-      kicker: "Is it real?",
-      title: "Only the flagged land moved",
+      kicker: t("Is it real?"),
+      title: t("Only the flagged land moved"),
       figure:
         inside !== null
-          ? { value: signed(inside), unit: "dB", note: `on the flagged land · ${outside !== null ? signed(outside) : "—"} dB everywhere else` }
+          ? {
+              value: signed(inside),
+              unit: "dB",
+              note: t("on the flagged land · {out} dB everywhere else", { out: outside !== null ? signed(outside) : "—" }),
+            }
           : undefined,
       body: (
         <>
           <p>
             {inside !== null && outside !== null
               ? Math.abs(inside) >= 3 * Math.max(Math.abs(outside), 0.2)
-                ? "If rain, season or calibration had shifted the whole scene, the rest of the land would have moved too. It did not."
-                : "The rest of the land moved by a comparable amount, so part of this may be scene-wide and not a local event."
-              : "The flagged pixels are drawn over the after image."}
+                ? t("If rain, season or calibration had shifted the whole scene, the rest of the land would have moved too. It did not.")
+                : t("The rest of the land moved by a comparable amount, so part of this may be scene-wide and not a local event.")
+              : t("The flagged pixels are drawn over the after image.")}
           </p>
           {a.baseline && (
             <p className="mt-3">
-              With {a.baseline.passes} passes of this track, {pct(a.baseline.beyond3SigmaPct)}% of the flagged land moved
-              more than 3 times what those pixels normally do from one pass to the next.
+              {t(
+                "With {passes} passes of this track, {pct}% of the flagged land moved more than 3 times what those pixels normally do from one pass to the next.",
+                { passes: a.baseline.passes, pct: pct(a.baseline.beyond3SigmaPct) },
+              )}
             </p>
           )}
         </>
@@ -171,13 +193,14 @@ function buildSteps(
   if (frames.length > 1) {
     steps.push({
       key: "time",
-      kicker: "Through time",
-      title: "Every pass of the track",
+      kicker: t("Through time"),
+      title: t("Every pass of the track"),
       body: (
         <p>
-          {frames.length} passes in false colour, from {formatDate(frames[0].date)} to{" "}
-          {formatDate(frames[frames.length - 1].date)}. Green and yellow are dense vegetation, purple and blue are bare
-          ground and low crops, black is calm water. Watch for patches that switch colour.
+          {t(
+            "{n} passes in false colour, from {d1} to {d2}. Green and yellow are dense vegetation, purple and blue are bare ground and low crops, black is calm water. Watch for patches that switch colour.",
+            { n: frames.length, d1: formatDate(frames[0].date), d2: formatDate(frames[frames.length - 1].date) },
+          )}
         </p>
       ),
       enter: () => {
@@ -200,26 +223,42 @@ function buildSteps(
   }
 
   if (top) {
+    const lead = standout && standout.lift >= 1.5 ? standout : null;
     steps.push({
       key: "ground",
-      kicker: "What was there",
-      title: standout && standout.lift >= 1.5 ? `Mostly ${standout.c.label.toLowerCase()}` : `Mostly ${top.label.toLowerCase()}`,
-      figure:
-        standout && standout.lift >= 1.5
-          ? { value: `${standout.lift.toFixed(1)}×`, unit: "", note: `${standout.c.label.toLowerCase()} is over-represented in what changed` }
-          : undefined,
+      kicker: t("What was there"),
+      title: t("Mostly {label}", { label: lower(lead ? lead.c.label : top.label) }),
+      figure: lead
+        ? {
+            value: `${formatNumber(lead.lift, 1, 1)}×`,
+            unit: "",
+            note: t("{label} is over-represented in what changed", { label: lower(lead.c.label) }),
+          }
+        : undefined,
       body: (
         <>
           <p>
-            {standout && standout.lift >= 1.5
-              ? `${standout.c.label} covers ${pct(standout.c.scenePct)}% of the land here, but ${pct(standout.c.flaggedPct)}% of the land that changed.`
-              : `${pct(top.flaggedPct)}% of the flagged land is ${top.label.toLowerCase()}, close to its share of the whole area (${pct(top.scenePct)}%).`}{" "}
-            That comes from a 2021 land-cover map, so the ground may have changed since.
+            {lead
+              ? t("{label} covers {scene}% of the land here, but {flagged}% of the land that changed.", {
+                  label: t(lead.c.label),
+                  scene: pct(lead.c.scenePct),
+                  flagged: pct(lead.c.flaggedPct),
+                })
+              : t("{flagged}% of the flagged land is {label}, close to its share of the whole area ({scene}%).", {
+                  flagged: pct(top.flaggedPct),
+                  label: lower(top.label),
+                  scene: pct(top.scenePct),
+                })}{" "}
+            {t("That comes from a 2021 land-cover map, so the ground may have changed since.")}
           </p>
           {main && other && (
             <p className="mt-3">
-              The {main.pol} channel flags {km(main.flaggedAreaKm2)} km²; {other.pol} flags {km(other.flaggedAreaKm2)} km²
-              for the same two passes.
+              {t("The {main} channel flags {a} km²; {other} flags {b} km² for the same two passes.", {
+                main: main.pol,
+                a: km(main.flaggedAreaKm2),
+                other: other.pol,
+                b: km(other.flaggedAreaKm2),
+              })}
             </p>
           )}
         </>
@@ -229,9 +268,17 @@ function buildSteps(
   }
 
   steps.push({
+    key: "drivers",
+    kicker: "Why it happened",
+    title: "From the sky to the ground",
+    body: <Drivers detail={detail} compact />,
+    enter: show(a.images.post, MID),
+  });
+
+  steps.push({
     key: "why",
-    kicker: "What could explain it",
-    title: "Leads, not conclusions",
+    kicker: t("What could explain it"),
+    title: t("Leads, not conclusions"),
     body: (
       <>
         <ol className="space-y-2.5">
@@ -241,15 +288,23 @@ function buildSteps(
                 {i + 1}
               </span>
               <span>
-                {h.cause}
-                <span className="mt-0.5 block text-xs text-muted">To check: {h.check}</span>
+                {t(h.cause)}
+                <span className="mt-0.5 block text-xs text-muted">{t("To check: {check}", { check: t(h.check) })}</span>
               </span>
             </li>
           ))}
         </ol>
-        <p className="mt-3 text-muted">Radar shows what changed, not why. None of this has been verified on the ground.</p>
+        <p className="mt-3 text-muted">{t("Radar shows what changed, not why. None of this has been verified on the ground.")}</p>
       </>
     ),
+    enter: show(a.images.post, MID),
+  });
+
+  steps.push({
+    key: "people",
+    kicker: "Why it matters",
+    title: "What this means for people",
+    body: <Impact detail={detail} compact />,
     enter: show(a.images.post, MID),
   });
 
@@ -257,6 +312,7 @@ function buildSteps(
 }
 
 export function Story() {
+  const t = useT();
   const on = useAppStore((s) => s.story);
   const setStory = useAppStore((s) => s.setStory);
   const setDrape = useAppStore((s) => s.setDrape);
@@ -275,10 +331,10 @@ export function Story() {
   const steps = useMemo(
     () => {
       if (!on || !detail) return [];
-      if (detail.extra) return buildExtraSteps(detail, detail.extra, setDrape);
-      return analysis ? buildSteps(detail, analysis, setDrape, setFrameDate, color) : [];
+      if (detail.extra) return buildExtraSteps(detail, setDrape);
+      return analysis ? buildSteps(t, detail, analysis, setDrape, setFrameDate, color) : [];
     },
-    [on, detail, analysis, setDrape, color],
+    [on, detail, analysis, setDrape, color, t],
   );
 
   // A story needs an open case.
@@ -374,14 +430,14 @@ export function Story() {
             </span>
           )}
           <span className="min-w-0 flex-1 truncate font-mono text-[11px] uppercase tracking-[0.14em] text-ink">
-            Story · {detail ? detail.name.replace(" analysis", "") : "loading"}
+            {t("Story · {name}", { name: detail ? shortName(t, detail.name) : t("loading") })}
           </span>
           <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted">
             {steps.length ? `${Math.min(active + 1, steps.length)} / ${steps.length}` : ""}
           </span>
         </div>
         <button type="button" onClick={exit} className="ge-surface shrink-0 px-3 py-2 text-xs text-ink transition-colors hover:text-accent">
-          Exit story
+          {t("Exit story")}
         </button>
       </div>
 
@@ -393,7 +449,7 @@ export function Story() {
               key={step.key}
               type="button"
               onClick={() => go(i)}
-              aria-label={`Step ${i + 1}: ${step.kicker}`}
+              aria-label={t("Step {n}: {kicker}", { n: i + 1, kicker: step.kicker })}
               aria-current={i === active}
               className={`h-2 w-2 rounded-full transition-all ${i === active ? "scale-150 bg-accent" : "bg-white/35 hover:bg-white/70"}`}
             />
@@ -406,12 +462,12 @@ export function Story() {
         ref={scrollRef}
         className="ge-story pointer-events-auto absolute inset-y-0 right-0 w-full overflow-y-auto md:w-[29.5rem]"
         tabIndex={0}
-        aria-label="Story"
+        aria-label={t("Story")}
       >
         {steps.length === 0 ? (
           <div className="flex h-full items-center justify-center px-5">
             <p role="status" className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-              Loading the analysis
+              {t("Loading the analysis")}
             </p>
           </div>
         ) : (
@@ -451,26 +507,31 @@ export function Story() {
 
                 {step.extra && i === active && <div className="mt-4">{step.extra}</div>}
 
+                {(() => {
+                  const why = detail && i === active ? whyFor(step.key, detail) : null;
+                  return why ? <WhyButton key={step.key} why={why} /> : null;
+                })()}
+
                 <div className="mt-5 flex flex-wrap items-center gap-2">
                   {i < steps.length - 1 ? (
                     <button type="button" onClick={() => go(i + 1)} className="ge-pill">
-                      Next ↓
+                      {t("Next ↓")}
                     </button>
                   ) : (
                     <>
                       <button type="button" onClick={exit} className="ge-pill">
-                        Open the full analysis
+                        {t("Open the full analysis")}
                       </button>
                       {nextCase && (
                         <button type="button" onClick={openNext} className="ge-pill">
-                          Next story: {nextCase.name.replace(" analysis", "")} →
+                          {t("Next story: {name} →", { name: shortName(t, nextCase.name) })}
                         </button>
                       )}
                     </>
                   )}
                   {i > 0 && (
                     <button type="button" onClick={() => go(i - 1)} className="ge-link text-xs">
-                      Back
+                      {t("Back")}
                     </button>
                   )}
                 </div>

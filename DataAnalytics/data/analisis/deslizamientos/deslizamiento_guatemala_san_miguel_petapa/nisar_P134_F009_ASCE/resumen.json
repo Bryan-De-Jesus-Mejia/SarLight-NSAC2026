@@ -1,0 +1,40 @@
+{
+  "collection": "deslizamiento_guatemala_san_miguel_petapa",
+  "source": "nisar",
+  "orbit": "P134_F009_ASCE",
+  "mode": "cambio",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-03T11:31:13Z",
+    "2026-09-15T11:31:13Z",
+    "2026-09-27T11:31:13Z",
+    "2026-10-09T11:31:13Z",
+    "2026-10-21T11:31:13Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32616",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": "2026-10-03"
+  },
+  "event_date": "2026-10-03",
+  "baseline_dates": [
+    "2026-09-03T11:31:13Z",
+    "2026-09-15T11:31:13Z",
+    "2026-09-27T11:31:13Z"
+  ],
+  "first_post_date": "2026-10-09T11:31:13Z",
+  "first_post_drop_km2": 0.25,
+  "first_post_rise_km2": 1.314,
+  "peak_drop_date": "2026-10-21T11:31:13Z",
+  "peak_drop_km2": 0.963,
+  "last_date": "2026-10-21T11:31:13Z",
+  "last_drop_km2": 0.963,
+  "last_rise_km2": 0.607
+}

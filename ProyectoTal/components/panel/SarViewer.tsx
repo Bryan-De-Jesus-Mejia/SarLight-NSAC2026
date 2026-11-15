@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 import type { SensorAnalysis } from "@/data/types";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { formatDate } from "@/lib/format";
+import { useT } from "@/i18n/core";
+import { formatDate, formatNumber } from "@/lib/format";
 import { globeApi } from "@/lib/globeApi";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -64,6 +65,7 @@ function useProbeData(url: string): ImageData | null {
  * time-lapse. The same picture can be laid on the globe at its real position.
  */
 export function SarViewer({ analysis, simple = false }: SarViewerProps) {
+  const t = useT();
   const reducedMotion = usePrefersReducedMotion();
   const setDrape = useAppStore((s) => s.setDrape);
 
@@ -87,15 +89,15 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
 
   const modes: Array<{ id: Mode; label: string }> = simple
     ? [
-        { id: "swipe", label: "Before / after" },
-        { id: "change", label: "What changed" },
+        { id: "swipe", label: t("Before / after") },
+        { id: "change", label: t("What changed") },
       ]
     : [
-        { id: "swipe", label: "Before / after" },
-        { id: "diff", label: "Difference" },
-        { id: "change", label: "Flagged" },
+        { id: "swipe", label: t("Before / after") },
+        { id: "diff", label: t("Difference") },
+        { id: "change", label: t("Flagged") },
       ];
-  if (frames.length > 1) modes.push({ id: "time", label: simple ? "Over time" : "Time-lapse" });
+  if (frames.length > 1) modes.push({ id: "time", label: simple ? t("Over time") : t("Time-lapse") });
 
   // Time-lapse clock.
   useEffect(() => {
@@ -183,11 +185,11 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
       {mode === "swipe" && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={images.post} alt={`Radar backscatter on ${after}`} className={layer} draggable={false} />
+          <img src={images.post} alt={t("Radar backscatter on {date}", { date: after })} className={layer} draggable={false} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={images.pre} alt={`Radar backscatter on ${before}`} className={layer} style={clip} draggable={false} />
-          <span className="ge-compare-tag left-2">Before · {before}</span>
-          <span className="ge-compare-tag right-2">After · {after}</span>
+          <img src={images.pre} alt={t("Radar backscatter on {date}", { date: before })} className={layer} style={clip} draggable={false} />
+          <span className="ge-compare-tag left-2">{t("Before · {date}", { date: before })}</span>
+          <span className="ge-compare-tag right-2">{t("After · {date}", { date: after })}</span>
           <div
             className="pointer-events-none absolute inset-y-0 w-px bg-white/90 shadow-[0_0_0_1px_rgb(0_0_0/0.35)]"
             style={{ left: `${position}%` }}
@@ -206,8 +208,8 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
             step={1}
             value={position}
             onChange={(e) => setPosition(Number(e.target.value))}
-            aria-label="Compare the before and after radar images"
-            aria-valuetext={`${position}% before, ${100 - position}% after`}
+            aria-label={t("Compare the before and after radar images")}
+            aria-valuetext={t("{before}% before, {after}% after", { before: position, after: 100 - position })}
             className="absolute inset-0 m-0 h-full w-full cursor-ew-resize opacity-0"
           />
         </>
@@ -216,29 +218,27 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
       {mode === "diff" && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={images.diff} alt={`Change in backscatter between ${before} and ${after}`} className={layer} draggable={false} />
-          <span className="ge-compare-tag left-2">After − before</span>
+          <img src={images.diff} alt={t("Change in backscatter between {before} and {after}", { before, after })} className={layer} draggable={false} />
+          <span className="ge-compare-tag left-2">{t("After − before")}</span>
         </>
       )}
 
       {mode === "change" && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={images.post} alt={`Radar backscatter on ${after}`} className={layer} draggable={false} />
+          <img src={images.post} alt={t("Radar backscatter on {date}", { date: after })} className={layer} draggable={false} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={images.change} alt={`Pixels that changed by at least ${threshold}`} className={layer} draggable={false} />
-          <span className="ge-compare-tag left-2">Changed ≥ {threshold}</span>
+          <img src={images.change} alt={t("Pixels that changed by at least {thr}", { thr: threshold })} className={layer} draggable={false} />
+          <span className="ge-compare-tag left-2">{t("Changed ≥ {thr}", { thr: threshold })}</span>
         </>
       )}
 
       {mode === "time" && frame?.frame && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={frame.frame} alt={`False-colour radar image of ${formatDate(frame.date)}`} className={layer} draggable={false} />
+          <img src={frame.frame} alt={t("False-colour radar image of {date}", { date: formatDate(frame.date) })} className={layer} draggable={false} />
           <span className="ge-compare-tag left-2">{formatDate(frame.date)}</span>
-          <span className="ge-compare-tag right-2">
-            Pass {frameIndex + 1} / {frames.length}
-          </span>
+          <span className="ge-compare-tag right-2">{t("Pass {n} / {total}", { n: frameIndex + 1, total: frames.length })}</span>
         </>
       )}
 
@@ -251,17 +251,17 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
           />
           <span className="ge-probe" aria-hidden="true">
             {probe.diff === null ? (
-              "no data here"
+              t("no data here")
             ) : (
               <>
                 <b>
                   {probe.diff > 0 ? "+" : probe.diff < 0 ? "−" : ""}
-                  {Math.abs(probe.diff).toFixed(1)} dB
+                  {formatNumber(Math.abs(probe.diff), 1, 1)} dB
                 </b>
                 {probe.before !== null && probe.after !== null && (
                   <span>
                     {" "}
-                    · {probe.before.toFixed(1)} → {probe.after.toFixed(1)} dB
+                    · {formatNumber(probe.before, 1, 1)} → {formatNumber(probe.after, 1, 1)} dB
                   </span>
                 )}
               </>
@@ -277,7 +277,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
       <button
         type="button"
         onClick={() => setPlaying(!playing)}
-        aria-label={playing ? "Pause the time-lapse" : "Play the time-lapse"}
+        aria-label={playing ? t("Pause the time-lapse") : t("Play the time-lapse")}
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-accent/70 bg-accent/10 text-accent transition-colors hover:bg-accent/20"
       >
         <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
@@ -294,7 +294,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
           setPlaying(false);
           setFrameIndex(Number(e.target.value));
         }}
-        aria-label="Satellite pass"
+        aria-label={t("Satellite pass")}
         aria-valuetext={frame ? formatDate(frame.date) : undefined}
         className="ge-frames flex-1"
       />
@@ -306,9 +306,9 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
 
   const plainLegend = (
     <p className="mt-2.5 text-xs leading-relaxed text-muted">
-      {mode === "swipe" && "Bright is rough ground, forest or buildings. Dark is calm water or smooth ground."}
-      {mode === "change" && "The coloured dots are the places that looked different on the second visit."}
-      {mode === "time" && "Every visit of the satellite. Green is thick vegetation, purple is bare ground or low crops, black is water."}
+      {mode === "swipe" && t("Bright is rough ground, forest or buildings. Dark is calm water or smooth ground.")}
+      {mode === "change" && t("The coloured dots are the places that looked different on the second visit.")}
+      {mode === "time" && t("Every visit of the satellite. Green is thick vegetation, purple is bare ground or low crops, black is water.")}
     </p>
   );
 
@@ -322,8 +322,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
             <span className="font-mono">{hi.toFixed(0)} dB</span>
           </span>
           <span className="mt-1.5 block">
-            Radar backscatter: brighter is a stronger echo (rough ground, buildings, vegetation); dark is calm
-            water or smooth ground. Drag to compare; hover to read a pixel.
+            {t("Radar backscatter: brighter is a stronger echo (rough ground, buildings, vegetation); dark is calm water or smooth ground. Drag to compare; hover to read a pixel.")}
           </span>
         </>
       )}
@@ -335,8 +334,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
             <span className="font-mono">+6 dB</span>
           </span>
           <span className="mt-1.5 block">
-            Red: the echo got weaker between the two passes. Blue: it got stronger. White: no change. Smoothed
-            with a {method.medianFilterPx}-pixel median filter.
+            {t("Red: the echo got weaker between the two passes. Blue: it got stronger. White: no change. Smoothed with a {px}-pixel median filter.", { px: method.medianFilterPx })}
           </span>
         </>
       )}
@@ -344,17 +342,17 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
         <span className="block">
           <span className="mr-3 inline-flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-sm" style={{ background: "#ff6b3d" }} aria-hidden="true" />
-            Weaker by ≥ {threshold}
+            {t("Weaker by ≥ {thr}", { thr: threshold })}
           </span>
           {method.direction !== "decrease" && (
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-sm" style={{ background: "#38bdf8" }} aria-hidden="true" />
-              Stronger by ≥ {threshold}
+              {t("Stronger by ≥ {thr}", { thr: threshold })}
             </span>
           )}
           <span className="mt-1.5 block">
-            Pixels that crossed the threshold, drawn over the after image.
-            {method.direction === "decrease" && " Only decreases were searched for in this analysis."}
+            {t("Pixels that crossed the threshold, drawn over the after image.")}
+            {method.direction === "decrease" && ` ${t("Only decreases were searched for in this analysis.")}`}
           </span>
         </span>
       )}
@@ -373,9 +371,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
             {co(analysis.pol)} − {cross(analysis.pol)}
           </span>
           <span className="mt-1.5 block">
-            Every pass of this track in false colour, on one fixed colour scale. Green and yellow: dense
-            vegetation, which scatters the pulse in all directions. Purple and blue: bare ground, low crops and
-            other surfaces. Black: calm water. Watch for patches that switch colour between passes.
+            {t("Every pass of this track in false colour, on one fixed colour scale. Green and yellow: dense vegetation, which scatters the pulse in all directions. Purple and blue: bare ground, low crops and other surfaces. Black: calm water. Watch for patches that switch colour between passes.")}
           </span>
         </span>
       )}
@@ -392,22 +388,22 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
         className="flex items-center gap-2 rounded px-1 py-1 text-ink transition-colors hover:bg-white/5"
       >
         <span className="ge-switch" data-on={onGlobe} aria-hidden="true" />
-        Show on the globe
+        {t("Show on the globe")}
       </button>
       <button type="button" onClick={zoomGlobe} className="ge-link">
-        {close ? "Zoom back out" : "Zoom the globe in"}
+        {close ? t("Zoom back out") : t("Zoom the globe in")}
       </button>
       <button type="button" onClick={() => setExpanded(true)} className="ge-link">
-        Enlarge
+        {t("Enlarge")}
       </button>
       <a href={downloadUrl} download className="ge-link">
-        Download image
+        {t("Download image")}
       </a>
     </div>
   );
 
   const tabs = (
-    <div className="ge-segments mb-2" role="group" aria-label="Image view">
+    <div className="ge-segments mb-2" role="group" aria-label={t("Image view")}>
       {modes.map((m) => (
         <button key={m.id} type="button" aria-pressed={mode === m.id} onClick={() => pickMode(m.id)} className="ge-segment">
           {m.label}
@@ -429,7 +425,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
           <div
             role="dialog"
             aria-modal="true"
-            aria-label="Radar images, enlarged"
+            aria-label={t("Radar images, enlarged")}
             className="fixed inset-0 z-[60] flex flex-col bg-[rgb(3_5_10/0.94)] p-4 sm:p-6"
           >
             <div className="mx-auto flex w-full max-w-6xl items-start gap-3">
@@ -438,7 +434,7 @@ export function SarViewer({ analysis, simple = false }: SarViewerProps) {
                 type="button"
                 autoFocus
                 onClick={() => setExpanded(false)}
-                aria-label="Close the enlarged view"
+                aria-label={t("Close the enlarged view")}
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line text-muted transition-colors hover:bg-white/10 hover:text-ink"
               >
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">

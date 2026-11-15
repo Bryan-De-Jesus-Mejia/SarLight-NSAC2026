@@ -17,6 +17,8 @@ import { useElementSize } from "@/hooks/useElementSize";
 import { useGeoData } from "@/hooks/useGeoData";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useVisibleEvents } from "@/hooks/useVisibleEvents";
+import { countryName } from "@/i18n/countries";
+import { t, useLang, useT } from "@/i18n/core";
 import { flyCamera, jumpCamera, type Flight } from "@/lib/camera";
 import { sizeIndex } from "@/lib/events";
 import { escapeHtml, isWebGLAvailable } from "@/lib/dom";
@@ -115,9 +117,9 @@ const pointLabel = (d: object): string => {
   const meta = CHANGE_TYPES[e.type];
   return (
     `<div class="ge-tooltip">` +
-    `<div class="ge-tooltip-type" style="color:${meta.color}">${escapeHtml(meta.label)}</div>` +
-    `<div class="ge-tooltip-name">${escapeHtml(e.name)}</div>` +
-    `<div class="ge-tooltip-place">${escapeHtml(e.region)} · ${escapeHtml(e.country)}</div>` +
+    `<div class="ge-tooltip-type" style="color:${meta.color}">${escapeHtml(t(meta.label))}</div>` +
+    `<div class="ge-tooltip-name">${escapeHtml(t(e.name))}</div>` +
+    `<div class="ge-tooltip-place">${escapeHtml(t(e.region))} · ${escapeHtml(t(e.country))}</div>` +
     `</div>`
   );
 };
@@ -195,6 +197,8 @@ const hexMargin = (): number => 0.22;
 /* -------------------------------------------------------------------------- */
 
 export default function GlobeScene() {
+  const tr = useT();
+  const lang = useLang();
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const [containerRef, size] = useElementSize<HTMLDivElement>();
   const reducedMotion = usePrefersReducedMotion();
@@ -520,11 +524,13 @@ export default function GlobeScene() {
 
   // Radar / water overlay follows the layer panel. Layer A is the picture, or
   // the "before" half when the curtain is on; layer B is the "after" half.
-  // With the lens on, A is the camera view of that day and B the radar inside the circle.
+  // With the lens on, A is the camera view of that day, cut out inside the circle so the
+  // cloud-free ground underneath shows through. B stays empty: the radar strips of the day
+  // read as unexplained rectangles there, and the NISAR layer shows them with a legend.
   const lens = useAppStore((s) => s.lens);
   const kindA = lens ? "optical" : compare && compareBefore === null ? "none" : overlay;
   const dateA = !lens && compare && compareBefore !== null ? compareBefore : overlayDate;
-  const kindB = lens ? "radar" : compare ? overlay : "none";
+  const kindB = lens ? "none" : compare ? overlay : "none";
 
   useEffect(() => {
     const engine = overlayRef.current;
@@ -562,6 +568,7 @@ export default function GlobeScene() {
         canvas.height - (clientY - rect.top) * ratio,
         LENS_RADIUS_PX * ratio,
       );
+      UNIFORMS_A.lens.value.copy(UNIFORMS_B.lens.value);
       if (lensRef.current) {
         lensRef.current.style.transform = `translate(${clientX - rect.left}px, ${clientY - rect.top}px)`;
       }
@@ -569,11 +576,13 @@ export default function GlobeScene() {
     const rect = canvas.getBoundingClientRect();
     place(rect.left + rect.width / 2, rect.top + rect.height / 2);
     UNIFORMS_B.lensMode.value = 1;
+    UNIFORMS_A.lensMode.value = -1;
     const onMove = (event: PointerEvent) => place(event.clientX, event.clientY);
     el.addEventListener("pointermove", onMove);
     return () => {
       el.removeEventListener("pointermove", onMove);
       UNIFORMS_B.lensMode.value = 0;
+      UNIFORMS_A.lensMode.value = 0;
     };
   }, [lens, sceneReady, containerRef, size.width, size.height]);
 
@@ -690,7 +699,10 @@ export default function GlobeScene() {
   useEffect(() => {
     markerHandlers.current = {
       activate: (event) => {
-        if (useAppStore.getState().story) return;
+        const app = useAppStore.getState();
+        // Picking a community: a marker is a place like any other.
+        if (app.communityPicking) return app.setCommunityPoint({ lat: event.lat, lng: event.lon });
+        if (app.story) return;
         if (caseLocked()) useAppStore.getState().select(null);
         else focusEvent(event);
       },
@@ -829,9 +841,9 @@ export default function GlobeScene() {
           const count = region.kind === "province" ? (provinceCountsRef.current.get(region.id) ?? 0) : null;
           tip.innerHTML =
             `<div class="ge-tooltip">` +
-            `<div class="ge-tooltip-type" style="color:var(--color-accent)">${region.kind === "province" ? "Province" : "Country"}</div>` +
-            `<div class="ge-tooltip-name">${escapeHtml(region.name)}</div>` +
-            `<div class="ge-tooltip-place">${count === null ? "" : `${count} signal${count === 1 ? "" : "s"} · `}Click to zoom in</div>` +
+            `<div class="ge-tooltip-type" style="color:var(--color-accent)">${escapeHtml(region.kind === "province" ? t("Province") : t("Country"))}</div>` +
+            `<div class="ge-tooltip-name">${escapeHtml(region.kind === "province" ? region.name : countryName(region.id, region.name))}</div>` +
+            `<div class="ge-tooltip-place">${escapeHtml(count === null ? "" : `${t("{n, plural, one {# signal} other {# signals}}", { n: count })} · `)}${escapeHtml(t("Click to zoom in"))}</div>` +
             `</div>`;
         }
         tip.style.opacity = "1";
@@ -863,8 +875,13 @@ export default function GlobeScene() {
       const globe = globeRef.current;
       if (!globe) return;
       const at = pickLatLng(globe.camera(), event.clientX, event.clientY, el.getBoundingClientRect());
+      const app = useAppStore.getState();
+      if (app.communityPicking) {
+        if (at) app.setCommunityPoint({ lat: at.lat, lng: at.lng });
+        return;
+      }
       const region = at ? pickRegion(at.lat, at.lng) : null;
-      if (useAppStore.getState().story) return;
+      if (app.story) return;
       if (region && !caseLocked()) openRegion(region);
       else useAppStore.getState().select(null);
     };
@@ -919,7 +936,12 @@ export default function GlobeScene() {
   }, []);
   const handlePointClick = useCallback(
     (d: object) => {
-      if (useAppStore.getState().story) return;
+      const app = useAppStore.getState();
+      if (app.communityPicking) {
+        const e = asEvent(d);
+        return app.setCommunityPoint({ lat: e.lat, lng: e.lon });
+      }
+      if (app.story) return;
       if (caseLocked()) select(null);
       else focusEvent(asEvent(d));
     },
@@ -1005,11 +1027,13 @@ export default function GlobeScene() {
   }, [selectedEvent, arrivedId]);
 
   // The callout card appears once the camera has arrived.
+  // A new array when the language changes, so the globe rebuilds the markers with the new words.
   const htmlData = useMemo<HtmlDatum[]>(() => {
-    if (!selectedEvent || arrivedId !== selectedEvent.id) return allFeatured;
-    if (story) return allFeatured;
+    if (!selectedEvent || arrivedId !== selectedEvent.id) return [...allFeatured];
+    if (story) return [...allFeatured];
     return [...allFeatured, toCalloutDatum(selectedEvent, detail)];
-  }, [allFeatured, selectedEvent, arrivedId, detail, story]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allFeatured, selectedEvent, arrivedId, detail, story, lang]);
 
   const orbit = lod === "orbit";
   const hexData = orbit ? events : NO_EVENTS;
@@ -1031,11 +1055,11 @@ export default function GlobeScene() {
     return (
       <div className="flex h-full w-full items-center justify-center p-6">
         <div className="glass max-w-sm rounded-2xl p-6 text-center" role="alert">
-          <h2 className="font-display text-2xl text-ink">3D globe unavailable</h2>
+          <h2 className="font-display text-2xl text-ink">{tr("3D globe unavailable")}</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            This explorer draws the Earth with WebGL, which this browser or device does not
-            provide. Open it in a recent version of Chrome, Edge, Firefox or Safari with hardware
-            acceleration turned on.
+            {tr(
+              "This explorer draws the Earth with WebGL, which this browser or device does not provide. Open it in a recent version of Chrome, Edge, Firefox or Safari with hardware acceleration turned on.",
+            )}
           </p>
         </div>
       </div>
@@ -1127,7 +1151,7 @@ export default function GlobeScene() {
       <div ref={tipRef} className="ge-region-tip" aria-hidden="true" />
       {lens && (
         <div ref={lensRef} className="ge-lens" aria-hidden="true">
-          <span>Radar · sees through cloud</span>
+          <span>Under the clouds · cloud-free mosaic</span>
         </div>
       )}
       {perfOn && <div ref={perfRef} className="ge-perf" aria-hidden="true" />}

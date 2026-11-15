@@ -1,0 +1,40 @@
+{
+  "collection": "inundacion_ecuador_babahoyo",
+  "source": "nisar",
+  "orbit": "P004_F001_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-06T11:01:47Z",
+    "2026-09-18T11:01:47Z",
+    "2026-09-30T11:01:47Z",
+    "2026-10-12T11:01:47Z",
+    "2026-10-24T11:01:48Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32717",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-12",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-06T11:01:47Z",
+    "2026-09-18T11:01:47Z",
+    "2026-09-30T11:01:47Z",
+    "2026-10-12T11:01:47Z"
+  ],
+  "peak_date": "2026-10-24T11:01:48Z",
+  "peak_flood_km2": 53.991,
+  "peak_new_water_km2": 37.168,
+  "peak_flooded_veg_km2": 16.823,
+  "max_extent_km2": 53.991,
+  "max_extent_open_water_km2": 37.168,
+  "max_extent_flooded_veg_km2": 16.823,
+  "permanent_water_km2": 6.521
+}

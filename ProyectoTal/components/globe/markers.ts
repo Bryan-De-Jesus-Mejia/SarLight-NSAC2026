@@ -1,5 +1,6 @@
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { EventDetail, EventSummary } from "@/data/types";
+import { msg, t } from "@/i18n/core";
 import { escapeHtml } from "@/lib/dom";
 import { formatDate, formatValue } from "@/lib/format";
 
@@ -66,7 +67,10 @@ function createMarker(e: EventSummary): HTMLElement {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "ge-marker";
-  button.setAttribute("aria-label", `${e.name}, ${e.country}. Radar analysis, ${meta.noun}.`);
+  button.setAttribute(
+    "aria-label",
+    t("{name}, {country}. Radar analysis, {noun}.", { name: t(e.name), country: t(e.country), noun: t(meta.noun) }),
+  );
 
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
@@ -78,7 +82,7 @@ function createMarker(e: EventSummary): HTMLElement {
 
   const label = document.createElement("span");
   label.className = "ge-marker-label";
-  label.textContent = e.name;
+  label.textContent = t(e.name);
   button.appendChild(label);
 
   button.addEventListener("click", (domEvent) => {
@@ -117,14 +121,14 @@ function createCallout(d: CalloutDatum): HTMLElement {
       stat =
         `<div class="ge-callout-stat">` +
         `<span class="ge-callout-value">${escapeHtml(formatValue(main.land.changedAreaKm2))} km²</span>` +
-        `<span class="ge-callout-metric">changed on land · ${escapeHtml(main.sensor === "nisar" ? "NISAR" : "Sentinel-1")}</span>` +
+        `<span class="ge-callout-metric">${escapeHtml(t("changed on land · {sensor}", { sensor: main.sensor === "nisar" ? "NISAR" : "Sentinel-1" }))}</span>` +
         `</div>`;
       when = `${formatDate(main.pre.date.slice(0, 10))} → ${formatDate(main.post.date.slice(0, 10))}`;
     } else {
       stat =
         `<div class="ge-callout-stat">` +
         `<span class="ge-callout-value">${escapeHtml(formatValue(d.detail.changedAreaKm2))} km²</span>` +
-        `<span class="ge-callout-metric">NISAR · ${escapeHtml(METRIC_NOTE[d.detail.kind ?? "agriculture"])}</span>` +
+        `<span class="ge-callout-metric">NISAR · ${escapeHtml(t(d.detail.type === "flood" ? "land under water at the peak" : METRIC_NOTE[d.detail.kind ?? "agriculture"]))}</span>` +
         `</div>`;
       when = `${formatDate(d.detail.startDate)} → ${formatDate(d.detail.endDate)}`;
     }
@@ -134,9 +138,9 @@ function createCallout(d: CalloutDatum): HTMLElement {
   card.className = "ge-callout";
   card.innerHTML =
     `<span class="ge-callout-line" aria-hidden="true"></span>` +
-    `<div class="ge-callout-type">${escapeHtml(meta.label)}</div>` +
-    `<div class="ge-callout-name">${escapeHtml(d.name)}</div>` +
-    `<div class="ge-callout-place">${escapeHtml(d.region)} · ${escapeHtml(d.country)}</div>` +
+    `<div class="ge-callout-type">${escapeHtml(t(meta.label))}</div>` +
+    `<div class="ge-callout-name">${escapeHtml(t(d.name))}</div>` +
+    `<div class="ge-callout-place">${escapeHtml(t(d.region))} · ${escapeHtml(t(d.country))}</div>` +
     stat +
     (when ? `<div class="ge-callout-area">${escapeHtml(when)}</div>` : "");
   anchor.appendChild(card);
@@ -145,9 +149,10 @@ function createCallout(d: CalloutDatum): HTMLElement {
 }
 
 const METRIC_NOTE = {
-  agriculture: "farmland that changed",
-  glacier: "ice moving fast",
-  displacement: "ground moved over 5 cm",
+  agriculture: msg("farmland that changed"),
+  glacier: msg("ice moving fast"),
+  displacement: msg("ground moved over 5 cm"),
+  change: msg("land that changed after the event"),
 } as const;
 
 export const htmlElement = (d: object): HTMLElement =>

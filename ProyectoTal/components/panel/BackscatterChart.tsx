@@ -3,7 +3,8 @@
 import { useMemo, useState, type PointerEvent } from "react";
 import type { SensorAnalysis } from "@/data/types";
 import { useElementSize } from "@/hooks/useElementSize";
-import { formatDate, formatMonth } from "@/lib/format";
+import { useT } from "@/i18n/core";
+import { formatDate, formatMonth, formatNumber } from "@/lib/format";
 
 interface BackscatterChartProps {
   analysis: SensorAnalysis;
@@ -38,6 +39,7 @@ function niceTicks(min: number, max: number, target = 4): number[] {
  * something that affected the whole scene (rain, calibration, season).
  */
 export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
+  const t = useT();
   const [wrapRef, size] = useElementSize<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
 
@@ -63,8 +65,10 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   if (!model) {
     return (
       <p className="rounded-lg border border-line bg-white/[0.03] px-3 py-2.5 text-xs leading-relaxed text-muted">
-        Only {usable.length} pass{usable.length === 1 ? "" : "es"} of this track cover the area well enough, so
-        there is no time series to draw.
+        {t(
+          "Only {n, plural, one {# pass} other {# passes}} of this track cover the area well enough, so there is no time series to draw.",
+          { n: usable.length },
+        )}
       </p>
     );
   }
@@ -98,8 +102,8 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   };
 
   const marks = [
-    { day: preDay, label: "Before" },
-    { day: postDay, label: "After" },
+    { day: preDay, label: t("Before") },
+    { day: postDay, label: t("After") },
   ].filter((m) => toMs(m.day) >= t0 && toMs(m.day) <= t1);
 
   const xTicks = [0, Math.floor((points.length - 1) / 2), points.length - 1]
@@ -119,7 +123,7 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
   const active = hover !== null ? points[hover] : null;
   const tooltipLeft = active ? Math.min(Math.max(active.px, 84), Math.max(width - 84, 84)) : 0;
   const last = points[points.length - 1];
-  const fmt = (v: number | null): string => (v === null ? "—" : v.toFixed(2));
+  const fmt = (v: number | null): string => (v === null ? "—" : formatNumber(v, 2, 2));
 
   return (
     <div>
@@ -129,7 +133,10 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
             width={width}
             height={HEIGHT}
             role="img"
-            aria-label={`Median radar backscatter in dB on each pass, for the flagged land and for the rest of the land, from ${formatDate(usable[0].date)} to ${formatDate(usable[usable.length - 1].date)}. A table of the values follows.`}
+            aria-label={t(
+              "Median radar backscatter in dB on each pass, for the flagged land and for the rest of the land, from {from} to {to}. A table of the values follows.",
+              { from: formatDate(usable[0].date), to: formatDate(usable[usable.length - 1].date) },
+            )}
             className="block overflow-visible"
           >
             {model.ticks.map((tick) => (
@@ -223,11 +230,11 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
             <div className="text-muted">{formatDate(active.p.date)}</div>
             {hasInside && (
               <div className="text-ink">
-                Flagged land <span className="font-medium">{fmt(active.p.insideDb)}</span> dB
+                {t("Flagged land")} <span className="font-medium">{fmt(active.p.insideDb)}</span> dB
               </div>
             )}
             <div className="text-ink">
-              Rest of land <span className="font-medium">{fmt(active.p.outsideDb)}</span> dB
+              {t("Rest of land")} <span className="font-medium">{fmt(active.p.outsideDb)}</span> dB
             </div>
           </div>
         )}
@@ -237,29 +244,30 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
         {hasInside && (
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-0.5 w-4 rounded" style={{ background: color }} />
-            Flagged land{last.p.insideDb !== null ? ` (${fmt(last.p.insideDb)} dB)` : ""}
+            {t("Flagged land")}
+            {last.p.insideDb !== null ? ` (${fmt(last.p.insideDb)} dB)` : ""}
           </span>
         )}
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-4 border-t-2 border-dashed" style={{ borderColor: REST_COLOR }} />
-          Rest of the land ({fmt(last.p.outsideDb)} dB)
+          {t("Rest of the land ({db} dB)", { db: fmt(last.p.outsideDb) })}
         </span>
         <span>
-          {analysis.pol} · {usable.length} passes
+          {analysis.pol} · {t("{n} passes", { n: usable.length })}
         </span>
       </p>
 
       <details className="mt-2 text-xs text-muted">
-        <summary className="cursor-pointer select-none rounded hover:text-ink">View data table</summary>
+        <summary className="cursor-pointer select-none rounded hover:text-ink">{t("View data table")}</summary>
         <div className="mt-2 max-h-44 overflow-y-auto rounded-lg border border-line">
           <table className="w-full border-collapse text-left font-mono text-[11px] tabular-nums">
-            <caption className="sr-only">Median backscatter on each pass, in dB.</caption>
+            <caption className="sr-only">{t("Median backscatter on each pass, in dB.")}</caption>
             <thead className="sticky top-0 bg-[#0d121d] text-muted">
               <tr>
-                <th scope="col" className="px-2.5 py-1.5 font-normal">Date</th>
-                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Flagged</th>
-                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">Rest</th>
-                <th scope="col" className="px-2.5 py-1.5 font-normal">Note</th>
+                <th scope="col" className="px-2.5 py-1.5 font-normal">{t("Date")}</th>
+                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">{t("Flagged")}</th>
+                <th scope="col" className="px-2.5 py-1.5 text-right font-normal">{t("Rest")}</th>
+                <th scope="col" className="px-2.5 py-1.5 font-normal">{t("Note")}</th>
               </tr>
             </thead>
             <tbody className="text-ink">
@@ -269,7 +277,13 @@ export function BackscatterChart({ analysis, color }: BackscatterChartProps) {
                   <td className="px-2.5 py-1 text-right">{fmt(p.insideDb)}</td>
                   <td className="px-2.5 py-1 text-right">{fmt(p.outsideDb)}</td>
                   <td className="px-2.5 py-1 text-muted">
-                    {p.date === preDay ? "Before" : p.date === postDay ? "After" : p.usable ? "" : `Partial pass (${p.validPct.toFixed(0)}%)`}
+                    {p.date === preDay
+                      ? t("Before")
+                      : p.date === postDay
+                        ? t("After")
+                        : p.usable
+                          ? ""
+                          : t("Partial pass ({pct}%)", { pct: p.validPct.toFixed(0) })}
                   </td>
                 </tr>
               ))}

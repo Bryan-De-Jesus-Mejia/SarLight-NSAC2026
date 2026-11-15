@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_santiago_hoya_caimito",
+  "source": "nisar",
+  "orbit": "P162_F011_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-17T10:09:07Z",
+    "2026-09-29T10:09:08Z",
+    "2026-10-11T10:09:08Z",
+    "2026-10-23T10:09:08Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32619",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-21",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-17T10:09:07Z",
+    "2026-09-29T10:09:08Z",
+    "2026-10-11T10:09:08Z"
+  ],
+  "peak_date": "2026-10-23T10:09:08Z",
+  "peak_flood_km2": 0.663,
+  "peak_new_water_km2": 0.0,
+  "peak_flooded_veg_km2": 0.663,
+  "max_extent_km2": 0.663,
+  "max_extent_open_water_km2": 0.0,
+  "max_extent_flooded_veg_km2": 0.663,
+  "permanent_water_km2": 0.0
+}

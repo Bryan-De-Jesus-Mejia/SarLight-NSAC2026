@@ -1,5 +1,6 @@
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { EventSummary } from "@/data/types";
+import { translate } from "@/i18n/core";
 
 /** Lower-case and strip diacritics, so "rondonia" finds "Rondônia". */
 export function normalizeText(value: string): string {
@@ -20,9 +21,9 @@ const haystacks = new WeakMap<EventSummary, string>();
 function haystack(event: EventSummary): string {
   let text = haystacks.get(event);
   if (text === undefined) {
-    text = normalizeText(
-      `${event.name} ${event.region} ${event.country} ${CHANGE_TYPES[event.type].label}`,
-    );
+    // Both languages at once: "inundación" and "flood" find the same case.
+    const parts = [event.name, event.region, event.country, CHANGE_TYPES[event.type].label];
+    text = normalizeText([...parts, ...parts.map((part) => translate("es", part))].join(" "));
     haystacks.set(event, text);
   }
   return text;

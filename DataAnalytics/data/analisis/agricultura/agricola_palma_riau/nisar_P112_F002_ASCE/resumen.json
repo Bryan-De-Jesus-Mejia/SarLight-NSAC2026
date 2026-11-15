@@ -1,0 +1,38 @@
+{
+  "collection": "agricola_palma_riau",
+  "source": "nisar",
+  "orbit": "P112_F002_ASCE",
+  "mode": "cosecha",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-21T22:49:55Z",
+    "2026-07-03T22:49:54Z",
+    "2026-07-15T22:49:54Z",
+    "2026-08-20T22:49:52Z",
+    "2026-09-01T22:49:52Z",
+    "2026-09-13T22:49:51Z",
+    "2026-09-25T22:49:51Z",
+    "2026-10-07T22:49:51Z",
+    "2026-10-19T22:49:52Z",
+    "2026-10-31T22:49:52Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32648",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "vegetated_area_km2": 1845.967,
+  "harvested_area_km2": 22.687,
+  "harvested_pct_of_vegetated": 1.23,
+  "peak_interval_end": "2026-07-03T22:49:54Z",
+  "peak_interval_drop_km2": 11.995,
+  "median_harvest_doy": 184,
+  "mean_max_drop_db": -3.665
+}

@@ -1,0 +1,42 @@
+{
+  "collection": "embalse_sabaneta",
+  "source": "nisar",
+  "orbit": "P162_F011_ASCE",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-25T10:09:10Z",
+    "2026-07-07T10:09:09Z",
+    "2026-07-19T10:09:09Z",
+    "2026-08-12T10:09:08Z",
+    "2026-08-24T10:09:08Z",
+    "2026-09-05T10:09:07Z",
+    "2026-09-17T10:09:07Z",
+    "2026-09-29T10:09:08Z",
+    "2026-10-11T10:09:08Z",
+    "2026-10-23T10:09:08Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32619",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-25T10:09:10Z",
+  "first_water_km2": 0.062,
+  "last_date": "2026-10-23T10:09:08Z",
+  "last_water_km2": 0.083,
+  "change_km2": 0.021,
+  "change_pct": 33.9,
+  "min_date": "2026-09-17T10:09:07Z",
+  "min_water_km2": 0.006,
+  "max_date": "2026-10-23T10:09:08Z",
+  "max_water_km2": 0.083,
+  "range_pct_of_max": 92.8
+}
