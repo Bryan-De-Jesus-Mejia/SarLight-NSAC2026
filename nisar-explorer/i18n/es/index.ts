@@ -1,6 +1,7 @@
 import { classroom } from "./classroom";
 import { data } from "./data";
 import { exportCase } from "./export";
+import { impacts } from "./impacts";
 import { menu } from "./menu";
 import { methods } from "./methods";
 import { more } from "./more";
@@ -34,4 +35,5 @@ export const es: Record<string, string> = {
   ...offline,
   ...passes,
   ...tour,
+  ...impacts,
 };

@@ -254,6 +254,18 @@ function useCommands(): Command[] {
       ),
       run: () => router.push("/methods"),
     });
+    list.push({
+      id: "impacts",
+      group: "learn",
+      label: t("Consequences"),
+      hint: t("What these events mean for people, with stories from the Dominican Republic"),
+      icon: (
+        <Glyph>
+          <path d="M8.500 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3.300 2.500-6 5.500-6s5.500 2.700 5.500 6M16.500 11a2.500 2.500 0 1 0 0-5M18 14c2 .500 3.500 2.600 3.500 5" />
+        </Glyph>
+      ),
+      run: () => router.push("/impacts"),
+    });
   }
 
   return list;
