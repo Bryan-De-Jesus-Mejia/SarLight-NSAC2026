@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { focusMenuButton } from "@/components/CommandMenu";
+import { usePopover } from "@/hooks/usePopover";
 import { useLang, useT, type TFunction } from "@/i18n/core";
 import { MAX_LENGTH, SUGGESTIONS, dropReplyFor, sendMessage, stopReply } from "@/lib/chatSimulation";
 import { formatClock, formatDayMonth } from "@/lib/format";
@@ -24,30 +26,6 @@ const when = (at: number, t: TFunction): string => {
     ? t("Today, {time}", { time })
     : t("{date}, {time}", { date: formatDayMonth(at), time });
 };
-
-/** Close a popover on an outside click or Escape. */
-function usePopover(onClose: () => void, active: boolean) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    if (!active) return;
-    const onPointer = (event: PointerEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) onClose();
-    };
-    const onKey = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.stopPropagation();
-        onClose();
-      }
-    };
-    window.addEventListener("pointerdown", onPointer);
-    window.addEventListener("keydown", onKey, true);
-    return () => {
-      window.removeEventListener("pointerdown", onPointer);
-      window.removeEventListener("keydown", onKey, true);
-    };
-  }, [active, onClose]);
-  return ref;
-}
 
 function Bubble({ message }: { message: ChatMessage }) {
   const t = useT();
@@ -152,7 +130,7 @@ export function ChatPanel() {
 
   const hide = useCallback(() => {
     closeChat();
-    document.getElementById("ge-chat-button")?.focus();
+    focusMenuButton();
   }, [closeChat]);
 
   // Focus the box when the panel opens.

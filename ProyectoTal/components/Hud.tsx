@@ -1,16 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { ChatButton } from "@/components/chat/ChatButton";
+import { MenuButton } from "@/components/CommandMenu";
 import { GeneralIntro } from "@/components/GeneralIntro";
-import { LanguageToggle } from "@/components/LanguageToggle";
+import { LanguageSelect } from "@/components/LanguageSelect";
 import { LayersPanel } from "@/components/LayersPanel";
 import { Legend } from "@/components/Legend";
 import { SearchBox } from "@/components/SearchBox";
 import { Timeline } from "@/components/Timeline";
+import { ViewSelect } from "@/components/ViewSelect";
 import { useT } from "@/i18n/core";
-import { globeApi } from "@/lib/globeApi";
 import { useAppStore } from "@/store/useAppStore";
 import { useChatStore } from "@/store/useChatStore";
 
@@ -49,24 +48,15 @@ export function Hud() {
   const chatOpen = useChatStore((s) => s.open);
   // The guided demo and story mode both take over the screen.
   const demoActive = useAppStore((s) => s.demoActive || s.story);
-  const startDemo = useAppStore((s) => s.startDemo);
   const audience = useAppStore((s) => s.audience);
-  const setAudience = useAppStore((s) => s.setAudience);
   const story = useAppStore((s) => s.story);
   const lens = useAppStore((s) => s.lens);
   const dance = useAppStore((s) => s.dance);
-  const setLens = useAppStore((s) => s.setLens);
   const community = useAppStore((s) => s.community);
   const setCommunity = useAppStore((s) => s.setCommunity);
-  const setDance = useAppStore((s) => s.setDance);
+  const intro = useAppStore((s) => s.intro);
+  const setIntro = useAppStore((s) => s.setIntro);
 
-  const toggleDance = () => {
-    if (dance) return setDance(false);
-    // Seen from far away, so the whole planet fills in.
-    globeApi.current?.flyTo({ lat: 12, lng: -45, altitude: 2.7 });
-    setDance(true);
-  };
-  const [introOpen, setIntroOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
@@ -92,143 +82,43 @@ export function Hud() {
     setLayersOpen(!layersOpen);
   };
 
+  const ready = hasEvents && !demoActive;
+
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-5 sm:p-8">
-      {hasEvents && introOpen && !demoActive && !caseOpen && !lens && !dance && audience === "general" && (
-        <GeneralIntro onClose={() => setIntroOpen(false)} />
+    <div className="pointer-events-none absolute inset-0 z-[25] flex flex-col justify-between p-5 sm:p-8">
+      {ready && intro && !caseOpen && !lens && !dance && audience !== "technical" && (
+        <GeneralIntro onClose={() => setIntro(false)} />
       )}
 
-      <div className="flex flex-wrap items-start gap-x-4 gap-y-4">
-        <h1 className="mr-auto font-display text-4xl leading-[1.05] text-ink sm:text-5xl">
+      <header className="flex flex-wrap items-start gap-x-6 gap-y-3">
+        <h1 className="mr-auto font-display text-3xl leading-[1.05] text-ink sm:text-4xl">
           Dancing with the <em>SARs</em>
         </h1>
 
-        <LanguageToggle />
+        {/* Phones: the menu holds the pickers, so the bar keeps only search and the community check. */}
+        <MenuButton className="md:hidden" />
 
-        {hasEvents && !demoActive && (
-          <div className="ge-surface pointer-events-auto flex h-10 shrink-0 overflow-hidden" role="group" aria-label={t("Who is reading")}>
+        <div className={`flex w-full items-center gap-2 md:ml-auto md:w-auto md:flex-wrap md:justify-end ${ready ? "" : "max-md:hidden"}`}>
+          <LanguageSelect className="max-md:hidden" />
+          {ready && <ViewSelect className="max-md:hidden" />}
+          {ready && <SearchBox className="min-w-0 flex-1 md:w-60 md:flex-none xl:w-72" />}
+          {ready && !story && (
             <button
               type="button"
-              aria-pressed={audience === "general"}
-              onClick={() => setAudience("general")}
-              title={t("Simple view")}
-              className={`flex w-10 items-center justify-center transition-colors hover:text-accent ${audience === "general" ? "bg-white/10 text-accent" : "text-muted"}`}
+              aria-pressed={community}
+              onClick={() => setCommunity(!community)}
+              title={t("Is my community at risk? See what our radar found around a place")}
+              className="ge-ctl ge-ctl--primary pointer-events-auto inline-flex shrink-0"
             >
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 20.300s-7.300-4.400-7.300-10A4.200 4.200 0 0 1 12 7.600a4.200 4.200 0 0 1 7.300 2.700c0 5.600-7.300 10-7.300 10z" />
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M3.500 11.500 12 4l8.500 7.500M6 10v9.500h12V10M10 19.500v-5h4v5" />
               </svg>
-              <span className="sr-only">{t("Simple view")}</span>
+              <span className="sr-only lg:not-sr-only">{t("Is my community at risk?")}</span>
             </button>
-            <button
-              type="button"
-              aria-pressed={audience === "technical"}
-              onClick={() => setAudience("technical")}
-              title={t("Technical view")}
-              className={`flex w-10 items-center justify-center border-l border-line transition-colors hover:text-accent ${audience === "technical" ? "bg-white/10 text-accent" : "text-muted"}`}
-            >
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M4 19.500h16M7 16v-5M12 16V6M17 16v-8" />
-              </svg>
-              <span className="sr-only">{t("Technical view")}</span>
-            </button>
-          </div>
-        )}
-
-        {hasEvents && !demoActive && audience === "general" && (
-          <button
-            type="button"
-            aria-pressed={introOpen}
-            onClick={() => setIntroOpen((open) => !open)}
-            title={t("Where the land changed most")}
-            className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center transition-colors hover:text-accent ${introOpen ? "text-accent" : "text-ink"}`}
-          >
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M4 6.5h16M4 12h10.500M4 17.500h6" />
-            </svg>
-            <span className="sr-only">{t("Where the land changed most")}</span>
-          </button>
-        )}
-
-        {hasEvents && !demoActive && <SearchBox className="w-full md:order-none md:w-72 max-md:order-last" />}
-
-        {hasEvents && !demoActive && (
-          <button
-            type="button"
-            onClick={startDemo}
-            title={t("Guided demo")}
-            className="ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm text-ink transition-colors hover:text-accent"
-          >
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-              <path d="M8 5.2v13.6a.6.6 0 0 0 .92.5l10.4-6.8a.6.6 0 0 0 0-1L8.92 4.7A.6.6 0 0 0 8 5.2z" />
-            </svg>
-            <span className="sr-only">{t("Guided demo")}</span>
-          </button>
-        )}
-
-        {hasEvents && !demoActive && !story && (
-          <button
-            type="button"
-            aria-pressed={community}
-            onClick={() => setCommunity(!community)}
-            title={t("Is my community at risk? See what our radar found around a place")}
-            className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm transition-colors hover:text-accent ${community ? "text-accent" : "text-ink"}`}
-          >
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M3.5 11.5 12 4l8.5 7.5M6 10v9.5h12V10M10 19.5v-5h4v5" />
-            </svg>
-            <span className="sr-only">{t("Is my community at risk?")}</span>
-          </button>
-        )}
-
-        {hasEvents && !demoActive && (
-          <>
-            <button
-              type="button"
-              aria-pressed={lens}
-              onClick={() => {
-                if (!lens) globeApi.current?.flyTo({ lat: 18.75, lng: -70.3, altitude: 0.6 });
-                setLens(!lens);
-              }}
-              title={t("See through the clouds: the day as a camera saw it, the ground underneath inside a circle")}
-              className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm transition-colors hover:text-accent max-md:hidden ${lens ? "text-accent" : "text-ink"}`}
-            >
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
-                <circle cx="10.5" cy="10.5" r="6.5" />
-                <path d="M15.5 15.5 20 20M7.5 10.5h6" />
-              </svg>
-              <span className="sr-only">{t("Radar lens")}</span>
-            </button>
-            <button
-              type="button"
-              aria-pressed={dance}
-              onClick={toggleDance}
-              title={t("Watch one real 12-day cycle of NISAR scenes cover the planet")}
-              className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm transition-colors hover:text-accent max-md:hidden ${dance ? "text-accent" : "text-ink"}`}
-            >
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="8.5" />
-                <path d="M5.5 17.5c3-7 8-10 13-11M12 3.5v2M12 18.5v2" />
-              </svg>
-              <span className="sr-only">{t("12-day dance of the satellite")}</span>
-            </button>
-          </>
-        )}
-
-{hasEvents && !demoActive && <ChatButton />}
-
-{!story && (
-        <Link
-            href="/methods"
-            title={t("How it works")}
-            className="ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm text-ink transition-colors hover:text-accent"
-          >
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 4.5h9.5a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h9.5M9 8.5h5" />
-            </svg>
-            <span className="sr-only">{t("How it works")}</span>
-          </Link>
-        )}
-      </div>
+          )}
+          <MenuButton className="max-md:hidden" />
+        </div>
+      </header>
 
       {hasEvents && !demoActive && (
         // With the case panel open, keep the dock clear of it.

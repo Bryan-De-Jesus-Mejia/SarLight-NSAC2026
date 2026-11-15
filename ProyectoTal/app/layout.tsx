@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import { LangSync } from "@/components/LangSync";
 import "./globals.css";
 
@@ -11,16 +11,27 @@ const display = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
-const sans = IBM_Plex_Sans({
+// One sans for the whole interface, and the serif only as the accent.
+const sans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+// The printable study guide keeps its own faces. They are not preloaded: a
+// page only downloads them if it draws a glyph with them.
+const guideSans = IBM_Plex_Sans({
   variable: "--font-plex-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+  preload: false,
 });
 
-const mono = IBM_Plex_Mono({
+const guideMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -33,7 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable} h-full antialiased`}
+      className={`${display.variable} ${sans.variable} ${guideSans.variable} ${guideMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <LangSync />

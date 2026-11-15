@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { SaveToClassroom } from "@/components/Classroom";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Drivers } from "@/components/panel/Drivers";
@@ -436,6 +437,7 @@ export function Story() {
             {steps.length ? `${Math.min(active + 1, steps.length)} / ${steps.length}` : ""}
           </span>
         </div>
+        <SaveToClassroom className="ge-surface !h-8 !w-8 !rounded-lg" />
         <button type="button" onClick={exit} className="ge-surface shrink-0 px-3 py-2 text-xs text-ink transition-colors hover:text-accent">
           {t("Exit story")}
         </button>

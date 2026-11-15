@@ -94,7 +94,7 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
 
   return (
     <div ref={rootRef} className={`pointer-events-auto relative ${className}`}>
-      <div className="ge-search flex h-10 items-center gap-2 rounded-full border border-line bg-[rgb(10_14_24/0.62)] pl-3.5 pr-1.5 backdrop-blur-md transition-colors focus-within:border-accent/70">
+      <div className="ge-search ge-ctl flex w-full !justify-start !gap-2 !px-3 focus-within:!border-accent/70">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" className="shrink-0 text-muted" aria-hidden="true">
           <circle cx="11" cy="11" r="6.5" />
           <path d="M16 16l4.5 4.5" />
@@ -136,7 +136,7 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
       </div>
 
       {showList && (
-        <div className="glass ge-search-list absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-lg p-1.5">
+        <div className="ge-pop ge-menu-surface ge-search-list absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 origin-top overflow-hidden p-1.5">
           {results.length > 0 ? (
             <>
               <ul id={listId} role="listbox" aria-label={t("Matching signals")}>

@@ -13,6 +13,11 @@ import type { Lod, View } from "@/lib/geo";
 
 export type LoadStatus = "idle" | "loading" | "ready" | "error";
 
+/** Who the app is talking to. Students read the simple view and also get the classroom tools. */
+export type Audience = "general" | "technical" | "student";
+
+export const AUDIENCES: readonly Audience[] = ["general", "technical", "student"];
+
 export type TrailKind = "world" | "region" | "country" | "province" | "event";
 
 /** One step of the breadcrumb, with the camera view that reaches it. */
@@ -69,9 +74,12 @@ interface AppState {
   setCompareBefore: (date: string | null) => void;
   setCurtain: (position: number) => void;
   setRadarClass: (klass: number | null) => void;
-  /** Who the app is talking to: everyone (plain words, the default) or a technical reader. */
-  audience: "general" | "technical";
-  setAudience: (audience: "general" | "technical") => void;
+  /** Who the app is talking to: everyone (plain words, the default), a technical reader or a student. */
+  audience: Audience;
+  setAudience: (audience: Audience) => void;
+  /** The "where the land changed most" card of the simple views. */
+  intro: boolean;
+  setIntro: (on: boolean) => void;
   /** Story mode: the open case told as a scroll (the case panel steps aside). */
   story: boolean;
   setStory: (on: boolean) => void;
@@ -187,6 +195,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     }
     set({ audience });
   },
+  intro: false,
+  setIntro: (on) => set({ intro: on }),
   story: false,
   setStory: (on) => set(on ? { story: true, lens: false, dance: false, overlay: "none", compare: false } : { story: false }),
   lens: false,

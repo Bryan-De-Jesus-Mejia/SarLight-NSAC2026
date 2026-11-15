@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
-import { LanguageToggle } from "@/components/LanguageToggle";
+import { LanguageSelect } from "@/components/LanguageSelect";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
 import { msg, useT } from "@/i18n/core";
 import { formatDate, formatValue } from "@/lib/format";
@@ -114,7 +114,7 @@ export function MethodsContent({ rows }: { rows: MethodsRow[] }) {
           </svg>
           {t("Back to the globe")}
         </Link>
-        <LanguageToggle />
+        <LanguageSelect />
       </nav>
 
       <header className="pb-10 pt-10">

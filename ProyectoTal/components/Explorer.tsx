@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import { ChatPanel } from "@/components/chat/ChatPanel";
+import { ClassroomPanel } from "@/components/Classroom";
+import { CommandMenu } from "@/components/CommandMenu";
 import { Curtain } from "@/components/Curtain";
 import { DemoPlayer } from "@/components/DemoPlayer";
 import { Hud } from "@/components/Hud";
@@ -32,8 +34,9 @@ export function Explorer() {
 
   useEffect(() => {
     try {
-      if (window.localStorage.getItem("ge-audience") === "technical") {
-        useAppStore.setState({ audience: "technical" });
+      const saved = window.localStorage.getItem("ge-audience");
+      if (saved === "technical" || saved === "student") {
+        useAppStore.setState({ audience: saved });
       }
     } catch {
       // No storage available: stay on the general view.
@@ -86,7 +89,7 @@ export function Explorer() {
 
   return (
     <main className="relative h-dvh w-full overflow-hidden bg-void">
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <GlobeScene />
       </div>
       <div className="ge-vignette" data-focus={focused ? "" : undefined} aria-hidden="true" />
@@ -100,6 +103,8 @@ export function Explorer() {
       <Community />
       <CasePanel />
       <ChatPanel />
+      <ClassroomPanel />
+      <CommandMenu />
 
       {failed && (
         <div className="absolute inset-0 z-20 flex items-center justify-center p-6">
