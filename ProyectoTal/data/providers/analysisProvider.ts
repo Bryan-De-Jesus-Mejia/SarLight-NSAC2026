@@ -1,10 +1,12 @@
 import raw from "../analysis/cases.json";
+import extraRaw from "../analysis/extra.json";
 import type {
   ChangeType,
   DataProvider,
   EventDetail,
   EventFilters,
   EventSummary,
+  ExtraAnalysis,
   SensorAnalysis,
   TimeRange,
 } from "../types";
@@ -28,7 +30,25 @@ interface RawCase {
   sensors: SensorAnalysis[];
 }
 
+interface RawExtra {
+  id: string;
+  type: ChangeType;
+  name: string;
+  region: string;
+  country: string;
+  lat: number;
+  lon: number;
+  startDate: string;
+  endDate: string;
+  footprint: Array<[number, number]>;
+  thumb: string;
+  changedAreaKm2: number;
+  changedPct: number;
+  extra: ExtraAnalysis;
+}
+
 const file = raw as unknown as { generatedAt: string; cases: RawCase[] };
+const extraFile = extraRaw as unknown as { generatedAt: string; cases: RawExtra[] };
 
 function toSummary(c: RawCase): EventSummary {
   const main = c.sensors[0];
@@ -51,31 +71,41 @@ function toSummary(c: RawCase): EventSummary {
   };
 }
 
+function extraSummary(c: RawExtra): EventSummary {
+  const { extra, ...summary } = c;
+  return { ...summary, source: "analysis", sensors: ["nisar"], kind: extra.kind };
+}
+
 const CASES = [...file.cases].sort((a, b) => a.startDate.localeCompare(b.startDate));
+const EXTRA = extraFile.cases;
+const bySummary = (a: EventSummary, b: EventSummary) => a.startDate.localeCompare(b.startDate);
 
 export class AnalysisProvider implements DataProvider {
   readonly source = "analysis" as const;
 
   async getEvents(filters?: EventFilters): Promise<EventSummary[]> {
     const types = filters?.types;
-    const cases = types && types.length > 0 ? CASES.filter((c) => types.includes(c.type)) : CASES;
-    return cases.map(toSummary);
+    const keep = (c: { type: ChangeType }) => !types || types.length === 0 || types.includes(c.type);
+    return [...CASES.filter(keep).map(toSummary), ...EXTRA.filter(keep).map(extraSummary)].sort(bySummary);
   }
 
   async getEventById(id: string): Promise<EventDetail | null> {
     const found = CASES.find((c) => c.id === id);
-    return found ? { ...toSummary(found), analyses: found.sensors } : null;
+    if (found) return { ...toSummary(found), analyses: found.sensors };
+    const extra = EXTRA.find((c) => c.id === id);
+    return extra ? { ...extraSummary(extra), analyses: [], extra: extra.extra } : null;
   }
 
   async getTimeRange(): Promise<TimeRange> {
+    const all = [...CASES, ...EXTRA];
     return {
-      start: CASES.reduce((min, c) => (c.startDate < min ? c.startDate : min), CASES[0].startDate),
-      end: CASES.reduce((max, c) => (c.endDate > max ? c.endDate : max), CASES[0].endDate),
+      start: all.reduce((min, c) => (c.startDate < min ? c.startDate : min), all[0].startDate),
+      end: all.reduce((max, c) => (c.endDate > max ? c.endDate : max), all[0].endDate),
     };
   }
 
   /** When the analyses were exported (ISO datetime). */
   generatedAt(): string {
-    return file.generatedAt;
+    return file.generatedAt > extraFile.generatedAt ? file.generatedAt : extraFile.generatedAt;
   }
 }
