@@ -146,14 +146,16 @@ const OFFLINE: Record<Lang, string> = {
 /** Turns sent to the service: enough to follow the conversation, small enough for the free tiers. */
 const HISTORY = 8;
 
-async function askService(chatId: string, signal: AbortSignal): Promise<string | null> {
+async function askService(chatId: string, lang: Lang, signal: AbortSignal): Promise<string | null> {
   const chat = useChatStore.getState().chats.find((c) => c.id === chatId);
   const messages = (chat?.messages ?? []).slice(-HISTORY).map((m) => ({ role: m.role, text: m.text }));
   try {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, caseId: useAppStore.getState().selectedId }),
+      // The language is decided here, from the question itself: a model left to guess drifts to Spanish
+      // when the facts it reads are about the Dominican Republic.
+      body: JSON.stringify({ messages, lang, caseId: useAppStore.getState().selectedId }),
       signal,
     });
     if (!response.ok) return null;
@@ -181,7 +183,7 @@ export function sendMessage(raw: string): void {
   const { signal } = request;
   useChatStream.setState({ chatId, phase: "thinking", text: "" });
 
-  void askService(chatId, signal).then((answer) => {
+  void askService(chatId, languageOf(text), signal).then((answer) => {
     // Stopped, or the chat was deleted while waiting.
     if (current !== mine || signal.aborted) return;
     request = null;
