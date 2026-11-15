@@ -1,0 +1,37 @@
+{
+  "collection": "embalse_el_salvador_cerron_grande",
+  "source": "nisar",
+  "orbit": "P134_F009_ASCE",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-08-22T11:31:13Z",
+    "2026-09-03T11:31:13Z",
+    "2026-10-09T11:31:13Z",
+    "2026-10-21T11:31:13Z",
+    "2026-11-02T11:31:13Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32616",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-08-22T11:31:13Z",
+  "first_water_km2": 60.599,
+  "last_date": "2026-11-02T11:31:13Z",
+  "last_water_km2": 78.784,
+  "change_km2": 18.185,
+  "change_pct": 30.0,
+  "min_date": "2026-10-09T11:31:13Z",
+  "min_water_km2": 26.932,
+  "max_date": "2026-11-02T11:31:13Z",
+  "max_water_km2": 78.784,
+  "range_pct_of_max": 65.8
+}
