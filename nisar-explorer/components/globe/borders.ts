@@ -32,6 +32,16 @@ const SHADE_SCALE = 1.0004;
 /** Longest line segment, in degrees: longer ones are split so they follow the curve. */
 const MAX_STEP_DEG = 0.6;
 const ACCENT = 0xfb7185;
+/**
+ * The shade is a faint veil (opacity 0.24): it does not need the border detail, and
+ * triangulating every point of every country would freeze the first frames. Its rings
+ * keep one point every SHADE_STEP_DEG (about the old 1:110m detail); the islands seen
+ * around the Dominican Republic keep all of theirs, so close up the veil meets their coasts.
+ */
+const SHADE_STEP_DEG = 0.4;
+const SHADE_FULL_DETAIL = new Set(["HTI", "PRI", "CUB", "JAM", "BHS", "TCA"]);
+/** Never seen while the veil is on (it shows close to the Dominican Republic), and its pole-wrapping polygon is slow to build. */
+const SHADE_SKIP = new Set(["ATA"]);
 
 const rad = Math.PI / 180;
 
@@ -88,13 +98,32 @@ function lineBatch(regions: RegionFeature[], color: number, opacity: number): Li
   return lines;
 }
 
+/** A ring with one point every `step` degrees (first and last kept), or null when only a sliver is left. */
+function thinRing(ring: Array<[number, number]>, step: number): Array<[number, number]> | null {
+  const out: Array<[number, number]> = [ring[0]];
+  for (let i = 1; i < ring.length - 1; i += 1) {
+    const [lng, lat] = ring[i];
+    const [lastLng, lastLat] = out[out.length - 1];
+    if (Math.abs(lng - lastLng) >= step || Math.abs(lat - lastLat) >= step) out.push(ring[i]);
+  }
+  out.push(ring[ring.length - 1]);
+  // Fewer than five corners is a sliver that was an islet: it adds nothing to the veil and stalls the triangulation.
+  return out.length >= 6 ? out : null;
+}
+
 /** One mesh covering every country but the Dominican Republic. */
 function buildShade(countries: RegionFeature[]): Mesh | null {
   try {
     const parts: BufferGeometry[] = [];
     for (const country of countries) {
-      if (country.id === DR_ISO) continue;
-      for (const polygon of polygonsOf(country)) {
+      if (country.id === DR_ISO || SHADE_SKIP.has(country.id)) continue;
+      const full = SHADE_FULL_DETAIL.has(country.id);
+      for (const original of polygonsOf(country)) {
+        const outer = full ? original[0] : thinRing(original[0], SHADE_STEP_DEG);
+        // Islands smaller than the step vanish from the veil; their outline is still drawn.
+        if (!outer) continue;
+        // Lakes are left out of a thinned veil: a thinned hole can cross its outline and stall the triangulation.
+        const polygon = full ? original : [outer];
         const geometry = new ConicPolygonGeometry(polygon, 0, GLOBE_RADIUS, false, true, false, 3);
         geometry.clearGroups();
         parts.push(geometry);
