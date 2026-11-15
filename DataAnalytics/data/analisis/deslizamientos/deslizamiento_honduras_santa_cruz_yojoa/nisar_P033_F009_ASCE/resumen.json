@@ -1,0 +1,39 @@
+{
+  "collection": "deslizamiento_honduras_santa_cruz_yojoa",
+  "source": "nisar",
+  "orbit": "P033_F009_ASCE",
+  "mode": "cambio",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-20T11:22:54Z",
+    "2026-10-02T11:22:54Z",
+    "2026-10-14T11:22:54Z",
+    "2026-10-26T11:22:54Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32616",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": "2026-10-20"
+  },
+  "event_date": "2026-10-20",
+  "baseline_dates": [
+    "2026-09-20T11:22:54Z",
+    "2026-10-02T11:22:54Z",
+    "2026-10-14T11:22:54Z"
+  ],
+  "first_post_date": "2026-10-26T11:22:54Z",
+  "first_post_drop_km2": 0.78,
+  "first_post_rise_km2": 0.586,
+  "peak_drop_date": "2026-10-26T11:22:54Z",
+  "peak_drop_km2": 0.78,
+  "last_date": "2026-10-26T11:22:54Z",
+  "last_drop_km2": 0.78,
+  "last_rise_km2": 0.586
+}
