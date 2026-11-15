@@ -1,0 +1,43 @@
+{
+  "collection": "embalse_colombia_tomine",
+  "source": "nisar",
+  "orbit": "P083_F086_DESC",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-19T23:20:55Z",
+    "2026-07-01T23:20:54Z",
+    "2026-07-13T23:20:53Z",
+    "2026-07-25T23:20:52Z",
+    "2026-08-18T23:20:51Z",
+    "2026-08-30T23:20:51Z",
+    "2026-09-11T23:20:51Z",
+    "2026-09-23T23:20:51Z",
+    "2026-10-05T23:20:51Z",
+    "2026-10-17T23:20:51Z",
+    "2026-10-29T23:20:51Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32618",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-19T23:20:55Z",
+  "first_water_km2": 9.552,
+  "last_date": "2026-10-29T23:20:51Z",
+  "last_water_km2": 8.98,
+  "change_km2": -0.572,
+  "change_pct": -6.0,
+  "min_date": "2026-07-25T23:20:52Z",
+  "min_water_km2": 0.994,
+  "max_date": "2026-10-05T23:20:51Z",
+  "max_water_km2": 10.067,
+  "range_pct_of_max": 90.1
+}
