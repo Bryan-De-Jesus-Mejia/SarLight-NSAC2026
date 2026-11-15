@@ -233,6 +233,17 @@ body {
   width: 0;
   height: 0;
   pointer-events: none;
+  /* Above every marker, so the card never slides under another case's icon. */
+  /* The globe writes its own z-index (by distance) on every anchor: win over it. */
+  z-index: 100 !important;
+}
+
+/* While a case is open the rest of the markers are for looking at, not touching. */
+body:has(.ge-callout-anchor) .ge-marker-anchor {
+  z-index: 1 !important;
+}
+body:has(.ge-callout-anchor) .ge-marker {
+  pointer-events: none;
 }
 
 .ge-sweep {
