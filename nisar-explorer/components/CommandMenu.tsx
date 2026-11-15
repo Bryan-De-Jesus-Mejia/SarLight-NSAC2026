@@ -10,6 +10,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { useChatStore } from "@/store/useChatStore";
 import { MAX_SAVED, useClassroomStore } from "@/store/useClassroomStore";
 import { useMenuStore } from "@/store/useMenuStore";
+import { useOfflineStore } from "@/store/useOfflineStore";
 
 type Group = "explore" | "study" | "settings" | "learn";
 
@@ -22,7 +23,7 @@ interface Command {
   /** Lit when the thing the command controls is on. */
   active?: boolean;
   /** A small count on the right. */
-  badge?: number;
+  badge?: string;
   /** Needs a pointer and room: left out of the phone drawer. */
   wide?: boolean;
   run: () => void;
@@ -75,6 +76,8 @@ function useCommands(): Command[] {
   const closeChat = useChatStore((s) => s.closeChat);
   const saved = useClassroomStore((s) => s.items.length);
   const setClassroomOpen = useClassroomStore((s) => s.setOpen);
+  const setOfflineOpen = useOfflineStore((s) => s.setOpen);
+  const downloaded = useOfflineStore((s) => Object.keys(s.meta.cases).length);
 
   const live = hasEvents && !demoActive && !story;
   const list: Command[] = [];
@@ -165,10 +168,23 @@ function useCommands(): Command[] {
         label: t("Classroom"),
         hint: t("Your saved cases and study guides"),
         icon: <ViewIcon audience="student" />,
-        badge: saved > 0 ? saved : undefined,
+        badge: saved > 0 ? `${saved}/${MAX_SAVED}` : undefined,
         run: () => setClassroomOpen(true),
       });
     }
+    list.push({
+      id: "offline",
+      group: "study",
+      label: t("Work offline"),
+      hint: t("Keep cases and study guides on this device"),
+      icon: (
+        <Glyph>
+          <path d="M12 4v10M7.500 10 12 14.500 16.500 10M5 19h14" />
+        </Glyph>
+      ),
+      badge: downloaded > 0 ? String(downloaded) : undefined,
+      run: () => setOfflineOpen(true),
+    });
     list.push({
       id: "assistant",
       group: "study",
@@ -463,7 +479,7 @@ function MenuPanel() {
                         </span>
                         {command.badge !== undefined && (
                           <span className="shrink-0 font-mono text-[11px] text-muted">
-                            {command.badge}/{MAX_SAVED}
+                            {command.badge}
                           </span>
                         )}
                         {command.active && (

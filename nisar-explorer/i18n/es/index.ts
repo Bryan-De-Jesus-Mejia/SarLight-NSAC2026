@@ -4,6 +4,7 @@ import { exportCase } from "./export";
 import { menu } from "./menu";
 import { methods } from "./methods";
 import { more } from "./more";
+import { offline } from "./offline";
 import { people } from "./people";
 import { panel } from "./panel";
 import { shell } from "./shell";
@@ -28,4 +29,5 @@ export const es: Record<string, string> = {
   ...menu,
   ...water,
   ...exportCase,
+  ...offline,
 };

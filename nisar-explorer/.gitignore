@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated before dev and build (scripts/build-offline-manifest.mjs)
+/public/offline-manifest.json
+/.next-*/

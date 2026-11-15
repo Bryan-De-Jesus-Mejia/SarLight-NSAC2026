@@ -9,6 +9,7 @@ import { useLang, useT } from "@/i18n/core";
 import { formatClock, formatDayMonth } from "@/lib/format";
 import { buildStudyPrompt } from "@/lib/lesson";
 import { useAppStore } from "@/store/useAppStore";
+import { keepCaseForClassroom, releaseCaseFromClassroom } from "@/store/useOfflineStore";
 import { MAX_SAVED, useClassroomStore, type SavedCase } from "@/store/useClassroomStore";
 
 const placeOf = (name: string): string => name.replace(/ analysis$/i, "");
@@ -26,9 +27,15 @@ export function SaveToClassroom({ className = "" }: { className?: string }) {
   const saved = items.some((item) => item.id === selectedId);
 
   const toggle = () => {
-    if (saved) return remove(selectedId);
+    if (saved) {
+      remove(selectedId);
+      releaseCaseFromClassroom(selectedId);
+      return;
+    }
     const { audience, story } = useAppStore.getState();
     save(selectedId, { audience, story });
+    // Saved (not waiting for the visitor to pick which case to replace): keep it for the classroom.
+    if (useClassroomStore.getState().items.some((item) => item.id === selectedId)) keepCaseForClassroom(selectedId);
   };
 
   return (
@@ -113,7 +120,14 @@ function Row({ item, event, onDone }: { item: SavedCase; event: EventSummary | u
         <button type="button" onClick={() => void copyPrompt()} className="ge-pill">
           {copied === "ok" ? t("Prompt copied") : copied === "fail" ? t("Could not copy") : t("Copy AI study prompt")}
         </button>
-        <button type="button" onClick={() => remove(item.id)} className="ge-link text-xs">
+        <button
+          type="button"
+          onClick={() => {
+            remove(item.id);
+            releaseCaseFromClassroom(item.id);
+          }}
+          className="ge-link text-xs"
+        >
           {t("Remove")}
         </button>
       </div>
@@ -168,7 +182,12 @@ export function ClassroomPanel() {
                   <li key={item.id}>
                     <button
                       type="button"
-                      onClick={() => replace(item.id)}
+                      onClick={() => {
+                        const incoming = pending?.id;
+                        replace(item.id);
+                        releaseCaseFromClassroom(item.id);
+                        if (incoming) keepCaseForClassroom(incoming);
+                      }}
                       className="flex w-full items-center justify-between gap-2 rounded-lg border border-line px-3 py-2 text-left text-sm text-ink transition-colors hover:bg-white/[0.07]"
                     >
                       <span className="truncate">{t(placeOf(eventOf(item.id)?.name ?? item.id))}</span>

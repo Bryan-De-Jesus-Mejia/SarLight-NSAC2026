@@ -13,9 +13,11 @@ import { PassDance } from "@/components/PassDance";
 import { Story } from "@/components/Story";
 import { Welcome } from "@/components/Welcome";
 import { Community } from "@/components/Community";
+import { OfflinePanel } from "@/components/OfflinePanel";
 import { CasePanel } from "@/components/panel/CasePanel";
 import { useT } from "@/i18n/core";
 import { useAppStore } from "@/store/useAppStore";
+import { useClassroomStore } from "@/store/useClassroomStore";
 
 // The globe needs WebGL and `window`: client only.
 const GlobeScene = dynamic(() => import("@/components/globe/GlobeScene"), { ssr: false });
@@ -48,6 +50,25 @@ export function Explorer() {
     if (status !== "ready" || !globeReady) return;
     if (!new URLSearchParams(window.location.search).has("demo")) return;
     const timer = setTimeout(() => useAppStore.getState().startDemo(), 1200);
+    return () => clearTimeout(timer);
+  }, [status, globeReady]);
+
+  // ?go=community|study: the shortcuts of the installed app (long-press the icon).
+  useEffect(() => {
+    if (status !== "ready" || !globeReady) return;
+    const go = new URLSearchParams(window.location.search).get("go");
+    if (!go) return;
+    const timer = setTimeout(() => {
+      const app = useAppStore.getState();
+      if (go === "community") app.setCommunity(true);
+      if (go === "study") {
+        app.setAudience("student");
+        useClassroomStore.getState().setOpen(true);
+      }
+      const url = new URL(window.location.href);
+      url.searchParams.delete("go");
+      window.history.replaceState(null, "", url);
+    }, 900);
     return () => clearTimeout(timer);
   }, [status, globeReady]);
 
@@ -104,6 +125,7 @@ export function Explorer() {
       <CasePanel />
       <ChatPanel />
       <ClassroomPanel />
+      <OfflinePanel />
       <CommandMenu />
 
       {failed && (

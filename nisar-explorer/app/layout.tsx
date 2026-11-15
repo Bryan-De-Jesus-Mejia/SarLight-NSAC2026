@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { LangSync } from "@/components/LangSync";
+import { OfflineBoot } from "@/components/OfflineBoot";
 import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -102,6 +103,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }} />
         <LangSync />
+        <OfflineBoot />
         {children}
       </body>
     </html>
