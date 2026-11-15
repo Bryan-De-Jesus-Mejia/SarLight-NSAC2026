@@ -1,0 +1,8 @@
+.env
+.venv/
+data/collections
+__pycache__/
+data/cache/
+resultados/
+cloud/logs/
+resultados/

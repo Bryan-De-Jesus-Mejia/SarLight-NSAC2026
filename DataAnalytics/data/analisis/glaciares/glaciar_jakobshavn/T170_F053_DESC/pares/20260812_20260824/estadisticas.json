@@ -1,0 +1,20 @@
+{
+  "days": 12,
+  "pixel_size_m": 80.0,
+  "crs": "EPSG:3413",
+  "incidence_deg_assumed": 37.0,
+  "reliable_pct": 71.3,
+  "noise_stable_ground_m_day": 0.443,
+  "speed_p50_m_day": 0.502,
+  "speed_p95_m_day": 2.1,
+  "speed_max_m_day": 3.53,
+  "fast_threshold_m_day": 1.0,
+  "fast_area_km2": 462.88,
+  "fast_median_m_day": 1.73,
+  "coherence_median": 0.077,
+  "group": "T170_F053_DESC",
+  "ref": "20260812",
+  "sec": "20260824",
+  "mid_date": "2026-08-18",
+  "direction": "DESC"
+}
