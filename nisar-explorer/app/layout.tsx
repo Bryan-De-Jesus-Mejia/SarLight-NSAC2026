@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { LangSync } from "@/components/LangSync";
 import "./globals.css";
@@ -39,7 +39,15 @@ const guideMono = IBM_Plex_Mono({
   preload: false,
 });
 
+export const viewport: Viewport = {
+  themeColor: "#040406",
+  colorScheme: "dark",
+};
+
 export const metadata: Metadata = {
+  applicationName: "Dancing with the SARs",
+  appleWebApp: { capable: true, title: "SARs", statusBarStyle: "black-translucent" },
+  formatDetection: { telephone: false },
   title: "ONAT: Dancing With the SARs for NASA Space Apps Challenge 2026",
   description:
     "An interactive globe for following how Earth's surface changes, as seen by the NASA–ISRO NISAR radar mission and Sentinel-1. Every figure comes from real radar scenes compared pass against pass; nothing has been verified on the ground yet.",
