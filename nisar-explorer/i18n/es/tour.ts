@@ -69,6 +69,16 @@ export const tour: Record<string, string> = {
   "The next NISAR pass over a place, the satellite’s 12-day dance, cases for offline use, study mode, the methods, the language and this tour.":
     "La próxima pasada de NISAR sobre un lugar, el baile de 12 días del satélite, casos para usar sin conexión, el modo estudio, los métodos, el idioma y este recorrido.",
 
+  // Voice in the chat (components/chat/ChatPanel.tsx, hooks/useVoice.ts)
+  "Ask by voice": "Preguntar por voz",
+  "Stop listening": "Dejar de escuchar",
+  "Listening… speak now, then check the text and send it.": "Escuchando… habla ahora y luego revisa el texto y envíalo.",
+  "The microphone is blocked. Allow it in the browser to ask by voice.": "El micrófono está bloqueado. Permítelo en el navegador para preguntar por voz.",
+  "I didn't hear anything. Try again closer to the microphone.": "No escuché nada. Inténtalo de nuevo más cerca del micrófono.",
+  "Voice is not available right now. You can type instead.": "La voz no está disponible ahora. Puedes escribir.",
+  "Your browser turns your voice into text (in Chrome, through Google).": "Tu navegador convierte tu voz en texto (en Chrome, a través de Google).",
+  "Read answers aloud": "Leer respuestas en voz alta",
+
   // Timeline period (components/Timeline.tsx)
   "Chosen period": "Período elegido",
   "Play the chosen period day by day": "Reproducir el período elegido día a día",

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { focusMenuButton } from "@/components/CommandMenu";
 import { usePopover } from "@/hooks/usePopover";
+import { useDictation, useReadAloud, useVoiceSupport } from "@/hooks/useVoice";
 import { useLang, useT, type TFunction } from "@/i18n/core";
 import { MAX_LENGTH, SUGGESTIONS, dropReplyFor, sendMessage, stopReply } from "@/lib/chatSimulation";
 import { formatClock, formatDayMonth } from "@/lib/format";
@@ -164,6 +165,35 @@ export function ChatPanel() {
     box.style.height = `${Math.min(box.scrollHeight, MAX_INPUT_HEIGHT)}px`;
   }, [value, open]);
 
+  // Voice: dictate a question (it waits in the box until you send it) and, if chosen, hear the answers.
+  const voice = useVoiceSupport();
+  // A spoken question stays in the box: the visitor can fix it and sends it when ready.
+  const keepSpoken = useCallback((text: string) => {
+    setValue(text);
+    inputRef.current?.focus();
+  }, []);
+  const dictation = useDictation(lang, setValue, keepSpoken);
+  const reader = useReadAloud(lang);
+  const lastHeard = useRef<string | null>(null);
+  const lastMessage = messages[messages.length - 1];
+  useEffect(() => {
+    // Switching chats (or opening the panel) does not read old answers.
+    lastHeard.current = lastMessage?.id ?? null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active?.id, open]);
+  useEffect(() => {
+    if (!lastMessage || lastMessage.id === lastHeard.current) return;
+    lastHeard.current = lastMessage.id;
+    if (reader.on && lastMessage.role === "assistant") reader.speak(lastMessage.text);
+  }, [lastMessage, reader]);
+  const { stop: stopDictation } = dictation;
+  const { silence } = reader;
+  useEffect(() => {
+    if (open) return;
+    stopDictation();
+    silence();
+  }, [open, stopDictation, silence]);
+
   if (!open || takenOver) return null;
 
   const remember = () => {
@@ -201,6 +231,7 @@ export function ChatPanel() {
     if (active) drafts.current.delete(active.id);
     setValue("");
   };
+
 
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     // Enter sends; Shift+Enter is a new line. Leave IME composition alone.
@@ -377,6 +408,21 @@ export function ChatPanel() {
             aria-label={t("Message")}
             className="ge-scroll max-h-[140px] min-h-[2.25rem] flex-1 resize-none bg-transparent px-2 py-1.5 text-sm leading-relaxed text-ink outline-none placeholder:text-muted/70"
           />
+          {voice.listen && !replying && (
+            <button
+              type="button"
+              onClick={dictation.listening ? dictation.stop : dictation.start}
+              aria-pressed={dictation.listening}
+              aria-label={dictation.listening ? t("Stop listening") : t("Ask by voice")}
+              title={dictation.listening ? t("Stop listening") : t("Ask by voice")}
+              className={`ge-send ${dictation.listening ? "ge-mic--on" : ""}`}
+            >
+              <Icon size={15}>
+                <rect x="9" y="3.500" width="6" height="11" rx="3" />
+                <path d="M5.500 11.500a6.500 6.500 0 0 0 13 0M12 18v2.500" />
+              </Icon>
+            </button>
+          )}
           {replying ? (
             <button type="button" onClick={() => stopReply()} aria-label={t("Stop the reply")} title={t("Stop")} className="ge-send">
               <Icon size={14}>
@@ -391,6 +437,35 @@ export function ChatPanel() {
             </button>
           )}
         </div>
+        {(voice.listen || voice.speak) && (
+          <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-1">
+            <p className="text-[10px] leading-snug text-muted" aria-live="polite">
+              {dictation.listening
+                ? t("Listening… speak now, then check the text and send it.")
+                : dictation.error === "denied"
+                  ? t("The microphone is blocked. Allow it in the browser to ask by voice.")
+                  : dictation.error === "no-speech"
+                    ? t("I didn't hear anything. Try again closer to the microphone.")
+                    : dictation.error === "failed"
+                      ? t("Voice is not available right now. You can type instead.")
+                      : voice.listen
+                        ? t("Your browser turns your voice into text (in Chrome, through Google).")
+                        : null}
+            </p>
+            {voice.speak && (
+              <button
+                type="button"
+                role="switch"
+                aria-checked={reader.on}
+                onClick={() => reader.setOn(!reader.on)}
+                className="flex shrink-0 items-center gap-1.5 text-[11px] text-muted transition-colors hover:text-ink"
+              >
+                {t("Read answers aloud")}
+                <span className="ge-switch" data-on={reader.on} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        )}
         {left <= 200 && (
           <p className={`mt-1.5 px-1 text-right font-mono text-[10px] tracking-[0.1em] ${left <= 0 ? "text-[#fb7185]" : "text-muted"}`}>{left}</p>
         )}

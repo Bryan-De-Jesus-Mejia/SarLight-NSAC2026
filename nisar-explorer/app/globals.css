@@ -1294,6 +1294,25 @@ body:has(.ge-callout-anchor) .ge-marker {
   background: var(--color-accent);
 }
 
+/* The microphone while it listens. */
+.ge-mic--on {
+  color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgb(251 113 133 / 0.25);
+  animation: ge-mic-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ge-mic-pulse {
+  50% {
+    box-shadow: 0 0 0 6px rgb(251 113 133 / 0.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-mic--on {
+    animation: none;
+  }
+}
+
 .ge-send:disabled {
   opacity: 0.25;
 }
