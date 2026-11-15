@@ -4,29 +4,28 @@
 
 An interactive globe that turns real radar data from the NASA–ISRO **NISAR** satellite into stories anyone can follow:
 floods that take homes, wind that flattens a harvest, heat that dries the land, slopes that slide, earthquakes that move
-the ground by tens of centimetres, and glaciers sliding into the sea. Built from the Dominican Republic out to the world,
-with a ready-to-use class for Dominican schools.
+the ground by tens of centimetres, and glaciers sliding into the sea. Built from the Dominican Republic out to the world.
 
 ## What you can do
 
 | For | What |
 |---|---|
-| Everyone | A **simple view** in plain words, a **story mode** that tells each case step by step on the globe, a **radar lens** (the day as a camera saw it, the radar inside a circle), the **12-day dance** of ~15,000 real NISAR scenes |
-| Teachers | **`/aula`**: a 50-minute lesson in Spanish for secondary schools, a flashlight-and-mirror experiment, the **Detective de radar** game with real images, community mapping, a printable worksheet with answer key |
+| Everyone | A **simple view** in plain words, a **story mode** that tells each case step by step on the globe, with **"Why?" cards** that explain the science behind each step, a **cloud lens** (the day as a camera saw it, the ground under the clouds inside a circle), the **12-day dance** of ~15,000 real NISAR scenes |
+| Communities | **"Is my community at risk?"**: pick a place and see what our radar found nearby. Every case has a **"For people"** card: how many people live on the land that changed, a **field watch** for those who farm (crop loss, drying, flooded fields, normal harvest) and **what to do**, with 9-1-1, COE and Defensa Civil in the Dominican Republic |
 | Scientists | A **technical view** with every number and method: thresholds, polarisations (HH/HV, VV/VH), L-band vs C-band, per-pixel baselines, land cover of the change, downloads (JSON, GeoJSON, images) |
 
 Every case has a **"Why it happened"** chain: cause → what happens on the ground → what the radar measured → what people
 live through. Where the world left a record, the cause comes with evidence: rain, heat and wind from the ERA5 reanalysis,
 earthquakes from the USGS catalogue.
 
-## The cases (29)
+## The cases (31)
 
 - **Dominican Republic (13):** floods in Capotillo, Santo Domingo Norte (Ozama), San Pedro de Macorís, San José de Ocoa,
   Azua and Monte Plata; wind damage in the Cibao and Valverde; heat and drought on the Línea Noroeste; landslide watch in
   Los Cacaos and Miches; fire analyses in Sierra de Bahoruco and Pelempito.
-- **World (16):** earthquakes in Venezuela, Mexico, Indonesia and Panama; the Langtang collapse in Nepal; glaciers
+- **World (18):** earthquakes in Venezuela, Mexico, Indonesia and Panama; the Langtang collapse in Nepal; glaciers
   (Jakobshavn, Hubbard, Pine Island); harvests, rice flooding, crop burning and forest clearing in the US, Canada, Ukraine,
-  Egypt, Vietnam, India and Brazil.
+  Egypt, Vietnam, Bangladesh, India, Indonesia and Brazil.
 
 ## Honesty
 
@@ -57,6 +56,7 @@ cd ../ProyectoTal
 python ../DataAnalytics/pipeline/export_web.py     # change maps
 node scripts/export-extra.mjs                      # floods over time, wind, heat, landslides, quakes, glaciers, farming
 node scripts/export-context.mjs                    # weather (Open-Meteo/ERA5) and earthquakes (USGS)
+python ../DataAnalytics/pipeline/export_people.py  # people on the changed land (GHSL population grid)
 python ../DataAnalytics/pipeline/export_passes.py  # the 12-day dance
 ```
 
@@ -66,6 +66,7 @@ python ../DataAnalytics/pipeline/export_passes.py  # the 12-day dance
 - **Sentinel-1** RTC backscatter (OPERA, NASA), contains Copernicus Sentinel data.
 - **Weather:** Open-Meteo historical weather API, ERA5 reanalysis, CC BY 4.0.
 - **Earthquakes:** USGS earthquake catalogue, public domain.
+- **Population:** GHS-POP R2023A (epoch 2025, 30 arc-seconds), European Commission JRC, CC BY 4.0.
 - **Land cover:** ESA WorldCover 2021 v200, CC BY 4.0.
 - **Imagery:** NASA GIBS (NOAA-20 VIIRS, NISAR, OPERA layers); Sentinel-2 cloudless by EOX (contains modified Copernicus Sentinel data 2021).
 

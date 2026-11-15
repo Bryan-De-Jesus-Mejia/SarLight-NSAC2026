@@ -54,6 +54,8 @@ export function Hud() {
   const lens = useAppStore((s) => s.lens);
   const dance = useAppStore((s) => s.dance);
   const setLens = useAppStore((s) => s.setLens);
+  const community = useAppStore((s) => s.community);
+  const setCommunity = useAppStore((s) => s.setCommunity);
   const setDance = useAppStore((s) => s.setDance);
 
   const toggleDance = () => {
@@ -161,6 +163,21 @@ export function Hud() {
           </button>
         )}
 
+        {hasEvents && !demoActive && !story && (
+          <button
+            type="button"
+            aria-pressed={community}
+            onClick={() => setCommunity(!community)}
+            title="Is my community at risk? See what our radar found around a place"
+            className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm transition-colors hover:text-accent ${community ? "text-accent" : "text-ink"}`}
+          >
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M3.5 11.5 12 4l8.5 7.5M6 10v9.5h12V10M10 19.5v-5h4v5" />
+            </svg>
+            <span className="sr-only">Is my community at risk?</span>
+          </button>
+        )}
+
         {hasEvents && !demoActive && (
           <>
             <button
@@ -170,7 +187,7 @@ export function Hud() {
                 if (!lens) globeApi.current?.flyTo({ lat: 18.75, lng: -70.3, altitude: 0.6 });
                 setLens(!lens);
               }}
-              title="See through the clouds: the day as a camera saw it, the ground and the radar inside a circle"
+              title="See through the clouds: the day as a camera saw it, the ground underneath inside a circle"
               className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm transition-colors hover:text-accent max-md:hidden ${lens ? "text-accent" : "text-ink"}`}
             >
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
@@ -196,19 +213,6 @@ export function Hud() {
         )}
 
 {hasEvents && !demoActive && <ChatButton />}
-
-{!story && (
-        <Link
-            href="/aula"
-            title="Classroom: a ready-made lesson for Dominican schools"
-            className="ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm text-ink transition-colors hover:text-accent"
-          >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M2.5 9 12 4.5 21.5 9 12 13.5zM6 11v4.5c1.5 1.6 3.6 2.5 6 2.5s4.5-.9 6-2.5V11M21.5 9v5" />
-            </svg>
-            <span className="sr-only">Classroom</span>
-          </Link>
-        )}
 
 {!story && (
         <Link

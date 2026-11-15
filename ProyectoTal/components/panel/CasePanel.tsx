@@ -7,6 +7,7 @@ import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
 import { ExtraBody } from "@/components/panel/ExtraCase";
 import { Drivers } from "@/components/panel/Drivers";
+import { Impact } from "@/components/panel/Impact";
 import { GeneralView } from "@/components/panel/GeneralView";
 import { SarViewer } from "@/components/panel/SarViewer";
 import { CHANGE_TYPES } from "@/data/changeTypes";
@@ -178,6 +179,8 @@ function AnalysisView({ detail, analysis }: { detail: EventDetail; analysis: Sen
       <div className="rounded-2xl border border-line bg-white/[0.03] p-4">
         <Drivers detail={detail} />
       </div>
+
+      <Impact detail={detail} />
 
       <Hypotheses type={detail.type} />
 

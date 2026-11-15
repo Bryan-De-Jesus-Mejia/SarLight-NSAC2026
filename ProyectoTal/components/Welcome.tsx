@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { globeApi } from "@/lib/globeApi";
 import { useAppStore } from "@/store/useAppStore";
@@ -111,10 +110,6 @@ export function Welcome() {
                   <span className="block text-xs text-muted">{choice.note}</span>
                 </button>
               ))}
-              <Link href="/aula" onClick={close} className="rounded-xl border border-accent/50 bg-accent/10 px-4 py-3 text-left transition-colors hover:bg-accent/20">
-                <span className="block text-[15px] font-medium text-accent">I&rsquo;m a teacher</span>
-                <span className="block text-xs text-muted">A ready-to-use class for Dominican schools, in Spanish</span>
-              </Link>
             </div>
           </>
         )}

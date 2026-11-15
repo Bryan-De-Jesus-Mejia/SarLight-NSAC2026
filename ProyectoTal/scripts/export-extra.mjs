@@ -37,6 +37,8 @@ const AGRICULTURE = {
   agricola_cosecha_saskatchewan: { id: "saskatchewan-harvest", name: "Saskatchewan crop harvest", region: "Saskatchewan", country: "Canada", activity: "harvest" },
   agricola_deforestacion_amazonia: { id: "amazon-clearing", name: "Amazon forest clearing", region: "Pará, Amazon", country: "Brazil", activity: "clearing" },
   agricola_girasol_ucrania: { id: "ukraine-sunflower", name: "Ukraine sunflower harvest", region: "Central Ukraine", country: "Ukraine", activity: "harvest" },
+  agricola_inundacion_bangladesh: { id: "chattogram-rice-flood", name: "Chattogram rice-field flooding", region: "Chattogram coast", country: "Bangladesh", activity: "flood" },
+  agricola_palma_riau: { id: "riau-palm-clearing", name: "Riau oil-palm clearing", region: "Riau, Sumatra", country: "Indonesia", activity: "clearing" },
   agricola_quema_punjab: { id: "punjab-burning", name: "Punjab crop-residue burning", region: "Punjab", country: "India", activity: "burning" },
 };
 const GLACIERS = {

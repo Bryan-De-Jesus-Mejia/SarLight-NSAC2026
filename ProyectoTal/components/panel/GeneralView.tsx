@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Drivers } from "@/components/panel/Drivers";
+import { Impact } from "@/components/panel/Impact";
 import { SarViewer } from "@/components/panel/SarViewer";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
@@ -180,6 +181,8 @@ export function GeneralView({ detail, analysis: a }: { detail: EventDetail; anal
       <div className="rounded-2xl border border-line bg-white/[0.03] p-4">
         <Drivers detail={detail} />
       </div>
+
+      <Impact detail={detail} />
 
       {/* How sure */}
       <section aria-labelledby="g-sure" className="rounded-2xl border border-line bg-white/[0.03] p-4">

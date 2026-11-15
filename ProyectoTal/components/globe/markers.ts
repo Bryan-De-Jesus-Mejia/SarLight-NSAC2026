@@ -124,7 +124,7 @@ function createCallout(d: CalloutDatum): HTMLElement {
       stat =
         `<div class="ge-callout-stat">` +
         `<span class="ge-callout-value">${escapeHtml(formatValue(d.detail.changedAreaKm2))} km²</span>` +
-        `<span class="ge-callout-metric">NISAR · ${escapeHtml(METRIC_NOTE[d.detail.kind ?? "agriculture"])}</span>` +
+        `<span class="ge-callout-metric">NISAR · ${escapeHtml(d.detail.type === "flood" ? "land under water at the peak" : METRIC_NOTE[d.detail.kind ?? "agriculture"])}</span>` +
         `</div>`;
       when = `${formatDate(d.detail.startDate)} → ${formatDate(d.detail.endDate)}`;
     }

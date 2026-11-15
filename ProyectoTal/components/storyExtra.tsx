@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Drivers } from "@/components/panel/Drivers";
+import { Impact } from "@/components/panel/Impact";
 import type { EventDetail } from "@/data/types";
 import { formatDate, formatValue } from "@/lib/format";
 import { globeApi } from "@/lib/globeApi";
@@ -73,7 +74,7 @@ export function buildExtraSteps(detail: EventDetail, setDrape: (d: null) => void
     body: (
       <>
         <p>
-          {place}. {intro[x.kind]}
+          {place}. {detail.type === "flood" ? "We followed this area pass after pass, to see when water came and how far it spread." : intro[x.kind]}
         </p>
         <p className="mt-3 text-muted">Scroll, or press Next, to follow what the radar saw.</p>
       </>
@@ -170,6 +171,9 @@ export function buildExtraSteps(detail: EventDetail, setDrape: (d: null) => void
     body: (
       <>
         <p>{PEOPLE[x.kind === "displacement" ? detail.type : x.kind === "change" ? detail.type : x.kind === "agriculture" && detail.type === "flood" ? "flood" : x.kind]}</p>
+        <div className="mt-4">
+          <Impact detail={detail} compact />
+        </div>
         <p className="mt-3 text-muted">This is a reading of real radar images. Nobody has checked it on the ground yet.</p>
       </>
     ),
