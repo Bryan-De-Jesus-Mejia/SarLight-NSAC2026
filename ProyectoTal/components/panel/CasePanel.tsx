@@ -6,6 +6,7 @@ import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
 import { ExtraBody } from "@/components/panel/ExtraCase";
+import { Drivers } from "@/components/panel/Drivers";
 import { GeneralView } from "@/components/panel/GeneralView";
 import { SarViewer } from "@/components/panel/SarViewer";
 import { CHANGE_TYPES } from "@/data/changeTypes";
@@ -23,6 +24,8 @@ const daysBetween = (a: string, b: string): number =>
 
 /** What a change in the echo can mean for each kind of analysis. Context, not a finding. */
 const READING: Record<ChangeType, string> = {
+  storm: "Standing crops and trees scatter the pulse strongly; flattened ones lose that structure, so the echo weakens where the wind hit.",
+  drought: "Water makes surfaces bright to radar. As soil and plants dry, the echo weakens. Radar does not measure heat, only what heat does to the ground.",
   wildfire:
     "Vegetation scatters radar energy, so burned or cleared ground tends to return a weaker echo, especially in cross-polarised channels (HV, VH). Rain, soil moisture and farming can move the echo too, so a drop on its own does not prove a fire.",
   flood:
@@ -171,6 +174,10 @@ function AnalysisView({ detail, analysis }: { detail: EventDetail; analysis: Sen
         </SectionTitle>
         <p className="mt-2.5 text-sm leading-relaxed text-ink/85">{READING[detail.type]}</p>
       </section>
+
+      <div className="rounded-2xl border border-line bg-white/[0.03] p-4">
+        <Drivers detail={detail} />
+      </div>
 
       <Hypotheses type={detail.type} />
 
@@ -360,7 +367,7 @@ export function CasePanel() {
           </div>
         ) : detail && detail.id === selectedId ? (
           <>
-            {!detail.extra && (
+            {(
             <button
               type="button"
               onClick={() => setStory(true)}

@@ -1,6 +1,8 @@
 import raw from "../analysis/cases.json";
+import contextRaw from "../analysis/context.json";
 import extraRaw from "../analysis/extra.json";
 import type {
+  CaseContext,
   ChangeType,
   DataProvider,
   EventDetail,
@@ -49,6 +51,7 @@ interface RawExtra {
 
 const file = raw as unknown as { generatedAt: string; cases: RawCase[] };
 const extraFile = extraRaw as unknown as { generatedAt: string; cases: RawExtra[] };
+const contextFile = contextRaw as unknown as { cases: Record<string, CaseContext> };
 
 function toSummary(c: RawCase): EventSummary {
   const main = c.sensors[0];
@@ -91,9 +94,9 @@ export class AnalysisProvider implements DataProvider {
 
   async getEventById(id: string): Promise<EventDetail | null> {
     const found = CASES.find((c) => c.id === id);
-    if (found) return { ...toSummary(found), analyses: found.sensors };
+    if (found) return { ...toSummary(found), analyses: found.sensors, context: contextFile.cases[id] };
     const extra = EXTRA.find((c) => c.id === id);
-    return extra ? { ...extraSummary(extra), analyses: [], extra: extra.extra } : null;
+    return extra ? { ...extraSummary(extra), analyses: [], extra: extra.extra, context: contextFile.cases[id] } : null;
   }
 
   async getTimeRange(): Promise<TimeRange> {

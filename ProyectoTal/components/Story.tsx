@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
+import { Drivers } from "@/components/panel/Drivers";
 import { HYPOTHESES } from "@/components/panel/Evidence";
+import { buildExtraSteps } from "@/components/storyExtra";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
 import { formatDate, formatValue } from "@/lib/format";
@@ -228,6 +230,14 @@ function buildSteps(
   }
 
   steps.push({
+    key: "drivers",
+    kicker: "Why it happened",
+    title: "From the sky to the ground",
+    body: <Drivers detail={detail} compact />,
+    enter: show(a.images.post, MID),
+  });
+
+  steps.push({
     key: "why",
     kicker: "What could explain it",
     title: "Leads, not conclusions",
@@ -272,7 +282,14 @@ export function Story() {
   const analysis = detail?.analyses[0] ?? null;
   const color = detail ? CHANGE_TYPES[detail.type].color : "#f2b866";
   const steps = useMemo(
-    () => (on && detail && analysis ? buildSteps(detail, analysis, setDrape, setFrameDate, color) : []),
+    () =>
+      on && detail
+        ? detail.extra
+          ? buildExtraSteps(detail, setDrape)
+          : analysis
+            ? buildSteps(detail, analysis, setDrape, setFrameDate, color)
+            : []
+        : [],
     [on, detail, analysis, setDrape, color],
   );
 

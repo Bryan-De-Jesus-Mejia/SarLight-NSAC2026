@@ -252,9 +252,9 @@ export function ChatPanel() {
           >
             <span className="min-w-0 flex-1">
               <span className="block truncate font-display text-[1.15rem] leading-tight text-ink">{active?.title ?? "Ask the globe"}</span>
-              {chats.length > 1 && (
-                <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{chats.length} chats</span>
-              )}
+              <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+                Guided answers · offline, not an AI{chats.length > 1 ? ` · ${chats.length} chats` : ""}
+              </span>
             </span>
             <Icon size={14}>
               <path d="m6 9 6 6 6-6" />

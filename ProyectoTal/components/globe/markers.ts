@@ -147,7 +147,7 @@ function createCallout(d: CalloutDatum): HTMLElement {
 const METRIC_NOTE = {
   agriculture: "farmland that changed",
   glacier: "ice moving fast",
-  displacement: "ground moved over 5 cm",
+  displacement: "ground moved over 5 cm", change: "land that changed after the event",
 } as const;
 
 export const htmlElement = (d: object): HTMLElement =>
