@@ -1,0 +1,40 @@
+{
+  "collection": "viento_brasil_santa_maria",
+  "source": "nisar",
+  "orbit": "P154_F103_DESC",
+  "mode": "cambio",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-04T21:42:08Z",
+    "2026-09-16T21:42:08Z",
+    "2026-09-28T21:42:08Z",
+    "2026-10-10T21:42:08Z",
+    "2026-10-22T21:42:08Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32721",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": "2026-10-03"
+  },
+  "event_date": "2026-10-03",
+  "baseline_dates": [
+    "2026-09-04T21:42:08Z",
+    "2026-09-16T21:42:08Z",
+    "2026-09-28T21:42:08Z"
+  ],
+  "first_post_date": "2026-10-10T21:42:08Z",
+  "first_post_drop_km2": 2.392,
+  "first_post_rise_km2": 27.106,
+  "peak_drop_date": "2026-10-10T21:42:08Z",
+  "peak_drop_km2": 2.392,
+  "last_date": "2026-10-22T21:42:08Z",
+  "last_drop_km2": 2.347,
+  "last_rise_km2": 6.595
+}
