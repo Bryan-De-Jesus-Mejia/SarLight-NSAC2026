@@ -1,0 +1,42 @@
+{
+  "collection": "lago_peru_titicaca_puno",
+  "source": "nisar",
+  "orbit": "P046_F170_ASCE",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-29T10:32:57Z",
+    "2026-07-11T10:32:57Z",
+    "2026-07-23T10:32:56Z",
+    "2026-08-16T10:32:55Z",
+    "2026-08-28T10:32:55Z",
+    "2026-09-09T10:32:54Z",
+    "2026-09-21T10:32:54Z",
+    "2026-10-03T10:32:55Z",
+    "2026-10-15T10:32:55Z",
+    "2026-10-27T10:32:55Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32719",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-29T10:32:57Z",
+  "first_water_km2": 55.515,
+  "last_date": "2026-10-27T10:32:55Z",
+  "last_water_km2": 45.406,
+  "change_km2": -10.109,
+  "change_pct": -18.2,
+  "min_date": "2026-07-11T10:32:57Z",
+  "min_water_km2": 44.013,
+  "max_date": "2026-07-23T10:32:56Z",
+  "max_water_km2": 86.491,
+  "range_pct_of_max": 49.1
+}
