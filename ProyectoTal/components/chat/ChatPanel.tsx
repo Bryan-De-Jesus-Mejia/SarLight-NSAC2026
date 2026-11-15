@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { MAX_LENGTH, SUGGESTIONS, dropReplyFor, sendMessage, stopReply } from "@/lib/chatSimulation";
+import { MAX_LENGTH, SUGGESTIONS, dropReplyFor, loadAssistant, runAction, sendMessage, stopReply } from "@/lib/assistant/chat";
+import { languageOf } from "@/lib/assistant/engine";
+import type { ChatAction } from "@/lib/assistant/types";
 import { useAppStore } from "@/store/useAppStore";
 import { MAX_CHATS, useChatStore, useChatStream, type Chat, type ChatMessage } from "@/store/useChatStore";
 
@@ -48,6 +50,23 @@ function usePopover(onClose: () => void, active: boolean) {
   return ref;
 }
 
+function actionLabel(action: ChatAction, es: boolean): string {
+  switch (action.kind) {
+    case "fly":
+      return es ? `Ir a ${action.label}` : `Go to ${action.label}`;
+    case "story":
+      return es ? "Escuchar su historia" : "Hear its story";
+    case "lens":
+      return es ? "Lupa de nubes" : "Cloud lens";
+    case "community":
+      return es ? "¿Mi comunidad está en riesgo?" : "Is my community at risk?";
+    case "dance":
+      return es ? "Baile del satélite" : "Satellite's dance";
+    case "demo":
+      return es ? "Recorrido guiado" : "Guided tour";
+  }
+}
+
 function Bubble({ message }: { message: ChatMessage }) {
   const [copied, setCopied] = useState(false);
 
@@ -73,6 +92,20 @@ function Bubble({ message }: { message: ChatMessage }) {
       <span className="mt-1 h-full min-h-4 w-[2px] shrink-0 rounded-full bg-accent/60" aria-hidden="true" />
       <div className="min-w-0 flex-1">
         <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-ink/90">{message.text}</p>
+        {message.actions && message.actions.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {message.actions.map((action) => (
+              <button
+                key={JSON.stringify(action)}
+                type="button"
+                onClick={() => runAction(action)}
+                className="rounded-full border border-accent/50 px-2.5 py-1 text-xs text-accent transition-colors hover:bg-accent/10"
+              >
+                {actionLabel(action, languageOf(message.text) === "es")}
+              </button>
+            ))}
+          </div>
+        )}
         <button
           type="button"
           onClick={copy}
@@ -83,6 +116,7 @@ function Bubble({ message }: { message: ChatMessage }) {
             <path d="M5.500 15.500h-.5a1.500 1.500 0 0 1-1.500-1.500V5A1.500 1.500 0 0 1 5 3.500h9A1.500 1.500 0 0 1 15.500 5v.5" />
           </Icon>
           {copied ? "Copied" : "Copy"}
+          {message.via && <span className="ml-2 normal-case tracking-normal">· {message.via === "ai" ? "AI, from our data" : "guide, from our data"}</span>}
         </button>
       </div>
     </div>
@@ -109,7 +143,7 @@ function Typing({ text, thinking }: { text: string; thinking: boolean }) {
   );
 }
 
-/** Side panel with the assistant. The answers are simulated for now (lib/chatSimulation). */
+/** Side panel with the assistant (lib/assistant): a free language model when configured, the offline guide otherwise. */
 export function ChatPanel() {
   const open = useChatStore((s) => s.open);
   const chats = useChatStore((s) => s.chats);
@@ -122,6 +156,20 @@ export function ChatPanel() {
   const takenOver = useAppStore((s) => s.demoActive || s.story);
 
   const [value, setValue] = useState("");
+  const [ai, setAi] = useState(false);
+  const [browserLang, setBrowserLang] = useState<"es" | "en">("en");
+  useEffect(() => {
+    if (!open) return;
+    let live = true;
+    void loadAssistant().then((s) => {
+      if (!live) return;
+      setAi(s.ai);
+      setBrowserLang(navigator.language.toLowerCase().startsWith("es") ? "es" : "en");
+    });
+    return () => {
+      live = false;
+    };
+  }, [open]);
   const [listOpen, setListOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -232,7 +280,7 @@ export function ChatPanel() {
     if (log) stick.current = log.scrollHeight - log.scrollTop - log.clientHeight < NEAR_BOTTOM_PX;
   };
 
-  const lang = /[¿¡áéíóúñ]/i.test(value) ? "es" : "en";
+  const lang = value ? languageOf(value) : browserLang;
   const left = MAX_LENGTH - value.length;
 
   return (
@@ -253,7 +301,7 @@ export function ChatPanel() {
             <span className="min-w-0 flex-1">
               <span className="block truncate font-display text-[1.15rem] leading-tight text-ink">{active?.title ?? "Ask the globe"}</span>
               <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                Guided answers · offline, not an AI{chats.length > 1 ? ` · ${chats.length} chats` : ""}
+                {ai ? "AI assistant · answers from our data" : "Guide · answers from our data"}{chats.length > 1 ? ` · ${chats.length} chats` : ""}
               </span>
             </span>
             <Icon size={14}>

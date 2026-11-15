@@ -1,6 +1,7 @@
 "use client";
 
 import type { CaseContext, ChangeType, EventDetail } from "@/data/types";
+import { evidenceOf, type Evidence } from "@/lib/evidence";
 import { formatDate } from "@/lib/format";
 
 /**
@@ -19,15 +20,6 @@ interface Link {
   evidence?: string;
 }
 
-interface Evidence {
-  keyDate: string | null;
-  rainWeek: number | null;
-  rainRatio: number | null;
-  hottest: number | null;
-  hotDays: number;
-  gust: number | null;
-  quake: { mag: number; place: string; date: string; depthKm: number; km: number } | null;
-}
 
 const ICON = {
   rain: "M7 15.5h9.5a3.5 3.5 0 0 0 .4-7 5.5 5.5 0 0 0-10.6 1.2A3 3 0 0 0 7 15.5zM9 18l-1 2.5M13 18l-1 2.5M17 18l-1 2.5",
@@ -43,58 +35,6 @@ const ICON = {
   people: "M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3.3 2.5-6 5.5-6s5.5 2.7 5.5 6M16.5 11a2.5 2.5 0 1 0 0-5M18 14c2 .5 3.5 2.6 3.5 5",
   home: "M3.5 11.5 12 4l8.5 7.5M6 10v9.5h12V10M10 19.5v-5h4v5",
 };
-
-const DAY = 86_400_000;
-const ms = (iso: string) => Date.parse(`${iso.slice(0, 10)}T00:00:00Z`);
-
-function keyDateOf(detail: EventDetail): string | null {
-  const x = detail.extra;
-  if (!x) return detail.analyses[0]?.post.date.slice(0, 10) ?? null;
-  if (x.kind === "change" || x.kind === "displacement") return x.eventDate;
-  if (x.kind === "agriculture") {
-    const o = x.orbits[0];
-    return o.mode === "flood" ? o.peakDate : o.peakIntervalEnd;
-  }
-  return null;
-}
-
-function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const r = Math.PI / 180;
-  const a =
-    Math.sin(((lat2 - lat1) * r) / 2) ** 2 +
-    Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(((lon2 - lon1) * r) / 2) ** 2;
-  return 6371 * 2 * Math.asin(Math.sqrt(a));
-}
-
-function evidenceOf(detail: EventDetail, ctx: CaseContext | undefined): Evidence {
-  const keyDate = keyDateOf(detail);
-  const e: Evidence = { keyDate, rainWeek: null, rainRatio: null, hottest: null, hotDays: 0, gust: null, quake: null };
-  const w = ctx?.weather;
-  if (w && w.dates.length) {
-    const t = keyDate ? ms(keyDate) : ms(w.dates[w.dates.length - 1]);
-    const inWeek = (d: string) => ms(d) <= t && ms(d) > t - 7 * DAY;
-    const rain = w.rainMm.map((v) => v ?? 0);
-    e.rainWeek = w.dates.reduce((sum, d, i) => sum + (inWeek(d) ? rain[i] : 0), 0);
-    const meanWeek = (rain.reduce((a, b) => a + b, 0) / rain.length) * 7;
-    e.rainRatio = meanWeek > 0.5 ? e.rainWeek / meanWeek : null;
-    const temps = w.tmaxC.filter((v): v is number => v !== null);
-    e.hottest = temps.length ? Math.max(...temps) : null;
-    e.hotDays = temps.filter((v) => v >= 35).length;
-    const near = w.dates.map((d, i) => (Math.abs(ms(d) - t) <= 3 * DAY ? w.gustKmh[i] : null)).filter((v): v is number => v !== null);
-    e.gust = near.length ? Math.max(...near) : null;
-  }
-  const q = ctx?.quakes?.[0];
-  if (q) {
-    e.quake = {
-      mag: q.mag,
-      place: q.place,
-      date: q.time.slice(0, 10),
-      depthKm: Math.round(q.depthKm),
-      km: Math.round(haversineKm(detail.lat, detail.lon, q.lat, q.lon)),
-    };
-  }
-  return e;
-}
 
 const mm = (v: number) => `${Math.round(v)} mm`;
 const rainLine = (e: Evidence) =>

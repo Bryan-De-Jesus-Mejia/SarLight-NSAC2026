@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
-import { ACTIONS, peopleLine } from "@/components/panel/Impact";
+import { ACTIONS, peopleLine } from "@/lib/impact";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, EventSummary } from "@/data/types";
 import { globeApi } from "@/lib/globeApi";

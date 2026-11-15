@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import type { ChatAction } from "@/lib/assistant/types";
 
 /** Only the most recent chats are kept. */
 export const MAX_CHATS = 3;
@@ -10,6 +11,10 @@ export interface ChatMessage {
   role: "user" | "assistant";
   text: string;
   at: number;
+  /** Buttons under an answer (fly to a case, open its story...). */
+  actions?: ChatAction[];
+  /** Who wrote an answer: the language model or the offline guide. */
+  via?: "ai" | "guide";
 }
 
 export interface Chat {
@@ -32,7 +37,7 @@ interface ChatState {
   newChat: () => string;
   selectChat: (id: string) => void;
   deleteChat: (id: string) => void;
-  addMessage: (chatId: string, role: ChatMessage["role"], text: string) => void;
+  addMessage: (chatId: string, role: ChatMessage["role"], text: string, extra?: Pick<ChatMessage, "actions" | "via">) => void;
 }
 
 const makeId = (): string =>
@@ -81,11 +86,11 @@ export const useChatStore = create<ChatState>()(
           return { chats, activeId };
         }),
 
-      addMessage: (chatId, role, text) =>
+      addMessage: (chatId, role, text, extra) =>
         set((state) => ({
           chats: state.chats.map((chat) => {
             if (chat.id !== chatId) return chat;
-            const message: ChatMessage = { id: makeId(), role, text, at: Date.now() };
+            const message: ChatMessage = { id: makeId(), role, text, at: Date.now(), ...extra };
             return {
               ...chat,
               title: chat.title === NEW_CHAT_TITLE && role === "user" ? titleFrom(text) : chat.title,

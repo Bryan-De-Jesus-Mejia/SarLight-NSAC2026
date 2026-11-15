@@ -12,6 +12,7 @@ the ground by tens of centimetres, and glaciers sliding into the sea. Built from
 |---|---|
 | Everyone | A **simple view** in plain words, a **story mode** that tells each case step by step on the globe, with **"Why?" cards** that explain the science behind each step, a **cloud lens** (the day as a camera saw it, the ground under the clouds inside a circle), the **12-day dance** of ~15,000 real NISAR scenes |
 | Communities | **"Is my community at risk?"**: pick a place and see what our radar found nearby. Every case has a **"For people"** card: how many people live on the land that changed, a **field watch** for those who farm (crop loss, drying, flooded fields, normal harvest) and **what to do**, with 9-1-1, COE and Defensa Civil in the Dominican Republic |
+| Curious minds | An **assistant chat** that knows every case: "¿Qué pasó en Capotillo?", "¿Dónde hay más gente afectada?", "Llévame al terremoto de Venezuela", "¿Qué hago si se inunda mi casa?". It answers in Spanish or English from our data only and moves the globe for you. Free: an offline guide always answers; with a free Groq key it becomes a language model that looks the data up through tools, and falls back to the guide when the free quota runs out |
 | Scientists | A **technical view** with every number and method: thresholds, polarisations (HH/HV, VV/VH), L-band vs C-band, per-pixel baselines, land cover of the change, downloads (JSON, GeoJSON, images) |
 
 Every case has a **"Why it happened"** chain: cause → what happens on the ground → what the radar measured → what people
@@ -31,7 +32,8 @@ earthquakes from the USGS catalogue.
 
 Every figure comes from real radar scenes processed by our own pipeline. Nothing is simulated. A flagged change is a
 **lead, not a verdict**: nothing has been verified on the ground, and the app says so next to the numbers. The assistant
-chat gives guided, offline answers; it is not an AI model.
+only quotes figures from our data; with a language model configured, it looks them up through tools instead of
+answering from memory.
 
 ## Run it
 
@@ -41,7 +43,8 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-Deploying on Vercel: set **Root Directory** to `ProyectoTal`.
+Deploying on Vercel: set **Root Directory** to `ProyectoTal`. Optional: a free [Groq](https://console.groq.com/keys) key in
+`GROQ_API_KEY` turns the chat guide into a language model (see `ProyectoTal/.env.example`).
 
 ## Reproduce the data
 
