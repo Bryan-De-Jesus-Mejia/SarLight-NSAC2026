@@ -141,6 +141,8 @@ def main():
                     help="Meter también los datos crudos de estas colecciones (por defecto no van; pesan mucho)")
     ap.add_argument("--solo-empaquetar", action="store_true")
     ap.add_argument("--listar", action="store_true", help="Muestra los grupos y trabajos disponibles y sale")
+    ap.add_argument("--contar", action="store_true",
+                    help="Imprime solo cuántos trabajos quedan tras los filtros y sale (sin instalar dependencias)")
     ap.add_argument("--commit", action="store_true",
                     help="Commit + push de data/analisis tras cada trabajo (en vez de crear el .tar.gz)")
     ap.add_argument("--pendientes", action="store_true",
@@ -175,7 +177,11 @@ def main():
     if args.pendientes:
         done = [k for k in jobs if has_analysis(k)]
         jobs = {k: v for k, v in jobs.items() if k not in done}
-        log(f"{len(done)} trabajos ya tienen análisis; pendientes: {', '.join(jobs) or 'ninguno'}")
+        print(f"[{time.strftime('%H:%M:%S')}] {len(done)} trabajos ya tienen análisis; pendientes: "
+              f"{', '.join(jobs) or 'ninguno'}", file=sys.stderr if args.contar else sys.stdout, flush=True)
+    if args.contar:
+        print(len(jobs))
+        return
     LOGS.mkdir(parents=True, exist_ok=True)
     (LOGS / "quedan.txt").unlink(missing_ok=True)
     if not jobs:
