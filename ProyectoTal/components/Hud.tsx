@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { Breadcrumb } from "@/components/Breadcrumb";
 import { ChatButton } from "@/components/chat/ChatButton";
 import { GeneralIntro } from "@/components/GeneralIntro";
 import { LayersPanel } from "@/components/LayersPanel";
@@ -93,8 +92,6 @@ export function Hud() {
       {hasEvents && introOpen && !demoActive && !caseOpen && !lens && !dance && audience === "general" && (
         <GeneralIntro onClose={() => setIntroOpen(false)} />
       )}
-
-      <Breadcrumb className="pointer-events-auto absolute left-1/2 top-5 z-10 -translate-x-1/2 max-2xl:top-[5.5rem]" />
 
       <div className="flex flex-wrap items-start gap-x-4 gap-y-4">
         <h1 className="mr-auto font-display text-4xl leading-[1.05] text-ink sm:text-5xl">
