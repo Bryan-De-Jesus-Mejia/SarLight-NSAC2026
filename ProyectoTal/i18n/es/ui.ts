@@ -95,6 +95,17 @@ export const ui: Record<string, string> = {
   Stop: "Detener",
   "Send message": "Enviar mensaje",
   Send: "Enviar",
+  "Listening… speak now": "Escuchando… habla ahora",
+  "Stop dictating": "Dejar de dictar",
+  "Dictate your question": "Dicta tu pregunta",
+  "Dictate your question. Your browser's speech service turns your voice into text, so it needs internet.":
+    "Dicta tu pregunta. El servicio de voz de tu navegador convierte tu voz en texto, así que necesita internet.",
+  "The microphone is blocked. Allow it in your browser to dictate, or type your question.":
+    "El micrófono está bloqueado. Permítelo en tu navegador para dictar, o escribe tu pregunta.",
+  "Dictation needs an internet connection. You can still type your question.":
+    "El dictado necesita conexión a internet. Aun así puedes escribir tu pregunta.",
+  "No microphone was found.": "No se encontró ningún micrófono.",
+  "Dictation did not work. Try again or type your question.": "El dictado no funcionó. Inténtalo de nuevo o escribe tu pregunta.",
   Copied: "Copiado",
   Copy: "Copiar",
   "The assistant is thinking": "El asistente está pensando",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useDictation } from "@/hooks/useDictation";
 import { useLang, useT, type TFunction } from "@/i18n/core";
 import { MAX_LENGTH, SUGGESTIONS, dropReplyFor, sendMessage, stopReply } from "@/lib/chatSimulation";
 import { formatClock, formatDayMonth } from "@/lib/format";
@@ -127,6 +128,7 @@ export function ChatPanel() {
   const takenOver = useAppStore((s) => s.demoActive || s.story);
 
   const [value, setValue] = useState("");
+  const dictation = useDictation(lang, (text) => setValue(text.slice(0, MAX_LENGTH)));
   const [listOpen, setListOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -140,6 +142,10 @@ export function ChatPanel() {
   const messages = active?.messages ?? [];
   const sorted = [...chats].sort((a, b) => b.updatedAt - a.updatedAt);
   const replying = stream.phase !== "idle";
+  const stopDictation = dictation.stop;
+  useEffect(() => {
+    if (replying) stopDictation();
+  }, [replying, stopDictation]);
   const showStream = replying && stream.chatId === active?.id;
 
   const closeList = useCallback(() => setListOpen(false), []);
@@ -395,10 +401,28 @@ export function ChatPanel() {
             maxLength={MAX_LENGTH}
             onChange={(event) => setValue(event.target.value)}
             onKeyDown={onKeyDown}
-            placeholder={t("Ask about radar, NISAR or what you see…")}
+            placeholder={dictation.listening ? t("Listening… speak now") : t("Ask about radar, NISAR or what you see…")}
             aria-label={t("Message")}
             className="ge-scroll max-h-[140px] min-h-[2.25rem] flex-1 resize-none bg-transparent px-2 py-1.5 text-sm leading-relaxed text-ink outline-none placeholder:text-muted/70"
           />
+          {dictation.supported && !replying && (
+            <button
+              type="button"
+              aria-pressed={dictation.listening}
+              onClick={() => (dictation.listening ? dictation.stop() : dictation.start(value))}
+              aria-label={dictation.listening ? t("Stop dictating") : t("Dictate your question")}
+              title={dictation.listening ? t("Stop dictating") : t("Dictate your question. Your browser's speech service turns your voice into text, so it needs internet.")}
+              className={`ge-demo-button shrink-0 ${dictation.listening ? "!text-[#fb7185]" : ""}`}
+            >
+              <span className="relative grid place-items-center">
+                {dictation.listening && <span className="absolute h-6 w-6 animate-ping rounded-full bg-[#fb7185]/30" aria-hidden="true" />}
+                <Icon size={16}>
+                  <rect x="9" y="3" width="6" height="11" rx="3" />
+                  <path d="M5.500 11a6.500 6.500 0 0 0 13 0M12 17.500V21" />
+                </Icon>
+              </span>
+            </button>
+          )}
           {replying ? (
             <button type="button" onClick={() => stopReply()} aria-label={t("Stop the reply")} title={t("Stop")} className="ge-send">
               <Icon size={14}>
@@ -413,6 +437,17 @@ export function ChatPanel() {
             </button>
           )}
         </div>
+        {dictation.error && (
+          <p role="alert" className="mt-1.5 px-1 text-xs leading-snug text-[#fb7185]">
+            {dictation.error === "denied"
+              ? t("The microphone is blocked. Allow it in your browser to dictate, or type your question.")
+              : dictation.error === "network"
+                ? t("Dictation needs an internet connection. You can still type your question.")
+                : dictation.error === "no-mic"
+                  ? t("No microphone was found.")
+                  : t("Dictation did not work. Try again or type your question.")}
+          </p>
+        )}
         {left <= 200 && (
           <p className={`mt-1.5 px-1 text-right font-mono text-[10px] tracking-[0.1em] ${left <= 0 ? "text-[#fb7185]" : "text-muted"}`}>{left}</p>
         )}
