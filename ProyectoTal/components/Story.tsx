@@ -8,6 +8,7 @@ import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
 import { formatDate, formatValue } from "@/lib/format";
 import { globeApi } from "@/lib/globeApi";
+import { buildExtraSteps } from "@/components/storyExtra";
 import { useAppStore } from "@/store/useAppStore";
 
 /**
@@ -272,7 +273,11 @@ export function Story() {
   const analysis = detail?.analyses[0] ?? null;
   const color = detail ? CHANGE_TYPES[detail.type].color : "#f2b866";
   const steps = useMemo(
-    () => (on && detail && analysis ? buildSteps(detail, analysis, setDrape, setFrameDate, color) : []),
+    () => {
+      if (!on || !detail) return [];
+      if (detail.extra) return buildExtraSteps(detail, detail.extra, setDrape);
+      return analysis ? buildSteps(detail, analysis, setDrape, setFrameDate, color) : [];
+    },
     [on, detail, analysis, setDrape, color],
   );
 
