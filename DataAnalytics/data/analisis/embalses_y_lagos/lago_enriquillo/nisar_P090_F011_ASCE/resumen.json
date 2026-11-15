@@ -1,0 +1,43 @@
+{
+  "collection": "lago_enriquillo",
+  "source": "nisar",
+  "orbit": "P090_F011_ASCE",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-20T10:17:29Z",
+    "2026-07-02T10:17:28Z",
+    "2026-07-14T10:17:28Z",
+    "2026-07-26T10:17:27Z",
+    "2026-08-19T10:17:26Z",
+    "2026-08-31T10:17:25Z",
+    "2026-09-12T10:17:25Z",
+    "2026-09-24T10:17:25Z",
+    "2026-10-06T10:17:25Z",
+    "2026-10-18T10:17:25Z",
+    "2026-10-30T10:17:26Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32618",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-20T10:17:29Z",
+  "first_water_km2": 97.043,
+  "last_date": "2026-10-30T10:17:26Z",
+  "last_water_km2": 116.772,
+  "change_km2": 19.729,
+  "change_pct": 20.3,
+  "min_date": "2026-10-06T10:17:25Z",
+  "min_water_km2": 9.136,
+  "max_date": "2026-10-30T10:17:26Z",
+  "max_water_km2": 116.772,
+  "range_pct_of_max": 92.2
+}
