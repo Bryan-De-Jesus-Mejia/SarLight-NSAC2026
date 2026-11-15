@@ -507,3 +507,17 @@ export function answer(question: string, facts: CaseFact[], ctx: { lastId?: stri
     text: t(lang, `No estoy seguro de haber entendido. Puedo contarte qué pasó en cualquiera de los 31 lugares, cuánta gente vive ahí, qué lo causó, qué hacer ante una inundación o un sismo, o cómo funciona el radar. Prueba: "${SUGGESTIONS.es[0]}" o "${SUGGESTIONS.es[2]}".`, `I'm not sure I understood. I can tell you what happened in any of the 31 places, how many people live there, what caused it, what to do in a flood or an earthquake, or how radar works. Try: "${SUGGESTIONS.en[0]}" or "${SUGGESTIONS.en[2]}".`),
   };
 }
+
+/** The same sentences the guide uses, for the downloadable reports. */
+export const narrative = {
+  summary,
+  area: areaPhrase,
+  cause: causeLine,
+  people: peopleLine,
+  field: fieldLine,
+  caveat,
+  advice: (lang: Lang, type: ChangeType, inDR: boolean) => advice(lang, type, inDR),
+  typeName,
+  countryName,
+  date,
+};

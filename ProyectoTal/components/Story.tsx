@@ -6,6 +6,7 @@ import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Drivers } from "@/components/panel/Drivers";
 import { Impact } from "@/components/panel/Impact";
 import { WhyButton, whyFor } from "@/components/WhyCard";
+import { downloadCasePdf } from "@/lib/pdf/download";
 import { HYPOTHESES } from "@/components/panel/Evidence";
 import { buildExtraSteps } from "@/components/storyExtra";
 import { CHANGE_TYPES } from "@/data/changeTypes";
@@ -488,6 +489,15 @@ export function Story() {
                       <button type="button" onClick={exit} className="ge-pill">
                         Open the full analysis
                       </button>
+                      {detail && (
+                        <button
+                          type="button"
+                          onClick={() => void downloadCasePdf(detail, "community", detail.country === "Dominican Republic" || navigator.language.toLowerCase().startsWith("es") ? "es" : "en")}
+                          className="ge-pill"
+                        >
+                          Download the community sheet (PDF)
+                        </button>
+                      )}
                       {nextCase && (
                         <button type="button" onClick={openNext} className="ge-pill">
                           Next story: {nextCase.name.replace(" analysis", "")} →

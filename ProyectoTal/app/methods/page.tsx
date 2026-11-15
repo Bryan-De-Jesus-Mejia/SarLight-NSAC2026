@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { AtlasDownload } from "@/components/AtlasDownload";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { CHANGE_TYPES, CHANGE_TYPE_ORDER } from "@/data/changeTypes";
 import { getDataProvider } from "@/data/providers";
@@ -272,6 +273,10 @@ export default async function MethodsPage() {
             reports), build a per-pixel baseline from the whole time series so significance can be measured,
             and add live hazard feeds as a separate layer.
           </p>
+        </Section>
+
+        <Section id="resources" eyebrow="07 · Take it with you" title="Resources">
+          <AtlasDownload />
         </Section>
       </div>
 

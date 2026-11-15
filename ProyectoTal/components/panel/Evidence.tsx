@@ -293,16 +293,7 @@ export function Hypotheses({ type }: { type: ChangeType }) {
 /* Share and export                                                    */
 /* ------------------------------------------------------------------ */
 
-function download(name: string, text: string, type: string): void {
-  const url = URL.createObjectURL(new Blob([text], { type }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = name;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
-export function ShareBar({ detail, analysis }: { detail: EventDetail; analysis: SensorAnalysis }) {
+export function ShareBar({ detail }: { detail: EventDetail }) {
   const [copied, setCopied] = useState(false);
 
   const copyLink = async () => {
@@ -317,43 +308,10 @@ export function ShareBar({ detail, analysis }: { detail: EventDetail; analysis: 
     }
   };
 
-  const geojson = () => {
-    const ring = [...analysis.footprint.polygon, analysis.footprint.polygon[0]];
-    const feature = {
-      type: "Feature",
-      geometry: { type: "Polygon", coordinates: [ring] },
-      properties: {
-        id: detail.id,
-        name: detail.name,
-        type: detail.type,
-        sensor: analysis.label,
-        polarisation: analysis.pol,
-        before: analysis.pre.date,
-        after: analysis.post.date,
-        thresholdDb: analysis.method.thresholdDb,
-        changedOnLandKm2: analysis.land.changedAreaKm2,
-        weakerKm2: analysis.land.decreaseAreaKm2,
-        strongerKm2: analysis.land.increaseAreaKm2,
-        note: "Radar change analysis, not verified on the ground.",
-      },
-    };
-    download(`${detail.id}-${analysis.key}.geojson`, JSON.stringify(feature, null, 2), "application/geo+json");
-  };
-
   return (
     <div className="flex flex-wrap gap-2 border-t border-line pt-4">
       <button type="button" onClick={() => void copyLink()} className="ge-pill">
         {copied ? "Link copied" : "Copy link to this case"}
-      </button>
-      <button
-        type="button"
-        onClick={() => download(`${detail.id}.json`, JSON.stringify(detail, null, 2), "application/json")}
-        className="ge-pill"
-      >
-        Download data (JSON)
-      </button>
-      <button type="button" onClick={geojson} className="ge-pill">
-        Download area (GeoJSON)
       </button>
     </div>
   );

@@ -6,6 +6,7 @@ import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Baseline, Channels, GroundCover, Hypotheses, LocalChange, ShareBar } from "@/components/panel/Evidence";
 import { ExtraBody } from "@/components/panel/ExtraCase";
+import { Resources } from "@/components/panel/Resources";
 import { Drivers } from "@/components/panel/Drivers";
 import { Impact } from "@/components/panel/Impact";
 import { GeneralView } from "@/components/panel/GeneralView";
@@ -229,7 +230,7 @@ function AnalysisView({ detail, analysis }: { detail: EventDetail; analysis: Sen
         </p>
       </details>
 
-      <ShareBar detail={detail} analysis={analysis} />
+      <ShareBar detail={detail} />
     </div>
   );
 }
@@ -239,7 +240,13 @@ function PanelBody({ detail }: { detail: EventDetail }) {
   const technical = useAppStore((s) => s.audience === "technical");
   const analysis = (technical ? detail.analyses.find((a) => a.key === picked) : undefined) ?? detail.analyses[0];
 
-  if (detail.extra) return <ExtraBody detail={detail} />;
+  if (detail.extra)
+    return (
+      <div className="space-y-7">
+        <ExtraBody detail={detail} />
+        <Resources detail={detail} />
+      </div>
+    );
 
   return (
     <div className="space-y-5">
@@ -259,6 +266,7 @@ function PanelBody({ detail }: { detail: EventDetail }) {
         </div>
       )}
       {technical ? <AnalysisView detail={detail} analysis={analysis} /> : <GeneralView detail={detail} analysis={analysis} />}
+      <Resources detail={detail} />
     </div>
   );
 }
