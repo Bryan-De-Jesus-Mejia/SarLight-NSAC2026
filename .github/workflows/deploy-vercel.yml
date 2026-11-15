@@ -1,0 +1,74 @@
+name: Deploy a Vercel (sarlight-nsac)
+
+# Sube cada cambio de main al proyecto sarlight-nsac de Vercel con la CLI.
+# Hace falta porque ese proyecto no está conectado a GitHub: el repo es de otra cuenta.
+#
+# Solo corre si cambió la app (nisar-explorer/) o la configuración de Vercel:
+# los commits de los análisis (DataAnalytics/) no gastan deploys.
+# También se puede lanzar a mano desde la pestaña Actions (Run workflow).
+#
+# Necesita el secret de Actions VERCEL_TOKEN (Settings -> Secrets and variables -> Actions),
+# creado en la cuenta de Vercel dueña de sarlight-nsac (Account Settings -> Tokens).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "nisar-explorer/**"
+      - "vercel.json"
+      - ".vercelignore"
+      - ".github/workflows/deploy-vercel.yml"
+  workflow_dispatch:
+
+# Si llegan varios push seguidos, solo se despliega el último: ahorra deploys del día.
+concurrency:
+  group: deploy-vercel-produccion
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      # IDs del proyecto sarlight-nsac (salen de nisar-explorer/.vercel/project.json). No son secretos.
+      VERCEL_ORG_ID: team_XRJYTSQcgFArF7hTyluI4aUU
+      VERCEL_PROJECT_ID: prj_jNtZVBf8cwY2NG6GvAZKFI55ZoxA
+    steps:
+      - name: ¿Está el token?
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::Falta el secret VERCEL_TOKEN (Settings -> Secrets and variables -> Actions)."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar la CLI de Vercel
+        run: npm install --global vercel@latest
+
+      - name: Traer la configuración del proyecto
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      # Si el proyecto tiene "Root Directory" = nisar-explorer, Vercel entra solo a esa carpeta
+      # y hay que desplegar desde la raíz. Si no lo tiene, se despliega desde nisar-explorer.
+      - name: Elegir la carpeta desde la que se despliega
+        id: carpeta
+        run: |
+          raiz=$(node -p "(require('./.vercel/project.json').settings || {}).rootDirectory || ''")
+          if [ -n "$raiz" ]; then dir=.; else dir=nisar-explorer; fi
+          echo "Root Directory en Vercel: '${raiz:-ninguno}' -> se despliega desde '$dir'"
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+
+      - name: Desplegar a producción
+        working-directory: ${{ steps.carpeta.outputs.dir }}
+        run: |
+          url=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN")
+          echo "Producción: $url"
+          echo "Desplegado en producción: $url" >> "$GITHUB_STEP_SUMMARY"
