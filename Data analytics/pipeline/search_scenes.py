@@ -29,8 +29,8 @@ def default_bbox() -> list[float]:
 def _pols(pr: dict) -> list[str]:
     if pr.get("polarization"):
         return list(pr["polarization"])
-    code = pr["fileID"].split("_")[9]  # p.ej. DHDH, NADV
-    return {"DH": ["HH", "HV"], "DV": ["VV", "VH"], "SH": ["HH"], "SV": ["VV"]}.get(
+    code = pr["fileID"].split("_")[9]  # p.ej. DHDH, NADV, QPDH (cuádruple)
+    return {"DH": ["HH", "HV"], "DV": ["VV", "VH"], "SH": ["HH"], "SV": ["VV"], "QP": ["HH", "HV", "VV"]}.get(
         code[:2] if code[:2] != "NA" else code[2:], [code]
     )
 

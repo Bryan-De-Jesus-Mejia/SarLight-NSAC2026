@@ -1,6 +1,6 @@
 """Convierte los resultados de data/analisis en archivos ligeros para la app web.
 
-Por cada análisis (data/analisis/<caso>/<sensor_pol>/) genera, en la carpeta de la app:
+Por cada análisis (data/analisis/<tipo>/<caso>/<sensor_pol>/) genera, en la carpeta de la app:
   public/analysis/<caso>/<sensor>-<pol>_{pre,post,diff,change}.webp   imágenes reducidas
   data/analysis/cases.json                                            metadatos, estadísticas y series
 
@@ -36,6 +36,7 @@ from rasterio.transform import Affine
 from rasterio.warp import transform as warp_transform
 from scipy.ndimage import median_filter
 
+from rutas import case_dirs as find_case_dirs
 from search_scenes import DATA_DIR
 
 matplotlib.use("Agg")
@@ -490,7 +491,7 @@ def main() -> None:
     collections = DATA_DIR / "collections"
     cases = []
     t0 = time.time()
-    case_dirs = sorted(d for d in args.analysis.iterdir() if d.is_dir())
+    case_dirs = find_case_dirs(args.analysis)
     log(f"Exportando {len(case_dirs)} casos desde {args.analysis}")
     for n, case_dir in enumerate(case_dirs, 1):
         if args.only and case_dir.name not in args.only:

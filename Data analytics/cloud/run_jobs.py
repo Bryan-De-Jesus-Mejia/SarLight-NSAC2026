@@ -8,11 +8,12 @@ baja y se analiza todo, y solo se trae a casa un .tar.gz con el ANÁLISIS (los d
 Si una colección no tiene análisis, se avisa y queda fuera del paquete.
 
 Uso (desde "Data analytics"):
-  python cloud/run_jobs.py                       # todos los trabajos, 3 a la vez
+  python cloud/run_jobs.py --solo agricola_ --commit   # baja, analiza y sube SOLO data/analisis a GitHub
   python cloud/run_jobs.py --solo glaciar_jakobshavn colapso_langtang
-  python cloud/run_jobs.py --solo-empaquetar     # vuelve a crear el .tar.gz con lo que ya hay
-Luego descarga resultados/resultados_<fecha>.tar.gz (clic derecho > Download en el explorador de VS Code)
-y en la PC local:  tar -xzf resultados_<fecha>.tar.gz -C "Data analytics"
+  python cloud/run_jobs.py --solo-empaquetar           # vuelve a crear el .tar.gz con lo que ya hay
+--solo acepta nombres completos o prefijos (agricola_, glaciar_, ...).
+Con --commit: en la PC local basta con git pull. Sin él: descarga resultados/resultados_<fecha>.tar.gz
+(clic derecho > Download en VS Code) y en la PC local:  tar -xzf resultados_<fecha>.tar.gz -C "Data analytics"
 """
 import argparse
 import os
@@ -29,9 +30,11 @@ ROOT = HERE.parent
 sys.path.insert(0, str(ROOT / "pipeline"))
 
 from progress import Progress, fmt_dur, log, setup_stdout  # noqa: E402
+from rutas import case_dirs  # noqa: E402
 
 LOGS = HERE / "logs"
 DATA = ROOT / "data"
+GITHUB_MAX_MB = 95  # GitHub rechaza archivos de más de 100 MB
 
 
 def read_jobs(path: Path) -> dict[str, str]:
@@ -68,7 +71,7 @@ def package(include_raw: list[str]) -> Path:
     out_dir = ROOT / "resultados"
     out_dir.mkdir(exist_ok=True)
     out = out_dir / f"resultados_{time.strftime('%Y%m%d_%H%M')}.tar.gz"
-    analyzed = {p.name for p in (DATA / "analisis").glob("*") if p.is_dir()}
+    analyzed = {p.name for p in case_dirs(DATA / "analisis")}
     files = [p for p in sorted((DATA / "analisis").rglob("*")) if p.is_file()]
     for coll in sorted(p for p in (DATA / "collections").glob("*") if p.is_dir()):
         if coll.name not in analyzed:
@@ -87,6 +90,33 @@ def package(include_raw: list[str]) -> Path:
     return out
 
 
+def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
+    r = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
+    if check and r.returncode:
+        raise RuntimeError(f"git {' '.join(args)} falló:\n{r.stdout}{r.stderr}")
+    return r
+
+
+def commit_analysis(names: list[str]):
+    """Commit + push SOLO de data/analisis (los datos crudos y los logs nunca se suben)."""
+    analysis = DATA / "analisis"
+    big = [p for p in analysis.rglob("*") if p.is_file() and p.stat().st_size > GITHUB_MAX_MB * 2**20]
+    git("add", "-A", "--", str(analysis))
+    for p in big:
+        git("reset", "-q", "--", str(p))
+        log(f"   AVISO: {p.relative_to(ROOT)} pesa {p.stat().st_size / 2**20:.0f} MB; no se sube (límite GitHub)")
+    if not git("diff", "--cached", "--quiet", "--", str(analysis), check=False).returncode:
+        log("No hay cambios en data/analisis que subir.")
+        return
+    files = git("diff", "--cached", "--name-only", "--", str(analysis)).stdout.splitlines()
+    msg = f"Resultados de la nube: {', '.join(names)}" if len(names) <= 6 else f"Resultados de la nube: {len(names)} trabajos"
+    git("commit", "-q", "-m", msg, "--", str(analysis))
+    log(f"Commit con {len(files)} archivos de data/analisis: {msg}")
+    git("pull", "-q", "--rebase", "--autostash")
+    git("push", "-q", "origin", "HEAD")
+    log("Push hecho. En la PC local: git pull")
+
+
 def main():
     setup_stdout()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -96,6 +126,8 @@ def main():
     ap.add_argument("--incluir-datos", nargs="*", default=[],
                     help="Meter también los datos crudos de estas colecciones (por defecto no van; pesan mucho)")
     ap.add_argument("--solo-empaquetar", action="store_true")
+    ap.add_argument("--commit", action="store_true",
+                    help="Al terminar, commit + push de data/analisis (en vez de crear el .tar.gz)")
     args = ap.parse_args()
 
     if args.solo_empaquetar:
@@ -104,10 +136,10 @@ def main():
 
     jobs = read_jobs(args.jobs_file)
     if args.solo:
-        missing = set(args.solo) - set(jobs)
+        missing = [s for s in args.solo if not any(k.startswith(s) for k in jobs)]
         if missing:
-            raise SystemExit(f"No están en {args.jobs_file.name}: {sorted(missing)}. Hay: {sorted(jobs)}")
-        jobs = {k: v for k, v in jobs.items() if k in args.solo}
+            raise SystemExit(f"No están en {args.jobs_file.name}: {missing}. Hay: {sorted(jobs)}")
+        jobs = {k: v for k, v in jobs.items() if any(k.startswith(s) for s in args.solo)}
 
     from earthdata_auth import get_token
     get_token()  # falla aquí, y no a mitad de camino, si faltan los secretos de Earthdata
@@ -145,7 +177,10 @@ def main():
             prog.step(f"{name} en {fmt_dur(dt)} | {last_line(LOGS / f'{name}.log')}", status=status)
     stop.set()
     prog.summary(final=True)
-    package(args.incluir_datos)
+    if args.commit:
+        commit_analysis(list(jobs))
+    else:
+        package(args.incluir_datos)
 
 
 if __name__ == "__main__":

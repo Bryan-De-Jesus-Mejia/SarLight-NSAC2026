@@ -9,10 +9,10 @@ Por cada par (geometría + fechas):
      donde la fase se decorrelaciona; también sirven para comprobar el signo de la fase
   6. coherencia baja = decorrelación (daño, deslizamientos, ruptura, cambios de superficie)
 
-Salida en data/analisis/<colección>/<geometría>_<ref>_<sec>/:
+Salida en data/analisis/<tipo>/<colección>/<geometría>_<ref>_<sec>/  (tipo: terremotos, deslizamientos...):
   desplazamiento_los_cm.tif, offset_rango_los_cm.tif, offset_azimut_cm.tif, decorrelacion.tif,
   mapa_sismo.png (4 paneles), franjas.png, estadisticas.json
-y data/analisis/<colección>/resumen_evento.json con todos los pares.
+y data/analisis/<tipo>/<colección>/resumen_evento.json con todos los pares.
 
 Ejemplo:
   python pipeline/analisis_sismo.py --collection data/collections/terremoto_venezuela
@@ -36,6 +36,7 @@ from rasterio.warp import transform as warp_transform
 from scipy.ndimage import median_filter
 
 from progress import Heartbeat, Progress, log, setup_stdout
+from rutas import TIPOS, analysis_dir
 from sar_io import write_geotiff
 from search_scenes import ROOT
 
@@ -269,6 +270,8 @@ def main():
     ap.add_argument("--offset-median", type=int, default=5, help="Filtro de mediana de offsets (def. 5)")
     ap.add_argument("--decor-coh", type=float, default=0.3, help="Coherencia bajo la cual se marca decorrelación")
     ap.add_argument("--fringe-cm", type=float, help="cm por ciclo de color en franjas (def. λ/2 ≈ 12 cm)")
+    ap.add_argument("--tipo", choices=sorted(set(TIPOS.values())) + ["otros"],
+                    help="Carpeta de tipo en data/analisis (por defecto según el prefijo del nombre)")
     ap.add_argument("--epicenter", nargs=2, type=float, metavar=("LON", "LAT"), help="Marca el epicentro")
     args = ap.parse_args()
 
@@ -278,7 +281,7 @@ def main():
     if not pairs:
         raise SystemExit("No hay pares en catalog.csv que cumplan los filtros.")
 
-    out_root = ROOT / "data" / "analisis" / collection.name
+    out_root = analysis_dir(collection.name, args.tipo)
     prog = Progress(len(pairs), f"Análisis sísmico {collection.name}", unit="pares", summary_every_s=0)
     results = []
     for p in pairs:

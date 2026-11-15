@@ -32,7 +32,7 @@ from shapely.geometry import box, shape
 
 import sar_io
 from progress import Heartbeat, Progress, log, setup_stdout
-from sar_io import read_h5_layers, write_geotiff
+from sar_io import read_h5_layers, with_retries, write_geotiff
 from search_scenes import DATA_DIR
 
 BASE = "science/LSAR/GUNW/grids/frequencyA"
@@ -120,7 +120,8 @@ def fetch_pair(rec: dict, bbox, root) -> tuple[dict, str]:
     out = root / "gunw" / rec["group"] / rec["pair"]
     layers = {k: f"{BASE}/{v.format(pol=rec['pol'])}" for k, v in LAYERS.items()}
     with Heartbeat(f"Leyendo {len(layers)} capas de {rec['group']} {rec['pair']} (streaming)"):
-        data, meta = read_h5_layers(rec["url"], layers, bbox, META)
+        data, meta = with_retries(read_h5_layers, rec["url"], layers, bbox, META,
+                                  label=f"{rec['group']} {rec['pair']}")
     if "fase_desenvuelta" not in data:
         raise RuntimeError("el producto no trae fase desenvuelta")
     out.mkdir(parents=True, exist_ok=True)

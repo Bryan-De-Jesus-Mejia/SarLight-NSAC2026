@@ -199,6 +199,9 @@ def read_gcov(source: str, bbox, pols: list[str], freq: str | None = None) -> di
             term = pol * 2 if len(pol) == 2 else pol
             freq_key = next((k for k in order if term in grids[k]), None)
             if freq_key is None:
+                if len(pols) > 1:  # p.ej. HV en una escena solo HH: se guardan las demás
+                    _vlog(f"{term} no está en la escena; se omite. Disponibles: {gcov_terms(f)}")
+                    continue
                 raise SystemExit(f"{term} no está en {source}. Disponibles: {gcov_terms(f)}")
             grp = grids[freq_key]
             x, y = grp["xCoordinates"][()], grp["yCoordinates"][()]
@@ -216,7 +219,22 @@ def read_gcov(source: str, bbox, pols: list[str], freq: str | None = None) -> di
             data = _read_strips(grp[term], r0, r1, c0, c1, f"{term} ({freq_key})", fobj)
             transform = Affine(dx, 0, x_edge + c0 * dx, 0, dy, y_edge + r0 * dy)
             out[pol] = SarWindow(to_db(data), transform, crs, source, pol)
+    if not out:
+        raise SystemExit(f"Ninguna de {pols} está en {source}. Disponibles: {gcov_terms(f)}")
     return out
+
+
+def with_retries(fn, *args, tries: int = 3, wait_s: float = 20, label: str = ""):
+    """Reintenta fn ante errores de red (timeouts de ASF/S3). SystemExit (error de datos) no se reintenta."""
+    for attempt in range(1, tries + 1):
+        try:
+            return fn(*args)
+        except Exception as e:
+            if attempt == tries:
+                raise
+            print(f"[{time.strftime('%H:%M:%S')}]   {label} intento {attempt}/{tries} falló "
+                  f"({type(e).__name__}: {e}); reintento en {wait_s * attempt:.0f}s", flush=True)
+            time.sleep(wait_s * attempt)
 
 
 def read_h5_layers(source: str, layers: dict[str, str], bbox, meta: dict[str, str] | None = None):

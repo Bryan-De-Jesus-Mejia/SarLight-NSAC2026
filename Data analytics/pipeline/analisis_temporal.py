@@ -11,7 +11,7 @@ Modos:
 Cada órbita (nisar/<órbita>, opera/<burst>) se analiza por separado: mezclar geometrías da falsos cambios.
 Umbrales por defecto pensados para NISAR banda L (HH/HV); para OPERA banda C ajusta --water-max (~ -15).
 
-Salida en data/analisis/<colección>/<fuente>_<órbita>/:
+Salida en data/analisis/<tipo>/<colección>/<fuente>_<órbita>/  (agricola_* -> agricultura):
   serie_temporal.csv / .png   estadísticas por fecha
   resumen.json                cifras clave (para la app / chatbot)
   frames/<fecha>.png          falso color por fecha (R = co-pol, G = cross-pol, B = co - cross)
@@ -48,6 +48,7 @@ from rasterio.warp import Resampling, reproject
 from scipy.ndimage import median_filter
 
 from progress import Heartbeat, Progress, log, setup_stdout
+from rutas import TIPOS, analysis_dir
 from sar_io import write_geotiff
 from search_scenes import ROOT
 
@@ -319,6 +320,8 @@ def main():
                     help="inundacion: co-pol máximo (dB) para considerar agua abierta. Def. -18 (banda L)")
     ap.add_argument("--baseline-end", help="inundacion: última fecha (YYYY-MM-DD) de la línea base seca. "
                                            "Por defecto solo la primera fecha")
+    ap.add_argument("--tipo", choices=sorted(set(TIPOS.values())) + ["otros"],
+                    help="Carpeta de tipo en data/analisis (por defecto según el prefijo del nombre)")
     ap.add_argument("--no-frames", action="store_true", help="No generar imágenes por fecha")
     args = ap.parse_args()
 
@@ -351,7 +354,7 @@ def analyze_orbit(collection: Path, src: str, folder: str, by_date: dict, args) 
     log(f"== {src}/{folder}: {len(dates)} fechas con {co_pol}+{cross_pol}")
     if len(dates) < 2:
         return None
-    out = ROOT / "data" / "analisis" / collection.name / f"{src}_{folder}"
+    out = analysis_dir(collection.name, args.tipo) / f"{src}_{folder}"
     out.mkdir(parents=True, exist_ok=True)
 
     grid, co, cross = None, [], []

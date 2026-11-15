@@ -15,27 +15,33 @@ Plan gratis de GitHub: 120 horas-núcleo/mes (60 h en la máquina de 2 núcleos)
 2. En esa misma página, **Default idle timeout → 240 minutos**. Si no, el Codespace se apaga a los
    30 min sin tocar el teclado aunque haya una descarga corriendo.
 
-## Cada vez
+## Cada vez (un solo comando)
 
-1. En el repo en GitHub: **Code → Codespaces → Create codespace** (en la rama que tenga este código).
-   La primera vez instala las dependencias solo (2-3 min).
-2. En la terminal del Codespace:
+1. En el repo en GitHub: **Code → Codespaces** → abre tu Codespace (o **Create codespace on main**).
+2. En la terminal del Codespace (**Ctrl+`**):
    ```bash
-   cd "Data analytics"
-   python cloud/run_jobs.py
+   cd /workspaces/Nasa-space-apps-2026 && git pull && cd "Data analytics" && python cloud/run_jobs.py --solo agricola_ --commit
    ```
-   Corre los trabajos de `cloud/trabajos.txt`, 3 a la vez, y cada minuto imprime en qué va cada uno.
-   Solo algunos: `python cloud/run_jobs.py --solo glaciar_jakobshavn colapso_langtang`
-3. Al terminar crea `Data analytics/resultados/resultados_<fecha>.tar.gz`.
-   En el explorador de archivos de VS Code: clic derecho sobre el `.tar.gz` → **Download**.
-4. En la PC local, desde la carpeta del proyecto:
-   ```bash
-   tar -xzf ~/Downloads/resultados_<fecha>.tar.gz -C "Data analytics"
-   ```
-   Los resultados quedan en `data/analisis/` y `data/collections/` como si se hubieran generado en local.
-5. Para no gastar horas: en github.com/codespaces → **Stop** (o Delete si ya no lo necesitas).
+   - `--solo agricola_` corre solo los trabajos cuyo nombre empieza así (también `glaciar_`, `terremoto_`,
+     o nombres completos). Sin `--solo` corre todo `cloud/trabajos.txt`.
+   - `--commit` hace commit + push **solo de `data/analisis/`** (nunca los datos crudos ni los logs;
+     archivos de más de 95 MB se saltan con un aviso).
+3. En la PC local: `git pull`. Los análisis quedan en `data/analisis/<tipo>/<colección>/`.
+4. Para no gastar horas: en github.com/codespaces → **Stop** (los datos crudos se conservan).
 
-## Qué trae el paquete
+Si `git pull` en el Codespace se queja de archivos de `data/analisis` que "would be overwritten" (análisis
+generados allí antes de que estuvieran en git), bórralos y repite: `rm -rf "Data analytics/data/analisis"`.
+
+Sin `--commit` se crea en su lugar `resultados/resultados_<fecha>.tar.gz` para descargar a mano
+(clic derecho → Download) y descomprimir con `tar -xzf <archivo> -C "Data analytics"`.
+
+## Estructura de data/analisis
+
+`data/analisis/<tipo>/<colección>/`, con el tipo según el prefijo del nombre de la colección:
+`agricola_` → agricultura, `colapso_` → deslizamientos, `glaciar_` → glaciares, `incendio_` → incendios,
+`inundacion_` → inundaciones, `terremoto_` → terremotos (otro prefijo → otros, o `--tipo` en el análisis).
+
+## Qué trae el paquete (modo sin --commit)
 
 - `data/analisis/<colección>/`: mapas PNG, `estadisticas.json`, GeoTIFF de resultados.
 - `catalog.csv`, `manifest.json` y `errors.log` de cada colección.

@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 
 import numpy as np
 
-from sar_io import SarWindow, read_gcov, read_window, write_geotiff
+from sar_io import SarWindow, read_gcov, read_window, with_retries, write_geotiff
 from search_scenes import DATA_DIR, default_bbox, search
 
 CATALOG_FIELDS = [
@@ -82,10 +82,11 @@ def append_rows(catalog_path, rows: list[dict]):
 def fetch_scene(rec: dict, pols: list[str], bbox, root, nisar_freq, max_z_error):
     """Corre en un proceso aparte. Devuelve las filas del catálogo y los bytes escritos."""
     t0 = time.time()
+    label = f"{rec['date'][:10]} {rec['group']}"
     if rec["platform"] == "NISAR":
-        wins = read_gcov(rec["urls"][pols[0]], bbox, pols, freq=nisar_freq)
+        wins = with_retries(read_gcov, rec["urls"][pols[0]], bbox, pols, nisar_freq, label=label)
     else:
-        wins = {p: read_window(rec["urls"][p], bbox, p) for p in pols}
+        wins = {p: with_retries(read_window, rec["urls"][p], bbox, p, label=label) for p in pols}
 
     source = "nisar" if rec["platform"] == "NISAR" else "opera"
     out_dir = root / source / slug(rec["group"])
@@ -243,7 +244,9 @@ def main():
                           f"{written / 2**20:6.1f} MB {secs:5.1f}s", flush=True)
                 except BaseException as e:
                     prog.failed += 1
-                    print(f"[{prog.done()}/{prog.total}] ERROR {tag:44} {str(e).splitlines()[0][:120]}", flush=True)
+                    # Algunos errores (FSTimeoutError) no traen mensaje: str(e) == "" rompía este print.
+                    msg = (str(e).splitlines() or [""])[0][:120]
+                    print(f"[{prog.done()}/{prog.total}] ERROR {tag:44} {type(e).__name__}: {msg}", flush=True)
                     with open(root / "errors.log", "a") as f:
                         f.write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')} {r['scene']}\n"
                                 f"{''.join(traceback.format_exception(e))}\n")

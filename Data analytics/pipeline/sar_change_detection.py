@@ -10,7 +10,7 @@ Ejemplo (colección de bulk_fetch.py):
   python pipeline/sar_change_detection.py \\
       --pre  "data/collections/incendio_pelempito/nisar/P083_F079_DESC/20260911T*_HV.tif" \\
       --post "data/collections/incendio_pelempito/nisar/P083_F079_DESC/20260923T*_HV.tif" \\
-      --out data/analisis/incendio_pelempito/nisar_HV
+      --out data/analisis/incendios/incendio_pelempito/nisar_HV
 Ejemplo (streaming directo):
   python pipeline/sar_change_detection.py --pol VH --bbox -70.1 18.3 -69.7 18.6 \\
       --pre OPERA_L2_RTC-S1_..._v1.0 --post OPERA_L2_RTC-S1_..._v1.0
