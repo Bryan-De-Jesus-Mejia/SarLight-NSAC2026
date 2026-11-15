@@ -16,8 +16,8 @@ Every figure on the site comes from real radar scenes compared pass against pass
 
 ## Pages
 
-- [Home: the interactive globe](https://nasa-space-apps-2026-neon.vercel.app/): the explorer.
-- [Methods](https://nasa-space-apps-2026-neon.vercel.app/methods): what SAR and NISAR measure, how two passes become a change map, what the numbers can and cannot tell you, and the data sources.
+- [Home: the interactive globe](https://sarlight.vercel.app): the explorer.
+- [Methods](https://sarlight.vercel.app/methods): what SAR and NISAR measure, how two passes become a change map, what the numbers can and cannot tell you, and the data sources.
 
 ## Data and credits
 
