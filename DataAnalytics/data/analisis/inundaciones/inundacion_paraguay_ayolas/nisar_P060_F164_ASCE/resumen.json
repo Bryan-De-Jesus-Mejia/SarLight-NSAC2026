@@ -1,0 +1,36 @@
+{
+  "collection": "inundacion_paraguay_ayolas",
+  "source": "nisar",
+  "orbit": "P060_F164_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-10-04T09:47:56Z",
+    "2026-10-16T09:47:56Z",
+    "2026-10-28T09:47:56Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32721",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-20",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-10-04T09:47:56Z",
+    "2026-10-16T09:47:56Z"
+  ],
+  "peak_date": "2026-10-28T09:47:56Z",
+  "peak_flood_km2": 42.754,
+  "peak_new_water_km2": 42.264,
+  "peak_flooded_veg_km2": 0.49,
+  "max_extent_km2": 42.754,
+  "max_extent_open_water_km2": 42.264,
+  "max_extent_flooded_veg_km2": 0.49,
+  "permanent_water_km2": 40.598
+}
