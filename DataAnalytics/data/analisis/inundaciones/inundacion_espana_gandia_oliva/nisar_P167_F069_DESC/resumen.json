@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_espana_gandia_oliva",
+  "source": "nisar",
+  "orbit": "P167_F069_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-17T19:01:37Z",
+    "2026-09-29T19:01:37Z",
+    "2026-10-11T19:01:37Z",
+    "2026-10-23T19:01:37Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32630",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-18",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-17T19:01:37Z",
+    "2026-09-29T19:01:37Z",
+    "2026-10-11T19:01:37Z"
+  ],
+  "peak_date": "2026-10-23T19:01:37Z",
+  "peak_flood_km2": 13.168,
+  "peak_new_water_km2": 12.082,
+  "peak_flooded_veg_km2": 1.086,
+  "max_extent_km2": 13.168,
+  "max_extent_open_water_km2": 12.082,
+  "max_extent_flooded_veg_km2": 1.086,
+  "permanent_water_km2": 54.891
+}
