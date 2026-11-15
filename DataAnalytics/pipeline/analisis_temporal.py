@@ -7,6 +7,12 @@ Modos:
   inundacion  Cada fecha frente a una línea base seca (fechas <= --baseline-end):
               1 = agua nueva (co-pol muy bajo), 2 = vegetación inundada (co-pol sube por doble
               rebote agua-tallo, típico de banda L), 3 = agua permanente. Ej.: Bangladesh.
+  cambio      Cada fecha frente a la mediana de las fechas anteriores a --event-date:
+              1 = caída (co o cross bajan >= --threshold dB: cultivo tumbado, vegetación seca o
+              arrancada, cicatriz de deslizamiento), 2 = subida (escombros, suelo húmedo, agua
+              somera). Ej.: ventarrón, deslizamiento, ola de calor, sequía.
+  agua        Superficie de agua abierta (co-pol <= --water-max) en cada fecha: nivel de embalses
+              y lagos a lo largo del tiempo (sequía, recarga).
 
 Cada órbita (nisar/<órbita>, opera/<burst>) se analiza por separado: mezclar geometrías da falsos cambios.
 Umbrales por defecto pensados para NISAR banda L (HH/HV); para OPERA banda C ajusta --water-max (~ -15).
@@ -17,6 +23,8 @@ Salida en data/analisis/<tipo>/<colección>/<fuente>_<órbita>/  (agricola_* -> 
   frames/<fecha>.png          falso color por fecha (R = co-pol, G = cross-pol, B = co - cross)
   cosecha:    fecha_cosecha.tif (día del año, 0 = sin cosecha), caida_max_db.tif, mapa_cosecha.png
   inundacion: clase_<fecha>.tif, extension_maxima.tif, frecuencia_inundacion.tif, mapa_inundacion.png
+  cambio:     cambio_<fecha>.tif (fechas posteriores al evento), mapa_cambio.png
+  agua:       frecuencia_agua.tif (% de fechas con agua), agua_minima.tif, agua_maxima.tif, mapa_agua.png
 
 Ejemplos:
   python pipeline/analisis_temporal.py --collection data/collections/quema_rastrojo_punjab --mode cosecha
@@ -277,6 +285,117 @@ def analyze_inundacion(out, dates, co, cross, grid, args) -> tuple[list, dict]:
     return rows, summary
 
 
+def analyze_cambio(out, dates, co, cross, grid, args) -> tuple[list, dict]:
+    if not args.event_date:
+        raise SystemExit("El modo cambio necesita --event-date YYYY-MM-DD.")
+    base_idx = [i for i, d in enumerate(dates) if d[:10] < args.event_date]
+    post_idx = [i for i, d in enumerate(dates) if d[:10] >= args.event_date]
+    if not base_idx or not post_idx:
+        raise SystemExit(f"Hace falta al menos una fecha antes y otra después de {args.event_date}.")
+    log(f"Línea base (antes del evento): {', '.join(dates[i][:10] for i in base_idx)}")
+    base_co = np.nanmedian(np.stack([co[i] for i in base_idx]), 0)
+    base_x = np.nanmedian(np.stack([cross[i] for i in base_idx]), 0)
+
+    rows, first = [], None
+    for t, dt in enumerate(dates):
+        d_co, d_x = co[t] - base_co, cross[t] - base_x
+        valid = np.isfinite(d_co) & np.isfinite(d_x)
+        lo, hi = np.fmin(d_co, d_x), np.fmax(d_co, d_x)
+        drop = valid & (lo <= -args.threshold) & (-lo >= hi)
+        rise = valid & (hi >= args.threshold) & ~drop
+        row = {"date": dt, "is_baseline": t in base_idx,
+               "co_median_db": round(float(np.nanmedian(co[t])), 3),
+               "cross_median_db": round(float(np.nanmedian(cross[t])), 3),
+               "co_change_median_db": round(float(np.nanmedian(d_co)), 3),
+               "cross_change_median_db": round(float(np.nanmedian(d_x)), 3),
+               "valid_pct": round(100 * float(valid.mean()), 2),
+               "drop_km2": km2(drop, grid), "rise_km2": km2(rise, grid)}
+        rows.append(row)
+        log(f"  {dt[:10]}{' (base)' if row['is_baseline'] else '       '} caída {row['drop_km2']:9.2f} km² | "
+            f"subida {row['rise_km2']:9.2f} km² | Δ{args.cross_label} mediana {row['cross_change_median_db']:+.2f} dB")
+        if t in post_idx:
+            cls = np.where(drop, 1, np.where(rise, 2, 0)).astype(np.uint8)
+            cls[~valid] = 255
+            write_geotiff(out / f"cambio_{dt[:10]}.tif", cls, grid.transform, grid.crs, nodata=255, date=dt,
+                          classes=f"1=caida>={args.threshold}dB,2=subida>={args.threshold}dB",
+                          event_date=args.event_date)
+            if first is None:
+                first = (dt, drop, rise)
+
+    post_rows = [rows[i] for i in post_idx]
+    peak = max(post_rows, key=lambda r: r["drop_km2"])
+    summary = {
+        "event_date": args.event_date, "baseline_dates": [dates[i] for i in base_idx],
+        "first_post_date": first[0], "first_post_drop_km2": rows[post_idx[0]]["drop_km2"],
+        "first_post_rise_km2": rows[post_idx[0]]["rise_km2"],
+        "peak_drop_date": peak["date"], "peak_drop_km2": peak["drop_km2"],
+        "last_date": dates[-1], "last_drop_km2": rows[-1]["drop_km2"], "last_rise_km2": rows[-1]["rise_km2"],
+    }
+
+    dt, drop, rise = first
+    step = max(1, math.ceil(max(grid.shape) / 2000))
+    fig, ax = plt.subplots(figsize=(10, 8), constrained_layout=True)
+    bg = base_co[::step, ::step]
+    ax.imshow(bg, cmap="gray", vmin=np.nanpercentile(bg, 2), vmax=np.nanpercentile(bg, 98))
+    overlay = np.where(drop, 1, np.where(rise, 2, 0))[::step, ::step]
+    ax.imshow(np.ma.masked_equal(overlay, 0), cmap=ListedColormap(["#e74c3c", "#2e86de"]), vmin=1, vmax=2,
+              alpha=0.8, interpolation="nearest")
+    ax.set_title(f"Cambio {dt[:10]} vs antes del {args.event_date}: rojo = caída "
+                 f"({summary['first_post_drop_km2']} km²), azul = subida ({summary['first_post_rise_km2']} km²)")
+    ax.set_xticks([]), ax.set_yticks([])
+    fig.savefig(out / "mapa_cambio.png", dpi=120)
+    plt.close(fig)
+    return rows, summary
+
+
+def analyze_agua(out, dates, co, cross, grid, args) -> tuple[list, dict]:
+    rows, masks = [], []
+    for t, dt in enumerate(dates):
+        valid = np.isfinite(co[t])
+        water = valid & (co[t] <= args.water_max)
+        masks.append(np.where(valid, water, False))
+        row = {"date": dt, "co_median_db": round(float(np.nanmedian(co[t])), 3),
+               "cross_median_db": round(float(np.nanmedian(cross[t])), 3),
+               "valid_pct": round(100 * float(valid.mean()), 2), "water_km2": km2(water, grid)}
+        rows.append(row)
+        log(f"  {dt[:10]}  agua {row['water_km2']:9.3f} km² | válido {row['valid_pct']:5.1f}%")
+
+    stack = np.stack(masks)
+    freq = (100 * stack.mean(0)).astype(np.uint8)
+    i_min = min(range(len(rows)), key=lambda i: rows[i]["water_km2"])
+    i_max = max(range(len(rows)), key=lambda i: rows[i]["water_km2"])
+    write_geotiff(out / "frecuencia_agua.tif", freq, grid.transform, grid.crs, nodata=None, units="percent")
+    write_geotiff(out / "agua_minima.tif", masks[i_min].astype(np.uint8), grid.transform, grid.crs, nodata=None,
+                  date=dates[i_min])
+    write_geotiff(out / "agua_maxima.tif", masks[i_max].astype(np.uint8), grid.transform, grid.crs, nodata=None,
+                  date=dates[i_max])
+    first, last = rows[0]["water_km2"], rows[-1]["water_km2"]
+    summary = {
+        "first_date": dates[0], "first_water_km2": first, "last_date": dates[-1], "last_water_km2": last,
+        "change_km2": round(last - first, 3),
+        "change_pct": round(100 * (last - first) / first, 1) if first else None,
+        "min_date": dates[i_min], "min_water_km2": rows[i_min]["water_km2"],
+        "max_date": dates[i_max], "max_water_km2": rows[i_max]["water_km2"],
+        "range_pct_of_max": round(100 * (rows[i_max]["water_km2"] - rows[i_min]["water_km2"])
+                                  / rows[i_max]["water_km2"], 1) if rows[i_max]["water_km2"] else None,
+    }
+
+    step = max(1, math.ceil(max(grid.shape) / 2000))
+    fig, ax = plt.subplots(figsize=(10, 8), constrained_layout=True)
+    bg = np.nanmedian(np.stack(co), 0)[::step, ::step]
+    ax.imshow(bg, cmap="gray", vmin=np.nanpercentile(bg, 2), vmax=np.nanpercentile(bg, 98))
+    both = (masks[i_min] & masks[i_max])[::step, ::step]
+    only_max = (masks[i_max] & ~masks[i_min])[::step, ::step]
+    ax.imshow(np.ma.masked_equal(np.where(both, 1, np.where(only_max, 2, 0)), 0),
+              cmap=ListedColormap(["#0b3d91", "#5dade2"]), vmin=1, vmax=2, alpha=0.85, interpolation="nearest")
+    ax.set_title(f"Agua: azul oscuro = en ambas fechas, celeste = solo en {dates[i_max][:10]} "
+                 f"({summary['max_water_km2']} km²) y no en {dates[i_min][:10]} ({summary['min_water_km2']} km²)")
+    ax.set_xticks([]), ax.set_yticks([])
+    fig.savefig(out / "mapa_agua.png", dpi=120)
+    plt.close(fig)
+    return rows, summary
+
+
 def plot_series(out, rows, mode, co_pol, cross_pol, title):
     t = [to_dt(r["date"]) for r in rows]
     fig, (a1, a2) = plt.subplots(2, 1, figsize=(10, 7), sharex=True, constrained_layout=True)
@@ -288,6 +407,14 @@ def plot_series(out, rows, mode, co_pol, cross_pol, title):
     if mode == "cosecha":
         a2.plot(t, [r["harvested_cum_pct"] for r in rows], "o-", color="#c0392b")
         a2.set_ylabel("% área cosechada (acumulado)")
+    elif mode == "cambio":
+        a2.plot(t, [r["drop_km2"] for r in rows], "o-", color="#e74c3c", label="Caída vs antes del evento")
+        a2.plot(t, [r["rise_km2"] for r in rows], "s-", color="#2e86de", label="Subida vs antes del evento")
+        a2.set_ylabel("km²")
+        a2.legend()
+    elif mode == "agua":
+        a2.plot(t, [r["water_km2"] for r in rows], "o-", color="#1f6fff")
+        a2.set_ylabel("Superficie de agua (km²)")
     else:
         a2.plot(t, [r["new_water_km2"] for r in rows], "o-", label="Agua nueva")
         a2.plot(t, [r["flooded_veg_km2"] for r in rows], "s-", label="Vegetación inundada")
@@ -304,7 +431,7 @@ def main():
     setup_stdout()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--collection", type=Path, required=True)
-    ap.add_argument("--mode", choices=["cosecha", "inundacion"], required=True)
+    ap.add_argument("--mode", choices=["cosecha", "inundacion", "cambio", "agua"], required=True)
     ap.add_argument("--source", choices=["all", "nisar", "opera"], default="all")
     ap.add_argument("--group", nargs="+", help="Solo órbitas cuyo nombre contenga este texto (p.ej. P084)")
     ap.add_argument("--start", help="YYYY-MM-DD")
@@ -317,9 +444,11 @@ def main():
     ap.add_argument("--veg-min", type=float, default=-22.0,
                     help="cosecha: cross-pol mínimo (dB) para considerar que había vegetación. Def. -22")
     ap.add_argument("--water-max", type=float, default=-18.0,
-                    help="inundacion: co-pol máximo (dB) para considerar agua abierta. Def. -18 (banda L)")
+                    help="inundacion/agua: co-pol máximo (dB) para considerar agua abierta. Def. -18 (banda L)")
     ap.add_argument("--baseline-end", help="inundacion: última fecha (YYYY-MM-DD) de la línea base seca. "
                                            "Por defecto solo la primera fecha")
+    ap.add_argument("--event-date", help="cambio: fecha del evento (YYYY-MM-DD); la línea base son las fechas "
+                                         "anteriores")
     ap.add_argument("--tipo", choices=sorted(set(TIPOS.values())) + ["otros"],
                     help="Carpeta de tipo en data/analisis (por defecto según el prefijo del nombre)")
     ap.add_argument("--no-frames", action="store_true", help="No generar imágenes por fecha")
@@ -369,10 +498,10 @@ def analyze_orbit(collection: Path, src: str, folder: str, by_date: dict, args) 
                   f"{co_pol} {np.nanmedian(c):.1f} dB, {cross_pol} {np.nanmedian(x):.1f} dB")
 
     with Heartbeat(f"Análisis de {args.mode} ({folder})"):
-        if args.mode == "cosecha":
-            rows, summary = analyze_cosecha(out, dates, co, cross, grid, args)
-        else:
-            rows, summary = analyze_inundacion(out, dates, co, cross, grid, args)
+        args.cross_label = cross_pol
+        analyze = {"cosecha": analyze_cosecha, "inundacion": analyze_inundacion,
+                   "cambio": analyze_cambio, "agua": analyze_agua}[args.mode]
+        rows, summary = analyze(out, dates, co, cross, grid, args)
 
     with open(out / "serie_temporal.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
@@ -388,7 +517,7 @@ def analyze_orbit(collection: Path, src: str, folder: str, by_date: dict, args) 
                "co_pol": co_pol, "cross_pol": cross_pol, "dates": dates,
                "pixel_size_m": abs(grid.transform.a), "crs": grid.crs.to_string(),
                "params": {k: getattr(args, k) for k in ("downsample", "median", "threshold", "veg_min",
-                                                         "water_max", "baseline_end")},
+                                                         "water_max", "baseline_end", "event_date")},
                **summary}
     (out / "resumen.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False))
     key = {k: v for k, v in summary.items() if k.endswith(("km2", "pct_of_vegetated", "date"))}

@@ -1,7 +1,8 @@
 # Trabajos que corre cloud/run_jobs.py (uno por línea):   nombre: comando [&& comando ...]
-# Se ejecutan desde la carpeta "Data analytics". Las líneas con # se ignoran.
+# Se ejecutan desde la carpeta "DataAnalytics". Las líneas con # se ignoran.
 # --workers = pares que baja cada trabajo a la vez. En la nube, 3-4 va bien.
 
+[eventos_globales]
 # Terremotos: Indonesia tenía un par sin bajar por timeout en local
 terremoto_indonesia: python pipeline/fetch_quake.py --name terremoto_indonesia --event-date 2026-08-14 --bbox 119.5 -8.9 122.5 -6.8 --workers 4 && python pipeline/analisis_sismo.py --collection data/collections/terremoto_indonesia
 
@@ -13,7 +14,8 @@ glaciar_jakobshavn: python pipeline/fetch_glacier.py --name glaciar_jakobshavn -
 glaciar_hubbard_alaska: python pipeline/fetch_glacier.py --name glaciar_hubbard_alaska --bbox -140.2 59.8 -139.0 60.4 --start 2026-06-01 --workers 4 && python pipeline/analisis_glaciar.py --collection data/collections/glaciar_hubbard_alaska
 glaciar_pine_island: python pipeline/fetch_glacier.py --name glaciar_pine_island --bbox -102.0 -75.5 -98.0 -74.8 --start 2026-06-01 --workers 4 && python pipeline/analisis_glaciar.py --collection data/collections/glaciar_pine_island
 
-# Actividades agrícolas (NISAR GCOV 10 m, HH/HV). Todas: python cloud/run_jobs.py --solo agricola_ --commit
+[agricultura]
+# Actividades agrícolas (NISAR GCOV 10 m, HH/HV). Todas: python cloud/run_jobs.py --grupo agricultura --commit
 #   cosecha    = mayor caída de HV entre fechas (cosecha, quema o tala)
 #   inundacion = agua nueva y vegetación inundada frente a una línea base
 agricola_quema_punjab: python pipeline/bulk_fetch.py --name agricola_quema_punjab --source nisar --bbox 74.80 31.30 75.20 31.60 --start 2026-09-01 --end 2026-11-14 --nisar-freq A --pol HH HV --min-coverage 50 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/agricola_quema_punjab --mode cosecha
@@ -26,3 +28,24 @@ agricola_arroz_sacramento: python pipeline/bulk_fetch.py --name agricola_arroz_s
 agricola_palma_riau: python pipeline/bulk_fetch.py --name agricola_palma_riau --source nisar --bbox 101.50 0.30 101.90 0.70 --start 2026-06-01 --end 2026-11-14 --nisar-freq A --pol HH HV --min-coverage 50 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/agricola_palma_riau --mode cosecha
 agricola_girasol_ucrania: python pipeline/bulk_fetch.py --name agricola_girasol_ucrania --source nisar --bbox 32.00 48.30 32.40 48.60 --start 2026-08-01 --end 2026-11-14 --nisar-freq A --pol HH HV --min-coverage 50 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/agricola_girasol_ucrania --mode cosecha
 agricola_arroz_delta_nilo: python pipeline/bulk_fetch.py --name agricola_arroz_delta_nilo --source nisar --bbox 31.00 31.00 31.40 31.40 --start 2026-08-01 --end 2026-11-14 --nisar-freq A --pol HH HV --min-coverage 50 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/agricola_arroz_delta_nilo --mode cosecha
+
+[meteo_rd]
+# Incidencias meteorológicas en RD (NISAR solo cubre RD del 2026-06-18 al 2026-11-05).
+# Todas: python cloud/run_jobs.py --grupo meteo_rd --commit
+#   inundacion = agua nueva / vegetación inundada vs antes;  cambio = caída o subida de HH/HV vs antes del evento
+#   agua = superficie de agua por fecha (embalses y lagos). Bbox de embalses según OpenStreetMap.
+inundacion_ozama_sdn: python pipeline/bulk_fetch.py --name inundacion_ozama_sdn --bbox -69.95 18.50 -69.82 18.62 --start 2026-09-15 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/inundacion_ozama_sdn --mode inundacion --baseline-end 2026-10-24
+inundacion_san_jose_ocoa: python pipeline/bulk_fetch.py --name inundacion_san_jose_ocoa --bbox -70.60 18.45 -70.40 18.65 --start 2026-09-15 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/inundacion_san_jose_ocoa --mode inundacion --baseline-end 2026-10-24
+inundacion_san_pedro_macoris: python pipeline/bulk_fetch.py --name inundacion_san_pedro_macoris --bbox -69.35 18.42 -69.22 18.52 --start 2026-07-20 --end 2026-09-20 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/inundacion_san_pedro_macoris --mode inundacion --baseline-end 2026-08-30
+inundacion_urbana_capotillo: python pipeline/bulk_fetch.py --name inundacion_urbana_capotillo --bbox -69.93 18.48 -69.88 18.51 --start 2026-09-15 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/inundacion_urbana_capotillo --mode inundacion --baseline-end 2026-10-24
+deslizamiento_los_cacaos: python pipeline/bulk_fetch.py --name deslizamiento_los_cacaos --bbox -70.38 18.50 -70.18 18.66 --start 2026-09-15 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/deslizamiento_los_cacaos --mode cambio --event-date 2026-10-25
+deslizamiento_miches_el_seibo: python pipeline/bulk_fetch.py --name deslizamiento_miches_el_seibo --bbox -69.15 18.80 -68.95 18.98 --start 2026-09-15 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/deslizamiento_miches_el_seibo --mode cambio --event-date 2026-10-25
+viento_cibao: python pipeline/bulk_fetch.py --name viento_cibao --bbox -70.58 19.30 -70.30 19.45 --start 2026-06-18 --end 2026-09-01 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/viento_cibao --mode cambio --event-date 2026-08-02
+viento_valverde: python pipeline/bulk_fetch.py --name viento_valverde --bbox -71.20 19.45 -70.95 19.65 --start 2026-07-25 --end 2026-09-30 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/viento_valverde --mode cambio --event-date 2026-08-31
+calor_linea_noroeste: python pipeline/bulk_fetch.py --name calor_linea_noroeste --bbox -71.55 19.35 -71.15 19.65 --start 2026-06-18 --end 2026-08-31 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/calor_linea_noroeste --mode cambio --event-date 2026-06-29
+sequia_valle_san_juan: python pipeline/bulk_fetch.py --name sequia_valle_san_juan --bbox -71.40 18.70 -71.05 18.95 --start 2026-06-18 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/sequia_valle_san_juan --mode cambio --event-date 2026-07-10
+embalse_sabana_yegua: python pipeline/bulk_fetch.py --name embalse_sabana_yegua --bbox -71.08 18.69 -70.97 18.78 --start 2026-06-18 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/embalse_sabana_yegua --mode agua
+embalse_monte_grande: python pipeline/bulk_fetch.py --name embalse_monte_grande --bbox -71.04 18.48 -70.97 18.54 --start 2026-06-18 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/embalse_monte_grande --mode agua
+embalse_jiguey: python pipeline/bulk_fetch.py --name embalse_jiguey --bbox -70.45 18.50 -70.33 18.60 --start 2026-06-18 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/embalse_jiguey --mode agua
+embalse_sabaneta: python pipeline/bulk_fetch.py --name embalse_sabaneta --bbox -71.32 18.96 -71.26 19.04 --start 2026-06-18 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/embalse_sabaneta --mode agua
+lago_enriquillo: python pipeline/bulk_fetch.py --name lago_enriquillo --bbox -71.86 18.38 -71.45 18.59 --start 2026-06-18 --end 2026-11-05 --source nisar --nisar-freq A --pol HH HV --min-coverage 90 --workers 4 && python pipeline/analisis_temporal.py --collection data/collections/lago_enriquillo --mode agua

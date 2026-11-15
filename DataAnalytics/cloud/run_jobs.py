@@ -7,13 +7,14 @@ baja y se analiza todo, y solo se trae a casa un .tar.gz con el ANÁLISIS (los d
   - cloud/logs/ (un log por trabajo)
 Si una colección no tiene análisis, se avisa y queda fuera del paquete.
 
-Uso (desde "Data analytics"):
-  python cloud/run_jobs.py --solo agricola_ --commit   # baja, analiza y sube SOLO data/analisis a GitHub
+Uso (desde "DataAnalytics"):
+  python cloud/run_jobs.py --grupo meteo_rd --commit   # baja, analiza y sube SOLO data/analisis a GitHub
+  python cloud/run_jobs.py --solo agricola_ --commit
   python cloud/run_jobs.py --solo glaciar_jakobshavn colapso_langtang
   python cloud/run_jobs.py --solo-empaquetar           # vuelve a crear el .tar.gz con lo que ya hay
 --solo acepta nombres completos o prefijos (agricola_, glaciar_, ...).
 Con --commit: en la PC local basta con git pull. Sin él: descarga resultados/resultados_<fecha>.tar.gz
-(clic derecho > Download en VS Code) y en la PC local:  tar -xzf resultados_<fecha>.tar.gz -C "Data analytics"
+(clic derecho > Download en VS Code) y en la PC local:  tar -xzf resultados_<fecha>.tar.gz -C DataAnalytics
 """
 import argparse
 import os
@@ -37,17 +38,22 @@ DATA = ROOT / "data"
 GITHUB_MAX_MB = 95  # GitHub rechaza archivos de más de 100 MB
 
 
-def read_jobs(path: Path) -> dict[str, str]:
-    jobs = {}
+def read_jobs(path: Path) -> tuple[dict[str, str], dict[str, str]]:
+    """Devuelve ({nombre: comando}, {nombre: grupo}). Un grupo empieza con una línea [nombre_grupo]."""
+    jobs, groups, group = {}, {}, "general"
     for n, line in enumerate(path.read_text().splitlines(), 1):
         line = line.strip()
         if not line or line.startswith("#"):
+            continue
+        if line.startswith("[") and line.endswith("]"):
+            group = line[1:-1].strip()
             continue
         name, sep, cmd = line.partition(":")
         if not sep or not cmd.strip():
             raise SystemExit(f"{path}:{n}: formato esperado 'nombre: comando'")
         jobs[name.strip()] = cmd.strip()
-    return jobs
+        groups[name.strip()] = group
+    return jobs, groups
 
 
 def last_line(path: Path) -> str:
@@ -121,7 +127,8 @@ def main():
     setup_stdout()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--jobs-file", type=Path, default=HERE / "trabajos.txt")
-    ap.add_argument("--solo", nargs="+", help="Solo estos trabajos (por nombre)")
+    ap.add_argument("--grupo", nargs="+", help="Solo los trabajos de estos grupos ([grupo] en trabajos.txt)")
+    ap.add_argument("--solo", nargs="+", help="Solo estos trabajos (nombre completo o prefijo)")
     ap.add_argument("--paralelo", type=int, default=3, help="Trabajos a la vez (def. 3)")
     ap.add_argument("--incluir-datos", nargs="*", default=[],
                     help="Meter también los datos crudos de estas colecciones (por defecto no van; pesan mucho)")
@@ -134,7 +141,12 @@ def main():
         package(args.incluir_datos)
         return
 
-    jobs = read_jobs(args.jobs_file)
+    jobs, groups = read_jobs(args.jobs_file)
+    if args.grupo:
+        unknown = set(args.grupo) - set(groups.values())
+        if unknown:
+            raise SystemExit(f"Grupos desconocidos: {sorted(unknown)}. Hay: {sorted(set(groups.values()))}")
+        jobs = {k: v for k, v in jobs.items() if groups[k] in args.grupo}
     if args.solo:
         missing = [s for s in args.solo if not any(k.startswith(s) for k in jobs)]
         if missing:

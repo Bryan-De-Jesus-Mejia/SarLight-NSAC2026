@@ -1,5 +1,5 @@
 {
-  "name": "NISAR pipeline (Data analytics)",
+  "name": "NISAR pipeline (DataAnalytics)",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
   "secrets": {
     "EARTHDATA_USERNAME": {
@@ -9,7 +9,7 @@
       "description": "Contraseña de NASA Earthdata Login"
     }
   },
-  "postCreateCommand": "pip install --no-cache-dir -r 'Data analytics/requirements.txt'",
+  "postCreateCommand": "pip install --no-cache-dir -r 'DataAnalytics/requirements.txt'",
   "customizations": {
     "vscode": {
       "extensions": ["ms-python.python"]

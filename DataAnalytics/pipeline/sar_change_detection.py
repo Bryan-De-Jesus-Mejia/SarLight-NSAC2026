@@ -2,7 +2,7 @@
 
 --pre/--post aceptan: GeoTIFF local (admite comodines * entre comillas o sin ellas), URL https/s3
 (COG o NISAR GCOV .h5) o nombre de escena ASF. Las rutas relativas se buscan desde la carpeta
-actual y, si no, desde "Data analytics/". La escena post se remuestrea a la malla pre.
+actual y, si no, desde "DataAnalytics/". La escena post se remuestrea a la malla pre.
 
 Salidas en --out: diferencia_db.tif, mascara_cambio.tif, visualizacion.png, estadisticas.json
 
@@ -67,7 +67,7 @@ def _not_found(source: str) -> str:
             if len(entries) > 60:
                 lines.append(f"  ... y {len(entries) - 60} más")
             break
-    lines.append("Revisa la fecha/órbita del nombre (ls de esa carpeta) o que estés en 'Data analytics/'.")
+    lines.append("Revisa la fecha/órbita del nombre (ls de esa carpeta) o que estés en 'DataAnalytics/'.")
     return "\n".join(lines)
 
 
