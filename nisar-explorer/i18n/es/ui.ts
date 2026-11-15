@@ -99,4 +99,11 @@ export const ui: Record<string, string> = {
   Copy: "Copiar",
   "The assistant is thinking": "El asistente está pensando",
   "Source code on GitHub": "Código fuente en GitHub",
+  // First-visit welcome (components/Welcome.tsx)
+  "Choose your language": "Elige tu idioma",
+  "Before you start": "Antes de empezar",
+  "Do you know how to use the globe?": "¿Sabes cómo usar el globo?",
+  "Yes, let me explore": "Sí, déjame explorar",
+  "No, show me how": "No, enséñame",
+  "A short tutorial of every control, at your own pace": "Un tutorial corto de cada control, a tu ritmo",
 };

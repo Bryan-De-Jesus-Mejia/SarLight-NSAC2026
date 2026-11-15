@@ -1,31 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { msg, useT } from "@/i18n/core";
-import { globeApi } from "@/lib/globeApi";
+import { LANGS, msg, translate, useLangStore, useT, type Lang } from "@/i18n/core";
 import { useAppStore } from "@/store/useAppStore";
 
 const KEY = "ge-welcome-v1";
 
-const STEPS = [
-  {
-    kicker: msg("A satellite that sees in the dark"),
-    title: msg("Most satellites take photos. This one listens to echoes."),
-    body: msg("NISAR, from NASA and India's space agency, sends its own radio waves to the ground and listens to what comes back. Clouds, smoke and night do not stop it."),
-  },
-  {
-    kicker: msg("Real places, real changes"),
-    title: msg("Floods, wind, drought, earthquakes, melting ice."),
-    body: msg("Every marker on the globe is a place we analysed with real NISAR images: from Capotillo and the Cibao to Venezuela, Punjab and Greenland. Each one has a story you can follow step by step."),
-  },
-];
+const INTRO = {
+  kicker: msg("A satellite that sees in the dark"),
+  title: msg("Most satellites take photos. This one listens to echoes."),
+  body: msg("NISAR, from NASA and India's space agency, sends its own radio waves to the ground and listens to what comes back. Clouds, smoke and night do not stop it."),
+};
 
-/** First-visit welcome: two short cards, then a choice of where to start. */
+/** Asked before the visitor has picked a language, so it shows in both. */
+const CHOOSE = msg("Choose your language");
+const LANG_NAME: Record<Lang, string> = { en: "English", es: "Español" };
+const STEP_COUNT = 3;
+
+/** First-visit welcome: the language, one card about the satellite, then the tutorial for those who want it. */
 export function Welcome() {
   const t = useT();
   const ready = useAppStore((s) => s.status === "ready" && s.globeReady);
   const busy = useAppStore((s) => s.demoActive || s.story || s.selectedId !== null);
   const startDemo = useAppStore((s) => s.startDemo);
+  const setLang = useLangStore((s) => s.setLang);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -54,58 +52,77 @@ export function Welcome() {
   };
 
   if (!open || busy) return null;
-  const last = step >= STEPS.length;
 
   return (
     <div className="pointer-events-auto absolute inset-0 z-40 flex items-end justify-center bg-[rgb(4_4_6/0.55)] p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
       <div className="ge-intro glass w-full max-w-md rounded-2xl p-6">
         <div className="flex gap-1.5" aria-hidden="true">
-          {[0, 1, 2].map((i) => (
+          {Array.from({ length: STEP_COUNT }, (_, i) => (
             <span key={i} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-accent" : "bg-white/15"}`} />
           ))}
         </div>
 
-        {!last ? (
+        {step === 0 && (
           <>
-            <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">{t(STEPS[step].kicker)}</p>
+            <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">SarLight</p>
             <h2 id="welcome-title" className="mt-2 font-display text-[1.9rem] leading-[1.08] text-ink">
-              {t(STEPS[step].title)}
+              {translate("en", CHOOSE)}
+              <span className="block text-muted">{translate("es", CHOOSE)}</span>
             </h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-ink/85">{t(STEPS[step].body)}</p>
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              {LANGS.map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  autoFocus={code === "en"}
+                  onClick={() => {
+                    setLang(code);
+                    setStep(1);
+                  }}
+                  className="rounded-xl border border-line px-4 py-3 text-center text-[15px] font-medium text-ink transition-colors hover:bg-white/[0.06]"
+                >
+                  {LANG_NAME[code]}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {step === 1 && (
+          <>
+            <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">{t(INTRO.kicker)}</p>
+            <h2 id="welcome-title" className="mt-2 font-display text-[1.9rem] leading-[1.08] text-ink">
+              {t(INTRO.title)}
+            </h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-ink/85">{t(INTRO.body)}</p>
             <div className="mt-6 flex items-center justify-between">
               <button type="button" onClick={close} className="ge-link text-sm">
                 {t("Skip")}
               </button>
-              <button type="button" autoFocus onClick={() => setStep(step + 1)} className="ge-pill">
+              <button type="button" autoFocus onClick={() => setStep(2)} className="ge-pill">
                 {t("Next →")}
               </button>
             </div>
           </>
-        ) : (
+        )}
+
+        {step === 2 && (
           <>
-            <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">{t("Where do you want to start?")}</p>
+            <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">{t("Before you start")}</p>
             <h2 id="welcome-title" className="mt-2 font-display text-[1.9rem] leading-[1.08] text-ink">
-              {t("Pick your way in")}
+              {t("Do you know how to use the globe?")}
             </h2>
             <div className="mt-5 grid gap-2">
               {[
+                { label: msg("Yes, let me explore"), note: msg("Drag the globe and tap any marker"), run: close },
                 {
-                  label: msg("Close to home"),
-                  note: msg("Fly to the Dominican Republic and its stories"),
-                  run: () => {
-                    close();
-                    globeApi.current?.openCountry("DOM");
-                  },
-                },
-                {
-                  label: msg("Take the tour"),
-                  note: msg("Learn every control in a minute, at your own pace"),
+                  label: msg("No, show me how"),
+                  note: msg("A short tutorial of every control, at your own pace"),
                   run: () => {
                     close();
                     startDemo();
                   },
                 },
-                { label: msg("Explore on my own"), note: msg("Drag the globe and tap any marker"), run: close },
               ].map((choice) => (
                 <button key={choice.label} type="button" onClick={choice.run} className="rounded-xl border border-line px-4 py-3 text-left transition-colors hover:bg-white/[0.06]">
                   <span className="block text-[15px] font-medium text-ink">{t(choice.label)}</span>

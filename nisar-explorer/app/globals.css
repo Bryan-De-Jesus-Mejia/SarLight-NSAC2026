@@ -728,7 +728,8 @@ body:has(.ge-callout-anchor) .ge-marker {
   border-color: rgb(255 255 255 / 0.28);
 }
 
-.ge-dock-button[aria-expanded="true"] {
+.ge-dock-button[aria-expanded="true"],
+.ge-dock-button[aria-pressed="true"] {
   color: #fff;
   background: var(--color-accent-strong);
   border-color: rgb(251 113 133 / 0.6);

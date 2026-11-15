@@ -13,15 +13,20 @@ import { useT } from "@/i18n/core";
 import { useRightToolOpen } from "@/lib/panels";
 import { useAppStore } from "@/store/useAppStore";
 
+/** A dock button opens a panel, or (`toggle`) switches a feature on and off. */
 function DockButton({
   label,
   open,
   onClick,
+  toggle = false,
+  tour,
   children,
 }: {
   label: string;
   open: boolean;
   onClick: () => void;
+  toggle?: boolean;
+  tour?: string;
   children: ReactNode;
 }) {
   return (
@@ -29,7 +34,9 @@ function DockButton({
       type="button"
       aria-label={label}
       title={label}
-      aria-expanded={open}
+      aria-expanded={toggle ? undefined : open}
+      aria-pressed={toggle ? open : undefined}
+      data-tour={tour}
       onClick={onClick}
       className="ge-dock-button"
     >
@@ -65,7 +72,9 @@ export function Hud() {
   const setDock = useAppStore((s) => s.setDock);
   const legendOpen = dock.legend;
   const timelineOpen = dock.timeline;
-  const layersOpen = dock.layers;
+  const setLens = useAppStore((s) => s.setLens);
+  // With the lens on, the "layers" slot shows its day picker (it is closed by the other panels, the lens stays on).
+  const layersOpen = dock.layers && lens;
 
   // The three panels rise from the same corner and cover each other: one at a time, on every screen.
   const toggle = (panel: "legend" | "timeline" | "layers") => {
@@ -75,7 +84,13 @@ export function Hud() {
   };
   const toggleLegend = () => toggle("legend");
   const toggleTimeline = () => toggle("timeline");
-  const toggleLayers = () => toggle("layers");
+  // The cloud lens is the only real data layer: its button switches it on and off directly.
+  const toggleLens = () => {
+    const on = !lens;
+    setLens(on);
+    if (on) toggle("layers");
+    else setDock("layers", false);
+  };
 
   const ready = hasEvents && !demoActive;
 
@@ -143,8 +158,8 @@ export function Hud() {
             <DockButton label={t("Surface change signals")} open={legendOpen} onClick={toggleLegend}>
               <path d="M12 3.5 3.5 8 12 12.5 20.5 8zM3.5 12 12 16.5 20.5 12M3.5 16 12 20.5 20.5 16" />
             </DockButton>
-            <DockButton label={t("Real data layers")} open={layersOpen} onClick={toggleLayers}>
-              <path d="M12 3.2a8.8 8.8 0 1 0 0 17.6 8.8 8.8 0 0 0 0-17.6zM3.4 12h17.2M12 3.2c2.4 2.4 3.6 5.4 3.6 8.8s-1.2 6.4-3.6 8.8c-2.4-2.4-3.6-5.4-3.6-8.8S9.6 5.6 12 3.2z" />
+            <DockButton label={t("Cloud lens")} open={lens} onClick={toggleLens} toggle tour="lens">
+              <path d="M10.500 17a6.500 6.500 0 1 0 0-13 6.500 6.500 0 0 0 0 13zM15.300 15.300 20 20M7.500 10.500a3 3 0 0 1 3-3" />
             </DockButton>
             <DockButton label={t("Timeline")} open={timelineOpen} onClick={toggleTimeline}>
               <path d="M3.5 17.5h17M6 17.5v-4M10 17.5V8M14 17.5v-6.5M18 17.5V5.5" />

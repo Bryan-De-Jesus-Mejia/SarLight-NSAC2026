@@ -38,7 +38,6 @@ export function LayersPanel({ className = "" }: { className?: string }) {
   const date = useAppStore((s) => s.overlayDate);
   const setDate = useAppStore((s) => s.setOverlayDate);
   const lens = useAppStore((s) => s.lens);
-  const setLens = useAppStore((s) => s.setLens);
   const passes = useNisarPasses(lens);
   const days = passes.length ? passes : [date];
 
@@ -48,21 +47,12 @@ export function LayersPanel({ className = "" }: { className?: string }) {
       aria-labelledby="layers-title"
     >
       <h2 id="layers-title" className="flex h-6 items-center px-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-        {t("Real data layers")}
+        {t("Cloud lens")}
       </h2>
 
+      {/* Switched on and off by its dock button; this panel only shows while it is on. */}
       <div className="mt-2 px-1 pb-1">
-        <button
-          type="button"
-          role="switch"
-          aria-checked={lens}
-          onClick={() => setLens(!lens)}
-          className="flex w-full items-center justify-between rounded text-left text-xs text-ink"
-        >
-          {t("Cloud lens")}
-          <span className="ge-switch" data-on={lens} aria-hidden="true" />
-        </button>
-        <p className="mt-1.5 text-[11px] leading-snug text-muted">
+        <p className="text-[11px] leading-snug text-muted">
           {t("The planet as a camera saw it that day, clouds and all. Inside the circle the clouds are lifted and the ground underneath shows: what a camera misses on a cloudy day, and what NISAR’s radar sees anyway.")}
         </p>
         {lens && (

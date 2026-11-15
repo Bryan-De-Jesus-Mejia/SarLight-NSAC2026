@@ -116,11 +116,8 @@ export const TUTORIAL_STEPS: readonly TutorialStep[] = [
     kicker: msg("Cloud lens"),
     title: msg("See under the clouds"),
     body: msg("Turn on the lens and move the pointer over the globe: inside the circle the clouds lift and the ground shows, the way NISAR’s radar sees it."),
-    target: "layers",
-    enter: () => {
-      clear();
-      store().setDock("layers", true);
-    },
+    target: "lens",
+    enter: () => clear(),
   },
   {
     kicker: msg("Timeline"),
