@@ -1,2 +1,4 @@
 CLAUDE.md
 SAR_3_band_model.onnx
+.vercel
+.env*
