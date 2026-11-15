@@ -41,7 +41,7 @@ from search_scenes import DATA_DIR
 
 matplotlib.use("Agg")
 
-APP_DIR = Path(__file__).resolve().parents[2] / "ProyectoTal"
+APP_DIR = Path(__file__).resolve().parents[2] / "nisar-explorer"
 MAX_SIDE = 1400
 WEBP_QUALITY = 82
 # Por debajo de este valor (dB, imagen pre) un píxel se considera agua abierta.
@@ -484,7 +484,7 @@ def process_sensor(case_dir_name: str, sensor_dir: Path, out_public: Path, colle
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--analysis", type=Path, default=DATA_DIR / "analisis")
-    ap.add_argument("--app", type=Path, default=APP_DIR, help="Carpeta de la app web (ProyectoTal)")
+    ap.add_argument("--app", type=Path, default=APP_DIR, help="Carpeta de la app web (nisar-explorer)")
     ap.add_argument("--only", nargs="+", help="Solo estos casos (nombre de carpeta en analisis)")
     args = ap.parse_args()
 

@@ -1,0 +1,1633 @@
+@import "tailwindcss";
+
+/* -------------------------------------------------------------------------- */
+/* Tokens                                                                     */
+/* -------------------------------------------------------------------------- */
+
+@theme inline {
+  --color-void: #040406;
+  --color-ink: #f4f4f6;
+  --color-muted: #9a9aa4;
+  --color-line: rgb(255 255 255 / 0.1);
+  /* Soft rose for text, rings and lines; the strong one fills the main buttons. */
+  --color-accent: #fb7185;
+  --color-accent-strong: #e11d48;
+
+  --font-display: var(--font-space-grotesk), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  /* No second family: the small caps labels use the sans too. */
+  --font-mono: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Programmatic focus targets (e.g. the case title) take focus without a ring. */
+.ge-no-ring:focus,
+.ge-no-ring:focus-visible {
+  outline: none;
+}
+
+/* The search field shows focus on its pill-shaped wrapper instead. */
+.ge-search input:focus-visible {
+  outline: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Surfaces                                                                   */
+/* -------------------------------------------------------------------------- */
+
+.glass {
+  background: rgb(10 10 14 / 0.78);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 24px 60px -15px rgb(0 0 0 / 0.85), inset 0 1px 0 rgb(255 255 255 / 0.14);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+}
+
+/* Flat instrument surface: panels, dock buttons, breadcrumb. */
+.ge-surface {
+  background: rgb(10 10 14 / 0.72);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px -6px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.16);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Soft darkening toward the edges so the HUD text sits on calm ground. */
+.ge-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 52%, rgb(4 4 6 / 0.55) 100%),
+    linear-gradient(to bottom, rgb(4 4 6 / 0.5), transparent 22%, transparent 80%, rgb(4 4 6 / 0.45));
+}
+
+/* A case is open: the rest of the planet steps back. */
+.ge-vignette {
+  transition: background 700ms ease;
+}
+
+.ge-vignette[data-focus] {
+  background:
+    radial-gradient(ellipse at 38% 50%, transparent 18%, rgb(4 4 6 / 0.62) 78%),
+    linear-gradient(to bottom, rgb(4 4 6 / 0.55), transparent 22%, transparent 78%, rgb(4 4 6 / 0.5));
+}
+
+/* -------------------------------------------------------------------------- */
+/* Globe tooltip (the library renders it in .float-tooltip-kap)               */
+/* -------------------------------------------------------------------------- */
+
+.ge-globe .float-tooltip-kap {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  max-width: 300px;
+  z-index: 5;
+}
+
+.ge-tooltip {
+  margin: 14px 0 0 14px;
+  padding: 10px 13px 11px;
+  border-radius: 16px;
+  background: rgb(10 10 14 / 0.86);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 24px 60px -15px rgb(0 0 0 / 0.85), inset 0 1px 0 rgb(255 255 255 / 0.14);
+  font-family: var(--font-sans);
+}
+
+.ge-tooltip-type {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ge-tooltip-name {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.ge-tooltip-place {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.ge-tooltip-sim {
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Featured-case markers                                                      */
+/* The globe owns `transform` on the anchor, so the anchor is zero-size and   */
+/* the button offsets itself inside it.                                       */
+/* -------------------------------------------------------------------------- */
+
+.ge-marker-anchor {
+  width: 0;
+  height: 0;
+  transition: opacity 250ms ease;
+}
+
+/* Switched off by the timeline or the type filters. */
+.ge-marker-anchor[data-off] .ge-marker {
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.ge-marker {
+  position: absolute;
+  top: -13px;
+  left: -13px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 9999px;
+  border: 1.5px solid var(--marker-color);
+  background: rgb(6 6 9 / 0.82);
+  color: var(--marker-color);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 3px rgb(var(--marker-rgb) / 0.14),
+    0 0 16px 2px rgb(var(--marker-rgb) / 0.5);
+  transition:
+    transform 160ms ease,
+    opacity 200ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.ge-marker:hover,
+.ge-marker:focus-visible {
+  transform: scale(1.14);
+  background: rgb(6 6 9 / 0.95);
+  box-shadow:
+    0 0 0 4px rgb(var(--marker-rgb) / 0.22),
+    0 0 22px 4px rgb(var(--marker-rgb) / 0.7);
+}
+
+.ge-marker svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* The name only unfolds for keyboard focus: the globe tooltip covers the pointer. */
+.ge-marker-label {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 9px);
+  transform: translateX(-50%);
+  padding: 4px 9px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink);
+  background: rgb(10 10 14 / 0.92);
+  border: 1px solid var(--color-line);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ge-marker:focus-visible .ge-marker-label {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Selected-case callout: radar sweep + anchored card                         */
+/* The globe owns `transform` on the anchor: zero-size, children offset.      */
+/* -------------------------------------------------------------------------- */
+
+.ge-callout-anchor {
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  /* Above every marker, so the card never slides under another case's icon. */
+  /* The globe writes its own z-index (by distance) on every anchor: win over it. */
+  z-index: 100 !important;
+}
+
+/* While a case is open the rest of the markers are for looking at, not touching. */
+body:has(.ge-callout-anchor) .ge-marker-anchor {
+  z-index: 1 !important;
+}
+body:has(.ge-callout-anchor) .ge-marker {
+  pointer-events: none;
+}
+
+.ge-sweep {
+  position: absolute;
+  top: -46px;
+  left: -46px;
+  width: 92px;
+  height: 92px;
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--marker-rgb) / 0.55);
+  background: conic-gradient(
+    from 0deg,
+    rgb(var(--marker-rgb) / 0.55),
+    rgb(var(--marker-rgb) / 0) 28%,
+    transparent
+  );
+  -webkit-mask: radial-gradient(circle, transparent 4px, #000 5px);
+  mask: radial-gradient(circle, transparent 4px, #000 5px);
+  animation:
+    ge-sweep-spin 2.6s linear infinite,
+    ge-sweep-in 600ms ease-out both;
+}
+
+@keyframes ge-sweep-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ge-sweep-in {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+.ge-callout {
+  position: absolute;
+  left: 52px;
+  bottom: 16px;
+  width: 15.5rem;
+  padding: 11px 13px 12px;
+  border-radius: 16px;
+  background: rgb(9 9 13 / 0.88);
+  border: 1px solid rgb(var(--marker-rgb) / 0.5);
+  box-shadow:
+    0 18px 44px -12px rgb(0 0 0 / 0.8),
+    0 0 26px -6px rgb(var(--marker-rgb) / 0.45);
+  animation: ge-callout-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Leader line from the card down to the event. */
+.ge-callout-line {
+  position: absolute;
+  left: -34px;
+  bottom: 12px;
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgb(var(--marker-rgb) / 0.9));
+}
+
+@keyframes ge-callout-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+.ge-callout-type {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--marker-color);
+}
+
+.ge-callout-name {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.12;
+  color: var(--color-ink);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ge-callout-place {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.ge-callout-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-line);
+}
+
+.ge-callout-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.ge-callout-metric,
+.ge-callout-area {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.ge-callout-area {
+  margin-top: 2px;
+}
+
+.ge-callout-sim {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-sweep,
+  .ge-callout {
+    animation: none;
+  }
+
+  .ge-vignette {
+    transition: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Loader                                                                     */
+/* -------------------------------------------------------------------------- */
+
+.ge-loader-ring {
+  width: 54px;
+  height: 54px;
+  border-radius: 9999px;
+  border: 1.5px solid rgb(255 255 255 / 0.12);
+  border-top-color: var(--color-accent);
+  animation: ge-spin 1.1s linear infinite;
+}
+
+@keyframes ge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-loader-ring {
+    animation: none;
+  }
+
+  .ge-marker,
+  .ge-marker-anchor {
+    transition: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Case panel                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.ge-panel {
+  background: rgb(10 10 14 / 0.74);
+  animation: ge-panel-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ge-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.ge-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.2) transparent;
+}
+
+.ge-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.05) 25%,
+    rgb(255 255 255 / 0.1) 50%,
+    rgb(255 255 255 / 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: ge-shimmer 1.4s linear infinite;
+}
+
+@keyframes ge-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Before / after image tags */
+.ge-compare-tag {
+  position: absolute;
+  top: 0.5rem;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  background: rgb(6 6 9 / 0.72);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  pointer-events: none;
+}
+
+
+/* Chart text: always ink tokens, never the series colour */
+.ge-chart-tick {
+  fill: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.ge-chart-note {
+  fill: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ge-chart-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  padding: 6px 9px;
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+  background: rgb(9 9 13 / 0.95);
+  font-size: 11.5px;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 8px 24px -8px rgb(0 0 0 / 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-panel,
+  .ge-skeleton {
+    animation: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Legend filters + timeline                                                  */
+/* -------------------------------------------------------------------------- */
+
+.ge-filter:hover {
+  background-color: rgb(255 255 255 / 0.05);
+}
+
+/* The scrubber: an invisible track over the activity chart, with a glowing needle. */
+.ge-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.ge-range::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.ge-range::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+
+.ge-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 3px;
+  height: 100%;
+  border: 0;
+  border-radius: 2px;
+  background: var(--color-accent);
+  box-shadow:
+    0 0 0 3px rgb(251 113 133 / 0.18),
+    0 0 14px 1px rgb(251 113 133 / 0.75);
+}
+
+.ge-range::-moz-range-thumb {
+  width: 3px;
+  height: 100%;
+  border: 0;
+  border-radius: 2px;
+  background: var(--color-accent);
+  box-shadow:
+    0 0 0 3px rgb(251 113 133 / 0.18),
+    0 0 14px 1px rgb(251 113 133 / 0.75);
+}
+
+/* No date chosen: the needle rests, dimmed, at the end. */
+.ge-range--idle::-webkit-slider-thumb {
+  background: rgb(255 255 255 / 0.35);
+  box-shadow: none;
+}
+
+.ge-range--idle::-moz-range-thumb {
+  background: rgb(255 255 255 / 0.35);
+  box-shadow: none;
+}
+
+.ge-range:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Dock: two panels that open from their buttons, side by side                */
+/* A panel first runs out sideways as a thin line, then unfolds downward.     */
+/* -------------------------------------------------------------------------- */
+
+.ge-dock {
+  --dock-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ge-dock-panels {
+  display: flex;
+  align-items: flex-end;
+  min-width: 0;
+}
+
+.ge-slot {
+  flex: 0 1 auto;
+  width: 0;
+  min-width: 0;
+  margin-right: 0;
+  overflow: hidden;
+  visibility: hidden;
+  /* Closing: fold up first, then run back in. */
+  transition:
+    width 380ms var(--dock-ease) 220ms,
+    margin-right 380ms var(--dock-ease) 220ms,
+    visibility 0s linear 600ms;
+}
+
+.ge-slot[data-open="true"] {
+  width: var(--slot-width);
+  margin-right: 0.75rem;
+  visibility: visible;
+  transition:
+    width 420ms var(--dock-ease),
+    margin-right 420ms var(--dock-ease),
+    visibility 0s;
+}
+
+.ge-slot--legend {
+  --slot-width: 16rem;
+}
+
+.ge-slot--layers {
+  --slot-width: 16rem;
+}
+
+.ge-slot--layers > * {
+  width: 16rem;
+}
+
+.ge-slot--timeline {
+  --slot-width: 38rem;
+}
+
+.ge-chip {
+  padding: 0.3rem 0.4rem;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  text-align: left;
+  color: var(--color-muted);
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.ge-chip:hover {
+  color: var(--color-ink);
+}
+
+.ge-chip[aria-pressed="true"] {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.1);
+  border-color: rgb(255 255 255 / 0.4);
+}
+
+.ge-slot > * {
+  clip-path: inset(0 0 calc(100% - 2px) 0 round 8px);
+  transition: clip-path 260ms var(--dock-ease);
+}
+
+.ge-slot[data-open="true"] > * {
+  clip-path: inset(0 0 0 0 round 8px);
+  transition: clip-path 420ms var(--dock-ease) 300ms;
+}
+
+.ge-slot--legend > * {
+  width: 16rem;
+}
+
+.ge-slot--timeline > * {
+  width: 100%;
+  min-width: min(20rem, 100vw - 2.5rem);
+}
+
+.ge-dock-button {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  background: rgb(10 10 14 / 0.72);
+  color: var(--color-muted);
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.ge-dock-button:hover {
+  color: var(--color-ink);
+  border-color: rgb(255 255 255 / 0.28);
+}
+
+.ge-dock-button[aria-expanded="true"] {
+  color: #fff;
+  background: var(--color-accent-strong);
+  border-color: rgb(251 113 133 / 0.6);
+}
+
+.ge-crumbs {
+  animation: ge-crumbs-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ge-crumbs-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 50% 0 50%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Legend rows */
+.ge-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 0.875rem;
+  transition:
+    background-color 160ms ease,
+    opacity 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.ge-row:hover {
+  background: rgb(255 255 255 / 0.05);
+}
+
+.ge-row[aria-pressed="true"] {
+  background: rgb(255 255 255 / 0.07);
+  box-shadow: inset 2px 0 0 var(--row-color);
+}
+
+.ge-segments {
+  display: flex;
+  border: 1px solid var(--color-line);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.ge-segment {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.ge-segment + .ge-segment {
+  border-left: 1px solid var(--color-line);
+}
+
+.ge-segment:hover {
+  color: var(--color-ink);
+}
+
+.ge-segment[aria-pressed="true"] {
+  background: rgb(255 255 255 / 0.1);
+  color: var(--color-ink);
+}
+
+.ge-switch {
+  position: relative;
+  width: 1.75rem;
+  height: 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  transition: background-color 160ms ease;
+}
+
+.ge-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--color-muted);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.ge-switch[data-on="true"] {
+  background: rgb(255 255 255 / 0.12);
+}
+
+.ge-switch[data-on="true"]::after {
+  transform: translateX(12px);
+  background: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-slot,
+  .ge-slot > *,
+  .ge-slot[data-open="true"],
+  .ge-slot[data-open="true"] > * {
+    transition: none;
+  }
+
+  .ge-crumbs {
+    animation: none;
+  }
+}
+
+/* Region tooltip, moved by script (the globe's own tooltip only knows meshes). */
+.ge-region-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  max-width: 300px;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ge-perf {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 30;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 0.7);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #9dffb0;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Guided demo                                                                */
+/* -------------------------------------------------------------------------- */
+
+.ge-demo-text {
+  animation: ge-demo-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ge-demo-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.ge-demo-button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  color: var(--color-muted);
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.ge-demo-button:hover:not(:disabled) {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ge-demo-button:disabled {
+  opacity: 0.35;
+}
+
+.ge-demo-text-button {
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.ge-demo-text-button:hover {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ge-demo-text-button--primary {
+  color: #fff;
+  background: var(--color-accent-strong);
+}
+
+.ge-demo-text-button--primary:hover {
+  color: #fff;
+  background: #f43f5e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-demo-text {
+    animation: none;
+  }
+}
+
+/* Before/after curtain */
+.ge-curtain-handle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: rgb(10 10 14 / 0.92);
+  border: 1px solid rgb(255 255 255 / 0.5);
+  color: var(--color-ink);
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.ge-curtain-handle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.ge-curtain-tag {
+  position: absolute;
+  top: calc(50% - 3.1rem);
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  background: rgb(10 10 14 / 0.85);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-ink);
+  pointer-events: none;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* Radar viewer extras, evidence, case list                                   */
+/* -------------------------------------------------------------------------- */
+
+.ge-link {
+  color: var(--color-muted);
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 0.25);
+  text-underline-offset: 3px;
+  transition: color 160ms ease;
+}
+
+.ge-link:hover {
+  color: var(--color-ink);
+}
+
+.ge-pill {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--color-line);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  color: var(--color-ink);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.ge-pill:hover {
+  background: rgb(255 255 255 / 0.07);
+  border-color: rgb(255 255 255 / 0.25);
+}
+
+/* Pixel readout under the pointer */
+.ge-probe {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  background: rgb(6 6 9 / 0.86);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-ink);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.ge-probe b {
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+/* Time-lapse scrubber */
+.ge-frames {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.25rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ge-frames::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.18);
+}
+
+.ge-frames::-moz-range-track {
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.18);
+}
+
+.ge-frames::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -4.5px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--color-accent);
+}
+
+.ge-frames::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--color-accent);
+}
+
+/* Case cards in the legend */
+.ge-case {
+  display: flex;
+  width: 100%;
+  gap: 0.625rem;
+  align-items: center;
+  padding: 0.35rem;
+  border-radius: 6px;
+  text-align: left;
+  transition: background-color 160ms ease;
+}
+
+.ge-case:hover,
+.ge-case[aria-current="true"] {
+  background: rgb(255 255 255 / 0.07);
+}
+
+.ge-case img {
+  width: 3.25rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 4px;
+  border: 1px solid var(--color-line);
+  object-fit: cover;
+}
+
+/* Radar lens: the ring that follows the pointer (the cut-out itself is done in the map shader) */
+.ge-lens {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px;
+  border-radius: 9999px;
+  border: 1.5px solid rgb(251 113 133 / 0.95);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.55),
+    0 0 34px rgb(251 113 133 / 0.3),
+    inset 0 0 24px rgb(0 0 0 / 0.35);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ge-lens span {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%);
+  padding: 3px 9px;
+  border-radius: 9999px;
+  border: 1px solid rgb(251 113 133 / 0.5);
+  background: rgb(6 6 9 / 0.82);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-accent);
+}
+
+.ge-globe[data-lens] .ge-region-tip {
+  display: none;
+}
+
+/* Story mode: the scroll column, fading into the globe on its left edge */
+.ge-story {
+  scroll-snap-type: y proximity;
+  scrollbar-width: none;
+  background: linear-gradient(90deg, transparent, rgb(4 4 6 / 0.55) 30%, rgb(4 4 6 / 0.72));
+  outline: none;
+}
+
+.ge-story::-webkit-scrollbar {
+  display: none;
+}
+
+.ge-story > section {
+  scroll-snap-align: center;
+}
+
+@media (max-width: 767px) {
+  .ge-story {
+    background: linear-gradient(180deg, transparent 30%, rgb(4 4 6 / 0.7));
+  }
+}
+
+/* Welcome card of the general view */
+.ge-intro {
+  animation: ge-panel-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-intro {
+    animation: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Assistant chat                                                             */
+/* -------------------------------------------------------------------------- */
+
+.ge-chat {
+  animation: ge-chat-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ge-chat-in {
+  from {
+    opacity: 0;
+    transform: translateX(22px);
+  }
+}
+
+@media (max-width: 767px) {
+  .ge-chat {
+    animation-name: ge-chat-up;
+  }
+
+  @keyframes ge-chat-up {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+  }
+}
+
+.ge-typing {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.ge-typing i {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--color-muted);
+  animation: ge-typing 1.1s ease-in-out infinite;
+}
+
+.ge-typing i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ge-typing i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes ge-typing {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.ge-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.12em;
+  background: var(--color-accent);
+  animation: ge-caret 0.9s steps(1) infinite;
+}
+
+@keyframes ge-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.ge-send {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: var(--color-accent-strong);
+  color: #fff;
+  transition: background-color 160ms ease, opacity 160ms ease;
+}
+
+.ge-send:hover:not(:disabled) {
+  background: var(--color-accent);
+}
+
+.ge-send:disabled {
+  opacity: 0.25;
+}
+
+.ge-menu-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 0.8125rem;
+  color: var(--color-ink);
+  transition: background-color 160ms ease;
+}
+
+.ge-menu-item:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.07);
+}
+
+.ge-menu-item:disabled {
+  opacity: 0.35;
+}
+
+.ge-menu-item--danger {
+  color: #fb7185;
+}
+
+.ge-demo-text-button--danger {
+  color: var(--color-void);
+  background: #fb7185;
+}
+
+.ge-demo-text-button--danger:hover {
+  color: var(--color-void);
+  background: #fda4af;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-chat,
+  .ge-typing i,
+  .ge-caret {
+    animation: none;
+  }
+}
+
+/* `display` of .ge-ctl, .ge-kbd and .ge-command is set with utilities where they are used,
+   so `hidden` and `max-md:hidden` can still switch them off. */
+/* -------------------------------------------------------------------------- */
+/* Top-bar controls, pickers and the menu                                     */
+/* -------------------------------------------------------------------------- */
+
+.ge-ctl {
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  padding: 0 0.8rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  background: rgb(10 10 14 / 0.62);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  white-space: nowrap;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12);
+}
+
+.ge-ctl:hover {
+  border-color: rgb(255 255 255 / 0.26);
+  background: rgb(255 255 255 / 0.07);
+}
+
+.ge-ctl[aria-expanded="true"],
+.ge-ctl[data-open="true"] {
+  border-color: rgb(251 113 133 / 0.55);
+}
+
+/* The one call to action of the bar. */
+.ge-ctl--primary {
+  border-color: rgb(251 113 133 / 0.6);
+  background: var(--color-accent-strong);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgb(251 113 133 / 0.35), 0 10px 30px -8px rgb(225 29 72 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.22);
+}
+
+.ge-ctl--primary:hover {
+  border-color: rgb(253 164 175 / 0.7);
+  background: #f43f5e;
+}
+
+.ge-ctl--primary[aria-pressed="true"] {
+  box-shadow: 0 0 0 3px rgb(251 113 133 / 0.35), 0 10px 30px -8px rgb(225 29 72 / 0.6);
+}
+
+.ge-select-chevron {
+  transition: transform 180ms ease;
+}
+
+.ge-select-trigger[data-open="true"] .ge-select-chevron {
+  transform: rotate(180deg);
+}
+
+/* Lists that open from a control: pickers, search results, the classroom. */
+.ge-menu-surface {
+  background: rgb(10 10 14 / 0.88);
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px -15px rgb(0 0 0 / 0.85), inset 0 1px 0 rgb(255 255 255 / 0.14);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.ge-pop {
+  animation: ge-pop-in 170ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ge-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+}
+
+@keyframes ge-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.ge-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  cursor: pointer;
+  animation: ge-option-in 200ms ease both;
+}
+
+@keyframes ge-option-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+.ge-option[data-active="true"] {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ge-eyebrow {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.ge-kbd {
+  align-items: center;
+  height: 1.375rem;
+  padding: 0 0.4rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  background: rgb(255 255 255 / 0.04);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+/* The menu: a centred window on desktop, a drawer from the right on phones. */
+.ge-scrim {
+  background: rgb(4 4 6 / 0.6);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: ge-fade-in 180ms ease both;
+}
+
+.ge-menu-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgb(10 10 14 / 0.92);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.9), inset 0 1px 0 rgb(255 255 255 / 0.14);
+}
+
+@media (min-width: 768px) {
+  .ge-menu-panel {
+    top: 12vh;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    width: min(35rem, calc(100vw - 2rem));
+    max-height: min(34rem, 76dvh);
+    border-radius: 18px;
+    transform-origin: top center;
+    animation: ge-pop-in 190ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+@media (max-width: 767px) {
+  .ge-menu-panel {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(21rem, 88vw);
+    border-right: 0;
+    border-radius: 20px 0 0 20px;
+    animation: ge-drawer-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+@keyframes ge-drawer-in {
+  from {
+    opacity: 0.4;
+    transform: translateX(100%);
+  }
+}
+
+.ge-command {
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.ge-command[data-active="true"] {
+  background: rgb(255 255 255 / 0.07);
+}
+
+/* On touch screens there is no pointer or keyboard highlight to show. */
+@media (hover: none) {
+  .ge-command[data-active="true"] {
+    background: none;
+  }
+
+  .ge-command[data-active="true"] .ge-command-icon:not([data-on="true"]) {
+    color: var(--color-muted);
+    border-color: var(--color-line);
+    background: rgb(255 255 255 / 0.03);
+  }
+}
+
+.ge-command-icon {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  background: rgb(255 255 255 / 0.03);
+  color: var(--color-muted);
+  transition:
+    color 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.ge-command[data-active="true"] .ge-command-icon,
+.ge-command-icon[data-on="true"] {
+  color: var(--color-accent);
+  border-color: rgb(251 113 133 / 0.4);
+  background: rgb(251 113 133 / 0.08);
+}
+
+.ge-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 14px;
+  border: 1px solid var(--color-line);
+  background: rgb(255 255 255 / 0.02);
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.ge-choice[aria-checked="true"] {
+  border-color: rgb(251 113 133 / 0.55);
+  background: rgb(251 113 133 / 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-pop,
+  .ge-option,
+  .ge-scrim,
+  .ge-menu-panel {
+    animation: none;
+  }
+}
+
+/* Titles and big numbers use the grotesk; the guide keeps its own serif. */
+.font-display {
+  font-weight: 600;
+}
+
+h1.font-display,
+h2.font-display,
+h3.font-display {
+  letter-spacing: -0.02em;
+}
+
+.font-display em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.guide .font-display {
+  font-family: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+.guide .font-display em {
+  font-style: italic;
+  color: inherit;
+}
+
+/* The name of the project keeps its own serif, as in the first version. */
+.ge-brand {
+  font-family: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+}
+
+.ge-brand em {
+  font-style: italic;
+  color: inherit;
+}
+
+/* The globe's hover tooltips float above everything: hide them while the menu is open. */
+body:has(.ge-menu-panel) .float-tooltip-kap,
+body:has(.ge-menu-panel) .ge-region-tip {
+  display: none !important;
+}
+
+/* ---- Printable study guide (/aula/[lang]/[id]) ---- */
+.guide {
+  min-height: 100dvh;
+  background: #fff;
+  color: #171717;
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  font-variant-numeric: normal;
+}
+
+.guide .font-mono {
+  font-family: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+}
+
+.guide-block {
+  break-inside: avoid;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .guide {
+    min-height: 0;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

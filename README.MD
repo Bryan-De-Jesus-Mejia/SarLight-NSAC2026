@@ -41,12 +41,12 @@ back to built-in answers.
 ## Run it
 
 ```bash
-cd ProyectoTal
+cd nisar-explorer
 npm install
 npm run dev        # http://localhost:3000
 ```
 
-Deploying on Vercel: the `vercel.json` at the repository root builds `ProyectoTal`.
+Deploying on Vercel: the `vercel.json` at the repository root builds `nisar-explorer`.
 
 ### The assistant (free tiers)
 
@@ -61,7 +61,7 @@ out of quota. The prompt stays under about 4,000 tokens however many cases there
 | `GROQ_MODEL` (optional) | default `openai/gpt-oss-120b` |
 | `OPENROUTER_MODELS` (optional) | comma-separated, tried in order; default `google/gemma-4-31b-it:free,nvidia/nemotron-3.5-super-vl:free` |
 
-Put them in `ProyectoTal/.env.local` for `npm run dev`, and in Vercel → Settings → Environment Variables for the site.
+Put them in `nisar-explorer/.env.local` for `npm run dev`, and in Vercel → Settings → Environment Variables for the site.
 Without keys, or when every provider fails, the chat answers from its built-in replies.
 
 ## Reproduce the data
@@ -73,7 +73,7 @@ python pipeline/bulk_fetch.py --name <case> --bbox ... --start ... --end ...   #
 python pipeline/analisis_temporal.py --collection data/collections/<case> --mode inundacion|cambio|cosecha
 
 # 2. Export for the app
-cd ../ProyectoTal
+cd ../nisar-explorer
 python ../DataAnalytics/pipeline/export_web.py     # change maps
 node scripts/export-extra.mjs                      # floods over time, wind, heat, drought, landslides, reservoirs, quakes, glaciers, farming
 node scripts/export-context.mjs                    # weather (Open-Meteo/ERA5) and earthquakes (USGS)

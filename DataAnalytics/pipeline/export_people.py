@@ -3,7 +3,7 @@ People living in each analysed area, and on the land that changed.
 
 Crosses our own change masks with the GHSL population grid (GHS-POP R2023A,
 epoch 2025, 30 arc-seconds, European Commission JRC, CC BY 4.0) and writes
-ProyectoTal/data/analysis/people.json, read by the app.
+nisar-explorer/data/analysis/people.json, read by the app.
 
   areaPeople     everyone living inside the analysed area
   exposedPeople  people living on the pixels our analysis flagged (water that
@@ -36,7 +36,7 @@ from rasterio.windows import from_bounds
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 ANALYSIS = os.path.join(ROOT, "DataAnalytics", "data", "analisis")
-APP_DATA = os.path.join(ROOT, "ProyectoTal", "data", "analysis")
+APP_DATA = os.path.join(ROOT, "nisar-explorer", "data", "analysis")
 TILE_URL = (
     "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/"
     "GHS_POP_E2025_GLOBE_R2023A_4326_30ss/V1-0/tiles/GHS_POP_E2025_GLOBE_R2023A_4326_30ss_V1_0_R{r}_C{c}.zip"

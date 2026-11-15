@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "installCommand": "cd ProyectoTal && npm ci",
-  "buildCommand": "cd ProyectoTal && npm run build",
-  "outputDirectory": "ProyectoTal/.next",
-  "ignoreCommand": "git log -1 --format=%ae | grep -q 'github-actions\\[bot\\]' && exit 0; git diff --quiet \"${VERCEL_GIT_PREVIOUS_SHA:-none}\" HEAD -- ':/ProyectoTal' 2>/dev/null && exit 0; exit 1"
+  "installCommand": "cd nisar-explorer && npm ci",
+  "buildCommand": "cd nisar-explorer && npm run build",
+  "outputDirectory": "nisar-explorer/.next",
+  "ignoreCommand": "git log -1 --format=%ae | grep -q 'github-actions\\[bot\\]' && exit 0; git diff --quiet \"${VERCEL_GIT_PREVIOUS_SHA:-none}\" HEAD -- ':/nisar-explorer' 2>/dev/null && exit 0; exit 1"
 }

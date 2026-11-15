@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/ProyectoTal/scripts/i18n-stop-hook.mjs\""
+            "command": "node \"$CLAUDE_PROJECT_DIR/nisar-explorer/scripts/i18n-stop-hook.mjs\""
           }
         ]
       }
