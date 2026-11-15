@@ -17,7 +17,7 @@ export const more: Record<string, string> = {
     "Pistas de imágenes reales del radar NISAR, leídas por nuestro equipo. Aún sin confirmar en el terreno.",
 
   /* Chat, lens, layers */
-  "Guided answers · offline, not an AI": "Respuestas guiadas · sin conexión, no es una IA",
+  "AI answers from our radar analyses · it can make mistakes": "Respuestas de IA a partir de nuestros análisis de radar · puede equivocarse",
   "See through the clouds: the day as a camera saw it, the ground underneath inside a circle":
     "Ver a través de las nubes: el día tal como lo vio una cámara, con el suelo debajo dentro de un círculo",
   "Cloud lens": "Lente de nubes",

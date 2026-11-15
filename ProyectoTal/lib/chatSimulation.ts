@@ -1,10 +1,12 @@
 import { getLang } from "@/i18n/core";
+import { useAppStore } from "@/store/useAppStore";
 import { useChatStore, useChatStream } from "@/store/useChatStore";
 
 /**
- * A stand-in for the real assistant: it picks a canned answer by keyword and
- * "types" it out. Replace `replyFor` with a call to the real service; the
- * panel and the stores do not change.
+ * The assistant on the client: it asks /api/chat (a free language model that
+ * reads our analyses) and "types" the answer out. When the service is down or
+ * out of quota, it falls back to a canned answer picked by keyword, so the
+ * chat always replies.
  */
 
 export const MAX_LENGTH = 1000;
@@ -94,13 +96,16 @@ export function replyFor(question: string): string {
 /* -------------------------------------------------------------------------- */
 
 let timer: ReturnType<typeof setTimeout> | undefined;
-let current: { chatId: string; answer: string } | null = null;
+let current: { chatId: string } | null = null;
+let request: AbortController | null = null;
 
 const idle = () => useChatStream.setState({ chatId: null, phase: "idle", text: "" });
 
 /** Stop the reply in progress. What was already typed is kept as the answer. */
 export function stopReply(options: { keepPartial?: boolean } = { keepPartial: true }): void {
   clearTimeout(timer);
+  request?.abort();
+  request = null;
   const { chatId, text } = useChatStream.getState();
   if (options.keepPartial && chatId && text.trim()) {
     useChatStore.getState().addMessage(chatId, "assistant", `${text.trimEnd()} …`);
@@ -133,7 +138,34 @@ function typeOut(chatId: string, answer: string): void {
   tick();
 }
 
-/** Send a message in the active chat (starting one if needed) and "answer" it. */
+const OFFLINE: Record<Lang, string> = {
+  en: "(The assistant is offline right now, so here is a general answer.)",
+  es: "(El asistente no está disponible ahora mismo, así que te doy una respuesta general.)",
+};
+
+/** Turns sent to the service: enough to follow the conversation, small enough for the free tiers. */
+const HISTORY = 8;
+
+async function askService(chatId: string, signal: AbortSignal): Promise<string | null> {
+  const chat = useChatStore.getState().chats.find((c) => c.id === chatId);
+  const messages = (chat?.messages ?? []).slice(-HISTORY).map((m) => ({ role: m.role, text: m.text }));
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages, caseId: useAppStore.getState().selectedId }),
+      signal,
+    });
+    if (!response.ok) return null;
+    const body: unknown = await response.json().catch(() => null);
+    const answer = (body as { answer?: unknown } | null)?.answer;
+    return typeof answer === "string" && answer.trim() ? answer.trim() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Send a message in the active chat (starting one if needed) and answer it. */
 export function sendMessage(raw: string): void {
   const text = raw.trim().slice(0, MAX_LENGTH);
   if (!text || useChatStream.getState().phase !== "idle") return;
@@ -143,8 +175,16 @@ export function sendMessage(raw: string): void {
   const chatId = hasActive && chats.activeId ? chats.activeId : chats.newChat();
   chats.addMessage(chatId, "user", text);
 
-  const answer = replyFor(text);
-  current = { chatId, answer };
+  const mine = { chatId };
+  current = mine;
+  request = new AbortController();
+  const { signal } = request;
   useChatStream.setState({ chatId, phase: "thinking", text: "" });
-  timer = setTimeout(() => typeOut(chatId, answer), 650 + Math.random() * 500);
+
+  void askService(chatId, signal).then((answer) => {
+    // Stopped, or the chat was deleted while waiting.
+    if (current !== mine || signal.aborted) return;
+    request = null;
+    typeOut(chatId, answer ?? `${replyFor(text)}\n\n${OFFLINE[languageOf(text)]}`);
+  });
 }

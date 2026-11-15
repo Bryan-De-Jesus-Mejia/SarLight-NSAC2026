@@ -112,7 +112,7 @@ function Typing({ text, thinking }: { text: string; thinking: boolean }) {
   );
 }
 
-/** Side panel with the assistant. The answers are simulated for now (lib/chatSimulation). */
+/** Side panel with the assistant (lib/chatSimulation asks /api/chat, with canned answers as a fallback). */
 export function ChatPanel() {
   const t = useT();
   const lang = useLang();
@@ -258,7 +258,7 @@ export function ChatPanel() {
             <span className="min-w-0 flex-1">
               <span className="block truncate font-display text-[1.15rem] leading-tight text-ink">{active ? titleOf(active) : t("Ask the globe")}</span>
               <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                {t("Guided answers · offline, not an AI")}
+                {t("AI answers from our radar analyses · it can make mistakes")}
                 {chats.length > 1 ? ` · ${t("{n} chats", { n: chats.length })}` : ""}
               </span>
             </span>

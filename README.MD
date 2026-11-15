@@ -35,7 +35,8 @@ earthquakes from the USGS catalogue.
 
 Every figure comes from real radar scenes processed by our own pipeline. Nothing is simulated. A flagged change is a
 **lead, not a verdict**: nothing has been verified on the ground, and the app says so next to the numbers. The assistant
-chat gives guided, offline answers; it is not an AI model.
+chat is a free language model that answers only from these analyses (see below); when it is unavailable, the chat falls
+back to built-in answers.
 
 ## Run it
 
@@ -45,7 +46,23 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-Deploying on Vercel: set **Root Directory** to `ProyectoTal`.
+Deploying on Vercel: the `vercel.json` at the repository root builds `ProyectoTal`.
+
+### The assistant (free tiers)
+
+`/api/chat` sends each question, with a summary of every case by kind and country, one line per case of the kinds and
+countries it names, and the full facts of the cases it is about (the open one and the ones it names), to **Groq** first and to the free models of **OpenRouter** when Groq is
+out of quota. The prompt stays under about 4,000 tokens however many cases there are. Both keys are free and need no card:
+
+| Variable | Where to get it |
+|---|---|
+| `GROQ_API_KEY` | console.groq.com → API Keys |
+| `OPENROUTER_API_KEY` | openrouter.ai → Keys |
+| `GROQ_MODEL` (optional) | default `openai/gpt-oss-120b` |
+| `OPENROUTER_MODELS` (optional) | comma-separated, tried in order; default `google/gemma-4-31b-it:free,nvidia/nemotron-3.5-super-vl:free` |
+
+Put them in `ProyectoTal/.env.local` for `npm run dev`, and in Vercel → Settings → Environment Variables for the site.
+Without keys, or when every provider fails, the chat answers from its built-in replies.
 
 ## Reproduce the data
 
