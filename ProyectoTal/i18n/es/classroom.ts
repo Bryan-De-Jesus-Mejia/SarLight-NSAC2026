@@ -11,7 +11,6 @@ const ui: Record<string, string> = {
   "Could not copy": "No se pudo copiar",
   "Copy AI study prompt": "Copiar prompt de estudio con IA",
   Remove: "Quitar",
-  "Classroom: your saved cases and study guides": "Aula: tus casos guardados y guías de estudio",
   Classroom: "Aula",
   "Keep up to {max} cases to come back to, and get a study guide for each one.":
     "Guarda hasta {max} casos para volver a ellos y consigue una guía de estudio de cada uno.",

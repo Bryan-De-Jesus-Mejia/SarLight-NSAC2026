@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import type { Audience } from "@/store/useAppStore";
 
 /** The classroom keeps only the most recent cases a teacher or student chose to keep. */
 export const MAX_SAVED = 3;
 
 /** How a case was being looked at when it was saved, so it opens the same way. */
 export interface SavedView {
-  audience: "general" | "technical";
+  audience: Audience;
   story: boolean;
 }
 

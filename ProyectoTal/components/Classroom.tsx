@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { EventDetail, EventSummary } from "@/data/types";
@@ -13,22 +13,16 @@ import { MAX_SAVED, useClassroomStore, type SavedCase } from "@/store/useClassro
 
 const placeOf = (name: string): string => name.replace(/ analysis$/i, "");
 
-function Icon({ children, size = 17 }: { children: React.ReactNode; size?: number }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {children}
-    </svg>
-  );
-}
-
 /** Bookmark that keeps the open case in the classroom (or takes it out again). */
 export function SaveToClassroom({ className = "" }: { className?: string }) {
   const t = useT();
   const selectedId = useAppStore((s) => s.selectedId);
+  const student = useAppStore((s) => s.audience === "student");
   const items = useClassroomStore((s) => s.items);
   const save = useClassroomStore((s) => s.save);
   const remove = useClassroomStore((s) => s.remove);
-  if (!selectedId) return null;
+  // The classroom belongs to the student view.
+  if (!selectedId || !student) return null;
   const saved = items.some((item) => item.id === selectedId);
 
   const toggle = () => {
@@ -127,10 +121,11 @@ function Row({ item, event, onDone }: { item: SavedCase; event: EventSummary | u
   );
 }
 
-/** Top-bar button with the list of saved cases. */
-export function ClassroomButton() {
+/** The list of saved cases. It opens from the menu and only exists in the student view. */
+export function ClassroomPanel() {
   const t = useT();
   const events = useAppStore((s) => s.events);
+  const student = useAppStore((s) => s.audience === "student");
   const items = useClassroomStore((s) => s.items);
   const open = useClassroomStore((s) => s.open);
   const pending = useClassroomStore((s) => s.pending);
@@ -138,37 +133,23 @@ export function ClassroomButton() {
   const replace = useClassroomStore((s) => s.replace);
 
   const close = useCallback(() => setOpen(false), [setOpen]);
-  const ref = usePopover(close, open);
+  const shown = open && student;
+  const ref = usePopover(close, shown);
   const eventOf = (id: string) => events.find((e) => e.id === id);
   const pendingEvent = pending ? eventOf(pending.id) : undefined;
 
-  return (
-    <div ref={ref} className="pointer-events-auto relative shrink-0">
-      <button
-        type="button"
-        aria-pressed={open}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        onClick={() => setOpen(!open)}
-        title={t("Classroom: your saved cases and study guides")}
-        className={`ge-surface flex h-10 w-10 items-center justify-center transition-colors hover:text-accent ${open ? "text-accent" : "text-ink"}`}
-      >
-        <Icon>
-          <path d="M3 9.500 12 5l9 4.500-9 4.500zM7 11.800V16c0 1.200 2.200 2.500 5 2.500s5-1.300 5-2.500v-4.200M21 9.500V15" />
-        </Icon>
-        <span className="sr-only">{t("Classroom")}</span>
-        {items.length > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 font-mono text-[9px] text-[#05070d]">
-            {items.length}
-          </span>
-        )}
-      </button>
+  // Leaving the student view puts the list away, so it does not pop back open later.
+  useEffect(() => {
+    if (open && !student) setOpen(false);
+  }, [open, student, setOpen]);
 
-      {open && (
+  return (
+    <div ref={ref} className="pointer-events-none fixed right-5 top-[7.25rem] z-40 sm:right-8 xl:top-[4.75rem]">
+      {shown && (
         <section
           role="dialog"
           aria-label={t("Classroom")}
-          className="ge-surface absolute right-0 top-[calc(100%+0.5rem)] z-40 w-[min(22rem,calc(100vw-2.5rem))] p-3 shadow-xl"
+          className="ge-pop ge-menu-surface pointer-events-auto w-[min(22rem,calc(100vw-2.5rem))] origin-top-right p-3"
         >
           <h2 className="font-display text-xl text-ink">{t("Classroom")}</h2>
           <p className="mt-1 text-xs leading-snug text-muted">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { focusMenuButton } from "@/components/CommandMenu";
 import { usePopover } from "@/hooks/usePopover";
 import { useLang, useT, type TFunction } from "@/i18n/core";
 import { MAX_LENGTH, SUGGESTIONS, dropReplyFor, sendMessage, stopReply } from "@/lib/chatSimulation";
@@ -129,7 +130,7 @@ export function ChatPanel() {
 
   const hide = useCallback(() => {
     closeChat();
-    document.getElementById("ge-chat-button")?.focus();
+    focusMenuButton();
   }, [closeChat]);
 
   // Focus the box when the panel opens.
