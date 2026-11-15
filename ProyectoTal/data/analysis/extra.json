@@ -1,0 +1,4366 @@
+{
+ "generatedAt": "2026-11-15T02:23:30.026Z",
+ "cases": [
+  {
+   "id": "venezuela-quake",
+   "type": "earthquake",
+   "name": "Venezuela earthquake",
+   "region": "Central coast",
+   "country": "Venezuela",
+   "lat": 10.5,
+   "lon": -68.5,
+   "startDate": "2026-06-13",
+   "endDate": "2026-06-29",
+   "footprint": [
+    [
+     -69.4,
+     11
+    ],
+    [
+     -67.6,
+     11
+    ],
+    [
+     -67.6,
+     10
+    ],
+    [
+     -69.4,
+     10
+    ]
+   ],
+   "thumb": "/analysis-extra/venezuela-quake/thumb.webp",
+   "changedAreaKm2": 3824.02,
+   "changedPct": 0,
+   "extra": {
+    "kind": "displacement",
+    "eventDate": "2026-06-24",
+    "pairs": [
+     {
+      "key": "T054_F083_DESC_20260617_20260629",
+      "group": "T054_F083_DESC",
+      "label": "Track 54 · frame 83 · descending",
+      "direction": "descending",
+      "track": 54,
+      "frame": 83,
+      "ref": "2026-06-17",
+      "sec": "2026-06-29",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 100,
+      "reliablePct": 59.49,
+      "towardMaxCm": 40.23,
+      "awayMaxCm": -29.62,
+      "area5Km2": 3824.02,
+      "area10Km2": 1771.45,
+      "area20Km2": 710.21,
+      "coherence": 0.361,
+      "decorrelatedKm2": 8826.53,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 10.9,
+      "images": {
+       "fringes": "/analysis-extra/venezuela-quake/T054_F083_DESC_20260617_20260629_fringes.webp",
+       "fringesSize": [
+        900,
+        526
+       ],
+       "displacement": "/analysis-extra/venezuela-quake/T054_F083_DESC_20260617_20260629_los.webp",
+       "displacementSize": [
+        700,
+        468
+       ]
+      }
+     },
+     {
+      "key": "T162_F007_ASC_20260613_20260625",
+      "group": "T162_F007_ASC",
+      "label": "Track 162 · frame 7 · ascending",
+      "direction": "ascending",
+      "track": 162,
+      "frame": 7,
+      "ref": "2026-06-13",
+      "sec": "2026-06-25",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 95.2,
+      "reliablePct": 55.94,
+      "towardMaxCm": 20.26,
+      "awayMaxCm": -44.44,
+      "area5Km2": 6091.24,
+      "area10Km2": 3638.32,
+      "area20Km2": 1363.76,
+      "coherence": 0.358,
+      "decorrelatedKm2": 8535.14,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 2.9,
+      "images": {
+       "fringes": "/analysis-extra/venezuela-quake/T162_F007_ASC_20260613_20260625_fringes.webp",
+       "fringesSize": [
+        900,
+        526
+       ],
+       "displacement": "/analysis-extra/venezuela-quake/T162_F007_ASC_20260613_20260625_los.webp",
+       "displacementSize": [
+        700,
+        468
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "pine-island-glacier",
+   "type": "glacier",
+   "name": "Pine Island Glacier ice flow",
+   "region": "Amundsen Sea",
+   "country": "Antarctica",
+   "lat": -75.15,
+   "lon": -100,
+   "startDate": "2026-06-17",
+   "endDate": "2026-10-15",
+   "footprint": [
+    [
+     -102,
+     -74.8
+    ],
+    [
+     -98,
+     -74.8
+    ],
+    [
+     -98,
+     -75.5
+    ],
+    [
+     -102,
+     -75.5
+    ]
+   ],
+   "thumb": "/analysis-extra/pine-island-glacier/thumb.webp",
+   "changedAreaKm2": 1352.3,
+   "changedPct": 0,
+   "extra": {
+    "kind": "glacier",
+    "method": "offsets de píxeles NISAR GUNW, rampa robusta restada, incidencia supuesta 37.0°, flujo horizontal",
+    "pairsAnalysed": 15,
+    "maxSpeedMDay": 7.81,
+    "maxSpeedPair": "T048_F140_ASC 20260629->20260711",
+    "medianNoiseMDay": 0.235,
+    "groups": [
+     {
+      "key": "T048_F140_ASC",
+      "label": "Track 48 · frame 140 · ascending",
+      "track": 48,
+      "frame": 140,
+      "direction": "ascending",
+      "pixelM": 80,
+      "crs": "EPSG:3031",
+      "incidenceDeg": 37,
+      "fastThresholdMs": 1,
+      "map": "/analysis-extra/pine-island-glacier/T048_F140_ASC_map.webp",
+      "mapSize": [
+       726,
+       705
+      ],
+      "frames": [
+       {
+        "date": "2026-06-17",
+        "src": "/analysis-extra/pine-island-glacier/T048_F140_ASC_2026-06-17.webp"
+       },
+       {
+        "date": "2026-07-11",
+        "src": "/analysis-extra/pine-island-glacier/T048_F140_ASC_2026-07-11.webp"
+       },
+       {
+        "date": "2026-08-28",
+        "src": "/analysis-extra/pine-island-glacier/T048_F140_ASC_2026-08-28.webp"
+       },
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/pine-island-glacier/T048_F140_ASC_2026-09-09.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/pine-island-glacier/T048_F140_ASC_2026-10-03.webp"
+       }
+      ],
+      "maxSpeedMDay": 7.81,
+      "typicalSpeedMDay": 0.32,
+      "fastAreaKm2": 1352.3,
+      "noiseMDay": 0.238,
+      "series": [
+       {
+        "date": "2026-06-23",
+        "ref": "2026-06-17",
+        "sec": "2026-06-29",
+        "days": 12,
+        "p50": 0.317,
+        "p95": 3.77,
+        "max": 7.73,
+        "fastKm2": 1470.48,
+        "fastMedian": 2.49,
+        "reliablePct": 60,
+        "coherence": 0.134
+       },
+       {
+        "date": "2026-07-05",
+        "ref": "2026-06-29",
+        "sec": "2026-07-11",
+        "days": 12,
+        "p50": 0.321,
+        "p95": 5.05,
+        "max": 7.81,
+        "fastKm2": 1488.19,
+        "fastMedian": 2.61,
+        "reliablePct": 60.24,
+        "coherence": 0.134
+       },
+       {
+        "date": "2026-07-17",
+        "ref": "2026-07-11",
+        "sec": "2026-07-23",
+        "days": 12,
+        "p50": 0.317,
+        "p95": 3.97,
+        "max": 7.71,
+        "fastKm2": 1424.47,
+        "fastMedian": 2.47,
+        "reliablePct": 60.1,
+        "coherence": 0.142
+       },
+       {
+        "date": "2026-08-22",
+        "ref": "2026-08-16",
+        "sec": "2026-08-28",
+        "days": 12,
+        "p50": 0.324,
+        "p95": 4.49,
+        "max": 7.63,
+        "fastKm2": 1115.04,
+        "fastMedian": 2.95,
+        "reliablePct": 51.08,
+        "coherence": 0.112
+       },
+       {
+        "date": "2026-09-03",
+        "ref": "2026-08-28",
+        "sec": "2026-09-09",
+        "days": 12,
+        "p50": 0.331,
+        "p95": 3.77,
+        "max": 7.45,
+        "fastKm2": 1097.46,
+        "fastMedian": 2.87,
+        "reliablePct": 51.41,
+        "coherence": 0.117
+       },
+       {
+        "date": "2026-09-15",
+        "ref": "2026-09-09",
+        "sec": "2026-09-21",
+        "days": 12,
+        "p50": 0.308,
+        "p95": 3.59,
+        "max": 7.61,
+        "fastKm2": 1349.36,
+        "fastMedian": 2.42,
+        "reliablePct": 58.73,
+        "coherence": 0.144
+       },
+       {
+        "date": "2026-09-27",
+        "ref": "2026-09-21",
+        "sec": "2026-10-03",
+        "days": 12,
+        "p50": 0.31,
+        "p95": 3.78,
+        "max": 7.68,
+        "fastKm2": 1395.35,
+        "fastMedian": 2.51,
+        "reliablePct": 59.37,
+        "coherence": 0.131
+       },
+       {
+        "date": "2026-10-09",
+        "ref": "2026-10-03",
+        "sec": "2026-10-15",
+        "days": 12,
+        "p50": 0.307,
+        "p95": 3.74,
+        "max": 7.7,
+        "fastKm2": 1478.01,
+        "fastMedian": 2.38,
+        "reliablePct": 61.1,
+        "coherence": 0.134
+       }
+      ]
+     },
+     {
+      "key": "T011_F126_DESC",
+      "label": "Track 11 · frame 126 · descending",
+      "track": 11,
+      "frame": 126,
+      "direction": "descending",
+      "pixelM": 80,
+      "crs": "EPSG:3031",
+      "incidenceDeg": 37,
+      "fastThresholdMs": 1,
+      "map": "/analysis-extra/pine-island-glacier/T011_F126_DESC_map.webp",
+      "mapSize": [
+       726,
+       705
+      ],
+      "frames": [
+       {
+        "date": "2026-06-26",
+        "src": "/analysis-extra/pine-island-glacier/T011_F126_DESC_2026-06-26.webp"
+       },
+       {
+        "date": "2026-08-13",
+        "src": "/analysis-extra/pine-island-glacier/T011_F126_DESC_2026-08-13.webp"
+       },
+       {
+        "date": "2026-08-25",
+        "src": "/analysis-extra/pine-island-glacier/T011_F126_DESC_2026-08-25.webp"
+       },
+       {
+        "date": "2026-09-18",
+        "src": "/analysis-extra/pine-island-glacier/T011_F126_DESC_2026-09-18.webp"
+       },
+       {
+        "date": "2026-09-30",
+        "src": "/analysis-extra/pine-island-glacier/T011_F126_DESC_2026-09-30.webp"
+       }
+      ],
+      "maxSpeedMDay": 7.05,
+      "typicalSpeedMDay": 0.35,
+      "fastAreaKm2": 1125.7,
+      "noiseMDay": 0.214,
+      "series": [
+       {
+        "date": "2026-07-02",
+        "ref": "2026-06-26",
+        "sec": "2026-07-08",
+        "days": 12,
+        "p50": 0.366,
+        "p95": 3.07,
+        "max": 7,
+        "fastKm2": 1217.13,
+        "fastMedian": 2.44,
+        "reliablePct": 59.93,
+        "coherence": 0.129
+       },
+       {
+        "date": "2026-07-14",
+        "ref": "2026-07-08",
+        "sec": "2026-07-20",
+        "days": 12,
+        "p50": 0.363,
+        "p95": 2.86,
+        "max": 6.19,
+        "fastKm2": 1104.67,
+        "fastMedian": 2.25,
+        "reliablePct": 59.82,
+        "coherence": 0.134
+       },
+       {
+        "date": "2026-08-19",
+        "ref": "2026-08-13",
+        "sec": "2026-08-25",
+        "days": 12,
+        "p50": 0.322,
+        "p95": 2.82,
+        "max": 7.05,
+        "fastKm2": 944.34,
+        "fastMedian": 2.33,
+        "reliablePct": 52.33,
+        "coherence": 0.113
+       },
+       {
+        "date": "2026-08-31",
+        "ref": "2026-08-25",
+        "sec": "2026-09-06",
+        "days": 12,
+        "p50": 0.353,
+        "p95": 2.8,
+        "max": 5.3,
+        "fastKm2": 955.55,
+        "fastMedian": 2.24,
+        "reliablePct": 52.02,
+        "coherence": 0.114
+       },
+       {
+        "date": "2026-09-12",
+        "ref": "2026-09-06",
+        "sec": "2026-09-18",
+        "days": 12,
+        "p50": 0.343,
+        "p95": 5.62,
+        "max": 5.73,
+        "fastKm2": 1431.3,
+        "fastMedian": 2.92,
+        "reliablePct": 57.3,
+        "coherence": 0.137
+       },
+       {
+        "date": "2026-09-24",
+        "ref": "2026-09-18",
+        "sec": "2026-09-30",
+        "days": 12,
+        "p50": 0.348,
+        "p95": 2.78,
+        "max": 5.12,
+        "fastKm2": 1051.04,
+        "fastMedian": 2.22,
+        "reliablePct": 57.58,
+        "coherence": 0.124
+       },
+       {
+        "date": "2026-10-06",
+        "ref": "2026-09-30",
+        "sec": "2026-10-12",
+        "days": 12,
+        "p50": 0.374,
+        "p95": 2.85,
+        "max": 5.82,
+        "fastKm2": 1175.8,
+        "fastMedian": 2.24,
+        "reliablePct": 60.44,
+        "coherence": 0.131
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "hubbard-glacier",
+   "type": "glacier",
+   "name": "Hubbard Glacier ice flow",
+   "region": "Yakutat Bay, Alaska",
+   "country": "United States",
+   "lat": 60.1,
+   "lon": -139.6,
+   "startDate": "2026-06-18",
+   "endDate": "2026-10-19",
+   "footprint": [
+    [
+     -140.2,
+     60.4
+    ],
+    [
+     -139,
+     60.4
+    ],
+    [
+     -139,
+     59.8
+    ],
+    [
+     -140.2,
+     59.8
+    ]
+   ],
+   "thumb": "/analysis-extra/hubbard-glacier/thumb.webp",
+   "changedAreaKm2": 179.7,
+   "changedPct": 0,
+   "extra": {
+    "kind": "glacier",
+    "method": "offsets de píxeles NISAR GUNW, rampa robusta restada, incidencia supuesta 37.0°, flujo horizontal",
+    "pairsAnalysed": 16,
+    "maxSpeedMDay": 7.15,
+    "maxSpeedPair": "T063_F032_ASC 20260630->20260712",
+    "medianNoiseMDay": 0.043,
+    "groups": [
+     {
+      "key": "T063_F032_ASC",
+      "label": "Track 63 · frame 32 · ascending",
+      "track": 63,
+      "frame": 32,
+      "direction": "ascending",
+      "pixelM": 80,
+      "crs": "EPSG:3413",
+      "incidenceDeg": 37,
+      "fastThresholdMs": 1,
+      "map": "/analysis-extra/hubbard-glacier/T063_F032_ASC_map.webp",
+      "mapSize": [
+       879,
+       705
+      ],
+      "frames": [
+       {
+        "date": "2026-06-18",
+        "src": "/analysis-extra/hubbard-glacier/T063_F032_ASC_2026-06-18.webp"
+       },
+       {
+        "date": "2026-07-12",
+        "src": "/analysis-extra/hubbard-glacier/T063_F032_ASC_2026-07-12.webp"
+       },
+       {
+        "date": "2026-08-29",
+        "src": "/analysis-extra/hubbard-glacier/T063_F032_ASC_2026-08-29.webp"
+       },
+       {
+        "date": "2026-09-10",
+        "src": "/analysis-extra/hubbard-glacier/T063_F032_ASC_2026-09-10.webp"
+       },
+       {
+        "date": "2026-10-04",
+        "src": "/analysis-extra/hubbard-glacier/T063_F032_ASC_2026-10-04.webp"
+       }
+      ],
+      "maxSpeedMDay": 7.15,
+      "typicalSpeedMDay": 0.14,
+      "fastAreaKm2": 179.7,
+      "noiseMDay": 0.097,
+      "series": [
+       {
+        "date": "2026-06-24",
+        "ref": "2026-06-18",
+        "sec": "2026-06-30",
+        "days": 12,
+        "p50": 0.166,
+        "p95": 1,
+        "max": 6.89,
+        "fastKm2": 191.57,
+        "fastMedian": 3.56,
+        "reliablePct": 68.25,
+        "coherence": 0.094
+       },
+       {
+        "date": "2026-07-06",
+        "ref": "2026-06-30",
+        "sec": "2026-07-12",
+        "days": 12,
+        "p50": 0.111,
+        "p95": 1.37,
+        "max": 7.15,
+        "fastKm2": 293.66,
+        "fastMedian": 2.74,
+        "reliablePct": 68.38,
+        "coherence": 0.095
+       },
+       {
+        "date": "2026-07-18",
+        "ref": "2026-07-12",
+        "sec": "2026-07-24",
+        "days": 12,
+        "p50": 0.177,
+        "p95": 0.67,
+        "max": 4.75,
+        "fastKm2": 163.38,
+        "fastMedian": 3.04,
+        "reliablePct": 78.37,
+        "coherence": 0.114
+       },
+       {
+        "date": "2026-08-23",
+        "ref": "2026-08-17",
+        "sec": "2026-08-29",
+        "days": 12,
+        "p50": 0.059,
+        "p95": 0.66,
+        "max": 2.98,
+        "fastKm2": 178.43,
+        "fastMedian": 2.04,
+        "reliablePct": 78.17,
+        "coherence": 0.118
+       },
+       {
+        "date": "2026-09-04",
+        "ref": "2026-08-29",
+        "sec": "2026-09-10",
+        "days": 12,
+        "p50": 0.077,
+        "p95": 0.59,
+        "max": 2.89,
+        "fastKm2": 167.68,
+        "fastMedian": 2.13,
+        "reliablePct": 82.36,
+        "coherence": 0.136
+       },
+       {
+        "date": "2026-09-16",
+        "ref": "2026-09-10",
+        "sec": "2026-09-22",
+        "days": 12,
+        "p50": 0.056,
+        "p95": 0.62,
+        "max": 2.72,
+        "fastKm2": 163.32,
+        "fastMedian": 1.99,
+        "reliablePct": 78.29,
+        "coherence": 0.112
+       },
+       {
+        "date": "2026-09-28",
+        "ref": "2026-09-22",
+        "sec": "2026-10-04",
+        "days": 12,
+        "p50": 0.203,
+        "p95": 0.64,
+        "max": 2.15,
+        "fastKm2": 129.06,
+        "fastMedian": 1.52,
+        "reliablePct": 78.08,
+        "coherence": 0.104
+       },
+       {
+        "date": "2026-10-10",
+        "ref": "2026-10-04",
+        "sec": "2026-10-16",
+        "days": 12,
+        "p50": 0.206,
+        "p95": 0.68,
+        "max": 2.61,
+        "fastKm2": 150.18,
+        "fastMedian": 1.96,
+        "reliablePct": 80.58,
+        "coherence": 0.107
+       }
+      ]
+     },
+     {
+      "key": "T101_F058_DESC",
+      "label": "Track 101 · frame 58 · descending",
+      "track": 101,
+      "frame": 58,
+      "direction": "descending",
+      "pixelM": 80,
+      "crs": "EPSG:3413",
+      "incidenceDeg": 37,
+      "fastThresholdMs": 1,
+      "map": "/analysis-extra/hubbard-glacier/T101_F058_DESC_map.webp",
+      "mapSize": [
+       877,
+       704
+      ],
+      "frames": [
+       {
+        "date": "2026-06-21",
+        "src": "/analysis-extra/hubbard-glacier/T101_F058_DESC_2026-06-21.webp"
+       },
+       {
+        "date": "2026-07-15",
+        "src": "/analysis-extra/hubbard-glacier/T101_F058_DESC_2026-07-15.webp"
+       },
+       {
+        "date": "2026-09-01",
+        "src": "/analysis-extra/hubbard-glacier/T101_F058_DESC_2026-09-01.webp"
+       },
+       {
+        "date": "2026-09-13",
+        "src": "/analysis-extra/hubbard-glacier/T101_F058_DESC_2026-09-13.webp"
+       },
+       {
+        "date": "2026-10-07",
+        "src": "/analysis-extra/hubbard-glacier/T101_F058_DESC_2026-10-07.webp"
+       }
+      ],
+      "maxSpeedMDay": 4.12,
+      "typicalSpeedMDay": 0.07,
+      "fastAreaKm2": 172.2,
+      "noiseMDay": 0.04,
+      "series": [
+       {
+        "date": "2026-06-27",
+        "ref": "2026-06-21",
+        "sec": "2026-07-03",
+        "days": 12,
+        "p50": 0.045,
+        "p95": 1.54,
+        "max": 4.12,
+        "fastKm2": 276.73,
+        "fastMedian": 2.19,
+        "reliablePct": 76.31,
+        "coherence": 0.105
+       },
+       {
+        "date": "2026-07-09",
+        "ref": "2026-07-03",
+        "sec": "2026-07-15",
+        "days": 12,
+        "p50": 0.062,
+        "p95": 1.11,
+        "max": 3.1,
+        "fastKm2": 236.58,
+        "fastMedian": 1.95,
+        "reliablePct": 77.67,
+        "coherence": 0.118
+       },
+       {
+        "date": "2026-07-21",
+        "ref": "2026-07-15",
+        "sec": "2026-07-27",
+        "days": 12,
+        "p50": 0.073,
+        "p95": 1.15,
+        "max": 2.94,
+        "fastKm2": 266.78,
+        "fastMedian": 1.59,
+        "reliablePct": 80.47,
+        "coherence": 0.118
+       },
+       {
+        "date": "2026-08-26",
+        "ref": "2026-08-20",
+        "sec": "2026-09-01",
+        "days": 12,
+        "p50": 0.08,
+        "p95": 0.85,
+        "max": 1.73,
+        "fastKm2": 166.53,
+        "fastMedian": 1.31,
+        "reliablePct": 77.41,
+        "coherence": 0.111
+       },
+       {
+        "date": "2026-09-07",
+        "ref": "2026-09-01",
+        "sec": "2026-09-13",
+        "days": 12,
+        "p50": 0.062,
+        "p95": 0.69,
+        "max": 1.52,
+        "fastKm2": 99.54,
+        "fastMedian": 1.27,
+        "reliablePct": 80.37,
+        "coherence": 0.127
+       },
+       {
+        "date": "2026-09-19",
+        "ref": "2026-09-13",
+        "sec": "2026-09-25",
+        "days": 12,
+        "p50": 0.07,
+        "p95": 0.62,
+        "max": 1.45,
+        "fastKm2": 109.26,
+        "fastMedian": 1.28,
+        "reliablePct": 77.98,
+        "coherence": 0.115
+       },
+       {
+        "date": "2026-10-01",
+        "ref": "2026-09-25",
+        "sec": "2026-10-07",
+        "days": 12,
+        "p50": 0.081,
+        "p95": 0.77,
+        "max": 1.66,
+        "fastKm2": 146.59,
+        "fastMedian": 1.3,
+        "reliablePct": 79.22,
+        "coherence": 0.109
+       },
+       {
+        "date": "2026-10-13",
+        "ref": "2026-10-07",
+        "sec": "2026-10-19",
+        "days": 12,
+        "p50": 0.068,
+        "p95": 0.62,
+        "max": 1.37,
+        "fastKm2": 75.92,
+        "fastMedian": 1.24,
+        "reliablePct": 84.19,
+        "coherence": 0.121
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "amazon-clearing",
+   "type": "agriculture",
+   "name": "Amazon forest clearing",
+   "region": "Pará, Amazon",
+   "country": "Brazil",
+   "lat": -7,
+   "lon": -55.3,
+   "startDate": "2026-06-21",
+   "endDate": "2026-10-31",
+   "footprint": [
+    [
+     -55.5,
+     -6.8
+    ],
+    [
+     -55.1,
+     -6.8
+    ],
+    [
+     -55.1,
+     -7.2
+    ],
+    [
+     -55.5,
+     -7.2
+    ]
+   ],
+   "thumb": "/analysis-extra/amazon-clearing/thumb.webp",
+   "changedAreaKm2": 214.65,
+   "changedPct": 10.92,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "clearing",
+    "orbits": [
+     {
+      "key": "P103_F174_ASCE",
+      "label": "Track 103 · frame 174 · ascending",
+      "track": 103,
+      "frame": 174,
+      "direction": "ascending",
+      "pixelM": 40,
+      "crs": "EPSG:32721",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-21",
+       "2026-07-03",
+       "2026-07-15",
+       "2026-07-27",
+       "2026-08-20",
+       "2026-09-01",
+       "2026-10-07",
+       "2026-10-19",
+       "2026-10-31"
+      ],
+      "map": "/analysis-extra/amazon-clearing/P103_F174_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       820
+      ],
+      "frames": [
+       {
+        "date": "2026-06-21",
+        "src": "/analysis-extra/amazon-clearing/P103_F174_ASCE_2026-06-21.webp"
+       },
+       {
+        "date": "2026-07-15",
+        "src": "/analysis-extra/amazon-clearing/P103_F174_ASCE_2026-07-15.webp"
+       },
+       {
+        "date": "2026-08-20",
+        "src": "/analysis-extra/amazon-clearing/P103_F174_ASCE_2026-08-20.webp"
+       },
+       {
+        "date": "2026-10-07",
+        "src": "/analysis-extra/amazon-clearing/P103_F174_ASCE_2026-10-07.webp"
+       },
+       {
+        "date": "2026-10-31",
+        "src": "/analysis-extra/amazon-clearing/P103_F174_ASCE_2026-10-31.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1966.15,
+      "harvestedKm2": 214.65,
+      "harvestedPct": 10.92,
+      "peakIntervalEnd": "2026-08-20",
+      "peakIntervalDropKm2": 147.7,
+      "medianHarvestDoy": 232,
+      "meanMaxDropDb": -3.94,
+      "series": [
+       {
+        "date": "2026-06-21",
+        "coDb": -6.992,
+        "crossDb": -12.687,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-03",
+        "coDb": -7.575,
+        "crossDb": -13.246,
+        "validPct": 100,
+        "dropKm2": 80.234,
+        "riseKm2": 0.435,
+        "cumulativeKm2": 61.301,
+        "cumulativePct": 3.12
+       },
+       {
+        "date": "2026-07-15",
+        "coDb": -7.574,
+        "crossDb": -13.282,
+        "validPct": 100,
+        "dropKm2": 4.461,
+        "riseKm2": 6.502,
+        "cumulativeKm2": 64.856,
+        "cumulativePct": 3.3
+       },
+       {
+        "date": "2026-07-27",
+        "coDb": -7.126,
+        "crossDb": -12.715,
+        "validPct": 100,
+        "dropKm2": 2.773,
+        "riseKm2": 52.202,
+        "cumulativeKm2": 66.851,
+        "cumulativePct": 3.4
+       },
+       {
+        "date": "2026-08-20",
+        "coDb": -7.484,
+        "crossDb": -13.524,
+        "validPct": 100,
+        "dropKm2": 147.696,
+        "riseKm2": 0.272,
+        "cumulativeKm2": 199.744,
+        "cumulativePct": 10.16
+       },
+       {
+        "date": "2026-09-01",
+        "coDb": -7.659,
+        "crossDb": -13.771,
+        "validPct": 100,
+        "dropKm2": 3.877,
+        "riseKm2": 0.41,
+        "cumulativeKm2": 202.019,
+        "cumulativePct": 10.27
+       },
+       {
+        "date": "2026-10-07",
+        "coDb": -7.693,
+        "crossDb": -13.805,
+        "validPct": 100,
+        "dropKm2": 9.752,
+        "riseKm2": 1.554,
+        "cumulativeKm2": 211.077,
+        "cumulativePct": 10.74
+       },
+       {
+        "date": "2026-10-19",
+        "coDb": -7.603,
+        "crossDb": -13.743,
+        "validPct": 100,
+        "dropKm2": 2.467,
+        "riseKm2": 4.557,
+        "cumulativeKm2": 213.197,
+        "cumulativePct": 10.84
+       },
+       {
+        "date": "2026-10-31",
+        "coDb": -7.663,
+        "crossDb": -13.452,
+        "validPct": 100,
+        "dropKm2": 1.87,
+        "riseKm2": 48.63,
+        "cumulativeKm2": 214.654,
+        "cumulativePct": 10.92
+       }
+      ]
+     },
+     {
+      "key": "P111_F092_DESC",
+      "label": "Track 111 · frame 92 · descending",
+      "track": 111,
+      "frame": 92,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32721",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-06-21",
+       "2026-07-15",
+       "2026-09-01",
+       "2026-09-25",
+       "2026-10-19"
+      ],
+      "map": "/analysis-extra/amazon-clearing/P111_F092_DESC_map.webp",
+      "mapSize": [
+       1000,
+       820
+      ],
+      "frames": [
+       {
+        "date": "2026-06-21",
+        "src": "/analysis-extra/amazon-clearing/P111_F092_DESC_2026-06-21.webp"
+       },
+       {
+        "date": "2026-07-15",
+        "src": "/analysis-extra/amazon-clearing/P111_F092_DESC_2026-07-15.webp"
+       },
+       {
+        "date": "2026-09-01",
+        "src": "/analysis-extra/amazon-clearing/P111_F092_DESC_2026-09-01.webp"
+       },
+       {
+        "date": "2026-09-25",
+        "src": "/analysis-extra/amazon-clearing/P111_F092_DESC_2026-09-25.webp"
+       },
+       {
+        "date": "2026-10-19",
+        "src": "/analysis-extra/amazon-clearing/P111_F092_DESC_2026-10-19.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1966.09,
+      "harvestedKm2": 97.9,
+      "harvestedPct": 4.98,
+      "peakIntervalEnd": "2026-07-15",
+      "peakIntervalDropKm2": 42.76,
+      "medianHarvestDoy": 244,
+      "meanMaxDropDb": -4.13,
+      "series": [
+       {
+        "date": "2026-06-21",
+        "coDb": -7.19,
+        "crossDb": -12.594,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-15",
+        "coDb": -7.438,
+        "crossDb": -12.882,
+        "validPct": 100,
+        "dropKm2": 42.755,
+        "riseKm2": 1.606,
+        "cumulativeKm2": 41.445,
+        "cumulativePct": 2.11
+       },
+       {
+        "date": "2026-09-01",
+        "coDb": -7.499,
+        "crossDb": -13.187,
+        "validPct": 100,
+        "dropKm2": 36.123,
+        "riseKm2": 4.875,
+        "cumulativeKm2": 76.498,
+        "cumulativePct": 3.89
+       },
+       {
+        "date": "2026-09-25",
+        "coDb": -7.478,
+        "crossDb": -13.162,
+        "validPct": 100,
+        "dropKm2": 15.091,
+        "riseKm2": 13.126,
+        "cumulativeKm2": 90.869,
+        "cumulativePct": 4.62
+       },
+       {
+        "date": "2026-10-19",
+        "coDb": -7.416,
+        "crossDb": -13.198,
+        "validPct": 100,
+        "dropKm2": 7.198,
+        "riseKm2": 2.25,
+        "cumulativeKm2": 97.898,
+        "cumulativePct": 4.98
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "jakobshavn-glacier",
+   "type": "glacier",
+   "name": "Jakobshavn Isbræ ice flow",
+   "region": "Ilulissat Icefjord",
+   "country": "Greenland",
+   "lat": 69.175,
+   "lon": -49.7,
+   "startDate": "2026-06-23",
+   "endDate": "2026-10-21",
+   "footprint": [
+    [
+     -50.6,
+     69.35
+    ],
+    [
+     -48.8,
+     69.35
+    ],
+    [
+     -48.8,
+     69
+    ],
+    [
+     -50.6,
+     69
+    ]
+   ],
+   "thumb": "/analysis-extra/jakobshavn-glacier/thumb.webp",
+   "changedAreaKm2": 450.7,
+   "changedPct": 0,
+   "extra": {
+    "kind": "glacier",
+    "method": "offsets de píxeles NISAR GUNW, rampa robusta restada, incidencia supuesta 37.0°, flujo horizontal",
+    "pairsAnalysed": 15,
+    "maxSpeedMDay": 4.79,
+    "maxSpeedPair": "T131_F037_ASC 20260927->20261009",
+    "medianNoiseMDay": 0.42,
+    "groups": [
+     {
+      "key": "T131_F037_ASC",
+      "label": "Track 131 · frame 37 · ascending",
+      "track": 131,
+      "frame": 37,
+      "direction": "ascending",
+      "pixelM": 80,
+      "crs": "EPSG:3413",
+      "incidenceDeg": 37,
+      "fastThresholdMs": 1,
+      "map": "/analysis-extra/jakobshavn-glacier/T131_F037_ASC_map.webp",
+      "mapSize": [
+       886,
+       521
+      ],
+      "frames": [
+       {
+        "date": "2026-06-23",
+        "src": "/analysis-extra/jakobshavn-glacier/T131_F037_ASC_2026-06-23.webp"
+       },
+       {
+        "date": "2026-08-10",
+        "src": "/analysis-extra/jakobshavn-glacier/T131_F037_ASC_2026-08-10.webp"
+       },
+       {
+        "date": "2026-09-03",
+        "src": "/analysis-extra/jakobshavn-glacier/T131_F037_ASC_2026-09-03.webp"
+       },
+       {
+        "date": "2026-09-15",
+        "src": "/analysis-extra/jakobshavn-glacier/T131_F037_ASC_2026-09-15.webp"
+       },
+       {
+        "date": "2026-10-09",
+        "src": "/analysis-extra/jakobshavn-glacier/T131_F037_ASC_2026-10-09.webp"
+       }
+      ],
+      "maxSpeedMDay": 4.79,
+      "typicalSpeedMDay": 0.46,
+      "fastAreaKm2": 450.7,
+      "noiseMDay": 0.418,
+      "series": [
+       {
+        "date": "2026-06-29",
+        "ref": "2026-06-23",
+        "sec": "2026-07-05",
+        "days": 12,
+        "p50": 0.438,
+        "p95": 2.48,
+        "max": 4.34,
+        "fastKm2": 469.94,
+        "fastMedian": 1.96,
+        "reliablePct": 62.44,
+        "coherence": 0.075
+       },
+       {
+        "date": "2026-07-11",
+        "ref": "2026-07-05",
+        "sec": "2026-07-17",
+        "days": 12,
+        "p50": 0.472,
+        "p95": 2.18,
+        "max": 4.28,
+        "fastKm2": 365.22,
+        "fastMedian": 1.66,
+        "reliablePct": 63.02,
+        "coherence": 0.071
+       },
+       {
+        "date": "2026-08-16",
+        "ref": "2026-08-10",
+        "sec": "2026-08-22",
+        "days": 12,
+        "p50": 0.43,
+        "p95": 2.43,
+        "max": 4.55,
+        "fastKm2": 438.78,
+        "fastMedian": 1.8,
+        "reliablePct": 70.59,
+        "coherence": 0.074
+       },
+       {
+        "date": "2026-08-28",
+        "ref": "2026-08-22",
+        "sec": "2026-09-03",
+        "days": 12,
+        "p50": 0.479,
+        "p95": 2.24,
+        "max": 4.63,
+        "fastKm2": 368.15,
+        "fastMedian": 1.81,
+        "reliablePct": 71.51,
+        "coherence": 0.077
+       },
+       {
+        "date": "2026-09-09",
+        "ref": "2026-09-03",
+        "sec": "2026-09-15",
+        "days": 12,
+        "p50": 0.477,
+        "p95": 2.36,
+        "max": 4.69,
+        "fastKm2": 498.78,
+        "fastMedian": 1.84,
+        "reliablePct": 73.34,
+        "coherence": 0.079
+       },
+       {
+        "date": "2026-09-21",
+        "ref": "2026-09-15",
+        "sec": "2026-09-27",
+        "days": 12,
+        "p50": 0.495,
+        "p95": 2.35,
+        "max": 4.74,
+        "fastKm2": 490.62,
+        "fastMedian": 1.82,
+        "reliablePct": 79.38,
+        "coherence": 0.111
+       },
+       {
+        "date": "2026-10-03",
+        "ref": "2026-09-27",
+        "sec": "2026-10-09",
+        "days": 12,
+        "p50": 0.455,
+        "p95": 2.72,
+        "max": 4.79,
+        "fastKm2": 671.21,
+        "fastMedian": 1.76,
+        "reliablePct": 87.21,
+        "coherence": 0.139
+       },
+       {
+        "date": "2026-10-15",
+        "ref": "2026-10-09",
+        "sec": "2026-10-21",
+        "days": 12,
+        "p50": 0.433,
+        "p95": 1.79,
+        "max": 4.71,
+        "fastKm2": 302.56,
+        "fastMedian": 1.73,
+        "reliablePct": 86.14,
+        "coherence": 0.134
+       }
+      ]
+     },
+     {
+      "key": "T170_F053_DESC",
+      "label": "Track 170 · frame 53 · descending",
+      "track": 170,
+      "frame": 53,
+      "direction": "descending",
+      "pixelM": 80,
+      "crs": "EPSG:3413",
+      "incidenceDeg": 37,
+      "fastThresholdMs": 1,
+      "map": "/analysis-extra/jakobshavn-glacier/T170_F053_DESC_map.webp",
+      "mapSize": [
+       886,
+       521
+      ],
+      "frames": [
+       {
+        "date": "2026-06-25",
+        "src": "/analysis-extra/jakobshavn-glacier/T170_F053_DESC_2026-06-25.webp"
+       },
+       {
+        "date": "2026-08-12",
+        "src": "/analysis-extra/jakobshavn-glacier/T170_F053_DESC_2026-08-12.webp"
+       },
+       {
+        "date": "2026-08-24",
+        "src": "/analysis-extra/jakobshavn-glacier/T170_F053_DESC_2026-08-24.webp"
+       },
+       {
+        "date": "2026-09-17",
+        "src": "/analysis-extra/jakobshavn-glacier/T170_F053_DESC_2026-09-17.webp"
+       },
+       {
+        "date": "2026-09-29",
+        "src": "/analysis-extra/jakobshavn-glacier/T170_F053_DESC_2026-09-29.webp"
+       }
+      ],
+      "maxSpeedMDay": 4.11,
+      "typicalSpeedMDay": 0.5,
+      "fastAreaKm2": 456.3,
+      "noiseMDay": 0.443,
+      "series": [
+       {
+        "date": "2026-07-01",
+        "ref": "2026-06-25",
+        "sec": "2026-07-07",
+        "days": 12,
+        "p50": 0.562,
+        "p95": 1.85,
+        "max": 3.26,
+        "fastKm2": 400.71,
+        "fastMedian": 1.53,
+        "reliablePct": 62.03,
+        "coherence": 0.073
+       },
+       {
+        "date": "2026-07-13",
+        "ref": "2026-07-07",
+        "sec": "2026-07-19",
+        "days": 12,
+        "p50": 0.589,
+        "p95": 1.96,
+        "max": 3.24,
+        "fastKm2": 440.62,
+        "fastMedian": 1.56,
+        "reliablePct": 66.59,
+        "coherence": 0.071
+       },
+       {
+        "date": "2026-08-18",
+        "ref": "2026-08-12",
+        "sec": "2026-08-24",
+        "days": 12,
+        "p50": 0.502,
+        "p95": 2.1,
+        "max": 3.53,
+        "fastKm2": 462.88,
+        "fastMedian": 1.73,
+        "reliablePct": 71.3,
+        "coherence": 0.077
+       },
+       {
+        "date": "2026-08-30",
+        "ref": "2026-08-24",
+        "sec": "2026-09-05",
+        "days": 12,
+        "p50": 0.483,
+        "p95": 2.02,
+        "max": 3.4,
+        "fastKm2": 449.02,
+        "fastMedian": 1.66,
+        "reliablePct": 70.48,
+        "coherence": 0.08
+       },
+       {
+        "date": "2026-09-11",
+        "ref": "2026-09-05",
+        "sec": "2026-09-17",
+        "days": 12,
+        "p50": 0.466,
+        "p95": 2.07,
+        "max": 3.4,
+        "fastKm2": 455.26,
+        "fastMedian": 1.68,
+        "reliablePct": 70.43,
+        "coherence": 0.081
+       },
+       {
+        "date": "2026-09-23",
+        "ref": "2026-09-17",
+        "sec": "2026-09-29",
+        "days": 12,
+        "p50": 0.416,
+        "p95": 2.07,
+        "max": 3.45,
+        "fastKm2": 439.32,
+        "fastMedian": 1.7,
+        "reliablePct": 75.21,
+        "coherence": 0.109
+       },
+       {
+        "date": "2026-10-05",
+        "ref": "2026-09-29",
+        "sec": "2026-10-11",
+        "days": 12,
+        "p50": 0.612,
+        "p95": 2.17,
+        "max": 4.11,
+        "fastKm2": 546.43,
+        "fastMedian": 1.58,
+        "reliablePct": 80.56,
+        "coherence": 0.113
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "mekong-rice-flood",
+   "type": "agriculture",
+   "name": "Mekong Delta rice flooding",
+   "region": "Mekong Delta",
+   "country": "Vietnam",
+   "lat": 10.6,
+   "lon": 105.4,
+   "startDate": "2026-07-01",
+   "endDate": "2026-08-28",
+   "footprint": [
+    [
+     105.2,
+     10.8
+    ],
+    [
+     105.6,
+     10.8
+    ],
+    [
+     105.6,
+     10.4
+    ],
+    [
+     105.2,
+     10.4
+    ]
+   ],
+   "thumb": "/analysis-extra/mekong-rice-flood/thumb.webp",
+   "changedAreaKm2": 348.65,
+   "changedPct": 0,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "flood",
+    "orbits": [
+     {
+      "key": "P047_F083_DESC",
+      "label": "Track 47 · frame 83 · descending",
+      "track": 47,
+      "frame": 83,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32648",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-07-11",
+       "2026-07-23",
+       "2026-08-16",
+       "2026-08-28"
+      ],
+      "map": "/analysis-extra/mekong-rice-flood/P047_F083_DESC_map.webp",
+      "mapSize": [
+       917,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-07-11",
+        "src": "/analysis-extra/mekong-rice-flood/P047_F083_DESC_2026-07-11.webp"
+       },
+       {
+        "date": "2026-07-23",
+        "src": "/analysis-extra/mekong-rice-flood/P047_F083_DESC_2026-07-23.webp"
+       },
+       {
+        "date": "2026-08-16",
+        "src": "/analysis-extra/mekong-rice-flood/P047_F083_DESC_2026-08-16.webp"
+       },
+       {
+        "date": "2026-08-28",
+        "src": "/analysis-extra/mekong-rice-flood/P047_F083_DESC_2026-08-28.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-07-11",
+       "2026-07-23"
+      ],
+      "peakDate": "2026-08-28",
+      "peakFloodKm2": 348.65,
+      "peakNewWaterKm2": 242.96,
+      "peakFloodedVegKm2": 105.69,
+      "maxExtentKm2": 532.05,
+      "maxExtentOpenWaterKm2": 304.73,
+      "maxExtentFloodedVegKm2": 227.32,
+      "permanentWaterKm2": 20.6,
+      "series": [
+       {
+        "date": "2026-07-11",
+        "baseline": true,
+        "coDb": -11.272,
+        "crossDb": -20.685,
+        "validPct": 100,
+        "newWaterKm2": 9.678,
+        "floodedVegKm2": 5.066,
+        "permanentWaterKm2": 14.526,
+        "floodKm2": 14.744
+       },
+       {
+        "date": "2026-07-23",
+        "baseline": true,
+        "coDb": -11.055,
+        "crossDb": -19.79,
+        "validPct": 100,
+        "newWaterKm2": 21.273,
+        "floodedVegKm2": 3.882,
+        "permanentWaterKm2": 17.948,
+        "floodKm2": 25.155
+       },
+       {
+        "date": "2026-08-16",
+        "baseline": false,
+        "coDb": -10.436,
+        "crossDb": -17.756,
+        "validPct": 100,
+        "newWaterKm2": 111.19,
+        "floodedVegKm2": 191.607,
+        "permanentWaterKm2": 1.451,
+        "floodKm2": 302.797
+       },
+       {
+        "date": "2026-08-28",
+        "baseline": false,
+        "coDb": -12.401,
+        "crossDb": -19.933,
+        "validPct": 100,
+        "newWaterKm2": 242.96,
+        "floodedVegKm2": 105.69,
+        "permanentWaterKm2": 9.959,
+        "floodKm2": 348.65
+       }
+      ]
+     },
+     {
+      "key": "P083_F007_ASCE",
+      "label": "Track 83 · frame 7 · ascending",
+      "track": 83,
+      "frame": 7,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32648",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-07-01",
+       "2026-07-13",
+       "2026-07-25",
+       "2026-08-18"
+      ],
+      "map": "/analysis-extra/mekong-rice-flood/P083_F007_ASCE_map.webp",
+      "mapSize": [
+       917,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-07-01",
+        "src": "/analysis-extra/mekong-rice-flood/P083_F007_ASCE_2026-07-01.webp"
+       },
+       {
+        "date": "2026-07-13",
+        "src": "/analysis-extra/mekong-rice-flood/P083_F007_ASCE_2026-07-13.webp"
+       },
+       {
+        "date": "2026-07-25",
+        "src": "/analysis-extra/mekong-rice-flood/P083_F007_ASCE_2026-07-25.webp"
+       },
+       {
+        "date": "2026-08-18",
+        "src": "/analysis-extra/mekong-rice-flood/P083_F007_ASCE_2026-08-18.webp"
+       }
+      ],
+      "mode": "flood",
+      "baselineDates": [
+       "2026-07-01",
+       "2026-07-13",
+       "2026-07-25"
+      ],
+      "peakDate": "2026-08-18",
+      "peakFloodKm2": 224.53,
+      "peakNewWaterKm2": 164.19,
+      "peakFloodedVegKm2": 60.35,
+      "maxExtentKm2": 224.53,
+      "maxExtentOpenWaterKm2": 164.19,
+      "maxExtentFloodedVegKm2": 60.35,
+      "permanentWaterKm2": 13.21,
+      "series": [
+       {
+        "date": "2026-07-01",
+        "baseline": true,
+        "coDb": -10.309,
+        "crossDb": -20.723,
+        "validPct": 100,
+        "newWaterKm2": 11.352,
+        "floodedVegKm2": 13.538,
+        "permanentWaterKm2": 11.803,
+        "floodKm2": 24.89
+       },
+       {
+        "date": "2026-07-13",
+        "baseline": true,
+        "coDb": -9.651,
+        "crossDb": -20.149,
+        "validPct": 100,
+        "newWaterKm2": 6.203,
+        "floodedVegKm2": 16.266,
+        "permanentWaterKm2": 10.744,
+        "floodKm2": 22.469
+       },
+       {
+        "date": "2026-07-25",
+        "baseline": true,
+        "coDb": -10.174,
+        "crossDb": -19.351,
+        "validPct": 100,
+        "newWaterKm2": 6.28,
+        "floodedVegKm2": 22.978,
+        "permanentWaterKm2": 6.188,
+        "floodKm2": 29.258
+       },
+       {
+        "date": "2026-08-18",
+        "baseline": false,
+        "coDb": -11.547,
+        "crossDb": -20.011,
+        "validPct": 100,
+        "newWaterKm2": 164.188,
+        "floodedVegKm2": 60.346,
+        "permanentWaterKm2": 3.339,
+        "floodKm2": 224.534
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "saskatchewan-harvest",
+   "type": "agriculture",
+   "name": "Saskatchewan crop harvest",
+   "region": "Saskatchewan",
+   "country": "Canada",
+   "lat": 52.05,
+   "lon": -106.7,
+   "startDate": "2026-07-02",
+   "endDate": "2026-08-12",
+   "footprint": [
+    [
+     -106.9,
+     52.2
+    ],
+    [
+     -106.5,
+     52.2
+    ],
+    [
+     -106.5,
+     51.9
+    ],
+    [
+     -106.9,
+     51.9
+    ]
+   ],
+   "thumb": "/analysis-extra/saskatchewan-harvest/thumb.webp",
+   "changedAreaKm2": 56.43,
+   "changedPct": 6.5,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "harvest",
+    "orbits": [
+     {
+      "key": "P085_F062_DESC",
+      "label": "Track 85 · frame 62 · descending",
+      "track": 85,
+      "frame": 62,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-07-02",
+       "2026-07-14",
+       "2026-07-26"
+      ],
+      "map": "/analysis-extra/saskatchewan-harvest/P085_F062_DESC_map.webp",
+      "mapSize": [
+       965,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-07-02",
+        "src": "/analysis-extra/saskatchewan-harvest/P085_F062_DESC_2026-07-02.webp"
+       },
+       {
+        "date": "2026-07-14",
+        "src": "/analysis-extra/saskatchewan-harvest/P085_F062_DESC_2026-07-14.webp"
+       },
+       {
+        "date": "2026-07-26",
+        "src": "/analysis-extra/saskatchewan-harvest/P085_F062_DESC_2026-07-26.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 868.53,
+      "harvestedKm2": 56.43,
+      "harvestedPct": 6.5,
+      "peakIntervalEnd": "2026-07-26",
+      "peakIntervalDropKm2": 30.97,
+      "medianHarvestDoy": 207,
+      "meanMaxDropDb": -3.71,
+      "series": [
+       {
+        "date": "2026-07-02",
+        "coDb": -12.456,
+        "crossDb": -19.353,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-14",
+        "coDb": -12.672,
+        "crossDb": -19.646,
+        "validPct": 100,
+        "dropKm2": 25.639,
+        "riseKm2": 18.214,
+        "cumulativeKm2": 25.562,
+        "cumulativePct": 2.94
+       },
+       {
+        "date": "2026-07-26",
+        "coDb": -13.727,
+        "crossDb": -20.297,
+        "validPct": 100,
+        "dropKm2": 30.97,
+        "riseKm2": 6.888,
+        "cumulativeKm2": 56.434,
+        "cumulativePct": 6.5
+       }
+      ]
+     },
+     {
+      "key": "P163_F028_ASCE",
+      "label": "Track 163 · frame 28 · ascending",
+      "track": 163,
+      "frame": 28,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32612",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-07-07",
+       "2026-07-19",
+       "2026-08-12"
+      ],
+      "map": "/analysis-extra/saskatchewan-harvest/P163_F028_ASCE_map.webp",
+      "mapSize": [
+       974,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-07-07",
+        "src": "/analysis-extra/saskatchewan-harvest/P163_F028_ASCE_2026-07-07.webp"
+       },
+       {
+        "date": "2026-07-19",
+        "src": "/analysis-extra/saskatchewan-harvest/P163_F028_ASCE_2026-07-19.webp"
+       },
+       {
+        "date": "2026-08-12",
+        "src": "/analysis-extra/saskatchewan-harvest/P163_F028_ASCE_2026-08-12.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 141.28,
+      "harvestedKm2": 12.25,
+      "harvestedPct": 8.67,
+      "peakIntervalEnd": "2026-08-12",
+      "peakIntervalDropKm2": 11.38,
+      "medianHarvestDoy": 224,
+      "meanMaxDropDb": -3.85,
+      "series": [
+       {
+        "date": "2026-07-07",
+        "coDb": -130.642,
+        "crossDb": -137.437,
+        "validPct": 59.94,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-19",
+        "coDb": -131.17,
+        "crossDb": -138.609,
+        "validPct": 59.98,
+        "dropKm2": 1.05,
+        "riseKm2": 25.938,
+        "cumulativeKm2": 0.933,
+        "cumulativePct": 0.66
+       },
+       {
+        "date": "2026-08-12",
+        "coDb": -132.43,
+        "crossDb": -139.448,
+        "validPct": 60.28,
+        "dropKm2": 11.378,
+        "riseKm2": 19.306,
+        "cumulativeKm2": 12.251,
+        "cumulativePct": 8.67
+       }
+      ]
+     },
+     {
+      "key": "P062_F028_ASCE",
+      "label": "Track 62 · frame 28 · ascending",
+      "track": 62,
+      "frame": 28,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-07-12",
+       "2026-07-24"
+      ],
+      "map": "/analysis-extra/saskatchewan-harvest/P062_F028_ASCE_map.webp",
+      "mapSize": [
+       965,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-07-12",
+        "src": "/analysis-extra/saskatchewan-harvest/P062_F028_ASCE_2026-07-12.webp"
+       },
+       {
+        "date": "2026-07-24",
+        "src": "/analysis-extra/saskatchewan-harvest/P062_F028_ASCE_2026-07-24.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 758.83,
+      "harvestedKm2": 43.65,
+      "harvestedPct": 5.75,
+      "peakIntervalEnd": "2026-07-24",
+      "peakIntervalDropKm2": 43.65,
+      "medianHarvestDoy": 205,
+      "meanMaxDropDb": -3.89,
+      "series": [
+       {
+        "date": "2026-07-12",
+        "coDb": -12.695,
+        "crossDb": -19.99,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-24",
+        "coDb": -13.223,
+        "crossDb": -20.18,
+        "validPct": 100,
+        "dropKm2": 43.654,
+        "riseKm2": 10.16,
+        "cumulativeKm2": 43.654,
+        "cumulativePct": 5.75
+       }
+      ]
+     },
+     {
+      "key": "P157_F062_DESC",
+      "label": "Track 157 · frame 62 · descending",
+      "track": 157,
+      "frame": 62,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32613",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-07-07",
+       "2026-07-19"
+      ],
+      "map": "/analysis-extra/saskatchewan-harvest/P157_F062_DESC_map.webp",
+      "mapSize": [
+       965,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-07-07",
+        "src": "/analysis-extra/saskatchewan-harvest/P157_F062_DESC_2026-07-07.webp"
+       },
+       {
+        "date": "2026-07-19",
+        "src": "/analysis-extra/saskatchewan-harvest/P157_F062_DESC_2026-07-19.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 677.84,
+      "harvestedKm2": 6.92,
+      "harvestedPct": 1.02,
+      "peakIntervalEnd": "2026-07-19",
+      "peakIntervalDropKm2": 6.92,
+      "medianHarvestDoy": 200,
+      "meanMaxDropDb": -3.68,
+      "series": [
+       {
+        "date": "2026-07-07",
+        "coDb": -13.462,
+        "crossDb": -20.669,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-07-19",
+        "coDb": -13.03,
+        "crossDb": -20.301,
+        "validPct": 100,
+        "dropKm2": 6.922,
+        "riseKm2": 30.882,
+        "cumulativeKm2": 6.922,
+        "cumulativePct": 1.02
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "mexico-quake",
+   "type": "earthquake",
+   "name": "Mexico earthquake",
+   "region": "Chiapas coast",
+   "country": "Mexico",
+   "lat": 14.8,
+   "lon": -92.7,
+   "startDate": "2026-07-12",
+   "endDate": "2026-07-24",
+   "footprint": [
+    [
+     -93.6,
+     15.6
+    ],
+    [
+     -91.8,
+     15.6
+    ],
+    [
+     -91.8,
+     14
+    ],
+    [
+     -93.6,
+     14
+    ]
+   ],
+   "thumb": "/analysis-extra/mexico-quake/thumb.webp",
+   "changedAreaKm2": 573.49,
+   "changedPct": 0,
+   "extra": {
+    "kind": "displacement",
+    "eventDate": "2026-07-17",
+    "pairs": [
+     {
+      "key": "T062_F009_ASC_20260712_20260724",
+      "group": "T062_F009_ASC",
+      "label": "Track 62 · frame 9 · ascending",
+      "direction": "ascending",
+      "track": 62,
+      "frame": 9,
+      "ref": "2026-07-12",
+      "sec": "2026-07-24",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 82.6,
+      "reliablePct": 20.21,
+      "towardMaxCm": 7.87,
+      "awayMaxCm": -5.19,
+      "area5Km2": 573.49,
+      "area10Km2": 0.49,
+      "area20Km2": 0,
+      "coherence": 0.112,
+      "decorrelatedKm2": 20798.13,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 1.6,
+      "images": {
+       "fringes": "/analysis-extra/mexico-quake/T062_F009_ASC_20260712_20260724_fringes.webp",
+       "fringesSize": [
+        765,
+        884
+       ],
+       "displacement": "/analysis-extra/mexico-quake/T062_F009_ASC_20260712_20260724_los.webp",
+       "displacementSize": [
+        694,
+        547
+       ]
+      }
+     },
+     {
+      "key": "T055_F081_DESC_20260712_20260724",
+      "group": "T055_F081_DESC",
+      "label": "Track 55 · frame 81 · descending",
+      "direction": "descending",
+      "track": 55,
+      "frame": 81,
+      "ref": "2026-07-12",
+      "sec": "2026-07-24",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 93.1,
+      "reliablePct": 18.84,
+      "towardMaxCm": 8.6,
+      "awayMaxCm": -21.22,
+      "area5Km2": 2025.08,
+      "area10Km2": 549.39,
+      "area20Km2": 52.22,
+      "coherence": 0.104,
+      "decorrelatedKm2": 25334.12,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 6.2,
+      "images": {
+       "fringes": "/analysis-extra/mexico-quake/T055_F081_DESC_20260712_20260724_fringes.webp",
+       "fringesSize": [
+        900,
+        702
+       ],
+       "displacement": "/analysis-extra/mexico-quake/T055_F081_DESC_20260712_20260724_los.webp",
+       "displacementSize": [
+        700,
+        546
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "nile-delta-rice",
+   "type": "agriculture",
+   "name": "Nile Delta rice harvest",
+   "region": "Nile Delta",
+   "country": "Egypt",
+   "lat": 31.2,
+   "lon": 31.2,
+   "startDate": "2026-08-10",
+   "endDate": "2026-11-02",
+   "footprint": [
+    [
+     31,
+     31.4
+    ],
+    [
+     31.4,
+     31.4
+    ],
+    [
+     31.4,
+     31
+    ],
+    [
+     31,
+     31
+    ]
+   ],
+   "thumb": "/analysis-extra/nile-delta-rice/thumb.webp",
+   "changedAreaKm2": 467.8,
+   "changedPct": 27,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "harvest",
+    "orbits": [
+     {
+      "key": "P129_F017_ASCE",
+      "label": "Track 129 · frame 17 · ascending",
+      "track": 129,
+      "frame": 17,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32636",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-10",
+       "2026-08-22",
+       "2026-09-03",
+       "2026-09-15",
+       "2026-09-27",
+       "2026-10-09",
+       "2026-10-21",
+       "2026-11-02"
+      ],
+      "map": "/analysis-extra/nile-delta-rice/P129_F017_ASCE_map.webp",
+      "mapSize": [
+       996,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-10",
+        "src": "/analysis-extra/nile-delta-rice/P129_F017_ASCE_2026-08-10.webp"
+       },
+       {
+        "date": "2026-09-03",
+        "src": "/analysis-extra/nile-delta-rice/P129_F017_ASCE_2026-09-03.webp"
+       },
+       {
+        "date": "2026-09-27",
+        "src": "/analysis-extra/nile-delta-rice/P129_F017_ASCE_2026-09-27.webp"
+       },
+       {
+        "date": "2026-10-09",
+        "src": "/analysis-extra/nile-delta-rice/P129_F017_ASCE_2026-10-09.webp"
+       },
+       {
+        "date": "2026-11-02",
+        "src": "/analysis-extra/nile-delta-rice/P129_F017_ASCE_2026-11-02.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1732.37,
+      "harvestedKm2": 467.8,
+      "harvestedPct": 27,
+      "peakIntervalEnd": "2026-09-27",
+      "peakIntervalDropKm2": 123.75,
+      "medianHarvestDoy": 270,
+      "meanMaxDropDb": -4.15,
+      "series": [
+       {
+        "date": "2026-08-10",
+        "coDb": -7.316,
+        "crossDb": -17.154,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-22",
+        "coDb": -7.524,
+        "crossDb": -17.108,
+        "validPct": 100,
+        "dropKm2": 47.687,
+        "riseKm2": 36.641,
+        "cumulativeKm2": 39.653,
+        "cumulativePct": 2.29
+       },
+       {
+        "date": "2026-09-03",
+        "coDb": -7.899,
+        "crossDb": -17.136,
+        "validPct": 100,
+        "dropKm2": 74.535,
+        "riseKm2": 37.746,
+        "cumulativeKm2": 105.164,
+        "cumulativePct": 6.07
+       },
+       {
+        "date": "2026-09-15",
+        "coDb": -8.479,
+        "crossDb": -17.299,
+        "validPct": 100,
+        "dropKm2": 78.818,
+        "riseKm2": 30.62,
+        "cumulativeKm2": 172.339,
+        "cumulativePct": 9.95
+       },
+       {
+        "date": "2026-09-27",
+        "coDb": -9.515,
+        "crossDb": -17.884,
+        "validPct": 100,
+        "dropKm2": 123.748,
+        "riseKm2": 34.697,
+        "cumulativeKm2": 279.077,
+        "cumulativePct": 16.11
+       },
+       {
+        "date": "2026-10-09",
+        "coDb": -9.516,
+        "crossDb": -17.654,
+        "validPct": 100,
+        "dropKm2": 58.812,
+        "riseKm2": 111.725,
+        "cumulativeKm2": 329.374,
+        "cumulativePct": 19.01
+       },
+       {
+        "date": "2026-10-21",
+        "coDb": -9.287,
+        "crossDb": -17.433,
+        "validPct": 100,
+        "dropKm2": 47.99,
+        "riseKm2": 102.644,
+        "cumulativeKm2": 368.196,
+        "cumulativePct": 21.25
+       },
+       {
+        "date": "2026-11-02",
+        "coDb": -9.973,
+        "crossDb": -18.114,
+        "validPct": 100,
+        "dropKm2": 116.335,
+        "riseKm2": 42.19,
+        "cumulativeKm2": 467.799,
+        "cumulativePct": 27
+       }
+      ]
+     },
+     {
+      "key": "P007_F073_DESC",
+      "label": "Track 7 · frame 73 · descending",
+      "track": 7,
+      "frame": 73,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32636",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-13",
+       "2026-08-25",
+       "2026-09-06",
+       "2026-09-18",
+       "2026-09-30",
+       "2026-10-12",
+       "2026-10-24"
+      ],
+      "map": "/analysis-extra/nile-delta-rice/P007_F073_DESC_map.webp",
+      "mapSize": [
+       996,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-13",
+        "src": "/analysis-extra/nile-delta-rice/P007_F073_DESC_2026-08-13.webp"
+       },
+       {
+        "date": "2026-09-06",
+        "src": "/analysis-extra/nile-delta-rice/P007_F073_DESC_2026-09-06.webp"
+       },
+       {
+        "date": "2026-09-18",
+        "src": "/analysis-extra/nile-delta-rice/P007_F073_DESC_2026-09-18.webp"
+       },
+       {
+        "date": "2026-10-12",
+        "src": "/analysis-extra/nile-delta-rice/P007_F073_DESC_2026-10-12.webp"
+       },
+       {
+        "date": "2026-10-24",
+        "src": "/analysis-extra/nile-delta-rice/P007_F073_DESC_2026-10-24.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1746.25,
+      "harvestedKm2": 230.79,
+      "harvestedPct": 13.22,
+      "peakIntervalEnd": "2026-10-12",
+      "peakIntervalDropKm2": 67.72,
+      "medianHarvestDoy": 273,
+      "meanMaxDropDb": -3.94,
+      "series": [
+       {
+        "date": "2026-08-13",
+        "coDb": -6.576,
+        "crossDb": -16.287,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-25",
+        "coDb": -7.311,
+        "crossDb": -16.278,
+        "validPct": 100,
+        "dropKm2": 31.898,
+        "riseKm2": 25.136,
+        "cumulativeKm2": 30.306,
+        "cumulativePct": 1.74
+       },
+       {
+        "date": "2026-09-06",
+        "coDb": -7.469,
+        "crossDb": -16.253,
+        "validPct": 100,
+        "dropKm2": 46.653,
+        "riseKm2": 15.014,
+        "cumulativeKm2": 74.514,
+        "cumulativePct": 4.27
+       },
+       {
+        "date": "2026-09-18",
+        "coDb": -7.58,
+        "crossDb": -16.056,
+        "validPct": 100,
+        "dropKm2": 35.693,
+        "riseKm2": 21.507,
+        "cumulativeKm2": 108.5,
+        "cumulativePct": 6.21
+       },
+       {
+        "date": "2026-09-30",
+        "coDb": -7.764,
+        "crossDb": -16.527,
+        "validPct": 100,
+        "dropKm2": 47.002,
+        "riseKm2": 11.792,
+        "cumulativeKm2": 152.985,
+        "cumulativePct": 8.76
+       },
+       {
+        "date": "2026-10-12",
+        "coDb": -8.274,
+        "crossDb": -17.126,
+        "validPct": 100,
+        "dropKm2": 67.723,
+        "riseKm2": 15.754,
+        "cumulativeKm2": 216.039,
+        "cumulativePct": 12.37
+       },
+       {
+        "date": "2026-10-24",
+        "coDb": -8.119,
+        "crossDb": -16.724,
+        "validPct": 100,
+        "dropKm2": 16.287,
+        "riseKm2": 59.688,
+        "cumulativeKm2": 230.788,
+        "cumulativePct": 13.22
+       }
+      ]
+     },
+     {
+      "key": "P028_F017_ASCE",
+      "label": "Track 28 · frame 17 · ascending",
+      "track": 28,
+      "frame": 17,
+      "direction": "ascending",
+      "pixelM": 40,
+      "crs": "EPSG:32636",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-15",
+       "2026-08-27",
+       "2026-09-20",
+       "2026-10-02",
+       "2026-10-26"
+      ],
+      "map": "/analysis-extra/nile-delta-rice/P028_F017_ASCE_map.webp",
+      "mapSize": [
+       996,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-15",
+        "src": "/analysis-extra/nile-delta-rice/P028_F017_ASCE_2026-08-15.webp"
+       },
+       {
+        "date": "2026-08-27",
+        "src": "/analysis-extra/nile-delta-rice/P028_F017_ASCE_2026-08-27.webp"
+       },
+       {
+        "date": "2026-09-20",
+        "src": "/analysis-extra/nile-delta-rice/P028_F017_ASCE_2026-09-20.webp"
+       },
+       {
+        "date": "2026-10-02",
+        "src": "/analysis-extra/nile-delta-rice/P028_F017_ASCE_2026-10-02.webp"
+       },
+       {
+        "date": "2026-10-26",
+        "src": "/analysis-extra/nile-delta-rice/P028_F017_ASCE_2026-10-26.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1746.24,
+      "harvestedKm2": 184.59,
+      "harvestedPct": 10.57,
+      "peakIntervalEnd": "2026-09-20",
+      "peakIntervalDropKm2": 98.9,
+      "medianHarvestDoy": 263,
+      "meanMaxDropDb": -3.98,
+      "series": [
+       {
+        "date": "2026-08-15",
+        "coDb": -7.794,
+        "crossDb": -17.255,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-27",
+        "coDb": -7.809,
+        "crossDb": -16.828,
+        "validPct": 100,
+        "dropKm2": 24.674,
+        "riseKm2": 15.125,
+        "cumulativeKm2": 23.461,
+        "cumulativePct": 1.34
+       },
+       {
+        "date": "2026-09-20",
+        "coDb": -9.36,
+        "crossDb": -17.282,
+        "validPct": 100,
+        "dropKm2": 98.902,
+        "riseKm2": 10.251,
+        "cumulativeKm2": 120.403,
+        "cumulativePct": 6.89
+       },
+       {
+        "date": "2026-10-02",
+        "coDb": -9.504,
+        "crossDb": -17.144,
+        "validPct": 100,
+        "dropKm2": 15.269,
+        "riseKm2": 28.326,
+        "cumulativeKm2": 135.267,
+        "cumulativePct": 7.75
+       },
+       {
+        "date": "2026-10-26",
+        "coDb": -9.769,
+        "crossDb": -17.347,
+        "validPct": 100,
+        "dropKm2": 52.261,
+        "riseKm2": 29.725,
+        "cumulativeKm2": 184.587,
+        "cumulativePct": 10.57
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "sacramento-rice",
+   "type": "agriculture",
+   "name": "Sacramento Valley rice harvest",
+   "region": "Sacramento Valley, California",
+   "country": "United States",
+   "lat": 39.25,
+   "lon": -121.95,
+   "startDate": "2026-08-10",
+   "endDate": "2026-09-16",
+   "footprint": [
+    [
+     -122.1,
+     39.4
+    ],
+    [
+     -121.8,
+     39.4
+    ],
+    [
+     -121.8,
+     39.1
+    ],
+    [
+     -122.1,
+     39.1
+    ]
+   ],
+   "thumb": "/analysis-extra/sacramento-rice/thumb.webp",
+   "changedAreaKm2": 49.19,
+   "changedPct": 5.85,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "harvest",
+    "orbits": [
+     {
+      "key": "P143_F069_DESC",
+      "label": "Track 143 · frame 69 · descending",
+      "track": 143,
+      "frame": 69,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32610",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-11",
+       "2026-08-23",
+       "2026-09-04",
+       "2026-09-16"
+      ],
+      "map": "/analysis-extra/sacramento-rice/P143_F069_DESC_map.webp",
+      "mapSize": [
+       921,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-11",
+        "src": "/analysis-extra/sacramento-rice/P143_F069_DESC_2026-08-11.webp"
+       },
+       {
+        "date": "2026-08-23",
+        "src": "/analysis-extra/sacramento-rice/P143_F069_DESC_2026-08-23.webp"
+       },
+       {
+        "date": "2026-09-04",
+        "src": "/analysis-extra/sacramento-rice/P143_F069_DESC_2026-09-04.webp"
+       },
+       {
+        "date": "2026-09-16",
+        "src": "/analysis-extra/sacramento-rice/P143_F069_DESC_2026-09-16.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 841.47,
+      "harvestedKm2": 49.19,
+      "harvestedPct": 5.85,
+      "peakIntervalEnd": "2026-09-16",
+      "peakIntervalDropKm2": 22.77,
+      "medianHarvestDoy": 247,
+      "meanMaxDropDb": -4.52,
+      "series": [
+       {
+        "date": "2026-08-11",
+        "coDb": -10.916,
+        "crossDb": -20.43,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-23",
+        "coDb": -10.869,
+        "crossDb": -19.515,
+        "validPct": 100,
+        "dropKm2": 12.01,
+        "riseKm2": 22.35,
+        "cumulativeKm2": 11.713,
+        "cumulativePct": 1.39
+       },
+       {
+        "date": "2026-09-04",
+        "coDb": -10.885,
+        "crossDb": -19.295,
+        "validPct": 100,
+        "dropKm2": 15.28,
+        "riseKm2": 23.865,
+        "cumulativeKm2": 26.585,
+        "cumulativePct": 3.16
+       },
+       {
+        "date": "2026-09-16",
+        "coDb": -11.466,
+        "crossDb": -19.264,
+        "validPct": 100,
+        "dropKm2": 22.772,
+        "riseKm2": 25.83,
+        "cumulativeKm2": 49.187,
+        "cumulativePct": 5.85
+       }
+      ]
+     },
+     {
+      "key": "P135_F021_ASCE",
+      "label": "Track 135 · frame 21 · ascending",
+      "track": 135,
+      "frame": 21,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32610",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-10",
+       "2026-08-22",
+       "2026-09-03"
+      ],
+      "map": "/analysis-extra/sacramento-rice/P135_F021_ASCE_map.webp",
+      "mapSize": [
+       921,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-10",
+        "src": "/analysis-extra/sacramento-rice/P135_F021_ASCE_2026-08-10.webp"
+       },
+       {
+        "date": "2026-08-22",
+        "src": "/analysis-extra/sacramento-rice/P135_F021_ASCE_2026-08-22.webp"
+       },
+       {
+        "date": "2026-09-03",
+        "src": "/analysis-extra/sacramento-rice/P135_F021_ASCE_2026-09-03.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 768.45,
+      "harvestedKm2": 56.45,
+      "harvestedPct": 7.35,
+      "peakIntervalEnd": "2026-09-03",
+      "peakIntervalDropKm2": 44.62,
+      "medianHarvestDoy": 246,
+      "meanMaxDropDb": -4.57,
+      "series": [
+       {
+        "date": "2026-08-10",
+        "coDb": -10.694,
+        "crossDb": -21.097,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-22",
+        "coDb": -9.967,
+        "crossDb": -19.942,
+        "validPct": 100,
+        "dropKm2": 13.373,
+        "riseKm2": 64.091,
+        "cumulativeKm2": 12.654,
+        "cumulativePct": 1.65
+       },
+       {
+        "date": "2026-09-03",
+        "coDb": -10.35,
+        "crossDb": -19.706,
+        "validPct": 100,
+        "dropKm2": 44.62,
+        "riseKm2": 57.704,
+        "cumulativeKm2": 56.454,
+        "cumulativePct": 7.35
+       }
+      ]
+     },
+     {
+      "key": "P034_F021_ASCE",
+      "label": "Track 34 · frame 21 · ascending",
+      "track": 34,
+      "frame": 21,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32610",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-15",
+       "2026-08-27",
+       "2026-09-08"
+      ],
+      "map": "/analysis-extra/sacramento-rice/P034_F021_ASCE_map.webp",
+      "mapSize": [
+       921,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-15",
+        "src": "/analysis-extra/sacramento-rice/P034_F021_ASCE_2026-08-15.webp"
+       },
+       {
+        "date": "2026-08-27",
+        "src": "/analysis-extra/sacramento-rice/P034_F021_ASCE_2026-08-27.webp"
+       },
+       {
+        "date": "2026-09-08",
+        "src": "/analysis-extra/sacramento-rice/P034_F021_ASCE_2026-09-08.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 748.27,
+      "harvestedKm2": 21.41,
+      "harvestedPct": 2.86,
+      "peakIntervalEnd": "2026-08-27",
+      "peakIntervalDropKm2": 11.85,
+      "medianHarvestDoy": 239,
+      "meanMaxDropDb": -4.94,
+      "series": [
+       {
+        "date": "2026-08-15",
+        "coDb": -10.583,
+        "crossDb": -19.158,
+        "validPct": 78.17,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-27",
+        "coDb": -10.482,
+        "crossDb": -19.123,
+        "validPct": 83.55,
+        "dropKm2": 11.85,
+        "riseKm2": 7.338,
+        "cumulativeKm2": 11.75,
+        "cumulativePct": 1.57
+       },
+       {
+        "date": "2026-09-08",
+        "coDb": -10.344,
+        "crossDb": -18.195,
+        "validPct": 86.61,
+        "dropKm2": 9.802,
+        "riseKm2": 45.23,
+        "cumulativeKm2": 21.406,
+        "cumulativePct": 2.86
+       }
+      ]
+     },
+     {
+      "key": "P034_F022_ASCE",
+      "label": "Track 34 · frame 22 · ascending",
+      "track": 34,
+      "frame": 22,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32610",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-15",
+       "2026-08-27",
+       "2026-09-08"
+      ],
+      "map": "/analysis-extra/sacramento-rice/P034_F022_ASCE_map.webp",
+      "mapSize": [
+       921,
+       919
+      ],
+      "frames": [
+       {
+        "date": "2026-08-15",
+        "src": "/analysis-extra/sacramento-rice/P034_F022_ASCE_2026-08-15.webp"
+       },
+       {
+        "date": "2026-08-27",
+        "src": "/analysis-extra/sacramento-rice/P034_F022_ASCE_2026-08-27.webp"
+       },
+       {
+        "date": "2026-09-08",
+        "src": "/analysis-extra/sacramento-rice/P034_F022_ASCE_2026-09-08.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 563.17,
+      "harvestedKm2": 11.07,
+      "harvestedPct": 1.97,
+      "peakIntervalEnd": "2026-08-27",
+      "peakIntervalDropKm2": 7.03,
+      "medianHarvestDoy": 239,
+      "meanMaxDropDb": -4.37,
+      "series": [
+       {
+        "date": "2026-08-15",
+        "coDb": -10.232,
+        "crossDb": -18.87,
+        "validPct": 64.78,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-27",
+        "coDb": -10.096,
+        "crossDb": -18.695,
+        "validPct": 59.39,
+        "dropKm2": 7.03,
+        "riseKm2": 8.122,
+        "cumulativeKm2": 7.001,
+        "cumulativePct": 1.24
+       },
+       {
+        "date": "2026-09-08",
+        "coDb": -10.275,
+        "crossDb": -17.734,
+        "validPct": 56.33,
+        "dropKm2": 4.084,
+        "riseKm2": 41.363,
+        "cumulativeKm2": 11.069,
+        "cumulativePct": 1.97
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "ukraine-sunflower",
+   "type": "agriculture",
+   "name": "Ukraine sunflower harvest",
+   "region": "Central Ukraine",
+   "country": "Ukraine",
+   "lat": 48.45,
+   "lon": 32.2,
+   "startDate": "2026-08-10",
+   "endDate": "2026-11-03",
+   "footprint": [
+    [
+     32,
+     48.6
+    ],
+    [
+     32.4,
+     48.6
+    ],
+    [
+     32.4,
+     48.3
+    ],
+    [
+     32,
+     48.3
+    ]
+   ],
+   "thumb": "/analysis-extra/ukraine-sunflower/thumb.webp",
+   "changedAreaKm2": 1001.35,
+   "changedPct": 99.24,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "harvest",
+    "orbits": [
+     {
+      "key": "P137_F064_DESC",
+      "label": "Track 137 · frame 64 · descending",
+      "track": 137,
+      "frame": 64,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32636",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-10",
+       "2026-08-22",
+       "2026-09-03",
+       "2026-09-15",
+       "2026-09-27",
+       "2026-10-09",
+       "2026-10-21",
+       "2026-11-02"
+      ],
+      "map": "/analysis-extra/ukraine-sunflower/P137_F064_DESC_map.webp",
+      "mapSize": [
+       1000,
+       901
+      ],
+      "frames": [
+       {
+        "date": "2026-08-10",
+        "src": "/analysis-extra/ukraine-sunflower/P137_F064_DESC_2026-08-10.webp"
+       },
+       {
+        "date": "2026-09-03",
+        "src": "/analysis-extra/ukraine-sunflower/P137_F064_DESC_2026-09-03.webp"
+       },
+       {
+        "date": "2026-09-27",
+        "src": "/analysis-extra/ukraine-sunflower/P137_F064_DESC_2026-09-27.webp"
+       },
+       {
+        "date": "2026-10-09",
+        "src": "/analysis-extra/ukraine-sunflower/P137_F064_DESC_2026-10-09.webp"
+       },
+       {
+        "date": "2026-11-02",
+        "src": "/analysis-extra/ukraine-sunflower/P137_F064_DESC_2026-11-02.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1009.05,
+      "harvestedKm2": 1001.35,
+      "harvestedPct": 99.24,
+      "peakIntervalEnd": "2026-09-27",
+      "peakIntervalDropKm2": 999.62,
+      "medianHarvestDoy": 270,
+      "meanMaxDropDb": -7.91,
+      "series": [
+       {
+        "date": "2026-08-10",
+        "coDb": -8.083,
+        "crossDb": -12.833,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-22",
+        "coDb": -8.247,
+        "crossDb": -12.768,
+        "validPct": 100,
+        "dropKm2": 0.035,
+        "riseKm2": 0.019,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-03",
+        "coDb": -8.608,
+        "crossDb": -11.803,
+        "validPct": 100,
+        "dropKm2": 0.006,
+        "riseKm2": 0.534,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-15",
+        "coDb": -3.212,
+        "crossDb": -4.001,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 991.822,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-27",
+        "coDb": -9.69,
+        "crossDb": -12.262,
+        "validPct": 100,
+        "dropKm2": 999.622,
+        "riseKm2": 0,
+        "cumulativeKm2": 983.382,
+        "cumulativePct": 97.46
+       },
+       {
+        "date": "2026-10-09",
+        "coDb": -11.245,
+        "crossDb": -13.099,
+        "validPct": 100,
+        "dropKm2": 2.85,
+        "riseKm2": 0.002,
+        "cumulativeKm2": 983.682,
+        "cumulativePct": 97.49
+       },
+       {
+        "date": "2026-10-21",
+        "coDb": -3.859,
+        "crossDb": -7.423,
+        "validPct": 100,
+        "dropKm2": 0.013,
+        "riseKm2": 960.726,
+        "cumulativeKm2": 983.682,
+        "cumulativePct": 97.49
+       },
+       {
+        "date": "2026-11-02",
+        "coDb": -9.566,
+        "crossDb": -12.426,
+        "validPct": 100,
+        "dropKm2": 910.379,
+        "riseKm2": 0,
+        "cumulativeKm2": 1001.352,
+        "cumulativePct": 99.24
+       }
+      ]
+     },
+     {
+      "key": "P143_F026_ASCE",
+      "label": "Track 143 · frame 26 · ascending",
+      "track": 143,
+      "frame": 26,
+      "direction": "ascending",
+      "pixelM": 40,
+      "crs": "EPSG:32636",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-11",
+       "2026-08-23",
+       "2026-09-04",
+       "2026-09-16",
+       "2026-09-28",
+       "2026-10-10",
+       "2026-10-22",
+       "2026-11-03"
+      ],
+      "map": "/analysis-extra/ukraine-sunflower/P143_F026_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       901
+      ],
+      "frames": [
+       {
+        "date": "2026-08-11",
+        "src": "/analysis-extra/ukraine-sunflower/P143_F026_ASCE_2026-08-11.webp"
+       },
+       {
+        "date": "2026-09-04",
+        "src": "/analysis-extra/ukraine-sunflower/P143_F026_ASCE_2026-09-04.webp"
+       },
+       {
+        "date": "2026-09-28",
+        "src": "/analysis-extra/ukraine-sunflower/P143_F026_ASCE_2026-09-28.webp"
+       },
+       {
+        "date": "2026-10-10",
+        "src": "/analysis-extra/ukraine-sunflower/P143_F026_ASCE_2026-10-10.webp"
+       },
+       {
+        "date": "2026-11-03",
+        "src": "/analysis-extra/ukraine-sunflower/P143_F026_ASCE_2026-11-03.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1009.05,
+      "harvestedKm2": 2.31,
+      "harvestedPct": 0.23,
+      "peakIntervalEnd": "2026-10-10",
+      "peakIntervalDropKm2": 1.56,
+      "medianHarvestDoy": 283,
+      "meanMaxDropDb": -3.4,
+      "series": [
+       {
+        "date": "2026-08-11",
+        "coDb": -9.009,
+        "crossDb": -14.144,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-23",
+        "coDb": -8.877,
+        "crossDb": -13.192,
+        "validPct": 100,
+        "dropKm2": 0.054,
+        "riseKm2": 6.858,
+        "cumulativeKm2": 0.053,
+        "cumulativePct": 0.01
+       },
+       {
+        "date": "2026-09-04",
+        "coDb": -9.419,
+        "crossDb": -13.977,
+        "validPct": 100,
+        "dropKm2": 0.254,
+        "riseKm2": 0.026,
+        "cumulativeKm2": 0.307,
+        "cumulativePct": 0.03
+       },
+       {
+        "date": "2026-09-16",
+        "coDb": -7.809,
+        "crossDb": -13.534,
+        "validPct": 100,
+        "dropKm2": 0.046,
+        "riseKm2": 0.794,
+        "cumulativeKm2": 0.354,
+        "cumulativePct": 0.04
+       },
+       {
+        "date": "2026-09-28",
+        "coDb": -9.208,
+        "crossDb": -13.094,
+        "validPct": 100,
+        "dropKm2": 0.39,
+        "riseKm2": 0.315,
+        "cumulativeKm2": 0.73,
+        "cumulativePct": 0.07
+       },
+       {
+        "date": "2026-10-10",
+        "coDb": -10.26,
+        "crossDb": -13.665,
+        "validPct": 100,
+        "dropKm2": 1.555,
+        "riseKm2": 0.04,
+        "cumulativeKm2": 2.28,
+        "cumulativePct": 0.23
+       },
+       {
+        "date": "2026-10-22",
+        "coDb": -8.887,
+        "crossDb": -13.614,
+        "validPct": 100,
+        "dropKm2": 0.03,
+        "riseKm2": 0.238,
+        "cumulativeKm2": 2.31,
+        "cumulativePct": 0.23
+       },
+       {
+        "date": "2026-11-03",
+        "coDb": -4.393,
+        "crossDb": 0.731,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 1008.965,
+        "cumulativeKm2": 2.31,
+        "cumulativePct": 0.23
+       }
+      ]
+     },
+     {
+      "key": "P071_F026_ASCE",
+      "label": "Track 71 · frame 26 · ascending",
+      "track": 71,
+      "frame": 26,
+      "direction": "ascending",
+      "pixelM": 40,
+      "crs": "EPSG:32636",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-18",
+       "2026-08-30",
+       "2026-09-11",
+       "2026-10-05",
+       "2026-10-17",
+       "2026-10-29"
+      ],
+      "map": "/analysis-extra/ukraine-sunflower/P071_F026_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       901
+      ],
+      "frames": [
+       {
+        "date": "2026-08-18",
+        "src": "/analysis-extra/ukraine-sunflower/P071_F026_ASCE_2026-08-18.webp"
+       },
+       {
+        "date": "2026-08-30",
+        "src": "/analysis-extra/ukraine-sunflower/P071_F026_ASCE_2026-08-30.webp"
+       },
+       {
+        "date": "2026-10-05",
+        "src": "/analysis-extra/ukraine-sunflower/P071_F026_ASCE_2026-10-05.webp"
+       },
+       {
+        "date": "2026-10-17",
+        "src": "/analysis-extra/ukraine-sunflower/P071_F026_ASCE_2026-10-17.webp"
+       },
+       {
+        "date": "2026-10-29",
+        "src": "/analysis-extra/ukraine-sunflower/P071_F026_ASCE_2026-10-29.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1009.05,
+      "harvestedKm2": 947.14,
+      "harvestedPct": 93.86,
+      "peakIntervalEnd": "2026-10-29",
+      "peakIntervalDropKm2": 937.08,
+      "medianHarvestDoy": 302,
+      "meanMaxDropDb": -7.78,
+      "series": [
+       {
+        "date": "2026-08-18",
+        "coDb": -10.145,
+        "crossDb": -16.179,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-08-30",
+        "coDb": -7.918,
+        "crossDb": -15.173,
+        "validPct": 100,
+        "dropKm2": 0.024,
+        "riseKm2": 6.862,
+        "cumulativeKm2": 0.003,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-11",
+        "coDb": -10.702,
+        "crossDb": -17.56,
+        "validPct": 100,
+        "dropKm2": 193.613,
+        "riseKm2": 0.027,
+        "cumulativeKm2": 18.042,
+        "cumulativePct": 1.79
+       },
+       {
+        "date": "2026-10-05",
+        "coDb": -11.491,
+        "crossDb": -17.84,
+        "validPct": 100,
+        "dropKm2": 3.072,
+        "riseKm2": 0.986,
+        "cumulativeKm2": 18.333,
+        "cumulativePct": 1.82
+       },
+       {
+        "date": "2026-10-17",
+        "coDb": -8.002,
+        "crossDb": -8.079,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 989.082,
+        "cumulativeKm2": 18.333,
+        "cumulativePct": 1.82
+       },
+       {
+        "date": "2026-10-29",
+        "coDb": -9.955,
+        "crossDb": -16.307,
+        "validPct": 100,
+        "dropKm2": 937.083,
+        "riseKm2": 0.011,
+        "cumulativeKm2": 947.136,
+        "cumulativePct": 93.86
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "indonesia-quake",
+   "type": "earthquake",
+   "name": "Indonesia earthquake",
+   "region": "Flores Sea",
+   "country": "Indonesia",
+   "lat": -7.85,
+   "lon": 121,
+   "startDate": "2026-08-12",
+   "endDate": "2026-08-25",
+   "footprint": [
+    [
+     119.5,
+     -6.8
+    ],
+    [
+     122.5,
+     -6.8
+    ],
+    [
+     122.5,
+     -8.9
+    ],
+    [
+     119.5,
+     -8.9
+    ]
+   ],
+   "thumb": "/analysis-extra/indonesia-quake/thumb.webp",
+   "changedAreaKm2": 2343.36,
+   "changedPct": 0,
+   "extra": {
+    "kind": "displacement",
+    "eventDate": "2026-08-14",
+    "pairs": [
+     {
+      "key": "T168_F173_ASC_20260812_20260824",
+      "group": "T168_F173_ASC",
+      "label": "Track 168 · frame 173 · ascending",
+      "direction": "ascending",
+      "track": 168,
+      "frame": 173,
+      "ref": "2026-08-12",
+      "sec": "2026-08-24",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 33,
+      "reliablePct": 24.86,
+      "towardMaxCm": 6.76,
+      "awayMaxCm": -10.14,
+      "area5Km2": 2343.36,
+      "area10Km2": 83.83,
+      "area20Km2": 0.67,
+      "coherence": 0.119,
+      "decorrelatedKm2": 14733.31,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 1.2,
+      "images": {
+       "fringes": "/analysis-extra/indonesia-quake/T168_F173_ASC_20260812_20260824_fringes.webp",
+       "fringesSize": [
+        900,
+        508
+       ],
+       "displacement": "/analysis-extra/indonesia-quake/T168_F173_ASC_20260812_20260824_los.webp",
+       "displacementSize": [
+        703,
+        468
+       ]
+      }
+     },
+     {
+      "key": "T003_F093_DESC_20260813_20260825",
+      "group": "T003_F093_DESC",
+      "label": "Track 3 · frame 93 · descending",
+      "direction": "descending",
+      "track": 3,
+      "frame": 93,
+      "ref": "2026-08-13",
+      "sec": "2026-08-25",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 34.9,
+      "reliablePct": 24.67,
+      "towardMaxCm": 18.95,
+      "awayMaxCm": -9.64,
+      "area5Km2": 4316.66,
+      "area10Km2": 300.04,
+      "area20Km2": 67.06,
+      "coherence": 0.115,
+      "decorrelatedKm2": 15621.91,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 10,
+      "images": {
+       "fringes": "/analysis-extra/indonesia-quake/T003_F093_DESC_20260813_20260825_fringes.webp",
+       "fringesSize": [
+        900,
+        565
+       ],
+       "displacement": "/analysis-extra/indonesia-quake/T003_F093_DESC_20260813_20260825_los.webp",
+       "displacementSize": [
+        700,
+        468
+       ]
+      }
+     },
+     {
+      "key": "T168_F174_ASC_20260812_20260824",
+      "group": "T168_F174_ASC",
+      "label": "Track 168 · frame 174 · ascending",
+      "direction": "ascending",
+      "track": 168,
+      "frame": 174,
+      "ref": "2026-08-12",
+      "sec": "2026-08-24",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 49.9,
+      "reliablePct": 0.22,
+      "towardMaxCm": 85.18,
+      "awayMaxCm": -38.89,
+      "area5Km2": 88.33,
+      "area10Km2": 85.14,
+      "area20Km2": 58.98,
+      "coherence": 0.105,
+      "decorrelatedKm2": 37622.58,
+      "wavelengthCm": 24.393,
+      "fringeCm": 12.197,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 17.8,
+      "images": {
+       "fringes": "/analysis-extra/indonesia-quake/T168_F174_ASC_20260812_20260824_fringes.webp",
+       "fringesSize": [
+        900,
+        575
+       ],
+       "displacement": "/analysis-extra/indonesia-quake/T168_F174_ASC_20260812_20260824_los.webp",
+       "displacementSize": [
+        700,
+        468
+       ]
+      }
+     },
+     {
+      "key": "T003_F092_DESC_20260813_20260825",
+      "group": "T003_F092_DESC",
+      "label": "Track 3 · frame 92 · descending",
+      "direction": "descending",
+      "track": 3,
+      "frame": 92,
+      "ref": "2026-08-13",
+      "sec": "2026-08-25",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 47.8,
+      "reliablePct": 0.1,
+      "towardMaxCm": 39.45,
+      "awayMaxCm": -74.68,
+      "area5Km2": 52.39,
+      "area10Km2": 41.65,
+      "area20Km2": 17.96,
+      "coherence": 0.104,
+      "decorrelatedKm2": 36338.16,
+      "wavelengthCm": 24.393,
+      "fringeCm": 12.197,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 43.8,
+      "images": {
+       "fringes": "/analysis-extra/indonesia-quake/T003_F092_DESC_20260813_20260825_fringes.webp",
+       "fringesSize": [
+        900,
+        177
+       ],
+       "displacement": "/analysis-extra/indonesia-quake/T003_F092_DESC_20260813_20260825_los.webp",
+       "displacementSize": [
+        700,
+        468
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "langtang-collapse",
+   "type": "landslide",
+   "name": "Langtang Lirung collapse",
+   "region": "Langtang, Rasuwa",
+   "country": "Nepal",
+   "lat": 28.25,
+   "lon": 85.65,
+   "startDate": "2026-08-16",
+   "endDate": "2026-08-31",
+   "footprint": [
+    [
+     85.4,
+     28.4
+    ],
+    [
+     85.9,
+     28.4
+    ],
+    [
+     85.9,
+     28.1
+    ],
+    [
+     85.4,
+     28.1
+    ]
+   ],
+   "thumb": "/analysis-extra/langtang-collapse/thumb.webp",
+   "changedAreaKm2": 27.26,
+   "changedPct": 0,
+   "extra": {
+    "kind": "displacement",
+    "eventDate": "2026-08-26",
+    "pairs": [
+     {
+      "key": "T098_F016_ASC_20260819_20260831",
+      "group": "T098_F016_ASC",
+      "label": "Track 98 · frame 16 · ascending",
+      "direction": "ascending",
+      "track": 98,
+      "frame": 16,
+      "ref": "2026-08-19",
+      "sec": "2026-08-31",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 100,
+      "reliablePct": 69.01,
+      "towardMaxCm": 3.91,
+      "awayMaxCm": -11.99,
+      "area5Km2": 27.26,
+      "area10Km2": 11.19,
+      "area20Km2": 0.01,
+      "coherence": 0.613,
+      "decorrelatedKm2": 428,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 46.6,
+      "images": {
+       "fringes": "/analysis-extra/langtang-collapse/T098_F016_ASC_20260819_20260831_fringes.webp",
+       "fringesSize": [
+        900,
+        635
+       ],
+       "displacement": "/analysis-extra/langtang-collapse/T098_F016_ASC_20260819_20260831_los.webp",
+       "displacementSize": [
+        694,
+        468
+       ]
+      }
+     },
+     {
+      "key": "T048_F074_DESC_20260816_20260828",
+      "group": "T048_F074_DESC",
+      "label": "Track 48 · frame 74 · descending",
+      "direction": "descending",
+      "track": 48,
+      "frame": 74,
+      "ref": "2026-08-16",
+      "sec": "2026-08-28",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 100,
+      "reliablePct": 55.34,
+      "towardMaxCm": 152.5,
+      "awayMaxCm": -6.23,
+      "area5Km2": 226.29,
+      "area10Km2": 215.92,
+      "area20Km2": 214.66,
+      "coherence": 0.442,
+      "decorrelatedKm2": 602.39,
+      "wavelengthCm": 24.393,
+      "fringeCm": 12.197,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 142.7,
+      "images": {
+       "fringes": "/analysis-extra/langtang-collapse/T048_F074_DESC_20260816_20260828_fringes.webp",
+       "fringesSize": [
+        900,
+        635
+       ],
+       "displacement": "/analysis-extra/langtang-collapse/T048_F074_DESC_20260816_20260828_los.webp",
+       "displacementSize": [
+        700,
+        474
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "iowa-harvest",
+   "type": "agriculture",
+   "name": "Iowa crop harvest",
+   "region": "Central Iowa",
+   "country": "United States",
+   "lat": 42.05,
+   "lon": -93.7,
+   "startDate": "2026-08-20",
+   "endDate": "2026-10-07",
+   "footprint": [
+    [
+     -93.9,
+     42.2
+    ],
+    [
+     -93.5,
+     42.2
+    ],
+    [
+     -93.5,
+     41.9
+    ],
+    [
+     -93.9,
+     41.9
+    ]
+   ],
+   "thumb": "/analysis-extra/iowa-harvest/thumb.webp",
+   "changedAreaKm2": 583.86,
+   "changedPct": 52.12,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "harvest",
+    "orbits": [
+     {
+      "key": "P105_F023_ASCE",
+      "label": "Track 105 · frame 23 · ascending",
+      "track": 105,
+      "frame": 23,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32615",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-20",
+       "2026-09-01",
+       "2026-09-13",
+       "2026-09-25",
+       "2026-10-07"
+      ],
+      "map": "/analysis-extra/iowa-harvest/P105_F023_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       823
+      ],
+      "frames": [
+       {
+        "date": "2026-08-20",
+        "src": "/analysis-extra/iowa-harvest/P105_F023_ASCE_2026-08-20.webp"
+       },
+       {
+        "date": "2026-09-01",
+        "src": "/analysis-extra/iowa-harvest/P105_F023_ASCE_2026-09-01.webp"
+       },
+       {
+        "date": "2026-09-13",
+        "src": "/analysis-extra/iowa-harvest/P105_F023_ASCE_2026-09-13.webp"
+       },
+       {
+        "date": "2026-09-25",
+        "src": "/analysis-extra/iowa-harvest/P105_F023_ASCE_2026-09-25.webp"
+       },
+       {
+        "date": "2026-10-07",
+        "src": "/analysis-extra/iowa-harvest/P105_F023_ASCE_2026-10-07.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1120.29,
+      "harvestedKm2": 583.86,
+      "harvestedPct": 52.12,
+      "peakIntervalEnd": "2026-10-07",
+      "peakIntervalDropKm2": 574.1,
+      "medianHarvestDoy": 280,
+      "meanMaxDropDb": -5.39,
+      "series": [
+       {
+        "date": "2026-08-20",
+        "coDb": -6.852,
+        "crossDb": -14.419,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-01",
+        "coDb": -6.85,
+        "crossDb": -14.827,
+        "validPct": 100,
+        "dropKm2": 8.111,
+        "riseKm2": 1.862,
+        "cumulativeKm2": 3.947,
+        "cumulativePct": 0.35
+       },
+       {
+        "date": "2026-09-13",
+        "coDb": -6.821,
+        "crossDb": -14.99,
+        "validPct": 100,
+        "dropKm2": 30.721,
+        "riseKm2": 10.525,
+        "cumulativeKm2": 18.08,
+        "cumulativePct": 1.61
+       },
+       {
+        "date": "2026-09-25",
+        "coDb": -5.825,
+        "crossDb": -13.49,
+        "validPct": 100,
+        "dropKm2": 7.815,
+        "riseKm2": 110.57,
+        "cumulativeKm2": 19.924,
+        "cumulativePct": 1.78
+       },
+       {
+        "date": "2026-10-07",
+        "coDb": -8.021,
+        "crossDb": -16.977,
+        "validPct": 100,
+        "dropKm2": 574.103,
+        "riseKm2": 0.526,
+        "cumulativeKm2": 583.863,
+        "cumulativePct": 52.12
+       }
+      ]
+     },
+     {
+      "key": "P004_F023_ASCE",
+      "label": "Track 4 · frame 23 · ascending",
+      "track": 4,
+      "frame": 23,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32615",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-08-25",
+       "2026-09-06",
+       "2026-09-18",
+       "2026-09-30"
+      ],
+      "map": "/analysis-extra/iowa-harvest/P004_F023_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       823
+      ],
+      "frames": [
+       {
+        "date": "2026-08-25",
+        "src": "/analysis-extra/iowa-harvest/P004_F023_ASCE_2026-08-25.webp"
+       },
+       {
+        "date": "2026-09-06",
+        "src": "/analysis-extra/iowa-harvest/P004_F023_ASCE_2026-09-06.webp"
+       },
+       {
+        "date": "2026-09-18",
+        "src": "/analysis-extra/iowa-harvest/P004_F023_ASCE_2026-09-18.webp"
+       },
+       {
+        "date": "2026-09-30",
+        "src": "/analysis-extra/iowa-harvest/P004_F023_ASCE_2026-09-30.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1120.9,
+      "harvestedKm2": 80.28,
+      "harvestedPct": 7.16,
+      "peakIntervalEnd": "2026-09-30",
+      "peakIntervalDropKm2": 50.44,
+      "medianHarvestDoy": 273,
+      "meanMaxDropDb": -3.91,
+      "series": [
+       {
+        "date": "2026-08-25",
+        "coDb": -6.464,
+        "crossDb": -14.233,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-06",
+        "coDb": -6.586,
+        "crossDb": -14.648,
+        "validPct": 100,
+        "dropKm2": 14.668,
+        "riseKm2": 1.336,
+        "cumulativeKm2": 13.444,
+        "cumulativePct": 1.2
+       },
+       {
+        "date": "2026-09-18",
+        "coDb": -5.679,
+        "crossDb": -13.709,
+        "validPct": 100,
+        "dropKm2": 18.497,
+        "riseKm2": 46.241,
+        "cumulativeKm2": 30.475,
+        "cumulativePct": 2.72
+       },
+       {
+        "date": "2026-09-30",
+        "coDb": -5.853,
+        "crossDb": -13.743,
+        "validPct": 100,
+        "dropKm2": 50.441,
+        "riseKm2": 2.824,
+        "cumulativeKm2": 80.277,
+        "cumulativePct": 7.16
+       }
+      ]
+     },
+     {
+      "key": "P041_F067_DESC",
+      "label": "Track 41 · frame 67 · descending",
+      "track": 41,
+      "frame": 67,
+      "direction": "descending",
+      "pixelM": 20,
+      "crs": "EPSG:32615",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-09",
+       "2026-09-21",
+       "2026-10-03"
+      ],
+      "map": "/analysis-extra/iowa-harvest/P041_F067_DESC_map.webp",
+      "mapSize": [
+       1000,
+       823
+      ],
+      "frames": [
+       {
+        "date": "2026-09-09",
+        "src": "/analysis-extra/iowa-harvest/P041_F067_DESC_2026-09-09.webp"
+       },
+       {
+        "date": "2026-09-21",
+        "src": "/analysis-extra/iowa-harvest/P041_F067_DESC_2026-09-21.webp"
+       },
+       {
+        "date": "2026-10-03",
+        "src": "/analysis-extra/iowa-harvest/P041_F067_DESC_2026-10-03.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1120.67,
+      "harvestedKm2": 226.2,
+      "harvestedPct": 20.18,
+      "peakIntervalEnd": "2026-09-21",
+      "peakIntervalDropKm2": 156.5,
+      "medianHarvestDoy": 264,
+      "meanMaxDropDb": -4.38,
+      "series": [
+       {
+        "date": "2026-09-09",
+        "coDb": -5.29,
+        "crossDb": -13.045,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-21",
+        "coDb": -5.773,
+        "crossDb": -14.047,
+        "validPct": 100,
+        "dropKm2": 156.502,
+        "riseKm2": 0.432,
+        "cumulativeKm2": 140.033,
+        "cumulativePct": 12.5
+       },
+       {
+        "date": "2026-10-03",
+        "coDb": -6.091,
+        "crossDb": -14.62,
+        "validPct": 100,
+        "dropKm2": 113.599,
+        "riseKm2": 1.821,
+        "cumulativeKm2": 226.2,
+        "cumulativePct": 20.18
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "punjab-burning",
+   "type": "agriculture",
+   "name": "Punjab crop-residue burning",
+   "region": "Punjab",
+   "country": "India",
+   "lat": 31.45,
+   "lon": 75,
+   "startDate": "2026-09-03",
+   "endDate": "2026-09-27",
+   "footprint": [
+    [
+     74.8,
+     31.6
+    ],
+    [
+     75.2,
+     31.6
+    ],
+    [
+     75.2,
+     31.3
+    ],
+    [
+     74.8,
+     31.3
+    ]
+   ],
+   "thumb": "/analysis-extra/punjab-burning/thumb.webp",
+   "changedAreaKm2": 128.07,
+   "changedPct": 11.17,
+   "extra": {
+    "kind": "agriculture",
+    "activity": "burning",
+    "orbits": [
+     {
+      "key": "P135_F073_DESC",
+      "label": "Track 135 · frame 73 · descending",
+      "track": 135,
+      "frame": 73,
+      "direction": "descending",
+      "pixelM": 40,
+      "crs": "EPSG:32643",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-03",
+       "2026-09-15",
+       "2026-09-27"
+      ],
+      "map": "/analysis-extra/punjab-burning/P135_F073_DESC_map.webp",
+      "mapSize": [
+       1000,
+       742
+      ],
+      "frames": [
+       {
+        "date": "2026-09-03",
+        "src": "/analysis-extra/punjab-burning/P135_F073_DESC_2026-09-03.webp"
+       },
+       {
+        "date": "2026-09-15",
+        "src": "/analysis-extra/punjab-burning/P135_F073_DESC_2026-09-15.webp"
+       },
+       {
+        "date": "2026-09-27",
+        "src": "/analysis-extra/punjab-burning/P135_F073_DESC_2026-09-27.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1146.76,
+      "harvestedKm2": 128.07,
+      "harvestedPct": 11.17,
+      "peakIntervalEnd": "2026-09-27",
+      "peakIntervalDropKm2": 74.83,
+      "medianHarvestDoy": 270,
+      "meanMaxDropDb": -4.28,
+      "series": [
+       {
+        "date": "2026-09-03",
+        "coDb": -4.632,
+        "crossDb": -15.919,
+        "validPct": 100,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-15",
+        "coDb": -5.608,
+        "crossDb": -16.122,
+        "validPct": 100,
+        "dropKm2": 54.051,
+        "riseKm2": 14.306,
+        "cumulativeKm2": 53.648,
+        "cumulativePct": 4.68
+       },
+       {
+        "date": "2026-09-27",
+        "coDb": -7.219,
+        "crossDb": -16.53,
+        "validPct": 100,
+        "dropKm2": 74.832,
+        "riseKm2": 12.398,
+        "cumulativeKm2": 128.072,
+        "cumulativePct": 11.17
+       }
+      ]
+     },
+     {
+      "key": "P156_F017_ASCE",
+      "label": "Track 156 · frame 17 · ascending",
+      "track": 156,
+      "frame": 17,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32643",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-05",
+       "2026-09-17"
+      ],
+      "map": "/analysis-extra/punjab-burning/P156_F017_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       742
+      ],
+      "frames": [
+       {
+        "date": "2026-09-05",
+        "src": "/analysis-extra/punjab-burning/P156_F017_ASCE_2026-09-05.webp"
+       },
+       {
+        "date": "2026-09-17",
+        "src": "/analysis-extra/punjab-burning/P156_F017_ASCE_2026-09-17.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 1197.94,
+      "harvestedKm2": 265.77,
+      "harvestedPct": 22.19,
+      "peakIntervalEnd": "2026-09-17",
+      "peakIntervalDropKm2": 265.77,
+      "medianHarvestDoy": 260,
+      "meanMaxDropDb": -4.07,
+      "series": [
+       {
+        "date": "2026-09-05",
+        "coDb": -4.587,
+        "crossDb": -14.804,
+        "validPct": 93.82,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-17",
+        "coDb": -5.975,
+        "crossDb": -16.485,
+        "validPct": 94.59,
+        "dropKm2": 265.769,
+        "riseKm2": 26.997,
+        "cumulativeKm2": 265.769,
+        "cumulativePct": 22.19
+       }
+      ]
+     },
+     {
+      "key": "P084_F017_ASCE",
+      "label": "Track 84 · frame 17 · ascending",
+      "track": 84,
+      "frame": 17,
+      "direction": "ascending",
+      "pixelM": 20,
+      "crs": "EPSG:32643",
+      "coPol": "HH",
+      "crossPol": "HV",
+      "thresholdDb": 3,
+      "vegMinDb": -22,
+      "waterMaxDb": -18,
+      "medianFilterPx": 3,
+      "downsample": 2,
+      "dates": [
+       "2026-09-12",
+       "2026-09-24"
+      ],
+      "map": "/analysis-extra/punjab-burning/P084_F017_ASCE_map.webp",
+      "mapSize": [
+       1000,
+       742
+      ],
+      "frames": [
+       {
+        "date": "2026-09-12",
+        "src": "/analysis-extra/punjab-burning/P084_F017_ASCE_2026-09-12.webp"
+       },
+       {
+        "date": "2026-09-24",
+        "src": "/analysis-extra/punjab-burning/P084_F017_ASCE_2026-09-24.webp"
+       }
+      ],
+      "mode": "harvest",
+      "vegetatedKm2": 803.55,
+      "harvestedKm2": 23.38,
+      "harvestedPct": 2.91,
+      "peakIntervalEnd": "2026-09-24",
+      "peakIntervalDropKm2": 23.38,
+      "medianHarvestDoy": 267,
+      "meanMaxDropDb": -3.77,
+      "series": [
+       {
+        "date": "2026-09-12",
+        "coDb": -4.61,
+        "crossDb": -16.907,
+        "validPct": 83.11,
+        "dropKm2": 0,
+        "riseKm2": 0,
+        "cumulativeKm2": 0,
+        "cumulativePct": 0
+       },
+       {
+        "date": "2026-09-24",
+        "coDb": -5.721,
+        "crossDb": -17.069,
+        "validPct": 83.01,
+        "dropKm2": 23.382,
+        "riseKm2": 14.762,
+        "cumulativeKm2": 23.382,
+        "cumulativePct": 2.91
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "panama-quake",
+   "type": "earthquake",
+   "name": "Panama earthquake",
+   "region": "Southwestern Panama",
+   "country": "Panama",
+   "lat": 7.7,
+   "lon": -80.9,
+   "startDate": "2026-09-30",
+   "endDate": "2026-10-17",
+   "footprint": [
+    [
+     -81.6,
+     8.4
+    ],
+    [
+     -80.2,
+     8.4
+    ],
+    [
+     -80.2,
+     7
+    ],
+    [
+     -81.6,
+     7
+    ]
+   ],
+   "thumb": "/analysis-extra/panama-quake/thumb.webp",
+   "changedAreaKm2": 3755.51,
+   "changedPct": 0,
+   "extra": {
+    "kind": "displacement",
+    "eventDate": "2026-10-09",
+    "pairs": [
+     {
+      "key": "T040_F085_DESC_20261002_20261014",
+      "group": "T040_F085_DESC",
+      "label": "Track 40 · frame 85 · descending",
+      "direction": "descending",
+      "track": 40,
+      "frame": 85,
+      "ref": "2026-10-02",
+      "sec": "2026-10-14",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 36.4,
+      "reliablePct": 23.39,
+      "towardMaxCm": 156.25,
+      "awayMaxCm": -37.44,
+      "area5Km2": 3755.51,
+      "area10Km2": 3204.97,
+      "area20Km2": 2017.68,
+      "coherence": 0.333,
+      "decorrelatedKm2": 4050.85,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 40.5,
+      "images": {
+       "fringes": "/analysis-extra/panama-quake/T040_F085_DESC_20261002_20261014_fringes.webp",
+       "fringesSize": [
+        558,
+        775
+       ],
+       "displacement": "/analysis-extra/panama-quake/T040_F085_DESC_20261002_20261014_los.webp",
+       "displacementSize": [
+        586,
+        557
+       ]
+      }
+     },
+     {
+      "key": "T076_F005_ASC_20261005_20261017",
+      "group": "T076_F005_ASC",
+      "label": "Track 76 · frame 5 · ascending",
+      "direction": "ascending",
+      "track": 76,
+      "frame": 5,
+      "ref": "2026-10-05",
+      "sec": "2026-10-17",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 32.2,
+      "reliablePct": 14.13,
+      "towardMaxCm": 39.52,
+      "awayMaxCm": -67,
+      "area5Km2": 1723.62,
+      "area10Km2": 1438.27,
+      "area20Km2": 958.98,
+      "coherence": 0.144,
+      "decorrelatedKm2": 4716.27,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 90.8,
+      "images": {
+       "fringes": "/analysis-extra/panama-quake/T076_F005_ASC_20261005_20261017_fringes.webp",
+       "fringesSize": [
+        617,
+        477
+       ],
+       "displacement": "/analysis-extra/panama-quake/T076_F005_ASC_20261005_20261017_los.webp",
+       "displacementSize": [
+        584,
+        557
+       ]
+      }
+     },
+     {
+      "key": "T004_F005_ASC_20260930_20261012",
+      "group": "T004_F005_ASC",
+      "label": "Track 4 · frame 5 · ascending",
+      "direction": "ascending",
+      "track": 4,
+      "frame": 5,
+      "ref": "2026-09-30",
+      "sec": "2026-10-12",
+      "days": 12,
+      "pol": "HH",
+      "coveragePct": 38.5,
+      "reliablePct": 12.88,
+      "towardMaxCm": 22.46,
+      "awayMaxCm": -21.77,
+      "area5Km2": 2342.25,
+      "area10Km2": 1644.32,
+      "area20Km2": 110.35,
+      "coherence": 0.106,
+      "decorrelatedKm2": 6437.56,
+      "wavelengthCm": 24.196,
+      "fringeCm": 12.098,
+      "pixelM": 80,
+      "ionosphereRemoved": true,
+      "offsetRangeP99Cm": 16.7,
+      "images": {
+       "fringes": "/analysis-extra/panama-quake/T004_F005_ASC_20260930_20261012_fringes.webp",
+       "fringesSize": [
+        657,
+        729
+       ],
+       "displacement": "/analysis-extra/panama-quake/T004_F005_ASC_20260930_20261012_los.webp",
+       "displacementSize": [
+        617,
+        557
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ]
+}
