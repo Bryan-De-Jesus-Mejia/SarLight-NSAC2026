@@ -1,6 +1,7 @@
 import { data } from "./data";
 import { methods } from "./methods";
 import { more } from "./more";
+import { people } from "./people";
 import { panel } from "./panel";
 import { shell } from "./shell";
 import { story } from "./story";
@@ -18,4 +19,5 @@ export const es: Record<string, string> = {
   ...story,
   ...methods,
   ...more,
+  ...people,
 };

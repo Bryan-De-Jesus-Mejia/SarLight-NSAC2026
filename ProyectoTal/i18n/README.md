@@ -27,3 +27,7 @@ rich(t("It flags <b>{area} km²</b>.", { area }), { b: (c) => <b>{c}</b> })   //
 3. Agrega la entrada en el archivo de su área dentro de `i18n/es/` (hay uno por área para que tres personas no editen las mismas líneas) y regístralo en `i18n/es/index.ts`.
 
 Si falta una traducción la app muestra el inglés (y avisa una vez en la consola en desarrollo): nunca queda en blanco.
+
+## Para el equipo (y para Claude)
+
+La regla vive en `.claude/rules/i18n.md` y Claude Code la carga sola en este proyecto: todo texto nuevo se escribe con `t()`/`msg()` y su español en el mismo cambio. Además, `.claude/settings.json` registra un hook de fin de turno (`scripts/i18n-stop-hook.mjs`) que corre el verificador y no deja terminar mientras falten traducciones. Para revisar a mano también inglés suelto en JSX: `node scripts/check-i18n.mjs --raw`.

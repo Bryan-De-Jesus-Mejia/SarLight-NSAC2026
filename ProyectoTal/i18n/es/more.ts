@@ -26,6 +26,7 @@ export const more: Record<string, string> = {
   "Camera view: NOAA-20 VIIRS true colour (NASA GIBS). Ground under the clouds: Sentinel-2 cloudless mosaic (EOX), a picture made from many clear days, not from that day. The radar itself: the NISAR layer below.":
     "Vista de cámara: color real de VIIRS en NOAA-20 (NASA GIBS). El suelo bajo las nubes: mosaico sin nubes de Sentinel-2 (EOX), una imagen hecha con muchos días despejados, no con ese día. El radar en sí: la capa de NISAR de abajo.",
   "land that changed after the event": "terreno que cambió tras el evento",
+  "Under the clouds · cloud-free mosaic": "Bajo las nubes · mosaico sin nubes",
 
   /* Change types added later */
   "Wind & storms": "Viento y tormentas",

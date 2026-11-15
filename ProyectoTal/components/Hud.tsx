@@ -170,13 +170,13 @@ export function Hud() {
             type="button"
             aria-pressed={community}
             onClick={() => setCommunity(!community)}
-            title="Is my community at risk? See what our radar found around a place"
+            title={t("Is my community at risk? See what our radar found around a place")}
             className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm transition-colors hover:text-accent ${community ? "text-accent" : "text-ink"}`}
           >
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M3.5 11.5 12 4l8.5 7.5M6 10v9.5h12V10M10 19.5v-5h4v5" />
             </svg>
-            <span className="sr-only">Is my community at risk?</span>
+            <span className="sr-only">{t("Is my community at risk?")}</span>
           </button>
         )}
 

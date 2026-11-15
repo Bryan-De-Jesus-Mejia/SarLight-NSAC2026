@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/ProyectoTal/scripts/i18n-stop-hook.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,7 +1,8 @@
 "use client";
 
 import type { CaseContext, ChangeType, EventDetail } from "@/data/types";
-import { formatDate } from "@/lib/format";
+import { msg, t, useT } from "@/i18n/core";
+import { formatDate, formatNumber } from "@/lib/format";
 
 /**
  * "Why it happened": the physical chain from a cause to what people live
@@ -97,115 +98,140 @@ function evidenceOf(detail: EventDetail, ctx: CaseContext | undefined): Evidence
 }
 
 const mm = (v: number) => `${Math.round(v)} mm`;
+const RADAR_TITLE = msg("What the radar measured");
 const rainLine = (e: Evidence) =>
   e.rainWeek === null
     ? undefined
-    : `${mm(e.rainWeek)} of rain in the week before ${e.keyDate ? formatDate(e.keyDate) : "the last pass"}` +
-      (e.rainRatio !== null && e.rainRatio >= 1.3 ? `, ${e.rainRatio.toFixed(1)}× a usual week of this record` : e.rainRatio !== null && e.rainRatio < 0.7 ? ", less than a usual week" : "");
+    : t("{rain} of rain in the week before {date}", { rain: mm(e.rainWeek), date: e.keyDate ? formatDate(e.keyDate) : t("the last pass") }) +
+      (e.rainRatio !== null && e.rainRatio >= 1.3
+        ? t(", {ratio}× a usual week of this record", { ratio: formatNumber(e.rainRatio, 1, 1) })
+        : e.rainRatio !== null && e.rainRatio < 0.7
+          ? t(", less than a usual week")
+          : "");
 
 function chainFor(type: ChangeType, detail: EventDetail, e: Evidence): Link[] {
   const x = detail.extra;
   const activity = x?.kind === "agriculture" ? x.activity : null;
-  const radar = (body: string): Link => ({ icon: ICON.radar, title: "What the radar measured", body });
+  const radar = (body: string): Link => ({ icon: ICON.radar, title: t(RADAR_TITLE), body: t(body) });
 
   if (type === "flood" || type === "wetland") {
     return [
-      { icon: ICON.rain, title: "Heavy rain", body: "Rain falls faster than the soil and drains can take it.", evidence: rainLine(e) },
-      { icon: ICON.water, title: "Water spreads over land", body: "Rivers and gullies overflow; low streets and fields fill." },
-      radar("Calm water is a mirror: the pulse bounces away, so flooded open ground turns dark. Flooded trees and crops can turn brighter instead, as the pulse bounces off the water and then the stems."),
-      { icon: ICON.home, title: "What people live through", body: "Homes to leave, roads cut, a harvest that rots in the field." },
+      { icon: ICON.rain, title: t("Heavy rain"), body: t("Rain falls faster than the soil and drains can take it."), evidence: rainLine(e) },
+      { icon: ICON.water, title: t("Water spreads over land"), body: t("Rivers and gullies overflow; low streets and fields fill.") },
+      radar(msg("Calm water is a mirror: the pulse bounces away, so flooded open ground turns dark. Flooded trees and crops can turn brighter instead, as the pulse bounces off the water and then the stems.")),
+      { icon: ICON.home, title: t("What people live through"), body: t("Homes to leave, roads cut, a harvest that rots in the field.") },
     ];
   }
   if (type === "wildfire") {
     return [
       {
         icon: ICON.sun,
-        title: "Heat and dry fuel",
-        body: "Hot, dry weeks turn leaves and grass into fuel.",
-        evidence: e.hottest !== null ? `Hottest day ${Math.round(e.hottest)} °C; ${e.rainWeek !== null ? `${mm(e.rainWeek)} of rain in the week before` : ""}` : undefined,
+        title: t("Heat and dry fuel"),
+        body: t("Hot, dry weeks turn leaves and grass into fuel."),
+        evidence:
+          e.hottest !== null
+            ? e.rainWeek !== null
+              ? t("Hottest day {temp} °C; {rain} of rain in the week before", { temp: Math.round(e.hottest), rain: mm(e.rainWeek) })
+              : t("Hottest day {temp} °C", { temp: Math.round(e.hottest) })
+            : undefined,
       },
-      { icon: ICON.leaf, title: "The canopy burns", body: "Leaves and branches go; bare trunks and soil remain." },
-      radar("Leaves scatter the pulse in all directions. Without them the cross-polarised echo (HV) drops."),
-      { icon: ICON.people, title: "What people live through", body: "Smoke, lost forest that held soil and water, risk to homes and farms nearby." },
+      { icon: ICON.leaf, title: t("The canopy burns"), body: t("Leaves and branches go; bare trunks and soil remain.") },
+      radar(msg("Leaves scatter the pulse in all directions. Without them the cross-polarised echo (HV) drops.")),
+      { icon: ICON.people, title: t("What people live through"), body: t("Smoke, lost forest that held soil and water, risk to homes and farms nearby.") },
     ];
   }
   if (type === "storm") {
     return [
       {
         icon: ICON.wind,
-        title: "Strong wind",
-        body: "A storm sweeps across the valley.",
-        evidence: e.gust !== null ? `Strongest gust ${Math.round(e.gust)} km/h around ${e.keyDate ? formatDate(e.keyDate) : "the event"}` : undefined,
+        title: t("Strong wind"),
+        body: t("A storm sweeps across the valley."),
+        evidence:
+          e.gust !== null
+            ? t("Strongest gust {gust} km/h around {date}", { gust: Math.round(e.gust), date: e.keyDate ? formatDate(e.keyDate) : t("the event") })
+            : undefined,
       },
-      { icon: ICON.leaf, title: "Crops and trees go down", body: "Banana plants, maize and branches are flattened or snapped." },
-      radar("Standing plants send back a strong echo. Flattened ones lose that structure, so the echo weakens where the wind hit."),
-      { icon: ICON.people, title: "What people live through", body: "A season of crops lost, fallen power lines, blocked roads." },
+      { icon: ICON.leaf, title: t("Crops and trees go down"), body: t("Banana plants, maize and branches are flattened or snapped.") },
+      radar(msg("Standing plants send back a strong echo. Flattened ones lose that structure, so the echo weakens where the wind hit.")),
+      { icon: ICON.people, title: t("What people live through"), body: t("A season of crops lost, fallen power lines, blocked roads.") },
     ];
   }
   if (type === "drought") {
     return [
       {
         icon: ICON.sun,
-        title: "Heat and little rain",
-        body: "Day after day of strong sun dries the land.",
+        title: t("Heat and little rain"),
+        body: t("Day after day of strong sun dries the land."),
         evidence:
           e.hottest !== null
-            ? `${e.hotDays} days at 35 °C or more, hottest ${Math.round(e.hottest)} °C${e.rainWeek !== null ? `; ${mm(e.rainWeek)} of rain in the week before ${e.keyDate ? formatDate(e.keyDate) : ""}` : ""}`
+            ? t("{days} days at 35 °C or more, hottest {temp} °C", { days: e.hotDays, temp: Math.round(e.hottest) }) +
+              (e.rainWeek !== null
+                ? `; ${t("{rain} of rain in the week before {date}", { rain: mm(e.rainWeek), date: e.keyDate ? formatDate(e.keyDate) : "" })}`
+                : "")
             : undefined,
       },
-      { icon: ICON.leaf, title: "Soil and plants dry out", body: "Pasture yellows, crops wilt, soil loses its water." },
-      radar("Water makes things bright to radar (a high dielectric constant). Dry soil and dry plants send back a weaker echo. The radar does not measure heat: it sees what heat does."),
-      { icon: ICON.people, title: "What people live through", body: "Smaller harvests, thirsty animals, less water for homes." },
+      { icon: ICON.leaf, title: t("Soil and plants dry out"), body: t("Pasture yellows, crops wilt, soil loses its water.") },
+      radar(msg("Water makes things bright to radar (a high dielectric constant). Dry soil and dry plants send back a weaker echo. The radar does not measure heat: it sees what heat does.")),
+      { icon: ICON.people, title: t("What people live through"), body: t("Smaller harvests, thirsty animals, less water for homes.") },
     ];
   }
   if (type === "earthquake") {
     return [
       {
         icon: ICON.fault,
-        title: "A fault slips",
-        body: "Stress built up over years is released in seconds.",
-        evidence: e.quake ? `USGS: magnitude ${e.quake.mag} on ${formatDate(e.quake.date)}, ${e.quake.depthKm} km deep, ${e.quake.km} km from the centre of this area` : undefined,
+        title: t("A fault slips"),
+        body: t("Stress built up over years is released in seconds."),
+        evidence: e.quake
+          ? t("USGS: magnitude {mag} on {date}, {depth} km deep, {km} km from the centre of this area", {
+              mag: e.quake.mag,
+              date: formatDate(e.quake.date),
+              depth: e.quake.depthKm,
+              km: e.quake.km,
+            })
+          : undefined,
       },
-      { icon: ICON.slope, title: "The ground moves", body: "Whole regions rise, sink or shift by centimetres." },
-      radar("The radar wave is about 24 cm long. Comparing its phase before and after, each colour cycle is about 12 cm of motion toward or away from the satellite."),
-      { icon: ICON.home, title: "What people live through", body: "Cracked buildings and roads; the map shows engineers and rescuers where the ground moved most." },
+      { icon: ICON.slope, title: t("The ground moves"), body: t("Whole regions rise, sink or shift by centimetres.") },
+      radar(msg("The radar wave is about 24 cm long. Comparing its phase before and after, each colour cycle is about 12 cm of motion toward or away from the satellite.")),
+      { icon: ICON.home, title: t("What people live through"), body: t("Cracked buildings and roads; the map shows engineers and rescuers where the ground moved most.") },
     ];
   }
   if (type === "landslide") {
     return [
       {
         icon: ICON.rain,
-        title: "A soaked slope",
-        body: "Rain fills the soil until the slope can no longer hold.",
-        evidence: e.quake ? `USGS: magnitude ${e.quake.mag} earthquake nearby on ${formatDate(e.quake.date)}` : rainLine(e),
+        title: t("A soaked slope"),
+        body: t("Rain fills the soil until the slope can no longer hold."),
+        evidence: e.quake
+          ? t("USGS: magnitude {mag} earthquake nearby on {date}", { mag: e.quake.mag, date: formatDate(e.quake.date) })
+          : rainLine(e),
       },
-      { icon: ICON.slope, title: "The slope gives way", body: "Soil and rock slide down, burying what lies below." },
-      radar("Fresh scars and debris change how rough the surface is, so the echo shifts where the ground moved."),
-      { icon: ICON.home, title: "What people live through", body: "Roads cut off, homes on the slope at risk." },
+      { icon: ICON.slope, title: t("The slope gives way"), body: t("Soil and rock slide down, burying what lies below.") },
+      radar(msg("Fresh scars and debris change how rough the surface is, so the echo shifts where the ground moved.")),
+      { icon: ICON.home, title: t("What people live through"), body: t("Roads cut off, homes on the slope at risk.") },
     ];
   }
   if (type === "glacier") {
     return [
-      { icon: ICON.sun, title: "Warmer ocean and air", body: "Warm water reaches the front of the ice and melts it from below." },
-      { icon: ICON.ice, title: "The ice speeds up", body: "With less to hold it back, the glacier flows and breaks off faster." },
-      radar("By tracking the same patch of ice in two passes, the radar measures how many metres it moved per day, even in polar night."),
-      { icon: ICON.water, title: "What it means for everyone", body: "Ice that reaches the sea raises sea level, for every coast, the Caribbean included." },
+      { icon: ICON.sun, title: t("Warmer ocean and air"), body: t("Warm water reaches the front of the ice and melts it from below.") },
+      { icon: ICON.ice, title: t("The ice speeds up"), body: t("With less to hold it back, the glacier flows and breaks off faster.") },
+      radar(msg("By tracking the same patch of ice in two passes, the radar measures how many metres it moved per day, even in polar night.")),
+      { icon: ICON.water, title: t("What it means for everyone"), body: t("Ice that reaches the sea raises sea level, for every coast, the Caribbean included.") },
     ];
   }
   // agriculture
   const human =
     activity === "burning"
-      ? { title: "Farmers burn the stubble", body: "After harvest, leftover straw is burned to clear the field fast." }
+      ? { title: t("Farmers burn the stubble"), body: t("After harvest, leftover straw is burned to clear the field fast.") }
       : activity === "clearing"
-        ? { title: "Forest is cleared", body: "Trees are cut and burned to make room for pasture or crops." }
+        ? { title: t("Forest is cleared"), body: t("Trees are cut and burned to make room for pasture or crops.") }
         : activity === "flood"
-          ? { title: "Paddies are flooded", body: "Rice is grown in standing water: farmers flood the fields on purpose." }
-          : { title: "Harvest time", body: "The crop calendar decides when fields are cut." };
+          ? { title: t("Paddies are flooded"), body: t("Rice is grown in standing water: farmers flood the fields on purpose.") }
+          : { title: t("Harvest time"), body: t("The crop calendar decides when fields are cut.") };
   return [
     { icon: ICON.hand, title: human.title, body: human.body, evidence: rainLine(e) },
-    { icon: ICON.leaf, title: "The fields change", body: activity === "flood" ? "Green fields turn to sheets of water, then back to green." : "Tall plants are replaced by bare soil or stubble." },
-    radar(activity === "flood" ? "Open water turns dark; young rice standing in water can turn bright." : "Tall crops scatter the pulse; bare fields send back much less, so the echo drops."),
-    { icon: ICON.people, title: "What people live through", body: activity === "clearing" ? "Forest lost for good, with its water, wildlife and carbon." : activity === "burning" ? "Smoke that chokes cities hundreds of kilometres away." : "Food on the table, and income for the families who grow it." },
+    { icon: ICON.leaf, title: t("The fields change"), body: activity === "flood" ? t("Green fields turn to sheets of water, then back to green.") : t("Tall plants are replaced by bare soil or stubble.") },
+    radar(activity === "flood" ? msg("Open water turns dark; young rice standing in water can turn bright.") : msg("Tall crops scatter the pulse; bare fields send back much less, so the echo drops.")),
+    { icon: ICON.people, title: t("What people live through"), body: activity === "clearing" ? t("Forest lost for good, with its water, wildlife and carbon.") : activity === "burning" ? t("Smoke that chokes cities hundreds of kilometres away.") : t("Food on the table, and income for the families who grow it.") },
   ];
 }
 
@@ -222,7 +248,7 @@ function MiniWeather({ ctx, keyDate, kind }: { ctx: CaseContext; keyDate: string
   const color = kind === "rain" ? "#60a5fa" : kind === "heat" ? "#fb923c" : "#a78bfa";
   return (
     <figure className="mt-2">
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-12 w-full" role="img" aria-label={`Daily ${kind === "rain" ? "rain" : kind === "heat" ? "maximum temperature" : "maximum wind gust"} from ${formatDate(w.dates[0])} to ${formatDate(w.dates[w.dates.length - 1])}`}>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-12 w-full" role="img" aria-label={t("{what} from {from} to {to}", { what: kind === "rain" ? t("Daily rain") : kind === "heat" ? t("Daily maximum temperature") : t("Daily maximum wind gust"), from: formatDate(w.dates[0]), to: formatDate(w.dates[w.dates.length - 1]) })}>
         {values.map((v, i) => {
           const h = ((v - min) / (max - min || 1)) * (H - 2);
           return <rect key={w.dates[i]} x={i * bw + bw * 0.15} y={H - h} width={bw * 0.7} height={Math.max(h, 0.3)} fill={color} opacity={i === keyIndex ? 1 : 0.55} />;
@@ -239,6 +265,7 @@ function MiniWeather({ ctx, keyDate, kind }: { ctx: CaseContext; keyDate: string
 }
 
 export function Drivers({ detail, compact = false }: { detail: EventDetail; compact?: boolean }) {
+  const tr = useT();
   const ctx = detail.context;
   const e = evidenceOf(detail, ctx);
   const chain = chainFor(detail.type, detail, e);
@@ -249,7 +276,7 @@ export function Drivers({ detail, compact = false }: { detail: EventDetail; comp
     <section aria-labelledby={compact ? undefined : "why-title"}>
       {!compact && (
         <h3 id="why-title" className="font-display text-xl leading-tight text-ink">
-          Why it happened
+          {tr("Why it happened")}
         </h3>
       )}
       <ol className={`relative ${compact ? "mt-1" : "mt-3"} space-y-0`}>
@@ -258,7 +285,7 @@ export function Drivers({ detail, compact = false }: { detail: EventDetail; comp
             {i < chain.length - 1 && <span className="absolute left-[17px] top-9 bottom-0 w-px bg-gradient-to-b from-white/30 to-white/5" aria-hidden="true" />}
             <span
               className={`relative z-[1] flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${
-                link.title === "What the radar measured" ? "border-accent/70 bg-accent/15 text-accent" : "border-line bg-[#0b101b] text-ink"
+                link.title === t(RADAR_TITLE) ? "border-accent/70 bg-accent/15 text-accent" : "border-line bg-[#0b101b] text-ink"
               }`}
             >
               <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -280,8 +307,9 @@ export function Drivers({ detail, compact = false }: { detail: EventDetail; comp
         ))}
       </ol>
       <p className="mt-3 text-[11px] leading-snug text-muted">
-        Weather: ERA5 reanalysis via Open-Meteo, at the centre of the area (a grid of about 25 km). Earthquakes: USGS catalogue.
-        These records make the cause likely; they do not prove it for each pixel.
+        {tr(
+          "Weather: ERA5 reanalysis via Open-Meteo, at the centre of the area (a grid of about 25 km). Earthquakes: USGS catalogue. These records make the cause likely; they do not prove it for each pixel.",
+        )}
       </p>
     </section>
   );

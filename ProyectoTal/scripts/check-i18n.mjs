@@ -4,6 +4,7 @@
  *
  *   node scripts/check-i18n.mjs          # report, exit 1 if anything is missing
  *   node scripts/check-i18n.mjs --unused # also list entries nothing refers to
+ *   node scripts/check-i18n.mjs --raw    # also list English text written straight into JSX (not wrapped in t())
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
@@ -33,9 +34,9 @@ function loadSpanish() {
     if (!name.endsWith(".ts") || name === "index.ts") continue;
     const source = readFileSync(join(dir, name), "utf8");
     const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
-    const module = { exports: {} };
-    new Function("module", "exports", js)(module, module.exports);
-    for (const value of Object.values(module.exports)) Object.assign(merged, value);
+    const mod = { exports: {} };
+    new Function("module", "exports", js)(mod, mod.exports);
+    for (const value of Object.values(mod.exports)) Object.assign(merged, value);
   }
   return merged;
 }
@@ -43,6 +44,8 @@ function loadSpanish() {
 const spanish = loadSpanish();
 const used = new Map(); // sentence → first place it is used
 const dynamic = [];
+const raw = [];
+const ATTRS = new Set(["aria-label", "title", "placeholder", "alt"]);
 
 for (const base of SOURCE_DIRS) {
   let files = [];
@@ -65,6 +68,17 @@ for (const base of SOURCE_DIRS) {
           dynamic.push(where);
         }
       }
+      if (ts.isJsxText(node)) {
+        const text = node.getText().replace(/\s+/g, " ").trim();
+        if (/[A-Za-z]{3,} [A-Za-z]{2,}/.test(text) && !text.startsWith("{")) {
+          raw.push(`${relative(root, file)}:${sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1}  ${text.slice(0, 70)}`);
+        }
+      }
+      if (ts.isJsxAttribute(node) && node.initializer && ts.isStringLiteral(node.initializer) && ATTRS.has(node.name.getText())) {
+        if (/[A-Za-z]{3,}/.test(node.initializer.text)) {
+          raw.push(`${relative(root, file)}:${sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1}  ${node.name.getText()}="${node.initializer.text.slice(0, 60)}"`);
+        }
+      }
       ts.forEachChild(node, visit);
     };
     visit(sourceFile);
@@ -78,6 +92,12 @@ for (const [text, where] of missing) console.log(`  MISSING  ${where}\n         
 if (dynamic.length) {
   console.log(`\nTemplate strings passed to t() cannot be looked up (use {name} placeholders instead):`);
   for (const where of dynamic) console.log(`  ${where}`);
+}
+
+if (process.argv.includes("--raw")) {
+  console.log(`
+${raw.length} English texts written straight into JSX (wrap them with t()):`);
+  for (const line of raw) console.log(`  ${line}`);
 }
 
 if (process.argv.includes("--unused")) {

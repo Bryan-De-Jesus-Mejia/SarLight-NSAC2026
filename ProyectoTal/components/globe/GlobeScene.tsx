@@ -1151,7 +1151,7 @@ export default function GlobeScene() {
       <div ref={tipRef} className="ge-region-tip" aria-hidden="true" />
       {lens && (
         <div ref={lensRef} className="ge-lens" aria-hidden="true">
-          <span>Under the clouds · cloud-free mosaic</span>
+          <span>{tr("Under the clouds · cloud-free mosaic")}</span>
         </div>
       )}
       {perfOn && <div ref={perfRef} className="ge-perf" aria-hidden="true" />}

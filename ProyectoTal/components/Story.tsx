@@ -269,8 +269,8 @@ function buildSteps(
 
   steps.push({
     key: "drivers",
-    kicker: "Why it happened",
-    title: "From the sky to the ground",
+    kicker: t("Why it happened"),
+    title: t("From the sky to the ground"),
     body: <Drivers detail={detail} compact />,
     enter: show(a.images.post, MID),
   });
@@ -302,8 +302,8 @@ function buildSteps(
 
   steps.push({
     key: "people",
-    kicker: "Why it matters",
-    title: "What this means for people",
+    kicker: t("Why it matters"),
+    title: t("What this means for people"),
     body: <Impact detail={detail} compact />,
     enter: show(a.images.post, MID),
   });

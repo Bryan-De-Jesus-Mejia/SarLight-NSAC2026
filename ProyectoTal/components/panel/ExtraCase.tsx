@@ -584,34 +584,46 @@ function DisplacementView({ detail, extra, technical }: { detail: EventDetail; e
 /* ------------------------- dated events (change mode) -------------------- */
 
 const CAUSE_WORD: Record<ChangeExtra["cause"], { event: string; weaker: string }> = {
-  wind: { event: "the windstorm", weaker: "standing crops and trees that lost their echo, as if knocked down" },
-  heat: { event: "the start of the heat wave", weaker: "land whose echo weakened, as soil and plants dried" },
-  landslide: { event: "the date of the landslide reports", weaker: "slopes whose echo changed, where ground may have moved" },
+  wind: { event: msg("the windstorm"), weaker: msg("standing crops and trees that lost their echo, as if knocked down") },
+  heat: { event: msg("the start of the heat wave"), weaker: msg("land whose echo weakened, as soil and plants dried") },
+  landslide: { event: msg("the date of the landslide reports"), weaker: msg("slopes whose echo changed, where ground may have moved") },
 };
 
 function ChangeView({ extra, technical }: { extra: ChangeExtra; technical: boolean }) {
+  const t = useT();
   const [picked, setPicked] = useState(extra.orbits[0].key);
   const orbit: ChangeOrbit = extra.orbits.find((o) => o.key === picked) ?? extra.orbits[0];
   const words = CAUSE_WORD[extra.cause];
-  const summary = `Before ${formatDate(extra.eventDate)}, ${words.event}, the satellite passed ${orbit.baselineDates.length} times to learn what normal looks like here. On ${formatDate(orbit.peakDropDate)}, ${km(orbit.peakDropKm2)} km² were ${words.weaker}. ${km(orbit.lastRiseKm2)} km² became brighter, which can be regrowth, wetter soil or debris.`;
+  const summary = t(
+    "Before {event_date}, {event}, the satellite passed {n} times to learn what normal looks like here. On {peak_date}, {drop} km² were {weaker}. {rise} km² became brighter, which can be regrowth, wetter soil or debris.",
+    {
+      event_date: formatDate(extra.eventDate),
+      event: t(words.event),
+      n: orbit.baselineDates.length,
+      peak_date: formatDate(orbit.peakDropDate),
+      drop: km(orbit.peakDropKm2),
+      weaker: t(words.weaker),
+      rise: km(orbit.lastRiseKm2),
+    },
+  );
 
   return (
     <div className="space-y-5">
       <p className="text-[15px] leading-relaxed text-ink/90">{summary}</p>
       {technical && (
-        <Switcher items={extra.orbits} value={orbit.key} label="Satellite track" onPick={setPicked} text={(o) => o.label} />
+        <Switcher items={extra.orbits} value={orbit.key} label={t("Satellite track")} onPick={setPicked} text={(o) => trackLabel(t, o.label)} />
       )}
       <dl className="grid grid-cols-2 gap-2.5">
-        <Stat label="Weaker echo" note={`on ${formatDate(orbit.peakDropDate)}`}>
+        <Stat label={t("Weaker echo")} note={t("on {date}", { date: formatDate(orbit.peakDropDate) })}>
           {km(orbit.peakDropKm2)} <Unit>km²</Unit>
         </Stat>
-        <Stat label="Stronger echo" note={`on ${formatDate(orbit.lastDate)}`}>
+        <Stat label={t("Stronger echo")} note={t("on {date}", { date: formatDate(orbit.lastDate) })}>
           {km(orbit.lastRiseKm2)} <Unit>km²</Unit>
         </Stat>
-        <Stat label="First look after" note={`${km(orbit.firstPostDropKm2)} km² weaker`}>
+        <Stat label={t("First look after")} note={t("{area} km² weaker", { area: km(orbit.firstPostDropKm2) })}>
           <span className="text-sm">{formatDate(orbit.firstPostDate)}</span>
         </Stat>
-        <Stat label="Event" note={`${orbit.baselineDates.length} passes before it`}>
+        <Stat label={t("Event")} note={t("{n} passes before it", { n: orbit.baselineDates.length })}>
           <span className="text-sm">{formatDate(extra.eventDate)}</span>
         </Stat>
       </dl>
@@ -620,50 +632,55 @@ function ChangeView({ extra, technical }: { extra: ChangeExtra; technical: boole
         tabs={[
           {
             key: "map",
-            label: "Map of the change",
+            label: t("Map of the change"),
             body: (
               <Figure
                 src={orbit.map}
                 size={orbit.mapSize}
-                alt="Map of where the radar echo changed after the event"
-                caption="Where the echo got weaker or stronger after the event, compared with the passes before it."
+                alt={t("Map of where the radar echo changed after the event")}
+                caption={t("Where the echo got weaker or stronger after the event, compared with the passes before it.")}
               />
             ),
           },
           {
             key: "passes",
             label: "Each pass",
-            body: <Passes frames={orbit.frames} caption="False colour: red and blue carry the co-polarised echo, green the cross-polarised one. Standing vegetation tends to look green." />,
+            body: (
+              <Passes
+                frames={orbit.frames}
+                caption={t("False colour: red and blue carry the co-polarised echo, green the cross-polarised one. Standing vegetation tends to look green.")}
+              />
+            ),
           },
         ]}
       />
       <div>
-        <Title>Land that changed, pass by pass</Title>
+        <Title>{t("Land that has changed, pass by pass")}</Title>
         <div className="mt-2">
           <SeriesChart
             unit="km²"
             zero
             decimals={1}
             series={[
-              { name: "Weaker echo", color: COLORS.warm, points: orbit.series.map((p) => ({ x: p.date, y: p.dropKm2, hollow: p.baseline })) },
-              { name: "Stronger echo", color: COLORS.second, points: orbit.series.map((p) => ({ x: p.date, y: p.riseKm2, hollow: p.baseline })) },
+              { name: t("Weaker echo"), color: COLORS.warm, points: orbit.series.map((p) => ({ x: p.date, y: p.dropKm2, hollow: p.baseline })) },
+              { name: t("Stronger echo"), color: COLORS.second, points: orbit.series.map((p) => ({ x: p.date, y: p.riseKm2, hollow: p.baseline })) },
             ]}
           />
         </div>
-        <p className="mt-1 text-[11px] leading-snug text-muted">Empty rings are the passes before the event, which set what is normal.</p>
+        <p className="mt-1 text-[11px] leading-snug text-muted">{t("Empty rings are the passes before the event, which set what is normal.")}</p>
       </div>
       <p className="text-xs leading-relaxed text-muted">
-        The date of the event was set by our team from public reports. The radar sees the echo change; linking it to {words.event} is our reading.
+        {t("The date of the event was set by our team from public reports. The radar sees the echo change; linking it to {event} is our reading.", { event: t(words.event) })}
       </p>
       {technical && (
         <Facts
           rows={[
-            ["Satellite", `NISAR, ${orbit.label}`],
-            ["Polarisations", `${orbit.coPol} and ${orbit.crossPol}`],
-            ["Threshold", orbit.thresholdDb === null ? "—" : `${orbit.thresholdDb} dB`],
-            ["Median filter", orbit.medianFilterPx === null ? "—" : `${orbit.medianFilterPx} px`],
-            ["Pixel", `${orbit.pixelM} m · ${orbit.crs}`],
-            ["Baseline passes", orbit.baselineDates.map((d) => formatDate(d)).join(", ")],
+            [t("Satellite"), `NISAR, ${trackLabel(t, orbit.label)}`],
+            [t("Polarisations"), t("{a} and {b}", { a: orbit.coPol, b: orbit.crossPol })],
+            [t("Threshold"), orbit.thresholdDb === null ? "—" : `${orbit.thresholdDb} dB`],
+            [t("Median filter"), orbit.medianFilterPx === null ? "—" : `${orbit.medianFilterPx} px`],
+            [t("Pixel"), `${orbit.pixelM} m · ${orbit.crs}`],
+            [t("Baseline passes"), orbit.baselineDates.map((d) => formatDate(d)).join(", ")],
           ]}
         />
       )}

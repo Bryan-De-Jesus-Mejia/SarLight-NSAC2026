@@ -1,7 +1,9 @@
 "use client";
 
 import type { ChangeType, EventDetail } from "@/data/types";
-import { formatDate, formatValue } from "@/lib/format";
+import { msg, t, useT } from "@/i18n/core";
+import { rich } from "@/i18n/rich";
+import { formatDate, formatNumber, formatValue } from "@/lib/format";
 
 /**
  * "For people": who lives there, what it means for those who farm, and what
@@ -12,19 +14,19 @@ import { formatDate, formatValue } from "@/lib/format";
 
 /** Round a head count the way people say it. */
 export function aboutPeople(n: number): string {
-  if (n < 100) return "fewer than 100";
+  if (n < 100) return t("fewer than 100");
   const digits = Math.floor(Math.log10(n)) - 1;
   const rounded = Math.round(n / 10 ** digits) * 10 ** digits;
-  return `about ${rounded.toLocaleString("en-US")}`;
+  return t("about {n}", { n: formatNumber(rounded) });
 }
 
 const ON_LAND: Partial<Record<ChangeType, string>> = {
-  flood: "live on land where water appeared",
-  storm: "live on land where crops and trees lost their echo after the wind",
-  drought: "live on land that dried out",
-  landslide: "live on slopes whose surface changed",
-  wildfire: "live in or right next to the burned land",
-  agriculture: "live among the fields that went under water",
+  flood: msg("live on land where water appeared"),
+  storm: msg("live on land where crops and trees lost their echo after the wind"),
+  drought: msg("live on land that dried out"),
+  landslide: msg("live on slopes whose surface changed"),
+  wildfire: msg("live in or right next to the burned land"),
+  agriculture: msg("live among the fields that went under water"),
 };
 
 type Level = "alert" | "watch" | "normal";
@@ -35,9 +37,9 @@ interface FieldWatch {
 }
 
 const LEVEL_STYLE: Record<Level, { label: string; color: string }> = {
-  alert: { label: "Alert", color: "#f87171" },
-  watch: { label: "Watch", color: "#fbbf24" },
-  normal: { label: "Seasonal", color: "#4ade80" },
+  alert: { label: msg("Alert"), color: "#f87171" },
+  watch: { label: msg("Watch"), color: "#fbbf24" },
+  normal: { label: msg("Seasonal"), color: "#4ade80" },
 };
 
 /** What the radar series says for those who farm the area, or null where there are no fields. */
@@ -47,16 +49,23 @@ export function fieldWatchOf(detail: EventDetail): FieldWatch | null {
   const km = (v: number) => `${formatValue(v)} km²`;
   if (x.kind === "change" && (x.cause === "wind" || x.cause === "heat")) {
     const o = x.orbits[0];
+    const params = { area: km(o.peakDropKm2), event: formatDate(x.eventDate), peak: formatDate(o.peakDropDate) };
     return x.cause === "wind"
       ? {
           level: "alert",
-          title: "Possible crop loss",
-          body: `${km(o.peakDropKm2)} of crops and trees lost their echo after the wind of ${formatDate(x.eventDate)}, the most by ${formatDate(o.peakDropDate)}. Flattened plants send back less. Expect a smaller harvest there.`,
+          title: t("Possible crop loss"),
+          body: t(
+            "{area} of crops and trees lost their echo after the wind of {event}, the most by {peak}. Flattened plants send back less. Expect a smaller harvest there.",
+            params,
+          ),
         }
       : {
           level: "alert",
-          title: "Fields drying",
-          body: `${km(o.peakDropKm2)} of land lost echo during the heat, the most by ${formatDate(o.peakDropDate)}. Dry soil and wilting crops send back less. Watch for a weaker harvest and thirsty livestock.`,
+          title: t("Fields drying"),
+          body: t(
+            "{area} of land lost echo during the heat, the most by {peak}. Dry soil and wilting crops send back less. Watch for a weaker harvest and thirsty livestock.",
+            params,
+          ),
         };
   }
   if (x.kind !== "agriculture" || detail.type !== "agriculture") return null;
@@ -64,62 +73,73 @@ export function fieldWatchOf(detail: EventDetail): FieldWatch | null {
   if (o.mode === "flood") {
     return {
       level: "watch",
-      title: "Fields under water",
-      body: `At the peak, on ${formatDate(o.peakDate)}, ${km(o.peakFloodKm2)} were under water, ${km(o.peakFloodedVegKm2)} of it with plants standing in it. Rice wants some water; weeks of deep water can drown it.`,
+      title: t("Fields under water"),
+      body: t(
+        "At the peak, on {date}, {total} were under water, {veg} of it with plants standing in it. Rice wants some water; weeks of deep water can drown it.",
+        { date: formatDate(o.peakDate), total: km(o.peakFloodKm2), veg: km(o.peakFloodedVegKm2) },
+      ),
     };
   }
   if (x.activity === "harvest") {
     return {
       level: "normal",
-      title: "Harvest under way",
-      body: `${o.harvestedPct}% of the crops the satellite watched (${km(o.harvestedKm2)}) were cut by ${formatDate(o.dates[o.dates.length - 1])}; the busiest stretch ended on ${formatDate(o.peakIntervalEnd)}. This is the season's normal rhythm, not a loss.`,
+      title: t("Harvest under way"),
+      body: t(
+        "{pct}% of the crops the satellite watched ({area}) were cut by {last}; the busiest stretch ended on {peak}. This is the season's normal rhythm, not a loss.",
+        { pct: o.harvestedPct, area: km(o.harvestedKm2), last: formatDate(o.dates[o.dates.length - 1]), peak: formatDate(o.peakIntervalEnd) },
+      ),
     };
   }
   return {
     level: "watch",
-    title: x.activity === "burning" ? "Fields cleared, likely by fire" : "Forest or plantation cleared",
+    title: x.activity === "burning" ? t("Fields cleared, likely by fire") : t("Forest or plantation cleared"),
     body:
       x.activity === "burning"
-        ? `${km(o.harvestedKm2)} of fields lost their cover after the harvest. Burning the stubble is fast, but it fills the air with smoke and takes nutrients from the soil.`
-        : `${km(o.harvestedKm2)} lost their tall cover. Land cleared of trees holds less water and soil, and stores less carbon.`,
+        ? t(
+            "{area} of fields lost their cover after the harvest. Burning the stubble is fast, but it fills the air with smoke and takes nutrients from the soil.",
+            { area: km(o.harvestedKm2) },
+          )
+        : t("{area} lost their tall cover. Land cleared of trees holds less water and soil, and stores less carbon.", {
+            area: km(o.harvestedKm2),
+          }),
   };
 }
 
 /** General safety guidance per kind of event. */
 export const ACTIONS: Partial<Record<ChangeType, string[]>> = {
   flood: [
-    "Know your way to higher ground before the rain; keep papers and medicine in a sealed bag.",
-    "Never walk or drive through moving water: 30 cm can carry a car away.",
-    "After the flood, boil or treat drinking water and avoid wading barefoot: floodwater spreads disease.",
+    msg("Know your way to higher ground before the rain; keep papers and medicine in a sealed bag."),
+    msg("Never walk or drive through moving water: 30 cm can carry a car away."),
+    msg("After the flood, boil or treat drinking water and avoid wading barefoot: floodwater spreads disease."),
   ],
   storm: [
-    "Tie down roofs and loose objects before a storm is forecast.",
-    "Keep away from fallen power lines and damaged trees.",
-    "Photograph damaged fields with the date: it helps when asking for aid or insurance.",
+    msg("Tie down roofs and loose objects before a storm is forecast."),
+    msg("Keep away from fallen power lines and damaged trees."),
+    msg("Photograph damaged fields with the date: it helps when asking for aid or insurance."),
   ],
   drought: [
-    "Store water covered: open containers breed the mosquitoes that carry dengue.",
-    "Work outdoors early or late and drink often; confusion and hot dry skin are signs of heat stroke.",
-    "Do not burn fields or rubbish in dry, windy weather.",
+    msg("Store water covered: open containers breed the mosquitoes that carry dengue."),
+    msg("Work outdoors early or late and drink often; confusion and hot dry skin are signs of heat stroke."),
+    msg("Do not burn fields or rubbish in dry, windy weather."),
   ],
   landslide: [
-    "Watch for new cracks in walls or ground, tilting poles and trees, or springs turning muddy.",
-    "Leave steep slopes and the foot of ravines during long, heavy rain.",
-    "Avoid building on cut slopes or close to a ravine edge.",
+    msg("Watch for new cracks in walls or ground, tilting poles and trees, or springs turning muddy."),
+    msg("Leave steep slopes and the foot of ravines during long, heavy rain."),
+    msg("Avoid building on cut slopes or close to a ravine edge."),
   ],
   wildfire: [
-    "Never burn fields or rubbish on dry, windy days.",
-    "Keep a strip around the house clear of dry grass and branches.",
-    "Report smoke early: a small fire is easy to stop.",
+    msg("Never burn fields or rubbish on dry, windy days."),
+    msg("Keep a strip around the house clear of dry grass and branches."),
+    msg("Report smoke early: a small fire is easy to stop."),
   ],
   earthquake: [
-    "During the shaking: drop, cover under a sturdy table, and hold on.",
-    "Agree on a meeting point with your family before it happens.",
-    "Afterwards, expect aftershocks, check for gas leaks and stay out of cracked buildings.",
+    msg("During the shaking: drop, cover under a sturdy table, and hold on."),
+    msg("Agree on a meeting point with your family before it happens."),
+    msg("Afterwards, expect aftershocks, check for gas leaks and stay out of cracked buildings."),
   ],
   agriculture: [
-    "Share these maps with your cooperative or extension office to plan the next season.",
-    "Keep a simple calendar of planting, harvest and losses for each field.",
+    msg("Share these maps with your cooperative or extension office to plan the next season."),
+    msg("Keep a simple calendar of planting, harvest and losses for each field."),
   ],
 };
 
@@ -141,14 +161,21 @@ export function peopleLine(detail: EventDetail): string | null {
   const exposed = p.exposedPeople;
   const verb = ON_LAND[detail.type];
   if (exposed !== undefined && exposed > 0 && verb) {
-    return `${cap(aboutPeople(exposed))} people ${verb}, out of ${aboutPeople(p.areaPeople)} in the whole area we watched.`;
+    return t("{count} people {verb}, out of {total} in the whole area we watched.", {
+      count: cap(aboutPeople(exposed)),
+      verb: t(verb),
+      total: aboutPeople(p.areaPeople),
+    });
   }
-  if (detail.type === "earthquake") return `${cap(aboutPeople(p.areaPeople))} people live in the area the radar watched move.`;
+  if (detail.type === "earthquake") {
+    return t("{count} people live in the area the radar watched move.", { count: cap(aboutPeople(p.areaPeople)) });
+  }
   if (detail.type === "glacier") return null;
-  return `${cap(aboutPeople(p.areaPeople))} people live in the area we watched.`;
+  return t("{count} people live in the area we watched.", { count: cap(aboutPeople(p.areaPeople)) });
 }
 
 export function Impact({ detail, compact = false }: { detail: EventDetail; compact?: boolean }) {
+  const tr = useT();
   const people = peopleLine(detail);
   const field = fieldWatchOf(detail);
   const actions = ACTIONS[detail.type];
@@ -158,16 +185,16 @@ export function Impact({ detail, compact = false }: { detail: EventDetail; compa
   const body = (
     <div className="space-y-3">
       {people && (
-        <Section title="Who lives there">
+        <Section title={tr("Who lives there")}>
           <p>{people}</p>
-          <p className="mt-1 text-[11px] text-muted">Estimate from the GHSL population grid (1 km squares, 2025), not a census.</p>
+          <p className="mt-1 text-[11px] text-muted">{tr("Estimate from the GHSL population grid (1 km squares, 2025), not a census.")}</p>
         </Section>
       )}
       {field && (
-        <Section title="For those who farm">
+        <Section title={tr("For those who farm")}>
           <p className="flex items-center gap-2">
             <span className="rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[#05070d]" style={{ background: LEVEL_STYLE[field.level].color }}>
-              {LEVEL_STYLE[field.level].label}
+              {tr(LEVEL_STYLE[field.level].label)}
             </span>
             <span className="font-medium text-ink">{field.title}</span>
           </p>
@@ -175,20 +202,16 @@ export function Impact({ detail, compact = false }: { detail: EventDetail; compa
         </Section>
       )}
       {actions && (
-        <Section title="What you can do">
+        <Section title={tr("What you can do")}>
           <ul className="list-disc space-y-1 pl-4 marker:text-muted">
             {actions.map((a) => (
-              <li key={a}>{a}</li>
+              <li key={a}>{tr(a)}</li>
             ))}
           </ul>
           <p className="mt-2 text-[12px] text-ink">
-            {home ? (
-              <>
-                Emergency: <b>9-1-1</b>. Follow the alerts of the <b>COE</b> and <b>Defensa Civil</b>.
-              </>
-            ) : (
-              "In an emergency, call your local emergency number and follow your civil protection's alerts."
-            )}
+            {home
+              ? rich(tr("Emergency: <b>9-1-1</b>. Follow the alerts of the <b>COE</b> and <b>Defensa Civil</b>."), { b: (c) => <b>{c}</b> })
+              : tr("In an emergency, call your local emergency number and follow your civil protection's alerts.")}
           </p>
         </Section>
       )}
@@ -197,8 +220,8 @@ export function Impact({ detail, compact = false }: { detail: EventDetail; compa
 
   if (compact) return body;
   return (
-    <section aria-label="For people" className="rounded-xl border border-line p-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">For people</p>
+    <section aria-label={tr("For people")} className="rounded-xl border border-line p-4">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">{tr("For people")}</p>
       <div className="mt-3">{body}</div>
     </section>
   );
