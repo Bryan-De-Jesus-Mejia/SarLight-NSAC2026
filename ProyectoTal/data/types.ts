@@ -10,6 +10,8 @@
  *  - EventDetail:  the full shape used by the case panel (fetched per event).
  */
 
+import type { ExtraAnalysis } from "./extraTypes";
+
 /** What the analysis was looking for. */
 export type ChangeType =
   | "wetland"
@@ -18,10 +20,14 @@ export type ChangeType =
   | "wildfire"
   | "earthquake"
   | "agriculture"
-  | "deformation";
+  | "deformation"
+  | "landslide";
 
 /** Where the numbers come from: radar scenes compared by our own pipeline. */
 export type DataSource = "analysis";
+
+/** Analyses that are not radar change maps carry their own shape (see extraTypes.ts). */
+export type { ExtraAnalysis } from "./extraTypes";
 
 export type SensorId = "nisar" | "opera";
 
@@ -176,11 +182,14 @@ export interface EventSummary {
   footprint: Array<[number, number]>;
   /** Small preview: the after image with the flagged pixels on top. */
   thumb: string;
+  /** Set for farming, ice and ground-movement analyses; absent for radar change maps. */
+  kind?: ExtraAnalysis["kind"];
 }
 
 export interface EventDetail extends EventSummary {
-  /** Main analysis first (NISAR when there is one). */
+  /** Main analysis first (NISAR when there is one). Empty for the cases that carry `extra`. */
   analyses: SensorAnalysis[];
+  extra?: ExtraAnalysis;
 }
 
 export interface EventFilters {
