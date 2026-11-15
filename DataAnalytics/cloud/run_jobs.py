@@ -110,9 +110,9 @@ def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
     return r
 
 
-def commit_analysis(names: list[str]):
-    """Commit + push SOLO de data/analisis (los datos crudos y los logs nunca se suben)."""
-    analysis = DATA / "analisis"
+def commit_analysis(names: list[str], only: Path | None = None):
+    """Commit + push SOLO de data/analisis, o solo de `only` (una carpeta de análisis). Nunca datos crudos ni logs."""
+    analysis = only or DATA / "analisis"
     big = [p for p in analysis.rglob("*") if p.is_file() and p.stat().st_size > GITHUB_MAX_MB * 2**20]
     git("add", "-A", "--", str(analysis))
     for p in big:
@@ -232,7 +232,8 @@ def main():
                     shutil.rmtree(DATA / "collections" / name, ignore_errors=True)
                 if args.commit:  # uno por uno: si algo corta la corrida, lo terminado ya está en GitHub
                     try:
-                        commit_analysis([name])
+                        if analysis_dir(name).exists():
+                            commit_analysis([name], only=analysis_dir(name))
                     except RuntimeError as e:
                         log(f"   AVISO: no se pudo subir {name}: {e}")
             fill()

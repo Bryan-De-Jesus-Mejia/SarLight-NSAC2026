@@ -3,5 +3,6 @@
   "framework": "nextjs",
   "installCommand": "cd ProyectoTal && npm ci",
   "buildCommand": "cd ProyectoTal && npm run build",
-  "outputDirectory": "ProyectoTal/.next"
+  "outputDirectory": "ProyectoTal/.next",
+  "ignoreCommand": "git log -1 --format=%ae | grep -q 'github-actions\\[bot\\]' || (git cat-file -e \"$VERCEL_GIT_PREVIOUS_SHA^{commit}\" 2>/dev/null && git diff --quiet \"$VERCEL_GIT_PREVIOUS_SHA\" HEAD -- ':/ProyectoTal')"
 }

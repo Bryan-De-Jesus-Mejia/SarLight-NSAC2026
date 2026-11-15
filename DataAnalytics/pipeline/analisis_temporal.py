@@ -64,6 +64,10 @@ FRAME_MAX_PX = 1500
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
+class OrbitSkip(Exception):
+    """Esta órbita no tiene las fechas que pide el modo (p.ej. ninguna después del evento): se salta."""
+
+
 def resolve_collection(path: Path) -> Path:
     if not path.is_absolute() and not path.exists():
         path = ROOT / path
@@ -221,7 +225,7 @@ def analyze_cosecha(out, dates, co, cross, grid, args) -> tuple[list, dict]:
 def analyze_inundacion(out, dates, co, cross, grid, args) -> tuple[list, dict]:
     base_idx = [i for i, d in enumerate(dates) if args.baseline_end and d[:10] <= args.baseline_end] or [0]
     if len(base_idx) >= len(dates):
-        raise SystemExit("La línea base incluye todas las fechas; ajusta --baseline-end.")
+        raise OrbitSkip(f"todas sus fechas son de la línea base (<= {args.baseline_end}); ninguna posterior")
     log(f"Línea base seca: {', '.join(dates[i][:10] for i in base_idx)}")
     base_co = np.nanmedian(np.stack([co[i] for i in base_idx]), 0)
     permanent = base_co <= args.water_max
@@ -286,12 +290,10 @@ def analyze_inundacion(out, dates, co, cross, grid, args) -> tuple[list, dict]:
 
 
 def analyze_cambio(out, dates, co, cross, grid, args) -> tuple[list, dict]:
-    if not args.event_date:
-        raise SystemExit("El modo cambio necesita --event-date YYYY-MM-DD.")
     base_idx = [i for i, d in enumerate(dates) if d[:10] < args.event_date]
     post_idx = [i for i, d in enumerate(dates) if d[:10] >= args.event_date]
     if not base_idx or not post_idx:
-        raise SystemExit(f"Hace falta al menos una fecha antes y otra después de {args.event_date}.")
+        raise OrbitSkip(f"no tiene fechas antes y después de {args.event_date}")
     log(f"Línea base (antes del evento): {', '.join(dates[i][:10] for i in base_idx)}")
     base_co = np.nanmedian(np.stack([co[i] for i in base_idx]), 0)
     base_x = np.nanmedian(np.stack([cross[i] for i in base_idx]), 0)
@@ -454,6 +456,8 @@ def main():
     ap.add_argument("--no-frames", action="store_true", help="No generar imágenes por fecha")
     args = ap.parse_args()
 
+    if args.mode == "cambio" and not args.event_date:
+        raise SystemExit("El modo cambio necesita --event-date YYYY-MM-DD.")
     collection = resolve_collection(args.collection)
     series = load_series(collection, args.source, args.group, args.start, args.end)
     log(f"Colección {collection.name}: {len(series)} órbitas | modo {args.mode}")
@@ -461,18 +465,24 @@ def main():
         raise SystemExit("No hay imágenes que cumplan los filtros en catalog.csv.")
 
     prog = Progress(len(series), f"Análisis {args.mode}", unit="órbitas", summary_every_s=0)
+    ok = 0
     for (src, folder), by_date in sorted(series.items()):
         tag = f"{src}/{folder}"
         try:
             msg = analyze_orbit(collection, src, folder, by_date, args)
             if msg:
+                ok += 1
                 prog.step(f"{tag}: {msg}")
             else:
                 prog.step(f"{tag}: menos de 2 fechas", status="SALTADA")
+        except OrbitSkip as e:
+            prog.step(f"{tag}: {e}", status="SALTADA")
         except Exception as e:
             prog.step(f"{tag}: {type(e).__name__}: {e}", status="ERROR")
             log(traceback.format_exc())
     prog.summary(final=True)
+    if not ok:  # código de salida != 0 solo si ninguna órbita se pudo analizar
+        raise SystemExit("Ninguna órbita se pudo analizar.")
 
 
 def analyze_orbit(collection: Path, src: str, folder: str, by_date: dict, args) -> str | None:
