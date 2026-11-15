@@ -36,12 +36,12 @@ chat gives guided, offline answers; it is not an AI model.
 ## Run it
 
 ```bash
-cd ProyectoTal
+cd nisar-explorer
 npm install
 npm run dev        # http://localhost:3000
 ```
 
-Deploying on Vercel: set **Root Directory** to `ProyectoTal`.
+Deploying on Vercel: set **Root Directory** to `nisar-explorer`.
 
 ## Reproduce the data
 
@@ -52,7 +52,7 @@ python pipeline/bulk_fetch.py --name <case> --bbox ... --start ... --end ...   #
 python pipeline/analisis_temporal.py --collection data/collections/<case> --mode inundacion|cambio|cosecha
 
 # 2. Export for the app
-cd ../ProyectoTal
+cd ../nisar-explorer
 python ../DataAnalytics/pipeline/export_web.py     # change maps
 node scripts/export-extra.mjs                      # floods over time, wind, heat, landslides, quakes, glaciers, farming
 node scripts/export-context.mjs                    # weather (Open-Meteo/ERA5) and earthquakes (USGS)

@@ -4,7 +4,7 @@ Consulta el catálogo público de NASA (CMR, no necesita credenciales) y guarda,
 L2 GCOV, la hora de adquisición y sus cuatro esquinas. La app dibuja esas huellas en orden
 cronológico sobre el globo ("el baile del satélite").
 
-Salida: ProyectoTal/public/geo/nisar-cycle.json
+Salida: nisar-explorer/public/geo/nisar-cycle.json
   { start, end, collection, count, scenes: [minutos_desde_start, lon1, lat1, ..., lon4, lat4, asc] }
 
 Uso:
@@ -19,7 +19,7 @@ from pathlib import Path
 
 import requests
 
-APP_DIR = Path(__file__).resolve().parents[2] / "ProyectoTal"
+APP_DIR = Path(__file__).resolve().parents[2] / "nisar-explorer"
 CMR = "https://cmr.earthdata.nasa.gov/search/granules.json"
 PAGE = 2000
 

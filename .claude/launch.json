@@ -4,7 +4,7 @@
     {
       "name": "globalearth-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "ProyectoTal", "run", "dev"],
+      "runtimeArgs": ["--prefix", "nisar-explorer", "run", "dev"],
       "port": 3000
     }
   ]

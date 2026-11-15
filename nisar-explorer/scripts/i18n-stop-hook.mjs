@@ -26,7 +26,7 @@ if (result.status === 0) process.exit(0);
 
 process.stderr.write(
   `Faltan traducciones al español (regla del proyecto: .claude/rules/i18n.md).\n` +
-    `Agrega cada frase a ProyectoTal/i18n/es/ con la clave idéntica al inglés y corre \`node scripts/check-i18n.mjs --raw\`.\n\n` +
+    `Agrega cada frase a nisar-explorer/i18n/es/ con la clave idéntica al inglés y corre \`node scripts/check-i18n.mjs --raw\`.\n\n` +
     `${result.stdout}${result.stderr}`,
 );
 process.exit(2);

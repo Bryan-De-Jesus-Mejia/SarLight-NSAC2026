@@ -66,12 +66,12 @@ no public API, no data download.
 
 ## 3. Architecture
 
-The app lives in the `ProyectoTal/` folder of the repository (run `npm`
+The app lives in the `nisar-explorer/` folder of the repository (run `npm`
 commands there). `.claude/launch.json` stays at the repository root.
 
 **Deploying to Vercel:** the repository root is not the app. In the Vercel
 project, set **Settings → Build and Deployment → Root Directory** to
-`ProyectoTal` (this cannot be set from `vercel.json`). `ProyectoTal/vercel.json`
+`nisar-explorer` (this cannot be set from `vercel.json`). `nisar-explorer/vercel.json`
 then pins the framework and the install/build commands.
 
 ```
