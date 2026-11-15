@@ -360,7 +360,6 @@ export function CasePanel() {
           </div>
         ) : detail && detail.id === selectedId ? (
           <>
-            {!detail.extra && (
             <button
               type="button"
               onClick={() => setStory(true)}
@@ -376,7 +375,6 @@ export function CasePanel() {
                 <span className="block text-xs text-muted">A step-by-step walk through what the radar saw</span>
               </span>
             </button>
-            )}
             <PanelBody key={detail.id} detail={detail} />
           </>
         ) : (
