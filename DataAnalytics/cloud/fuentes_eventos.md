@@ -1,0 +1,10 @@
+# Fuentes de los eventos meteorológicos
+
+| Añadido | Trabajo | Tipo | Lugar | Fecha del evento | NISAR antes → después | Fuentes |
+|---|---|---|---|---|---|---|
+| 2026-11-15 | inundacion_argentina_chaco | Inundación fluvial | Resistencia/Barranqueras, Chaco, Argentina (crecida Paraná/Paraguay/Bermejo) | 2026-10-26 (reporte) | 2026-10-24 → 2026-11-05 (P010 F102 DESC) | [OPS 27-oct-2026](https://www.paho.org/en/natural-hazards-monitoring/natural-hazards-monitoring-27-october-2026), [OPS 30-oct-2026](https://www.paho.org/en/natural-hazards-monitoring/natural-hazards-monitoring-30-october-2026) |
+| 2026-11-15 | inundacion_haiti_sud | Inundación | Llanura de Les Cayes, depto. Sud, Haití (bbox elegido en la zona más afectada; ~1 semana de lluvias hasta el 29-oct) | 2026-10-22 (aprox.) | 2026-10-12 → 2026-10-24 (P011 F079 DESC) | [OPS 30-oct-2026](https://www.paho.org/en/natural-hazards-monitoring/natural-hazards-monitoring-30-october-2026) |
+| 2026-11-15 | inundacion_colombia_cordoba | Inundación | Bajo Sinú (Lorica), Córdoba, Colombia (bbox elegido; 17 municipios afectados) | 2026-10-24 | 2026-10-15 → 2026-10-27 (P047 F006 ASCE) | [OPS 27-oct-2026](https://www.paho.org/en/natural-hazards-monitoring/natural-hazards-monitoring-27-october-2026) |
+| 2026-11-15 | inundacion_mexico_guaymas | Inundación | Guaymas, Sonora, México | 2026-10-31 (fin de semana previo al 2-nov) | 2026-10-26 → 2026-11-07 (P027 F075 DESC) | [OPS 3-nov-2026](https://www.paho.org/en/natural-hazards-monitoring/natural-hazards-monitoring-3-november-2026) |
+| 2026-11-15 | inundacion_mexico_ensenada | Inundación | El Salitral / arroyo San Carlos, Ensenada, Baja California, México | 2026-10-31 (fin de semana previo al 2-nov) | 2026-10-19 → 2026-10-31 (P106 F018 ASCE) | [OPS 3-nov-2026](https://www.paho.org/en/natural-hazards-monitoring/natural-hazards-monitoring-3-november-2026) |
+| 2026-11-15 | inundacion_panama_tocumen | Inundación urbana | Tocumen / Juan Díaz / Las Mañanitas, Panamá | 2026-10-14 (reporte SINAPROC) | 2026-10-05 → 2026-10-17 (P076 F006 ASCE) | [OPS 15-oct-2026](https://www.paho.org/en/natural-hazards-monitoring/natural-hazards-monitoring-15-october-2026) |
