@@ -27,5 +27,5 @@ export function LanguageSelect({ className = "" }: { className?: string }) {
   const lang = useLang();
   const setLang = useLangStore((s) => s.setLang);
 
-  return <Select value={lang} options={OPTIONS} onChange={setLang} label={t("Language")} icon={<GlobeIcon />} className={className} menuWidth="11rem" />;
+  return <Select value={lang} options={OPTIONS} onChange={setLang} label={t("Language")} icon={<GlobeIcon />} className={className} align="left" menuWidth="11rem" />;
 }

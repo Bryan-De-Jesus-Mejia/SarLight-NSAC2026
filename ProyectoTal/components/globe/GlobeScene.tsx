@@ -110,7 +110,8 @@ const asRegionGeometry = (d: object): { type: "Polygon"; coordinates: number[] }
 
 const pointLat = (d: object): number => asEvent(d).lat;
 const pointLng = (d: object): number => asEvent(d).lon;
-const pointColor = (d: object): string => CHANGE_TYPES[asEvent(d).type].color;
+// The discs stay only to catch hover and taps; the round markers are what is seen.
+const pointColor = (): string => "rgba(0, 0, 0, 0)";
 
 const pointLabel = (d: object): string => {
   const e = asEvent(d);
@@ -163,34 +164,6 @@ const footprintStroke = (): number => 0.03;
 const footprintDash = (): number => 0.04;
 const footprintGap = (): number => 0.025;
 const footprintAnimate = (): number => 5000;
-
-/* Hex density (orbit view) */
-interface HexBinLike {
-  points: object[];
-  sumWeight: number;
-}
-const hexWeight = (d: object): number => 0.4 + sizeIndex(asEvent(d));
-
-function hexColor(hex: HexBinLike, alpha: number): string {
-  // Cool blue → amber → coral as the cell gets busier.
-  const t = Math.min(1, hex.points.length / 9);
-  const stops: Array<[number, number, number]> = [
-    [110, 168, 255],
-    [242, 184, 102],
-    [251, 113, 133],
-  ];
-  const scaled = t * (stops.length - 1);
-  const i = Math.min(stops.length - 2, Math.floor(scaled));
-  const f = scaled - i;
-  const [a, b] = [stops[i], stops[i + 1]];
-  const c = a.map((v, k) => Math.round(v + (b[k] - v) * f));
-  return `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${alpha})`;
-}
-const hexTop = (h: object): string => hexColor(h as HexBinLike, 0.85);
-const hexSide = (h: object): string => hexColor(h as HexBinLike, 0.35);
-const hexAltitude = (h: object): number =>
-  0.006 + Math.min(0.1, (h as HexBinLike).sumWeight * 0.006);
-const hexMargin = (): number => 0.22;
 
 /* -------------------------------------------------------------------------- */
 /* Component                                                                  */
@@ -427,6 +400,17 @@ export default function GlobeScene() {
     const saved = savedViewRef.current;
     savedViewRef.current = null;
 
+    // Close in a step, not all the way out: the country of the case, with all its provinces in view.
+    const closed = allEvents.find((e) => e.id === previous);
+    const country = closed ? countries.find((c) => pointInRegion(closed.lon, closed.lat, c)) : undefined;
+    if (country) {
+      selectProvince(null);
+      const trail = trailForCountry(country, aspect);
+      setTrail(trail);
+      goTo(trail[trail.length - 1].view);
+      return;
+    }
+
     const state = useAppStore.getState();
     const trail = state.trail.filter((t) => t.kind !== "event");
     const last = trail[trail.length - 1];
@@ -434,7 +418,7 @@ export default function GlobeScene() {
     selectProvince(!backToOrbit && last?.kind === "province" ? (last.provinceId ?? null) : null);
     setTrail(backToOrbit ? [] : trail);
     if (saved) goTo(saved);
-  }, [selectedId, goTo, selectProvince, setTrail]);
+  }, [selectedId, goTo, selectProvince, setTrail, allEvents, countries, aspect]);
 
   /* ----------------------------- globe lifecycle --------------------------- */
 
@@ -954,10 +938,10 @@ export default function GlobeScene() {
 
   const pointAltitude = useCallback(
     (d: object): number => {
-      const e = asEvent(d);
-      return lod === "region" ? 0.006 + sizeIndex(e) * 0.03 : 0.003;
+      void d;
+      return 0.003;
     },
-    [lod],
+    [],
   );
 
   const pointRadius = useCallback(
@@ -1036,7 +1020,6 @@ export default function GlobeScene() {
   }, [allFeatured, selectedEvent, arrivedId, detail, story, lang]);
 
   const orbit = lod === "orbit";
-  const hexData = orbit ? events : NO_EVENTS;
   const nearRadius = lod === "region" ? 65 : lod === "country" ? 46 : 30;
   const pointsData = useMemo(() => {
     if (orbit) return NO_EVENTS;
@@ -1092,18 +1075,6 @@ export default function GlobeScene() {
           polygonCapCurvatureResolution={regionCurvature}
           polygonLabel={noLabel}
           polygonsTransitionDuration={0}
-          // Orbit: how busy each area is
-          hexBinPointsData={hexData}
-          hexBinPointLat={pointLat}
-          hexBinPointLng={pointLng}
-          hexBinPointWeight={hexWeight}
-          hexBinResolution={2}
-          hexMargin={hexMargin}
-          hexAltitude={hexAltitude}
-          hexTopColor={hexTop}
-          hexSideColor={hexSide}
-          hexBinMerge
-          hexTransitionDuration={0}
           // Region and closer: every signal as a flat disc
           pointsData={pointsData}
           pointLat={pointLat}

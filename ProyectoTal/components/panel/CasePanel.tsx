@@ -375,7 +375,7 @@ export function CasePanel() {
     <aside
       key={selectedId}
       aria-labelledby="case-title"
-      className="ge-panel glass pointer-events-auto absolute inset-x-0 bottom-0 z-20 flex max-h-[72dvh] flex-col rounded-t-2xl md:inset-x-auto md:bottom-5 md:right-5 md:top-[4.75rem] md:max-h-none md:w-[27rem] md:rounded-2xl"
+      className="ge-panel glass pointer-events-auto absolute inset-x-0 bottom-0 z-20 flex max-h-[72dvh] flex-col rounded-t-2xl md:inset-x-auto md:bottom-5 md:right-5 md:top-[5.75rem] md:max-h-none md:w-[27rem] md:rounded-2xl"
     >
       <header className="flex items-start gap-3 border-b border-line px-5 pb-4 pt-5">
         <span

@@ -144,7 +144,7 @@ export function ClassroomPanel() {
   }, [open, student, setOpen]);
 
   return (
-    <div ref={ref} className="pointer-events-none fixed right-5 top-[7.25rem] z-40 sm:right-8 xl:top-[4.75rem]">
+    <div ref={ref} className="pointer-events-none fixed right-5 top-[7.25rem] z-40 sm:right-8 xl:top-[5.75rem]">
       {shown && (
         <section
           role="dialog"

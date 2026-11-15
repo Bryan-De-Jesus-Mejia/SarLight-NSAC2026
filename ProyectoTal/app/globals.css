@@ -1584,7 +1584,7 @@ h3.font-display {
 
 .ge-brand em {
   font-style: italic;
-  color: var(--color-accent);
+  color: inherit;
 }
 
 /* The globe's hover tooltips float above everything: hide them while the menu is open. */

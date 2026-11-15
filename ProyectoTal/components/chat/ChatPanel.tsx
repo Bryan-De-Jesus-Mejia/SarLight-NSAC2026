@@ -222,7 +222,7 @@ export function ChatPanel() {
     <aside
       role="dialog"
       aria-label={t("Assistant chat")}
-      className="ge-chat ge-surface pointer-events-auto absolute inset-x-0 bottom-0 z-30 flex max-h-[85dvh] flex-col rounded-b-none md:inset-x-auto md:bottom-5 md:right-5 md:top-[4.75rem] md:max-h-none md:w-[27rem] md:rounded-2xl"
+      className="ge-chat ge-surface pointer-events-auto absolute inset-x-0 bottom-0 z-30 flex max-h-[85dvh] flex-col rounded-b-none md:inset-x-auto md:bottom-5 md:right-5 md:top-[5.75rem] md:max-h-none md:w-[27rem] md:rounded-2xl"
     >
       <header className="relative flex items-center gap-2 border-b border-line px-3 py-2.5">
         <div ref={listRef} className="relative min-w-0 flex-1">
