@@ -16,8 +16,8 @@ import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
 import { msg, useT, type TFunction } from "@/i18n/core";
 import { formatDate, formatNumber, formatValue } from "@/lib/format";
+import { rightToolOpenNow, useRightToolOpen } from "@/lib/panels";
 import { useAppStore } from "@/store/useAppStore";
-import { useChatStore } from "@/store/useChatStore";
 
 const DAY_MS = 86_400_000;
 /** First acquisition day of the validated NISAR L2 release at ASF (earlier ones are provisional). */
@@ -347,7 +347,7 @@ export function CasePanel() {
   const story = useAppStore((s) => s.story);
   const technical = useAppStore((s) => s.audience === "technical");
   const setStory = useAppStore((s) => s.setStory);
-  const chatOpen = useChatStore((s) => s.open);
+  const toolOpen = useRightToolOpen();
 
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -362,13 +362,13 @@ export function CasePanel() {
   useEffect(() => {
     if (selectedId === null) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !useAppStore.getState().story && !useChatStore.getState().open) select(null);
+      if (event.key === "Escape" && !useAppStore.getState().story && !rightToolOpenNow()) select(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [selectedId, select]);
 
-  if (selectedId === null || summary === null || story || chatOpen) return null;
+  if (selectedId === null || summary === null || story || toolOpen) return null;
 
   const meta = CHANGE_TYPES[summary.type];
 

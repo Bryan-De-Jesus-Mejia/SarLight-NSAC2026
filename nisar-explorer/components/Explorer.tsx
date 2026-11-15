@@ -17,6 +17,7 @@ import { OfflinePanel } from "@/components/OfflinePanel";
 import { PassesPanel } from "@/components/PassesPanel";
 import { CasePanel } from "@/components/panel/CasePanel";
 import { useT } from "@/i18n/core";
+import { useExclusivePanels } from "@/lib/panels";
 import { useAppStore } from "@/store/useAppStore";
 import { useClassroomStore } from "@/store/useClassroomStore";
 import { usePassesStore } from "@/store/usePassesStore";
@@ -26,6 +27,7 @@ const GlobeScene = dynamic(() => import("@/components/globe/GlobeScene"), { ssr:
 
 export function Explorer() {
   const t = useT();
+  useExclusivePanels();
   const status = useAppStore((s) => s.status);
   const errorMessage = useAppStore((s) => s.errorMessage);
   const globeReady = useAppStore((s) => s.globeReady);

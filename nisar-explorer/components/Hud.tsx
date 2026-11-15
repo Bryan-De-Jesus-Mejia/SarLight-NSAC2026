@@ -10,8 +10,8 @@ import { SearchBox } from "@/components/SearchBox";
 import { Timeline } from "@/components/Timeline";
 import { ViewSelect } from "@/components/ViewSelect";
 import { useT } from "@/i18n/core";
+import { useRightToolOpen } from "@/lib/panels";
 import { useAppStore } from "@/store/useAppStore";
-import { useChatStore } from "@/store/useChatStore";
 
 function DockButton({
   label,
@@ -47,7 +47,8 @@ export function Hud() {
   const t = useT();
   const hasEvents = useAppStore((s) => s.events.length > 0);
   const caseOpen = useAppStore((s) => s.selectedId !== null);
-  const chatOpen = useChatStore((s) => s.open);
+  // The assistant and the other right-hand tools take the same corner as the case panel.
+  const toolOpen = useRightToolOpen();
   // Story mode takes over the screen; the tutorial keeps every control visible, since it points at them.
   const demoActive = useAppStore((s) => s.story);
   const audience = useAppStore((s) => s.audience);
@@ -66,12 +67,10 @@ export function Hud() {
   const timelineOpen = dock.timeline;
   const layersOpen = dock.layers;
 
-  // On phones there is room for one panel at a time.
+  // The three panels rise from the same corner and cover each other: one at a time, on every screen.
   const toggle = (panel: "legend" | "timeline" | "layers") => {
     const open = !dock[panel];
-    if (open && window.matchMedia("(max-width: 767px)").matches) {
-      for (const other of ["legend", "timeline", "layers"] as const) if (other !== panel) setDock(other, false);
-    }
+    if (open) for (const other of ["legend", "timeline", "layers"] as const) if (other !== panel) setDock(other, false);
     setDock(panel, open);
   };
   const toggleLegend = () => toggle("legend");
@@ -127,7 +126,7 @@ export function Hud() {
 
       {hasEvents && !demoActive && (
         // With the case panel open, keep the dock clear of it.
-        <div className={`ge-dock ${caseOpen || chatOpen ? "max-md:hidden md:pr-[28rem]" : ""}`}>
+        <div className={`ge-dock ${caseOpen || toolOpen ? "max-md:hidden md:pr-[28rem]" : ""}`}>
           <div className="ge-dock-panels">
             <div className="ge-slot ge-slot--legend" data-tour="legend" data-open={legendOpen} inert={!legendOpen}>
               <Legend />
@@ -154,8 +153,8 @@ export function Hud() {
         </div>
       )}
 
-      {/* The case panel and the chat take this corner when they are open. */}
-      {ready && !caseOpen && !chatOpen && (
+      {/* The case panel and the right-hand tools take this corner when they are open. */}
+      {ready && !caseOpen && !toolOpen && (
         <a
           href={REPO_URL}
           target="_blank"
