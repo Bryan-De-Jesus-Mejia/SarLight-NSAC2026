@@ -1,0 +1,32 @@
+{
+  "collection": "agricola_deforestacion_amazonia",
+  "source": "nisar",
+  "orbit": "P111_F092_DESC",
+  "mode": "cosecha",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-21T22:01:01Z",
+    "2026-07-15T22:01:00Z",
+    "2026-09-01T22:00:57Z",
+    "2026-09-25T22:00:57Z",
+    "2026-10-19T22:00:58Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32721",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null
+  },
+  "vegetated_area_km2": 1966.086,
+  "harvested_area_km2": 97.898,
+  "harvested_pct_of_vegetated": 4.98,
+  "peak_interval_end": "2026-07-15T22:01:00Z",
+  "peak_interval_drop_km2": 42.755,
+  "median_harvest_doy": 244,
+  "mean_max_drop_db": -4.133
+}

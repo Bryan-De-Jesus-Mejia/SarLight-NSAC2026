@@ -1,0 +1,4 @@
+date,co_median_db,cross_median_db,valid_pct,drop_since_prev_km2,rise_since_prev_km2,harvested_cum_km2,harvested_cum_pct
+2026-07-07T11:58:36Z,-130.642,-137.437,59.94,0.0,0.0,0.0,0.0
+2026-07-19T11:58:36Z,-131.17,-138.609,59.98,1.05,25.938,0.933,0.66
+2026-08-12T11:58:34Z,-132.43,-139.448,60.28,11.378,19.306,12.251,8.67

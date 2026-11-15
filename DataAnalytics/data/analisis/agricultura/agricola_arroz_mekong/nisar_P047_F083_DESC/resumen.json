@@ -1,0 +1,36 @@
+{
+  "collection": "agricola_arroz_mekong",
+  "source": "nisar",
+  "orbit": "P047_F083_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-07-11T11:23:23Z",
+    "2026-07-23T11:23:22Z",
+    "2026-08-16T11:23:21Z",
+    "2026-08-28T11:23:20Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32648",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-07-31"
+  },
+  "baseline_dates": [
+    "2026-07-11T11:23:23Z",
+    "2026-07-23T11:23:22Z"
+  ],
+  "peak_date": "2026-08-28T11:23:20Z",
+  "peak_flood_km2": 348.65,
+  "peak_new_water_km2": 242.96,
+  "peak_flooded_veg_km2": 105.69,
+  "max_extent_km2": 532.054,
+  "max_extent_open_water_km2": 304.73,
+  "max_extent_flooded_veg_km2": 227.324,
+  "permanent_water_km2": 20.6
+}

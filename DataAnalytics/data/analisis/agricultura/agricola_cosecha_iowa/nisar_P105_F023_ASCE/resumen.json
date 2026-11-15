@@ -1,0 +1,32 @@
+{
+  "collection": "agricola_cosecha_iowa",
+  "source": "nisar",
+  "orbit": "P105_F023_ASCE",
+  "mode": "cosecha",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-08-20T11:22:26Z",
+    "2026-09-01T11:22:25Z",
+    "2026-09-13T11:22:25Z",
+    "2026-09-25T11:22:25Z",
+    "2026-10-07T11:22:25Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32615",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null
+  },
+  "vegetated_area_km2": 1120.294,
+  "harvested_area_km2": 583.863,
+  "harvested_pct_of_vegetated": 52.12,
+  "peak_interval_end": "2026-10-07T11:22:25Z",
+  "peak_interval_drop_km2": 574.103,
+  "median_harvest_doy": 280,
+  "mean_max_drop_db": -5.391
+}

@@ -1,0 +1,30 @@
+{
+  "collection": "agricola_arroz_sacramento",
+  "source": "nisar",
+  "orbit": "P135_F021_ASCE",
+  "mode": "cosecha",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-08-10T13:17:50Z",
+    "2026-08-22T13:17:50Z",
+    "2026-09-03T13:17:50Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32610",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null
+  },
+  "vegetated_area_km2": 768.453,
+  "harvested_area_km2": 56.454,
+  "harvested_pct_of_vegetated": 7.35,
+  "peak_interval_end": "2026-09-03T13:17:50Z",
+  "peak_interval_drop_km2": 44.62,
+  "median_harvest_doy": 246,
+  "mean_max_drop_db": -4.57
+}

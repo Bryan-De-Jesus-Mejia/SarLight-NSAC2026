@@ -1,0 +1,32 @@
+{
+  "collection": "agricola_arroz_delta_nilo",
+  "source": "nisar",
+  "orbit": "P028_F017_ASCE",
+  "mode": "cosecha",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-08-15T03:07:57Z",
+    "2026-08-27T03:07:57Z",
+    "2026-09-20T03:07:57Z",
+    "2026-10-02T03:07:57Z",
+    "2026-10-26T03:07:57Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32636",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null
+  },
+  "vegetated_area_km2": 1746.24,
+  "harvested_area_km2": 184.587,
+  "harvested_pct_of_vegetated": 10.57,
+  "peak_interval_end": "2026-09-20T03:07:57Z",
+  "peak_interval_drop_km2": 98.902,
+  "median_harvest_doy": 263,
+  "mean_max_drop_db": -3.976
+}

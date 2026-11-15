@@ -1,0 +1,29 @@
+{
+  "collection": "agricola_cosecha_saskatchewan",
+  "source": "nisar",
+  "orbit": "P062_F028_ASCE",
+  "mode": "cosecha",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-07-12T11:50:16Z",
+    "2026-07-24T11:50:15Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32613",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null
+  },
+  "vegetated_area_km2": 758.827,
+  "harvested_area_km2": 43.654,
+  "harvested_pct_of_vegetated": 5.75,
+  "peak_interval_end": "2026-07-24T11:50:15Z",
+  "peak_interval_drop_km2": 43.654,
+  "median_harvest_doy": 205,
+  "mean_max_drop_db": -3.886
+}

@@ -1,0 +1,35 @@
+{
+  "collection": "agricola_girasol_ucrania",
+  "source": "nisar",
+  "orbit": "P137_F064_DESC",
+  "mode": "cosecha",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-08-10T17:02:16Z",
+    "2026-08-22T17:02:16Z",
+    "2026-09-03T17:02:15Z",
+    "2026-09-15T17:02:15Z",
+    "2026-09-27T17:02:15Z",
+    "2026-10-09T17:02:15Z",
+    "2026-10-21T17:02:16Z",
+    "2026-11-02T17:02:16Z"
+  ],
+  "pixel_size_m": 40.0,
+  "crs": "EPSG:32636",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null
+  },
+  "vegetated_area_km2": 1009.053,
+  "harvested_area_km2": 1001.352,
+  "harvested_pct_of_vegetated": 99.24,
+  "peak_interval_end": "2026-09-27T17:02:15Z",
+  "peak_interval_drop_km2": 999.622,
+  "median_harvest_doy": 270,
+  "mean_max_drop_db": -7.908
+}
