@@ -1,0 +1,40 @@
+{
+  "collection": "inundacion_eeuu_hurricane_utah",
+  "source": "nisar",
+  "orbit": "P085_F070_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-12T02:31:40Z",
+    "2026-09-24T02:31:40Z",
+    "2026-10-06T02:31:40Z",
+    "2026-10-18T02:31:40Z",
+    "2026-10-30T02:31:41Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32611",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-21",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-12T02:31:40Z",
+    "2026-09-24T02:31:40Z",
+    "2026-10-06T02:31:40Z",
+    "2026-10-18T02:31:40Z"
+  ],
+  "peak_date": "2026-10-30T02:31:41Z",
+  "peak_flood_km2": 2.339,
+  "peak_new_water_km2": 0.429,
+  "peak_flooded_veg_km2": 1.91,
+  "max_extent_km2": 2.34,
+  "max_extent_open_water_km2": 0.429,
+  "max_extent_flooded_veg_km2": 1.91,
+  "permanent_water_km2": 0.568
+}
