@@ -1,0 +1,20 @@
+{
+  "days": 12,
+  "pixel_size_m": 80.0,
+  "crs": "EPSG:3413",
+  "incidence_deg_assumed": 37.0,
+  "reliable_pct": 68.38,
+  "noise_stable_ground_m_day": 0.066,
+  "speed_p50_m_day": 0.111,
+  "speed_p95_m_day": 1.37,
+  "speed_max_m_day": 7.15,
+  "fast_threshold_m_day": 1.0,
+  "fast_area_km2": 293.66,
+  "fast_median_m_day": 2.74,
+  "coherence_median": 0.095,
+  "group": "T063_F032_ASC",
+  "ref": "20260630",
+  "sec": "20260712",
+  "mid_date": "2026-07-06",
+  "direction": "ASC"
+}
