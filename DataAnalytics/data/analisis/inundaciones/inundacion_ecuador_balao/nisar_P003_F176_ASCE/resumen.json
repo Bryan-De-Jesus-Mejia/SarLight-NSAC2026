@@ -1,0 +1,39 @@
+{
+  "collection": "inundacion_ecuador_balao",
+  "source": "nisar",
+  "orbit": "P003_F176_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-06T11:01:11Z",
+    "2026-09-18T11:01:11Z",
+    "2026-09-30T11:01:12Z",
+    "2026-10-12T11:01:12Z",
+    "2026-10-24T11:01:12Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32717",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-11",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-06T11:01:11Z",
+    "2026-09-18T11:01:11Z",
+    "2026-09-30T11:01:12Z"
+  ],
+  "peak_date": "2026-10-24T11:01:12Z",
+  "peak_flood_km2": 12.459,
+  "peak_new_water_km2": 8.427,
+  "peak_flooded_veg_km2": 4.032,
+  "max_extent_km2": 18.888,
+  "max_extent_open_water_km2": 9.628,
+  "max_extent_flooded_veg_km2": 9.26,
+  "permanent_water_km2": 113.995
+}
