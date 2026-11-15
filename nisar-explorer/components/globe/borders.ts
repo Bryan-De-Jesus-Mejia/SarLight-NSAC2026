@@ -31,7 +31,7 @@ const LINE_RADIUS = GLOBE_RADIUS * 1.0007;
 const SHADE_SCALE = 1.0004;
 /** Longest line segment, in degrees: longer ones are split so they follow the curve. */
 const MAX_STEP_DEG = 0.6;
-const ACCENT = 0xf2b866;
+const ACCENT = 0xfb7185;
 
 const rad = Math.PI / 180;
 

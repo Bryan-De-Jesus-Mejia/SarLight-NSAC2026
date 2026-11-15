@@ -71,7 +71,7 @@ import { useAppStore, type TrailItem } from "@/store/useAppStore";
 
 const BACKGROUND_COLOR = "#040406";
 const ATMOSPHERE_COLOR = "#6ea8ff";
-const ACCENT_RGB = "242, 184, 102";
+const ACCENT_RGB = "251, 113, 133";
 /** Camera altitude on arrival at an event. */
 const EVENT_ALTITUDE = 0.085;
 /** Width of the case panel on desktop (27rem + margin), in px. */
