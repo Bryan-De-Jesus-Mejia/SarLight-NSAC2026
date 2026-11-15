@@ -1,0 +1,40 @@
+{
+  "collection": "viento_india_kakinada_yanam",
+  "source": "nisar",
+  "orbit": "P055_F010_ASCE",
+  "mode": "cambio",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-22T00:01:06Z",
+    "2026-10-04T00:01:06Z",
+    "2026-10-16T00:01:06Z",
+    "2026-10-28T00:01:07Z",
+    "2026-11-09T00:01:07Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32644",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": "2026-10-28"
+  },
+  "event_date": "2026-10-28",
+  "baseline_dates": [
+    "2026-09-22T00:01:06Z",
+    "2026-10-04T00:01:06Z",
+    "2026-10-16T00:01:06Z"
+  ],
+  "first_post_date": "2026-10-28T00:01:07Z",
+  "first_post_drop_km2": 51.796,
+  "first_post_rise_km2": 422.508,
+  "peak_drop_date": "2026-11-09T00:01:07Z",
+  "peak_drop_km2": 138.103,
+  "last_date": "2026-11-09T00:01:07Z",
+  "last_drop_km2": 138.103,
+  "last_rise_km2": 187.402
+}

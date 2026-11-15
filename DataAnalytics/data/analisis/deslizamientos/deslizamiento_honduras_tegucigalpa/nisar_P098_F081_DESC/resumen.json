@@ -1,0 +1,42 @@
+{
+  "collection": "deslizamiento_honduras_tegucigalpa",
+  "source": "nisar",
+  "orbit": "P098_F081_DESC",
+  "mode": "cambio",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-01T00:16:20Z",
+    "2026-09-13T00:16:20Z",
+    "2026-09-25T00:16:20Z",
+    "2026-10-07T00:16:20Z",
+    "2026-10-19T00:16:20Z",
+    "2026-10-31T00:16:20Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32616",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": "2026-10-08"
+  },
+  "event_date": "2026-10-08",
+  "baseline_dates": [
+    "2026-09-01T00:16:20Z",
+    "2026-09-13T00:16:20Z",
+    "2026-09-25T00:16:20Z",
+    "2026-10-07T00:16:20Z"
+  ],
+  "first_post_date": "2026-10-19T00:16:20Z",
+  "first_post_drop_km2": 0.242,
+  "first_post_rise_km2": 5.525,
+  "peak_drop_date": "2026-10-31T00:16:20Z",
+  "peak_drop_km2": 2.608,
+  "last_date": "2026-10-31T00:16:20Z",
+  "last_drop_km2": 2.608,
+  "last_rise_km2": 0.643
+}

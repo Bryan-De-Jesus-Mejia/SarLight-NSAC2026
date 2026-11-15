@@ -4,7 +4,8 @@ name: Procesar eventos SAR
 #   - cuando se sube un cambio a DataAnalytics/cloud/trabajos.txt (p.ej. un evento nuevo),
 #   - cada 30 minutos (reintenta lo que haya fallado),
 #   - o a mano desde la pestaña Actions (Run workflow).
-# Procesa los trabajos que aún no tienen análisis y sube SOLO DataAnalytics/data/analisis.
+# Procesa los trabajos que aún no tienen análisis y sube SOLO DataAnalytics/data/analisis,
+# en un único commit al final: cada push a main gasta uno de los deploys diarios de Vercel.
 # Necesita los secrets de Actions EARTHDATA_USERNAME y EARTHDATA_PASSWORD (Settings -> Secrets and variables -> Actions).
 on:
   push:
@@ -59,7 +60,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          python cloud/run_jobs.py --pendientes --commit --limpiar-crudos --paralelo 2 --tiempo-max-min 270
+          python cloud/run_jobs.py --pendientes --commit --un-commit --limpiar-crudos --paralelo 2 --tiempo-max-min 270
 
       # Un push hecho con este token no dispara workflows, pero workflow_dispatch sí: así continúa solo.
       - name: Relanzar si quedaron trabajos sin empezar

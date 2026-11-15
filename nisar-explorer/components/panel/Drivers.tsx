@@ -52,6 +52,7 @@ function keyDateOf(detail: EventDetail): string | null {
   const x = detail.extra;
   if (!x) return detail.analyses[0]?.post.date.slice(0, 10) ?? null;
   if (x.kind === "change" || x.kind === "displacement") return x.eventDate;
+  if (x.kind === "water") return x.orbits[0].lastDate;
   if (x.kind === "agriculture") {
     const o = x.orbits[0];
     return o.mode === "flood" ? o.peakDate : o.peakIntervalEnd;
@@ -114,6 +115,21 @@ function chainFor(type: ChangeType, detail: EventDetail, e: Evidence): Link[] {
   const activity = x?.kind === "agriculture" ? x.activity : null;
   const radar = (body: string): Link => ({ icon: ICON.radar, title: t(RADAR_TITLE), body: t(body) });
 
+  if (x?.kind === "water") {
+    return [
+      { icon: ICON.rain, title: t("Rain, or the lack of it"), body: t("Rivers fill the reservoir in the rainy months; in a dry spell, little comes in."), evidence: rainLine(e) },
+      {
+        icon: ICON.hand,
+        title: t("People draw the water"),
+        body:
+          x.body === "reservoir"
+            ? t("Turbines, irrigation canals and city pipes take water out all year, rain or no rain.")
+            : t("Farms and towns take water from the rivers that feed the lake, and the sun evaporates the rest."),
+      },
+      radar(msg("Calm water is a mirror: the pulse bounces away and the water turns black. As the level drops, the dark area shrinks and the bare shore appears.")),
+      { icon: ICON.people, title: t("What people live through"), body: t("Less water for homes and fields, and less electricity from the dam.") },
+    ];
+  }
   if (type === "flood" || type === "wetland") {
     return [
       { icon: ICON.rain, title: t("Heavy rain"), body: t("Rain falls faster than the soil and drains can take it."), evidence: rainLine(e) },

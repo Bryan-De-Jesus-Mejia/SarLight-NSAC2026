@@ -142,7 +142,7 @@ const CLASS_UNIFORM = { value: -1 };
 const UNIFORMS_A = createOverlayUniforms(CLASS_UNIFORM);
 const UNIFORMS_B = createOverlayUniforms(CLASS_UNIFORM);
 
-/** A case is open and a visitor (not the demo) is driving: map clicks close it instead of opening anything. */
+/** A case is open and a visitor (not the demo) is driving: map clicks close it instead of opening a region. */
 const caseLocked = (): boolean => {
   const state = useAppStore.getState();
   return state.selectedId !== null && !state.demoActive;
@@ -687,7 +687,7 @@ export default function GlobeScene() {
         // Picking a community: a marker is a place like any other.
         if (app.communityPicking) return app.setCommunityPoint({ lat: event.lat, lng: event.lon });
         if (app.story) return;
-        if (caseLocked()) useAppStore.getState().select(null);
+        if (caseLocked() && app.selectedId === event.id) app.select(null);
         else focusEvent(event);
       },
       reveal: (event) => {
@@ -926,8 +926,10 @@ export default function GlobeScene() {
         return app.setCommunityPoint({ lat: e.lat, lng: e.lon });
       }
       if (app.story) return;
-      if (caseLocked()) select(null);
-      else focusEvent(asEvent(d));
+      // Another case opens straight away; the open one closes.
+      const event = asEvent(d);
+      if (caseLocked() && app.selectedId === event.id) select(null);
+      else focusEvent(event);
     },
     [focusEvent, select],
   );

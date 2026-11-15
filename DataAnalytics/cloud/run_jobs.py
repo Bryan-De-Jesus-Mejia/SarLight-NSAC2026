@@ -145,6 +145,9 @@ def main():
                     help="Imprime solo cuántos trabajos quedan tras los filtros y sale (sin instalar dependencias)")
     ap.add_argument("--commit", action="store_true",
                     help="Commit + push de data/analisis tras cada trabajo (en vez de crear el .tar.gz)")
+    ap.add_argument("--un-commit", action="store_true",
+                    help="Con --commit: un solo commit + push al final, no uno por trabajo "
+                         "(cada push a main gasta un deploy de Vercel; lo usa GitHub Actions)")
     ap.add_argument("--pendientes", action="store_true",
                     help="Solo los trabajos que aún no tienen análisis en data/analisis (lo usa GitHub Actions)")
     ap.add_argument("--limpiar-crudos", action="store_true",
@@ -236,7 +239,7 @@ def main():
                           status="OK" if code == 0 else "ERROR")
                 if args.limpiar_crudos:
                     shutil.rmtree(DATA / "collections" / name, ignore_errors=True)
-                if args.commit:  # uno por uno: si algo corta la corrida, lo terminado ya está en GitHub
+                if args.commit and not args.un_commit:  # uno por uno: si algo corta la corrida, lo terminado ya está en GitHub
                     try:
                         if analysis_dir(name).exists():
                             commit_analysis([name], only=analysis_dir(name))
@@ -249,7 +252,7 @@ def main():
         (LOGS / "quedan.txt").write_text("\n".join(queue) + "\n")
         log(f"Tiempo agotado: {len(queue)} trabajos sin empezar ({', '.join(queue)}). Lista en {LOGS / 'quedan.txt'}")
     if args.commit:
-        commit_analysis(list(jobs))  # por si algún push intermedio falló
+        commit_analysis(list(jobs))  # el único con --un-commit; si no, por si algún push intermedio falló
     else:
         package(args.incluir_datos)
     if failed:
