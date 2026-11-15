@@ -2,6 +2,7 @@ import { msg } from "@/i18n/core";
 import { globeApi } from "@/lib/globeApi";
 import { CARIBBEAN_VIEW, caribbeanItem, worldItem } from "@/lib/trail";
 import { useAppStore } from "@/store/useAppStore";
+import { useChatStore } from "@/store/useChatStore";
 
 /**
  * The tutorial: how to use SarLight, one control at a time. Each step can set
@@ -31,6 +32,7 @@ function clear(keepCase = false) {
   s.closeDock();
   s.setCommunity(false);
   s.setLens(false);
+  useChatStore.getState().closeChat();
   if (!keepCase && s.selectedId) s.select(null);
 }
 
@@ -130,9 +132,16 @@ export const TUTORIAL_STEPS: readonly TutorialStep[] = [
     },
   },
   {
+    kicker: msg("The assistant"),
+    title: msg("Ask in your own words"),
+    body: msg("This button opens the AI assistant. Ask about a place, a kind of change or how the radar works, in Spanish or English: its answers come from our analyses. Press it again, or Esc, to close it."),
+    target: "assistant",
+    enter: () => clear(),
+  },
+  {
     kicker: msg("The menu"),
     title: msg("Everything else lives here"),
-    body: msg("The assistant chat, the next NISAR pass over a place, the satellite’s 12-day dance, cases for offline use, the methods, the language and this tour."),
+    body: msg("The next NISAR pass over a place, the satellite’s 12-day dance, cases for offline use, study mode, the methods, the language and this tour."),
     target: "menu",
     enter: () => clear(),
   },

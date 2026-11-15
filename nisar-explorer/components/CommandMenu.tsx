@@ -7,7 +7,6 @@ import { ViewIcon, useViewOptions } from "@/components/ViewSelect";
 import { LANGS, useLang, useLangStore, useT, type Lang } from "@/i18n/core";
 import { globeApi } from "@/lib/globeApi";
 import { useAppStore } from "@/store/useAppStore";
-import { useChatStore } from "@/store/useChatStore";
 import { MAX_SAVED, useClassroomStore } from "@/store/useClassroomStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { useOfflineStore } from "@/store/useOfflineStore";
@@ -72,9 +71,6 @@ function useCommands(): Command[] {
   const community = useAppStore((s) => s.community);
   const setCommunity = useAppStore((s) => s.setCommunity);
   const startDemo = useAppStore((s) => s.startDemo);
-  const chatOpen = useChatStore((s) => s.open);
-  const openChat = useChatStore((s) => s.openChat);
-  const closeChat = useChatStore((s) => s.closeChat);
   const saved = useClassroomStore((s) => s.items.length);
   const setClassroomOpen = useClassroomStore((s) => s.setOpen);
   const setOfflineOpen = useOfflineStore((s) => s.setOpen);
@@ -199,20 +195,6 @@ function useCommands(): Command[] {
       ),
       badge: downloaded > 0 ? String(downloaded) : undefined,
       run: () => setOfflineOpen(true),
-    });
-    list.push({
-      id: "assistant",
-      group: "study",
-      label: t("Ask the assistant"),
-      hint: t("Questions about what you see on the globe"),
-      icon: (
-        <Glyph>
-          <path d="M5 5.500h14a1.500 1.500 0 0 1 1.500 1.500v8a1.500 1.500 0 0 1-1.500 1.500h-7.500L7.500 20v-3.500H5A1.500 1.500 0 0 1 3.500 15V7A1.500 1.500 0 0 1 5 5.500z" />
-          <path d="M8 10h8M8 13h5" />
-        </Glyph>
-      ),
-      active: chatOpen,
-      run: chatOpen ? closeChat : openChat,
     });
   }
 

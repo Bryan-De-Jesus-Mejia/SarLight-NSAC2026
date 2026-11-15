@@ -60,6 +60,15 @@ export const tour: Record<string, string> = {
   "Start with a place you know. The figures come from real radar images processed by our team, not yet verified on the ground.":
     "Empieza por un lugar que conozcas. Las cifras salen de imágenes de radar reales procesadas por nuestro equipo, aún sin verificar en el terreno.",
 
+  // The assistant button (components/Hud.tsx) and its tutorial step
+  "Ask the assistant (AI)": "Pregúntale al asistente (IA)",
+  "The assistant": "El asistente",
+  "Ask in your own words": "Pregunta con tus palabras",
+  "This button opens the AI assistant. Ask about a place, a kind of change or how the radar works, in Spanish or English: its answers come from our analyses. Press it again, or Esc, to close it.":
+    "Este botón abre el asistente con IA. Pregunta por un lugar, un tipo de cambio o cómo funciona el radar, en español o en inglés: sus respuestas salen de nuestros análisis. Púlsalo otra vez, o Esc, para cerrarlo.",
+  "The next NISAR pass over a place, the satellite’s 12-day dance, cases for offline use, study mode, the methods, the language and this tour.":
+    "La próxima pasada de NISAR sobre un lugar, el baile de 12 días del satélite, casos para usar sin conexión, el modo estudio, los métodos, el idioma y este recorrido.",
+
   // Timeline period (components/Timeline.tsx)
   "Chosen period": "Período elegido",
   "Play the chosen period day by day": "Reproducir el período elegido día a día",
