@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_cambita_san_cristobal",
+  "source": "nisar",
+  "orbit": "P083_F079_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-23T23:16:57Z",
+    "2026-10-05T23:16:57Z",
+    "2026-10-17T23:16:57Z",
+    "2026-10-29T23:16:57Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32619",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-26",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-23T23:16:57Z",
+    "2026-10-05T23:16:57Z",
+    "2026-10-17T23:16:57Z"
+  ],
+  "peak_date": "2026-10-29T23:16:57Z",
+  "peak_flood_km2": 0.032,
+  "peak_new_water_km2": 0.009,
+  "peak_flooded_veg_km2": 0.023,
+  "max_extent_km2": 0.032,
+  "max_extent_open_water_km2": 0.009,
+  "max_extent_flooded_veg_km2": 0.023,
+  "permanent_water_km2": 0.0
+}

@@ -1,0 +1,35 @@
+{
+  "collection": "embalse_el_salvador_el_chaparral",
+  "source": "nisar",
+  "orbit": "P026_F082_DESC",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-28T00:25:15Z",
+    "2026-09-08T00:25:12Z",
+    "2026-10-26T00:25:13Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32616",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-28T00:25:15Z",
+  "first_water_km2": 1.351,
+  "last_date": "2026-10-26T00:25:13Z",
+  "last_water_km2": 1.265,
+  "change_km2": -0.086,
+  "change_pct": -6.4,
+  "min_date": "2026-09-08T00:25:12Z",
+  "min_water_km2": 0.546,
+  "max_date": "2026-06-28T00:25:15Z",
+  "max_water_km2": 1.351,
+  "range_pct_of_max": 59.6
+}

@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_tamayo_bahoruco",
+  "source": "nisar",
+  "orbit": "P090_F011_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-24T10:17:25Z",
+    "2026-10-06T10:17:25Z",
+    "2026-10-18T10:17:25Z",
+    "2026-10-30T10:17:26Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32618",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-26",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-24T10:17:25Z",
+    "2026-10-06T10:17:25Z",
+    "2026-10-18T10:17:25Z"
+  ],
+  "peak_date": "2026-10-30T10:17:26Z",
+  "peak_flood_km2": 0.981,
+  "peak_new_water_km2": 0.013,
+  "peak_flooded_veg_km2": 0.968,
+  "max_extent_km2": 0.981,
+  "max_extent_open_water_km2": 0.013,
+  "max_extent_flooded_veg_km2": 0.968,
+  "permanent_water_km2": 0.064
+}
