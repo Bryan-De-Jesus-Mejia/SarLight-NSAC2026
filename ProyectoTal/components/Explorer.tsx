@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
+import { ChatPanel } from "@/components/chat/ChatPanel";
 import { Curtain } from "@/components/Curtain";
 import { DemoPlayer } from "@/components/DemoPlayer";
 import { Hud } from "@/components/Hud";
@@ -87,6 +88,7 @@ export function Explorer() {
       <PassDance />
       <Story />
       <CasePanel />
+      <ChatPanel />
 
       {failed && (
         <div className="absolute inset-0 z-20 flex items-center justify-center p-6">

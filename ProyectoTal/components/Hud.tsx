@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { ChatButton } from "@/components/chat/ChatButton";
 import { GeneralIntro } from "@/components/GeneralIntro";
 import { LayersPanel } from "@/components/LayersPanel";
 import { Legend } from "@/components/Legend";
@@ -10,6 +11,7 @@ import { SearchBox } from "@/components/SearchBox";
 import { Timeline } from "@/components/Timeline";
 import { globeApi } from "@/lib/globeApi";
 import { useAppStore } from "@/store/useAppStore";
+import { useChatStore } from "@/store/useChatStore";
 
 function DockButton({
   label,
@@ -42,6 +44,7 @@ function DockButton({
 export function Hud() {
   const hasEvents = useAppStore((s) => s.events.length > 0);
   const caseOpen = useAppStore((s) => s.selectedId !== null);
+  const chatOpen = useChatStore((s) => s.open);
   // The guided demo and story mode both take over the screen.
   const demoActive = useAppStore((s) => s.demoActive || s.story);
   const startDemo = useAppStore((s) => s.startDemo);
@@ -59,6 +62,7 @@ export function Hud() {
     globeApi.current?.flyTo({ lat: 12, lng: -45, altitude: 2.7 });
     setDance(true);
   };
+  const [introOpen, setIntroOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
@@ -86,7 +90,9 @@ export function Hud() {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-5 sm:p-8">
-      {hasEvents && !demoActive && !caseOpen && !lens && !dance && audience === "general" && <GeneralIntro />}
+      {hasEvents && introOpen && !demoActive && !caseOpen && !lens && !dance && audience === "general" && (
+        <GeneralIntro onClose={() => setIntroOpen(false)} />
+      )}
 
       <Breadcrumb className="pointer-events-auto absolute left-1/2 top-5 z-10 -translate-x-1/2 max-2xl:top-[5.5rem]" />
 
@@ -101,27 +107,42 @@ export function Hud() {
               type="button"
               aria-pressed={audience === "general"}
               onClick={() => setAudience("general")}
-              title="For everyone: plain words"
+              title="Simple view"
               className={`flex w-10 items-center justify-center transition-colors hover:text-accent ${audience === "general" ? "bg-white/10 text-accent" : "text-muted"}`}
             >
               <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 20.300s-7.300-4.400-7.300-10A4.200 4.200 0 0 1 12 7.600a4.200 4.200 0 0 1 7.300 2.700c0 5.600-7.300 10-7.300 10z" />
               </svg>
-              <span className="sr-only">For everyone</span>
+              <span className="sr-only">Simple view</span>
             </button>
             <button
               type="button"
               aria-pressed={audience === "technical"}
               onClick={() => setAudience("technical")}
-              title="Technical: every number and method"
+              title="Technical view"
               className={`flex w-10 items-center justify-center border-l border-line transition-colors hover:text-accent ${audience === "technical" ? "bg-white/10 text-accent" : "text-muted"}`}
             >
               <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M4 19.500h16M7 16v-5M12 16V6M17 16v-8" />
               </svg>
-              <span className="sr-only">Technical</span>
+              <span className="sr-only">Technical view</span>
             </button>
           </div>
+        )}
+
+        {hasEvents && !demoActive && audience === "general" && (
+          <button
+            type="button"
+            aria-pressed={introOpen}
+            onClick={() => setIntroOpen((open) => !open)}
+            title="Where the land changed most"
+            className={`ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center transition-colors hover:text-accent ${introOpen ? "text-accent" : "text-ink"}`}
+          >
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M4 6.5h16M4 12h10.500M4 17.500h6" />
+            </svg>
+            <span className="sr-only">Where the land changed most</span>
+          </button>
         )}
 
         {hasEvents && !demoActive && <SearchBox className="w-full md:order-none md:w-72 max-md:order-last" />}
@@ -171,6 +192,8 @@ export function Hud() {
           </>
         )}
 
+{hasEvents && !demoActive && <ChatButton />}
+
 {!story && (
         <Link
             href="/methods"
@@ -187,7 +210,7 @@ export function Hud() {
 
       {hasEvents && !demoActive && (
         // With the case panel open, keep the dock clear of it.
-        <div className={`ge-dock ${caseOpen ? "max-md:hidden md:pr-[28rem]" : ""}`}>
+        <div className={`ge-dock ${caseOpen || chatOpen ? "max-md:hidden md:pr-[28rem]" : ""}`}>
           <div className="ge-dock-panels">
             <div className="ge-slot ge-slot--legend" data-open={legendOpen} inert={!legendOpen}>
               <Legend />

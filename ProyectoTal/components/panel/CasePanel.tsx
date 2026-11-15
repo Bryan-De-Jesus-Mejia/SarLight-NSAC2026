@@ -11,6 +11,7 @@ import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
 import { formatDate, formatValue } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
+import { useChatStore } from "@/store/useChatStore";
 
 const DAY_MS = 86_400_000;
 /** First acquisition day of the validated NISAR L2 release at ASF (earlier ones are provisional). */
@@ -270,6 +271,7 @@ export function CasePanel() {
   const story = useAppStore((s) => s.story);
   const technical = useAppStore((s) => s.audience === "technical");
   const setStory = useAppStore((s) => s.setStory);
+  const chatOpen = useChatStore((s) => s.open);
 
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -284,13 +286,13 @@ export function CasePanel() {
   useEffect(() => {
     if (selectedId === null) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !useAppStore.getState().story) select(null);
+      if (event.key === "Escape" && !useAppStore.getState().story && !useChatStore.getState().open) select(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [selectedId, select]);
 
-  if (selectedId === null || summary === null || story) return null;
+  if (selectedId === null || summary === null || story || chatOpen) return null;
 
   const meta = CHANGE_TYPES[summary.type];
 
@@ -325,10 +327,6 @@ export function CasePanel() {
           </h2>
           <p className="mt-1 text-sm text-muted">
             {summary.region} · {summary.country}
-          </p>
-          <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-accent/50 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
-            <span className="h-1 w-1 rounded-full bg-accent" aria-hidden="true" />
-            {technical ? "Real radar data · not verified on the ground" : "From real satellite images · a clue, not a verdict"}
           </p>
         </div>
         <button

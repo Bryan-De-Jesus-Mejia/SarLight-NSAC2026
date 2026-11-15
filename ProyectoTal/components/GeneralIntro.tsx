@@ -24,7 +24,7 @@ const placeOf = (name: string): string => name.replace(/ (flood|fire)? ?analysis
  * Welcome card of the general view: what this is, in two sentences, and the
  * places where the satellite saw the most land change. Each row opens its story.
  */
-export function GeneralIntro() {
+export function GeneralIntro({ onClose }: { onClose: () => void }) {
   const events = useAppStore((s) => s.events);
   const select = useAppStore((s) => s.select);
   const setStory = useAppStore((s) => s.setStory);
@@ -43,8 +43,17 @@ export function GeneralIntro() {
       aria-labelledby="intro-title"
       className="ge-intro glass pointer-events-auto absolute left-5 top-[6.5rem] w-[21.5rem] rounded-2xl p-5 max-md:hidden sm:left-8"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">For everyone</p>
-      <h2 id="intro-title" className="mt-2 font-display text-[1.7rem] leading-[1.08] text-ink">
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/10 hover:text-ink"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+      <h2 id="intro-title" className="pr-7 font-display text-[1.7rem] leading-[1.08] text-ink">
         The ground under us is always changing. A satellite is keeping watch.
       </h2>
       <p className="mt-3 text-sm leading-relaxed text-ink/85">
@@ -80,9 +89,6 @@ export function GeneralIntro() {
           );
         })}
       </ol>
-      <p className="mt-3 text-[11px] leading-snug text-muted">
-        Tap a place to hear its story. These are clues from real radar images, not yet confirmed on the ground.
-      </p>
     </section>
   );
 }
