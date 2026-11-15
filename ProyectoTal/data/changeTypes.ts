@@ -83,6 +83,15 @@ export const CHANGE_TYPES: Record<ChangeType, ChangeTypeMeta> = {
     // Strata lines with a downward arrow
     iconPath: "M3 5h18M3 10h5M16 10h5M12 8v11M8.5 15.5 12 19l3.5-3.5",
   },
+  landslide: {
+    label: "Landslides & collapses",
+    noun: "landslide",
+    blurb: "Slopes that give way, measured as ground movement toward or away from the satellite.",
+    color: "#d9a066",
+    rgb: [217, 160, 102],
+    // Slope with falling rocks
+    iconPath: "M3 19.5 10 7l4 7 2.5-3.5 4.5 9zM15.5 3.5h.01M19 5.5h.01M12.5 3h.01",
+  },
 };
 
 /** Fixed legend order. */
@@ -94,4 +103,5 @@ export const CHANGE_TYPE_ORDER: readonly ChangeType[] = [
   "earthquake",
   "agriculture",
   "deformation",
+  "landslide",
 ];
