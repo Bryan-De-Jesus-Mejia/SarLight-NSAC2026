@@ -85,6 +85,7 @@ const SOURCES: readonly { name: string; body: string }[] = [
   { name: msg("Population"), body: msg("People per 1 km square from the GHSL population grid (GHS-POP R2023A, epoch 2025, European Commission JRC, CC BY 4.0). We add up the people living on the pixels our analysis flagged; each 20 m pixel takes the density of its square, so the result is an estimate, not a census.") },
   { name: msg("Earthquake catalogue"), body: msg("Magnitude, depth, time and place of earthquakes from the USGS catalogue (public domain). For Venezuela (M7.5, 24 June 2026) and Mexico (M7.3, 17 July 2026) it independently confirms the events our radar analysis was built around.") },
   { name: msg("NISAR scene footprints"), body: msg("The 12-day dance draws the footprints of every NISAR L2 GCOV scene of one cycle, as listed in the public NASA CMR catalogue.") },
+  { name: msg("NISAR orbit and pass times"), body: msg("Orbital elements of NISAR (NORAD 65053, Space-Track data through SatNOGS DB or CelesTrak) walked forward with SGP4, and NASA's public CMR catalogue of real scenes. The radar looks to the left of its path and sees a strip about 240 km wide, roughly 430 to 680 km from the ground track: an estimate, not an official schedule.") },
 ];
 
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: ReactNode }) {

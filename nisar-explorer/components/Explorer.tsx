@@ -14,10 +14,12 @@ import { Story } from "@/components/Story";
 import { Welcome } from "@/components/Welcome";
 import { Community } from "@/components/Community";
 import { OfflinePanel } from "@/components/OfflinePanel";
+import { PassesPanel } from "@/components/PassesPanel";
 import { CasePanel } from "@/components/panel/CasePanel";
 import { useT } from "@/i18n/core";
 import { useAppStore } from "@/store/useAppStore";
 import { useClassroomStore } from "@/store/useClassroomStore";
+import { usePassesStore } from "@/store/usePassesStore";
 
 // The globe needs WebGL and `window`: client only.
 const GlobeScene = dynamic(() => import("@/components/globe/GlobeScene"), { ssr: false });
@@ -61,6 +63,7 @@ export function Explorer() {
     const timer = setTimeout(() => {
       const app = useAppStore.getState();
       if (go === "community") app.setCommunity(true);
+      if (go === "passes") usePassesStore.getState().setOpen(true);
       if (go === "study") {
         app.setAudience("student");
         useClassroomStore.getState().setOpen(true);
@@ -126,6 +129,7 @@ export function Explorer() {
       <ChatPanel />
       <ClassroomPanel />
       <OfflinePanel />
+      <PassesPanel />
       <CommandMenu />
 
       {failed && (

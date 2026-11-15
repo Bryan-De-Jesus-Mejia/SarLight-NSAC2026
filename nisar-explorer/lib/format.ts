@@ -44,6 +44,13 @@ export function formatDayMonth(timestamp: number): string {
   return new Intl.DateTimeFormat(tag(), { month: "short", day: "numeric" }).format(timestamp).replace(/\.$/, "");
 }
 
+/** "Sat, Nov 15, 4:30 PM" / "sáb, 15 nov, 16:30", in the visitor's own time zone. */
+export function formatWhen(timestamp: number, lang?: Lang): string {
+  return new Intl.DateTimeFormat(tag(lang), { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
+    .format(timestamp)
+    .replace(/\.(?=,| )/g, "");
+}
+
 /** Time of day for the chat list. */
 export function formatClock(timestamp: number): string {
   return new Intl.DateTimeFormat(tag(), { hour: "numeric", minute: "2-digit" }).format(timestamp);

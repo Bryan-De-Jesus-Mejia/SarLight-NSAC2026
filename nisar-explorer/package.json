@@ -19,6 +19,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-globe.gl": "^2.38.0",
+    "satellite.js": "7.2.0",
     "three": "^0.187.0",
     "three-conic-polygon-geometry": "^2.1.5",
     "three-slippy-map-globe": "^1.0.6",

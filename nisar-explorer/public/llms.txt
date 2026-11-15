@@ -10,6 +10,7 @@ Every figure on the site comes from real radar scenes compared pass against pass
 - Ask "Is my community at risk?" to see what the radar found around any place.
 - Read each case as a step-by-step story, in plain words or with the technical detail.
 - Use the study mode to save up to three cases and print a study guide (PDF) with a lesson plan, questions and a quiz, in English or Spanish.
+- See when NISAR can next image a place (an estimate from public orbit data and NASA's catalogue of real scenes, not an official schedule).
 - Chat with an assistant that answers only from the analysed data.
 - The interface is available in English and Spanish.
 

@@ -11,6 +11,7 @@ import { useChatStore } from "@/store/useChatStore";
 import { MAX_SAVED, useClassroomStore } from "@/store/useClassroomStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { useOfflineStore } from "@/store/useOfflineStore";
+import { usePassesStore } from "@/store/usePassesStore";
 
 type Group = "explore" | "study" | "settings" | "learn";
 
@@ -77,6 +78,7 @@ function useCommands(): Command[] {
   const saved = useClassroomStore((s) => s.items.length);
   const setClassroomOpen = useClassroomStore((s) => s.setOpen);
   const setOfflineOpen = useOfflineStore((s) => s.setOpen);
+  const setPassesOpen = usePassesStore((s) => s.setOpen);
   const downloaded = useOfflineStore((s) => Object.keys(s.meta.cases).length);
 
   const live = hasEvents && !demoActive && !story;
@@ -107,6 +109,19 @@ function useCommands(): Command[] {
       ),
       active: community,
       run: () => setCommunity(!community),
+    });
+    list.push({
+      id: "passes",
+      group: "explore",
+      label: t("Next NISAR pass"),
+      hint: t("See when the satellite can image a place"),
+      icon: (
+        <Glyph>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M4.500 12a7.500 7.500 0 0 1 7.500-7.500M19.500 12A7.500 7.500 0 0 1 12 19.500M12 2v2M12 20v2M2 12h2M20 12h2" />
+        </Glyph>
+      ),
+      run: () => setPassesOpen(true),
     });
     if (audience !== "technical") {
       list.push({
