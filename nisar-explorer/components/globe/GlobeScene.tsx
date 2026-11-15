@@ -15,6 +15,7 @@ import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { EventSummary } from "@/data/types";
 import { useElementSize } from "@/hooks/useElementSize";
 import { useGeoData } from "@/hooks/useGeoData";
+import { useLowPower } from "@/hooks/useLowPower";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useVisibleEvents } from "@/hooks/useVisibleEvents";
 import { countryName } from "@/i18n/countries";
@@ -196,6 +197,12 @@ export default function GlobeScene() {
   const [webgl] = useState(isWebGLAvailable);
   const [starfieldUrl] = useState(createStarfieldDataUrl);
   const [sceneReady, setSceneReady] = useState(false);
+  // Light mode for modest devices: no idle spin, one ring, plain pixel ratio (see hooks/useLowPower).
+  const lite = useLowPower(sceneReady);
+  const liteRef = useRef(lite);
+  useEffect(() => {
+    liteRef.current = lite;
+  }, [lite]);
   /** Id of the case the camera has finished flying to. */
   const [arrivedId, setArrivedId] = useState<string | null>(null);
   const overlay = useAppStore((s) => s.overlay);
@@ -651,7 +658,7 @@ export default function GlobeScene() {
     if (!sceneReady || !globe) return;
 
     const controls = globe.controls();
-    const shouldRotate = !reducedMotion && selectedId === null && lod === "orbit";
+    const shouldRotate = !reducedMotion && !lite && selectedId === null && lod === "orbit";
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     controls.autoRotate = shouldRotate;
@@ -675,7 +682,12 @@ export default function GlobeScene() {
       controls.removeEventListener("start", onStart);
       controls.removeEventListener("end", onEnd);
     };
-  }, [sceneReady, reducedMotion, selectedId, lod]);
+  }, [sceneReady, reducedMotion, selectedId, lod, lite]);
+
+  // Light mode draws at one pixel per CSS pixel, whatever the screen.
+  useEffect(() => {
+    if (sceneReady) globeRef.current?.renderer().setPixelRatio(lite ? 1 : FULL_RATIO);
+  }, [sceneReady, lite]);
 
   useEffect(() => {
     return () => setGlobeReady(false);
@@ -752,7 +764,7 @@ export default function GlobeScene() {
       if (now - last >= 500) {
         const info = globe.renderer().info;
         const fps = Math.round((frames * 1000) / (now - last));
-        out.textContent = `${fps} fps · ${info.render.calls} calls · ${Math.round(info.render.triangles / 1000)}k tris · ${useAppStore.getState().lod}`;
+        out.textContent = `${fps} fps · ${info.render.calls} calls · ${Math.round(info.render.triangles / 1000)}k tris · ${useAppStore.getState().lod}${liteRef.current ? " · lite" : ""}`;
         frames = 0;
         last = now;
       }
@@ -965,11 +977,13 @@ export default function GlobeScene() {
 
   const ringsData = useMemo(() => {
     if (reducedMotion || story) return NO_EVENTS;
+    // Every ring is its own animated mesh: on a modest device only the open case pulses.
+    if (lite) return selectedEvent ? [selectedEvent] : NO_EVENTS;
     if (selectedEvent && !featured.some((e) => e.id === selectedEvent.id)) {
       return [...featured, selectedEvent];
     }
     return featured;
-  }, [reducedMotion, featured, selectedEvent, story]);
+  }, [reducedMotion, featured, selectedEvent, story, lite]);
 
   const ringMaxRadius = useCallback(
     (d: object): number => (asEvent(d).id === selectedId ? 2.4 : 4.5) * markerScale,
@@ -980,7 +994,8 @@ export default function GlobeScene() {
     [selectedId, markerScale],
   );
   const ringPeriod = useCallback(
-    (d: object): number => (asEvent(d).id === selectedId ? 1100 : 1500),
+    // About two live rings per case instead of four: with ~100 cases each ring is a draw call.
+    (d: object): number => (asEvent(d).id === selectedId ? 1100 : 2600),
     [selectedId],
   );
 
@@ -1117,7 +1132,7 @@ export default function GlobeScene() {
           pathStroke={footprintStroke}
           pathDashLength={footprintDash}
           pathDashGap={footprintGap}
-          pathDashAnimateTime={reducedMotion ? 0 : footprintAnimate()}
+          pathDashAnimateTime={reducedMotion || lite ? 0 : footprintAnimate()}
           pathTransitionDuration={0}
           // Focusable DOM markers and the selected case's callout
           htmlElementsData={htmlData}
