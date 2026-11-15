@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_mexico_la_paz",
+  "source": "nisar",
+  "orbit": "P027_F076_DESC",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-10-02T02:01:45Z",
+    "2026-10-14T02:01:45Z",
+    "2026-10-26T02:01:45Z",
+    "2026-11-07T02:01:45Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32612",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-30",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-10-02T02:01:45Z",
+    "2026-10-14T02:01:45Z",
+    "2026-10-26T02:01:45Z"
+  ],
+  "peak_date": "2026-11-07T02:01:45Z",
+  "peak_flood_km2": 21.028,
+  "peak_new_water_km2": 19.998,
+  "peak_flooded_veg_km2": 1.03,
+  "max_extent_km2": 21.028,
+  "max_extent_open_water_km2": 19.998,
+  "max_extent_flooded_veg_km2": 1.03,
+  "permanent_water_km2": 24.536
+}
