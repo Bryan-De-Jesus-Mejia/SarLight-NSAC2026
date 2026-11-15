@@ -21,7 +21,9 @@ export type ChangeType =
   | "earthquake"
   | "agriculture"
   | "deformation"
-  | "landslide";
+  | "landslide"
+  | "storm"
+  | "drought";
 
 /** Where the numbers come from: radar scenes compared by our own pipeline. */
 export type DataSource = "analysis";
@@ -186,10 +188,25 @@ export interface EventSummary {
   kind?: ExtraAnalysis["kind"];
 }
 
+/** Real-world records around the case, for the "Why it happened" chain. */
+export interface CaseContext {
+  lat: number;
+  lon: number;
+  weather?: {
+    dates: string[];
+    rainMm: Array<number | null>;
+    tmaxC: Array<number | null>;
+    gustKmh: Array<number | null>;
+  };
+  quakes?: Array<{ mag: number; place: string; time: string; depthKm: number; lat: number; lon: number; url: string }>;
+}
+
 export interface EventDetail extends EventSummary {
   /** Main analysis first (NISAR when there is one). Empty for the cases that carry `extra`. */
   analyses: SensorAnalysis[];
   extra?: ExtraAnalysis;
+  /** Weather and earthquake records around the case (Open-Meteo, USGS). */
+  context?: CaseContext;
 }
 
 export interface EventFilters {

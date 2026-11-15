@@ -2,7 +2,10 @@
 
 import { useState, type ReactNode } from "react";
 import { SeriesChart } from "@/components/panel/SeriesChart";
+import { Drivers } from "@/components/panel/Drivers";
 import type {
+  ChangeExtra,
+  ChangeOrbit,
   DisplacementExtra,
   DisplacementPair,
   FarmExtra,
@@ -143,6 +146,13 @@ const doyToIso = (doy: number, year: string): string =>
 
 /* -------------------------------- farming -------------------------------- */
 
+const SETTING_NOTE: Record<NonNullable<FarmExtra["setting"]>, string> = {
+  river: "This is the riverside, where homes sit close to the water.",
+  town: "This is a dense neighbourhood: even a small flooded area here means streets and homes under water.",
+  coast: "Here the river meets the sea, among towns, cane fields and roads.",
+  valley: "In a mountain valley, water gathers fast in the low land along the river.",
+};
+
 const ACTIVITY_WORD: Record<FarmExtra["activity"], string> = {
   harvest: "looks harvested",
   flood: "flooded",
@@ -159,7 +169,7 @@ function FarmView({ extra, technical }: { extra: FarmExtra; technical: boolean }
   const summary =
     orbit.mode === "harvest"
       ? `${km(orbit.harvestedKm2)} km² of land (${orbit.harvestedPct}% of the vegetation the satellite watched) ${ACTIVITY_WORD[extra.activity]}: its radar echo dropped between ${formatDate(first)} and ${formatDate(last)}. The busiest stretch ended on ${formatDate(orbit.peakIntervalEnd)}, when ${km(orbit.peakIntervalDropKm2)} km² changed in one step.`
-      : `At its peak, on ${formatDate(orbit.peakDate)}, about ${km(orbit.peakFloodKm2)} km² were under water: ${km(orbit.peakNewWaterKm2)} km² of new open water and ${km(orbit.peakFloodedVegKm2)} km² of flooded vegetation, compared with the weeks before. In rice country fields are also flooded on purpose, so not all of it is a disaster.`;
+      : `At its peak, on ${formatDate(orbit.peakDate)}, about ${km(orbit.peakFloodKm2)} km² were under water: ${km(orbit.peakNewWaterKm2)} km² of new open water and ${km(orbit.peakFloodedVegKm2)} km² of flooded vegetation, compared with the weeks before.${extra.setting ? ` ${SETTING_NOTE[extra.setting]}` : " In rice country fields are also flooded on purpose, so not all of it is a disaster."}`;
 
   const stats =
     orbit.mode === "harvest" ? (
@@ -470,11 +480,117 @@ function DisplacementView({ detail, extra, technical }: { detail: EventDetail; e
 }
 
 /** Entry point: picks the view that matches the kind of analysis. */
+
+/* ------------------------- dated events (change mode) -------------------- */
+
+const CAUSE_WORD: Record<ChangeExtra["cause"], { event: string; weaker: string }> = {
+  wind: { event: "the windstorm", weaker: "standing crops and trees that lost their echo, as if knocked down" },
+  heat: { event: "the start of the heat wave", weaker: "land whose echo weakened, as soil and plants dried" },
+  landslide: { event: "the date of the landslide reports", weaker: "slopes whose echo changed, where ground may have moved" },
+};
+
+function ChangeView({ extra, technical }: { extra: ChangeExtra; technical: boolean }) {
+  const [picked, setPicked] = useState(extra.orbits[0].key);
+  const orbit: ChangeOrbit = extra.orbits.find((o) => o.key === picked) ?? extra.orbits[0];
+  const words = CAUSE_WORD[extra.cause];
+  const summary = `Before ${formatDate(extra.eventDate)}, ${words.event}, the satellite passed ${orbit.baselineDates.length} times to learn what normal looks like here. On ${formatDate(orbit.peakDropDate)}, ${km(orbit.peakDropKm2)} km² were ${words.weaker}. ${km(orbit.lastRiseKm2)} km² became brighter, which can be regrowth, wetter soil or debris.`;
+
+  return (
+    <div className="space-y-5">
+      <p className="text-[15px] leading-relaxed text-ink/90">{summary}</p>
+      {technical && (
+        <Switcher items={extra.orbits} value={orbit.key} label="Satellite track" onPick={setPicked} text={(o) => o.label} />
+      )}
+      <dl className="grid grid-cols-2 gap-2.5">
+        <Stat label="Weaker echo" note={`on ${formatDate(orbit.peakDropDate)}`}>
+          {km(orbit.peakDropKm2)} <Unit>km²</Unit>
+        </Stat>
+        <Stat label="Stronger echo" note={`on ${formatDate(orbit.lastDate)}`}>
+          {km(orbit.lastRiseKm2)} <Unit>km²</Unit>
+        </Stat>
+        <Stat label="First look after" note={`${km(orbit.firstPostDropKm2)} km² weaker`}>
+          <span className="text-sm">{formatDate(orbit.firstPostDate)}</span>
+        </Stat>
+        <Stat label="Event" note={`${orbit.baselineDates.length} passes before it`}>
+          <span className="text-sm">{formatDate(extra.eventDate)}</span>
+        </Stat>
+      </dl>
+      <Tabs
+        key={orbit.key}
+        tabs={[
+          {
+            key: "map",
+            label: "Map of the change",
+            body: (
+              <Figure
+                src={orbit.map}
+                size={orbit.mapSize}
+                alt="Map of where the radar echo changed after the event"
+                caption="Where the echo got weaker or stronger after the event, compared with the passes before it."
+              />
+            ),
+          },
+          {
+            key: "passes",
+            label: "Each pass",
+            body: <Passes frames={orbit.frames} caption="False colour: red and blue carry the co-polarised echo, green the cross-polarised one. Standing vegetation tends to look green." />,
+          },
+        ]}
+      />
+      <div>
+        <Title>Land that changed, pass by pass</Title>
+        <div className="mt-2">
+          <SeriesChart
+            unit="km²"
+            zero
+            decimals={1}
+            series={[
+              { name: "Weaker echo", color: COLORS.warm, points: orbit.series.map((p) => ({ x: p.date, y: p.dropKm2, hollow: p.baseline })) },
+              { name: "Stronger echo", color: COLORS.second, points: orbit.series.map((p) => ({ x: p.date, y: p.riseKm2, hollow: p.baseline })) },
+            ]}
+          />
+        </div>
+        <p className="mt-1 text-[11px] leading-snug text-muted">Empty rings are the passes before the event, which set what is normal.</p>
+      </div>
+      <p className="text-xs leading-relaxed text-muted">
+        The date of the event was set by our team from public reports. The radar sees the echo change; linking it to {words.event} is our reading.
+      </p>
+      {technical && (
+        <Facts
+          rows={[
+            ["Satellite", `NISAR, ${orbit.label}`],
+            ["Polarisations", `${orbit.coPol} and ${orbit.crossPol}`],
+            ["Threshold", orbit.thresholdDb === null ? "—" : `${orbit.thresholdDb} dB`],
+            ["Median filter", orbit.medianFilterPx === null ? "—" : `${orbit.medianFilterPx} px`],
+            ["Pixel", `${orbit.pixelM} m · ${orbit.crs}`],
+            ["Baseline passes", orbit.baselineDates.map((d) => formatDate(d)).join(", ")],
+          ]}
+        />
+      )}
+    </div>
+  );
+}
+
 export function ExtraBody({ detail }: { detail: EventDetail }) {
   const technical = useAppStore((s) => s.audience === "technical");
   const extra = detail.extra;
   if (!extra) return null;
-  if (extra.kind === "agriculture") return <FarmView extra={extra} technical={technical} />;
-  if (extra.kind === "glacier") return <GlacierView extra={extra} technical={technical} />;
-  return <DisplacementView detail={detail} extra={extra} technical={technical} />;
+  const body =
+    extra.kind === "agriculture" ? (
+      <FarmView extra={extra} technical={technical} />
+    ) : extra.kind === "glacier" ? (
+      <GlacierView extra={extra} technical={technical} />
+    ) : extra.kind === "change" ? (
+      <ChangeView extra={extra} technical={technical} />
+    ) : (
+      <DisplacementView detail={detail} extra={extra} technical={technical} />
+    );
+  return (
+    <div className="space-y-7">
+      {body}
+      <div className="rounded-2xl border border-line bg-white/[0.03] p-4">
+        <Drivers detail={detail} />
+      </div>
+    </div>
+  );
 }

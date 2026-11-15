@@ -562,6 +562,7 @@ export default function GlobeScene() {
         canvas.height - (clientY - rect.top) * ratio,
         LENS_RADIUS_PX * ratio,
       );
+      UNIFORMS_A.lens.value.copy(UNIFORMS_B.lens.value);
       if (lensRef.current) {
         lensRef.current.style.transform = `translate(${clientX - rect.left}px, ${clientY - rect.top}px)`;
       }
@@ -569,11 +570,13 @@ export default function GlobeScene() {
     const rect = canvas.getBoundingClientRect();
     place(rect.left + rect.width / 2, rect.top + rect.height / 2);
     UNIFORMS_B.lensMode.value = 1;
+    UNIFORMS_A.lensMode.value = -1;
     const onMove = (event: PointerEvent) => place(event.clientX, event.clientY);
     el.addEventListener("pointermove", onMove);
     return () => {
       el.removeEventListener("pointermove", onMove);
       UNIFORMS_B.lensMode.value = 0;
+      UNIFORMS_A.lensMode.value = 0;
     };
   }, [lens, sceneReady, containerRef, size.width, size.height]);
 
@@ -1127,7 +1130,7 @@ export default function GlobeScene() {
       <div ref={tipRef} className="ge-region-tip" aria-hidden="true" />
       {lens && (
         <div ref={lensRef} className="ge-lens" aria-hidden="true">
-          <span>Radar · sees through cloud</span>
+          <span>Under the clouds · NISAR radar</span>
         </div>
       )}
       {perfOn && <div ref={perfRef} className="ge-perf" aria-hidden="true" />}

@@ -92,6 +92,24 @@ export const CHANGE_TYPES: Record<ChangeType, ChangeTypeMeta> = {
     // Slope with falling rocks
     iconPath: "M3 19.5 10 7l4 7 2.5-3.5 4.5 9zM15.5 3.5h.01M19 5.5h.01M12.5 3h.01",
   },
+  storm: {
+    label: "Wind & storms",
+    noun: "wind damage",
+    blurb: "Crops and trees knocked down by strong wind, seen as standing vegetation losing its echo.",
+    color: "#c084fc",
+    rgb: [192, 132, 252],
+    // Gusts of wind
+    iconPath: "M3 9h11a2.5 2.5 0 1 0-2.5-2.5M3 13h15a2.5 2.5 0 1 1-2.5 2.5M3 17h7",
+  },
+  drought: {
+    label: "Heat & drought",
+    noun: "drought",
+    blurb: "Soil and plants drying out in long heat: dry ground sends back a weaker radar echo.",
+    color: "#fbbf24",
+    rgb: [251, 191, 36],
+    // Sun over cracked ground
+    iconPath: "M12 4.5v1.5M6.6 6.6l1 1M17.4 6.6l-1 1M8.5 12a3.5 3.5 0 0 1 7 0M3 15h18M6 19l2-4M12 19v-4M18 19l-2-4",
+  },
 };
 
 /** Fixed legend order. */
@@ -104,4 +122,6 @@ export const CHANGE_TYPE_ORDER: readonly ChangeType[] = [
   "agriculture",
   "deformation",
   "landslide",
+  "storm",
+  "drought",
 ];

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Drivers } from "@/components/panel/Drivers";
 import { SarViewer } from "@/components/panel/SarViewer";
 import { CHANGE_TYPES } from "@/data/changeTypes";
 import type { ChangeType, EventDetail, SensorAnalysis } from "@/data/types";
@@ -175,6 +176,10 @@ export function GeneralView({ detail, analysis: a }: { detail: EventDetail; anal
           <p className="mt-2 text-[15px] leading-relaxed text-ink/90">{WHY[detail.type]}</p>
         </section>
       )}
+
+      <div className="rounded-2xl border border-line bg-white/[0.03] p-4">
+        <Drivers detail={detail} />
+      </div>
 
       {/* How sure */}
       <section aria-labelledby="g-sure" className="rounded-2xl border border-line bg-white/[0.03] p-4">

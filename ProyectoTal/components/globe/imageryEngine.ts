@@ -36,7 +36,7 @@ export interface OverlayUniforms {
   klass: { value: number };
   /** Lens circle in drawing-buffer pixels: centre x, centre y (from the bottom), radius. */
   lens: { value: Vector3 };
-  /** 0: no lens. 1: draw only inside the circle. */
+  /** 0: no lens. 1: draw only inside the circle. -1: draw only outside it. */
   lensMode: { value: number };
 }
 
@@ -49,6 +49,7 @@ const FRAGMENT_MASK = `
   vec4 sampledDiffuseColor = texture2D( map, vMapUv );
   if ( ( uSide < -0.5 && gl_FragCoord.x > uSplitX ) || ( uSide > 0.5 && gl_FragCoord.x < uSplitX ) ) discard;
   if ( uLensMode > 0.5 && distance( gl_FragCoord.xy, uLens.xy ) > uLens.z ) discard;
+  if ( uLensMode < -0.5 && distance( gl_FragCoord.xy, uLens.xy ) < uLens.z ) discard;
   vec3 tint = sampledDiffuseColor.rgb;
   float peak = max( tint.r, max( tint.g, tint.b ) );
   float alphaMask = step( 0.002, peak );
@@ -108,7 +109,7 @@ export function createOverlayEngine(parent: Object3D, uniforms: OverlayUniforms,
             .replace("#include <common>", "#include <common>\nuniform float uSplitX;\nuniform float uSide;\nuniform float uClass;\nuniform vec3 uLens;\nuniform float uLensMode;")
             .replace("#include <map_fragment>", FRAGMENT_MASK);
         };
-        material.customProgramCacheKey = () => "ge-overlay-v3";
+        material.customProgramCacheKey = () => "ge-overlay-v4";
         tile.material = material;
         old.dispose();
         tile.renderOrder = renderOrder;

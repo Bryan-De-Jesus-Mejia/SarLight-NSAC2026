@@ -9,6 +9,7 @@ import { Hud } from "@/components/Hud";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { PassDance } from "@/components/PassDance";
 import { Story } from "@/components/Story";
+import { Welcome } from "@/components/Welcome";
 import { CasePanel } from "@/components/panel/CasePanel";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -87,6 +88,7 @@ export function Explorer() {
       <DemoPlayer />
       <PassDance />
       <Story />
+      <Welcome />
       <CasePanel />
       <ChatPanel />
 
