@@ -25,6 +25,8 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
   const select = useAppStore((s) => s.select);
 
   const [open, setOpen] = useState(false);
+  /** Phones: the field is a button until it is tapped, then it opens as a bar under the header. */
+  const [expanded, setExpanded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -42,20 +44,28 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
   const searching = query.trim().length > 0;
   const showList = open && searching;
 
+  useEffect(() => {
+    if (expanded) inputRef.current?.focus();
+  }, [expanded]);
+
   // Close when the pointer goes elsewhere.
   useEffect(() => {
-    if (!showList) return;
+    if (!showList && !expanded) return;
     const onPointerDown = (event: PointerEvent) => {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) setOpen(false);
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+        setOpen(false);
+        setExpanded(false);
+      }
     };
     window.addEventListener("pointerdown", onPointerDown);
     return () => window.removeEventListener("pointerdown", onPointerDown);
-  }, [showList]);
+  }, [showList, expanded]);
 
   const pick = (id: string) => {
     select(id);
     setQuery("");
     setOpen(false);
+    setExpanded(false);
     inputRef.current?.blur();
   };
 
@@ -73,6 +83,10 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
         event.nativeEvent.stopImmediatePropagation();
         setQuery("");
         setOpen(false);
+      }
+      if (expanded) {
+        event.stopPropagation();
+        setExpanded(false);
       }
       return;
     }
@@ -94,6 +108,19 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
 
   return (
     <div ref={rootRef} className={`pointer-events-auto relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setExpanded(true)}
+        aria-label={t("Search a place or signal")}
+        title={t("Search a place or signal")}
+        className="ge-ctl inline-flex shrink-0 md:hidden"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.500" />
+          <path d="M16 16l4.500 4.500" />
+        </svg>
+      </button>
+      <div className={expanded ? "max-md:fixed max-md:inset-x-3 max-md:top-[4.75rem] max-md:z-40" : "max-md:hidden"}>
       <div className="ge-search ge-ctl flex w-full !justify-start !gap-2 !px-3 focus-within:!border-accent/70">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" className="shrink-0 text-muted" aria-hidden="true">
           <circle cx="11" cy="11" r="6.5" />
@@ -194,6 +221,7 @@ export function SearchBox({ className = "" }: SearchBoxProps) {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

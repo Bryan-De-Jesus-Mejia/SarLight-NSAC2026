@@ -18,7 +18,7 @@ export function LoadingScreen({ done }: LoadingScreenProps) {
       aria-hidden={done}
     >
       <div className="ge-loader-ring" aria-hidden="true" />
-      <p className="ge-brand text-3xl italic text-ink">Dancing with the SARs</p>
+      <p className="ge-brand text-3xl italic text-ink">SarLight</p>
       <p role="status" className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
         {done ? t("Ready") : t("Acquiring radar passes")}
       </p>

@@ -661,13 +661,25 @@ body:has(.ge-callout-anchor) .ge-marker {
 }
 
 .ge-slot > * {
-  clip-path: inset(0 0 calc(100% - 2px) 0 round 8px);
-  transition: clip-path 260ms var(--dock-ease);
+  /* Closed: nothing shows (no thin line), lowered a little. */
+  clip-path: inset(100% 0 0 0 round 12px);
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    clip-path 240ms var(--dock-ease),
+    opacity 180ms ease,
+    transform 240ms var(--dock-ease);
 }
 
+/* Open: the card rises from the button row while the slot makes room beside its neighbours. */
 .ge-slot[data-open="true"] > * {
-  clip-path: inset(0 0 0 0 round 8px);
-  transition: clip-path 420ms var(--dock-ease) 300ms;
+  clip-path: inset(0 0 0 0 round 12px);
+  opacity: 1;
+  transform: none;
+  transition:
+    clip-path 480ms var(--dock-ease) 140ms,
+    opacity 320ms ease 140ms,
+    transform 480ms var(--dock-ease) 140ms;
 }
 
 .ge-slot--legend > * {

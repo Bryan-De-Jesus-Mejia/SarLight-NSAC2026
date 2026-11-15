@@ -73,7 +73,8 @@ export function PassesPanel() {
   const [text, setText] = useState("");
   const [locating, setLocating] = useState(false);
   const [denied, setDenied] = useState(false);
-  const [now, setNow] = useState(() => Date.now());
+  // Read the clock in an effect, never while rendering: the page is prerendered.
+  const [now, setNow] = useState(0);
 
   const close = useCallback(() => setOpen(false), [setOpen]);
   const ref = usePopover(close, open);
@@ -101,8 +102,12 @@ export function PassesPanel() {
   // The countdown moves twice a minute.
   useEffect(() => {
     if (!open) return;
+    const first = window.setTimeout(() => setNow(Date.now()), 0);
     const timer = window.setInterval(() => setNow(Date.now()), 30_000);
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(timer);
+    };
   }, [open]);
 
   const choose = (next: Place) => {
@@ -128,7 +133,7 @@ export function PassesPanel() {
     );
   };
 
-  const upcoming = data ? data.passes.filter((pass) => new Date(pass.time).getTime() > now - 10 * 60_000) : [];
+  const upcoming = data && now > 0 ? data.passes.filter((pass) => new Date(pass.time).getTime() > now - 10 * 60_000) : [];
   const next = upcoming[0];
 
   const hourText = (hour: number): string => `${Math.floor(hour)}:${pad(Math.round((hour % 1) * 60) % 60)}`;

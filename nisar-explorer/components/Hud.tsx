@@ -90,18 +90,16 @@ export function Hud() {
         <GeneralIntro onClose={() => setIntro(false)} />
       )}
 
-      <header className="flex flex-wrap items-start gap-x-6 gap-y-3">
+      <header className={`flex items-start gap-x-6 gap-y-3 md:flex-wrap ${caseOpen ? "max-md:hidden" : ""}`}>
         <h1 className="ge-brand mr-auto text-4xl leading-[1.05] text-ink sm:text-5xl">
-          Dancing with the <em>SARs</em>
+          Sar<em>Light</em>
         </h1>
 
-        {/* Phones: the menu holds the pickers, so the bar keeps only search and the community check. */}
-        <MenuButton className="md:hidden" />
-
-        <div className={`flex w-full items-center gap-2 md:ml-auto md:w-auto md:flex-wrap md:justify-end ${ready ? "" : "max-md:hidden"}`}>
+        {/* Phones: the menu holds the pickers, so the bar keeps three buttons together: search, community and menu. */}
+        <div className="flex items-center gap-2 md:ml-auto md:flex-wrap md:justify-end">
           <LanguageSelect className="max-md:hidden" />
           {ready && <ViewSelect className="max-md:hidden" />}
-          {ready && <SearchBox className="min-w-0 flex-1 md:w-60 md:flex-none xl:w-72" />}
+          {ready && <SearchBox className="md:w-60 xl:w-72" />}
           {ready && !story && (
             <button
               type="button"
@@ -116,7 +114,7 @@ export function Hud() {
               <span className="sr-only lg:not-sr-only">{t("Is my community at risk?")}</span>
             </button>
           )}
-          <MenuButton className="max-md:hidden" />
+          <MenuButton />
         </div>
       </header>
 

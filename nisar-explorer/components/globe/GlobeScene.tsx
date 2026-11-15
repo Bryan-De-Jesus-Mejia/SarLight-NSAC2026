@@ -77,8 +77,8 @@ const EVENT_ALTITUDE = 0.085;
 /** Width of the case panel on desktop (27rem + margin), in px. */
 const PANEL_PX = 440;
 const DESKTOP_MIN_WIDTH = 768;
-/** Share of the screen the case panel covers on small screens (max-h 72dvh). */
-const SHEET_FRACTION = 0.68;
+/** Share of the screen the case panel covers on small screens (max-h 56dvh). */
+const SHEET_FRACTION = 0.58;
 const RESUME_ROTATION_MS = 6000;
 const MIN_DISTANCE = 100 * (1 + 0.012);
 const MAX_DISTANCE = 520;
