@@ -4,15 +4,13 @@
 
 An interactive globe that turns real radar data from the NASA–ISRO **NISAR** satellite into stories anyone can follow:
 floods that take homes, wind that flattens a harvest, heat that dries the land, slopes that slide, earthquakes that move
-the ground by tens of centimetres, and glaciers sliding into the sea. Built from the Dominican Republic out to the world,
-with a ready-to-use class for Dominican schools.
+the ground by tens of centimetres, and glaciers sliding into the sea. Built from the Dominican Republic out to the world.
 
 ## What you can do
 
 | For | What |
 |---|---|
 | Everyone | A **simple view** in plain words, a **story mode** that tells each case step by step on the globe, a **radar lens** (the day as a camera saw it, the radar inside a circle), the **12-day dance** of ~15,000 real NISAR scenes |
-| Teachers | **`/aula`**: a 50-minute lesson in Spanish for secondary schools, a flashlight-and-mirror experiment, the **Detective de radar** game with real images, community mapping, a printable worksheet with answer key |
 | Scientists | A **technical view** with every number and method: thresholds, polarisations (HH/HV, VV/VH), L-band vs C-band, per-pixel baselines, land cover of the change, downloads (JSON, GeoJSON, images) |
 
 Every case has a **"Why it happened"** chain: cause → what happens on the ground → what the radar measured → what people

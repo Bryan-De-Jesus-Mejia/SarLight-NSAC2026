@@ -45,14 +45,30 @@ export function createOverlayUniforms(klass: { value: number }): OverlayUniforms
 }
 
 // Hue bands of the NISAR false-colour layer (see components/LayersPanel).
+// Pixels are blended by hand, leaving the black no-data pixels out: the GPU's own
+// blending mixes a radar pixel with its black neighbour into a dim colour that would
+// read as data, and the edge of every radar strip got a dark outline.
 const FRAGMENT_MASK = `
-  vec4 sampledDiffuseColor = texture2D( map, vMapUv );
   if ( ( uSide < -0.5 && gl_FragCoord.x > uSplitX ) || ( uSide > 0.5 && gl_FragCoord.x < uSplitX ) ) discard;
   if ( uLensMode > 0.5 && distance( gl_FragCoord.xy, uLens.xy ) > uLens.z ) discard;
   if ( uLensMode < -0.5 && distance( gl_FragCoord.xy, uLens.xy ) < uLens.z ) discard;
-  vec3 tint = sampledDiffuseColor.rgb;
-  float peak = max( tint.r, max( tint.g, tint.b ) );
-  float alphaMask = step( 0.002, peak );
+  ivec2 tsz = textureSize( map, 0 );
+  ivec2 tmax = tsz - 1;
+  vec2 st = vMapUv * vec2( tsz ) - 0.5;
+  vec2 f = fract( st );
+  ivec2 i0 = ivec2( floor( st ) );
+  vec3 t00 = texelFetch( map, clamp( i0, ivec2( 0 ), tmax ), 0 ).rgb;
+  vec3 t10 = texelFetch( map, clamp( i0 + ivec2( 1, 0 ), ivec2( 0 ), tmax ), 0 ).rgb;
+  vec3 t01 = texelFetch( map, clamp( i0 + ivec2( 0, 1 ), ivec2( 0 ), tmax ), 0 ).rgb;
+  vec3 t11 = texelFetch( map, clamp( i0 + ivec2( 1, 1 ), ivec2( 0 ), tmax ), 0 ).rgb;
+  float w00 = ( 1.0 - f.x ) * ( 1.0 - f.y ) * step( 0.002, max( t00.r, max( t00.g, t00.b ) ) );
+  float w10 = f.x * ( 1.0 - f.y ) * step( 0.002, max( t10.r, max( t10.g, t10.b ) ) );
+  float w01 = ( 1.0 - f.x ) * f.y * step( 0.002, max( t01.r, max( t01.g, t01.b ) ) );
+  float w11 = f.x * f.y * step( 0.002, max( t11.r, max( t11.g, t11.b ) ) );
+  float wsum = w00 + w10 + w01 + w11;
+  if ( wsum < 0.001 ) discard;
+  vec3 tint = ( w00 * t00 + w10 * t10 + w01 * t01 + w11 * t11 ) / wsum;
+  float alphaMask = smoothstep( 0.0, 0.5, wsum );
   if ( uClass > -0.5 ) {
     vec3 c = pow( tint, vec3( 0.4545 ) );
     float mx = max( c.r, max( c.g, c.b ) );
@@ -80,6 +96,11 @@ const FRAGMENT_MASK = `
 
 export function createOverlayEngine(parent: Object3D, uniforms: OverlayUniforms, renderOrder = 2): Engine {
   const engine = new ThreeSlippyMapGlobe(OVERLAY_RADIUS, { minLevel: 0, maxLevel: 13 });
+  // Tiles are flat facets: with the default 5° per facet, a facet sags up to 0.1 units
+  // below the true sphere, more than the 0.03 units the overlay floats above the map.
+  // Where the map's own facets sit higher, they poke through as polygon-shaped holes.
+  // 1.5° facets sag less than 0.01 units, so the overlay always stays on top.
+  engine.curvatureResolution = 1.5;
   engine.visible = false;
 
   // Tiles arrive one by one: make each transparent, unlit and drawn over the ground.
@@ -109,7 +130,7 @@ export function createOverlayEngine(parent: Object3D, uniforms: OverlayUniforms,
             .replace("#include <common>", "#include <common>\nuniform float uSplitX;\nuniform float uSide;\nuniform float uClass;\nuniform vec3 uLens;\nuniform float uLensMode;")
             .replace("#include <map_fragment>", FRAGMENT_MASK);
         };
-        material.customProgramCacheKey = () => "ge-overlay-v4";
+        material.customProgramCacheKey = () => "ge-overlay-v5";
         tile.material = material;
         old.dispose();
         tile.renderOrder = renderOrder;

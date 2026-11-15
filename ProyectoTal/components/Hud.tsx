@@ -199,19 +199,6 @@ export function Hud() {
 
 {!story && (
         <Link
-            href="/aula"
-            title="Classroom: a ready-made lesson for Dominican schools"
-            className="ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm text-ink transition-colors hover:text-accent"
-          >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M2.5 9 12 4.5 21.5 9 12 13.5zM6 11v4.5c1.5 1.6 3.6 2.5 6 2.5s4.5-.9 6-2.5V11M21.5 9v5" />
-            </svg>
-            <span className="sr-only">Classroom</span>
-          </Link>
-        )}
-
-{!story && (
-        <Link
             href="/methods"
             title="How it works"
             className="ge-surface pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center text-sm text-ink transition-colors hover:text-accent"
