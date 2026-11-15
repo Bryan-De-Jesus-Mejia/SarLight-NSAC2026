@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ChangeTypeIcon } from "@/components/icons/ChangeTypeIcon";
 import { BackscatterChart } from "@/components/panel/BackscatterChart";
 import { Drivers } from "@/components/panel/Drivers";
+import { Impact } from "@/components/panel/Impact";
+import { WhyButton, whyFor } from "@/components/WhyCard";
 import { HYPOTHESES } from "@/components/panel/Evidence";
 import { buildExtraSteps } from "@/components/storyExtra";
 import { CHANGE_TYPES } from "@/data/changeTypes";
@@ -262,6 +264,14 @@ function buildSteps(
     enter: show(a.images.post, MID),
   });
 
+  steps.push({
+    key: "people",
+    kicker: "Why it matters",
+    title: "What this means for people",
+    body: <Impact detail={detail} compact />,
+    enter: show(a.images.post, MID),
+  });
+
   return steps;
 }
 
@@ -462,6 +472,11 @@ export function Story() {
                 )}
 
                 {step.extra && i === active && <div className="mt-4">{step.extra}</div>}
+
+                {(() => {
+                  const why = detail && i === active ? whyFor(step.key, detail) : null;
+                  return why ? <WhyButton key={step.key} why={why} /> : null;
+                })()}
 
                 <div className="mt-5 flex flex-wrap items-center gap-2">
                   {i < steps.length - 1 ? (

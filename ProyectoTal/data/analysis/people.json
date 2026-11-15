@@ -1,0 +1,113 @@
+{
+ "source": "GHS-POP R2023A, epoch 2025, 30 arc-seconds (European Commission, JRC), CC BY 4.0",
+ "cases": {
+  "pelempito-fire": {
+   "areaPeople": 845,
+   "exposedPeople": 0
+  },
+  "bahoruco-fire": {
+   "areaPeople": 170010,
+   "exposedPeople": 1218
+  },
+  "azua-flood": {
+   "areaPeople": 215886,
+   "exposedPeople": 2342
+  },
+  "monte-plata-flood": {
+   "areaPeople": 128890,
+   "exposedPeople": 314
+  },
+  "venezuela-quake": {
+   "areaPeople": 4350647
+  },
+  "riau-palm-clearing": {
+   "areaPeople": 512748
+  },
+  "pine-island-glacier": {
+   "areaPeople": 0
+  },
+  "chattogram-rice-flood": {
+   "areaPeople": 6028099,
+   "exposedPeople": 2095264
+  },
+  "hubbard-glacier": {
+   "areaPeople": 26
+  },
+  "cibao-wind": {
+   "areaPeople": 300800,
+   "exposedPeople": 5194
+  },
+  "noroeste-heat": {
+   "areaPeople": 72836,
+   "exposedPeople": 1818
+  },
+  "amazon-clearing": {
+   "areaPeople": 23233
+  },
+  "jakobshavn-glacier": {
+   "areaPeople": 0
+  },
+  "mekong-rice-flood": {
+   "areaPeople": 1305469,
+   "exposedPeople": 208811
+  },
+  "saskatchewan-harvest": {
+   "areaPeople": 308229
+  },
+  "mexico-quake": {
+   "areaPeople": 2664985
+  },
+  "valverde-wind": {
+   "areaPeople": 184888,
+   "exposedPeople": 2053
+  },
+  "nile-delta-rice": {
+   "areaPeople": 2831618
+  },
+  "sacramento-rice": {
+   "areaPeople": 9959
+  },
+  "ukraine-sunflower": {
+   "areaPeople": 221446
+  },
+  "san-pedro-flood": {
+   "areaPeople": 257261,
+   "exposedPeople": 8441
+  },
+  "indonesia-quake": {
+   "areaPeople": 1950937
+  },
+  "langtang-collapse": {
+   "areaPeople": 3497
+  },
+  "iowa-harvest": {
+   "areaPeople": 90924
+  },
+  "punjab-burning": {
+   "areaPeople": 979630
+  },
+  "miches-landslide": {
+   "areaPeople": 14540,
+   "exposedPeople": 27
+  },
+  "ozama-flood": {
+   "areaPeople": 1092836,
+   "exposedPeople": 3788
+  },
+  "capotillo-flood": {
+   "areaPeople": 274923,
+   "exposedPeople": 1207
+  },
+  "ocoa-flood": {
+   "areaPeople": 45785,
+   "exposedPeople": 46
+  },
+  "los-cacaos-landslide": {
+   "areaPeople": 14968,
+   "exposedPeople": 51
+  },
+  "panama-quake": {
+   "areaPeople": 510128
+  }
+ }
+}

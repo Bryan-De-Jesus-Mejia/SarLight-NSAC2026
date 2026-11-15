@@ -101,18 +101,18 @@ export function LayersPanel({ className = "" }: { className?: string }) {
           onClick={() => setLens(!lens)}
           className="flex w-full items-center justify-between rounded text-left text-xs text-ink"
         >
-          Radar lens
+          Cloud lens
           <span className="ge-switch" data-on={lens} aria-hidden="true" />
         </button>
         <p className="mt-1.5 text-[11px] leading-snug text-muted">
-          The planet as a camera saw it that day, clouds and all. Inside the circle the clouds are lifted: the ground underneath, with the NISAR radar of the same day where the satellite passed.
+          The planet as a camera saw it that day, clouds and all. Inside the circle the clouds are lifted and the ground underneath shows: what a camera misses on a cloudy day, and what NISAR&rsquo;s radar sees anyway.
         </p>
         {lens && (
           <div className="mt-2">
             <Heading>Day</Heading>
             <Chips days={days} value={date} onPick={(d) => d && setDate(d)} />
             <p className="mt-2 text-[11px] leading-snug text-muted">
-              Camera view: NOAA-20 VIIRS true colour (NASA GIBS). Ground under the clouds: Sentinel-2 cloudless mosaic (EOX). Radar: NISAR GCOV (NASA GIBS), only along that day&rsquo;s passes.
+              Camera view: NOAA-20 VIIRS true colour (NASA GIBS). Ground under the clouds: Sentinel-2 cloudless mosaic (EOX), a picture made from many clear days, not from that day. The radar itself: the NISAR layer below.
             </p>
           </div>
         )}

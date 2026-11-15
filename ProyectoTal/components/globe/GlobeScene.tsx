@@ -520,11 +520,13 @@ export default function GlobeScene() {
 
   // Radar / water overlay follows the layer panel. Layer A is the picture, or
   // the "before" half when the curtain is on; layer B is the "after" half.
-  // With the lens on, A is the camera view of that day and B the radar inside the circle.
+  // With the lens on, A is the camera view of that day, cut out inside the circle so the
+  // cloud-free ground underneath shows through. B stays empty: the radar strips of the day
+  // read as unexplained rectangles there, and the NISAR layer shows them with a legend.
   const lens = useAppStore((s) => s.lens);
   const kindA = lens ? "optical" : compare && compareBefore === null ? "none" : overlay;
   const dateA = !lens && compare && compareBefore !== null ? compareBefore : overlayDate;
-  const kindB = lens ? "radar" : compare ? overlay : "none";
+  const kindB = lens ? "none" : compare ? overlay : "none";
 
   useEffect(() => {
     const engine = overlayRef.current;
@@ -693,7 +695,10 @@ export default function GlobeScene() {
   useEffect(() => {
     markerHandlers.current = {
       activate: (event) => {
-        if (useAppStore.getState().story) return;
+        const app = useAppStore.getState();
+        // Picking a community: a marker is a place like any other.
+        if (app.communityPicking) return app.setCommunityPoint({ lat: event.lat, lng: event.lon });
+        if (app.story) return;
         if (caseLocked()) useAppStore.getState().select(null);
         else focusEvent(event);
       },
@@ -866,8 +871,13 @@ export default function GlobeScene() {
       const globe = globeRef.current;
       if (!globe) return;
       const at = pickLatLng(globe.camera(), event.clientX, event.clientY, el.getBoundingClientRect());
+      const app = useAppStore.getState();
+      if (app.communityPicking) {
+        if (at) app.setCommunityPoint({ lat: at.lat, lng: at.lng });
+        return;
+      }
       const region = at ? pickRegion(at.lat, at.lng) : null;
-      if (useAppStore.getState().story) return;
+      if (app.story) return;
       if (region && !caseLocked()) openRegion(region);
       else useAppStore.getState().select(null);
     };
@@ -922,7 +932,12 @@ export default function GlobeScene() {
   }, []);
   const handlePointClick = useCallback(
     (d: object) => {
-      if (useAppStore.getState().story) return;
+      const app = useAppStore.getState();
+      if (app.communityPicking) {
+        const e = asEvent(d);
+        return app.setCommunityPoint({ lat: e.lat, lng: e.lon });
+      }
+      if (app.story) return;
       if (caseLocked()) select(null);
       else focusEvent(asEvent(d));
     },
@@ -1130,7 +1145,7 @@ export default function GlobeScene() {
       <div ref={tipRef} className="ge-region-tip" aria-hidden="true" />
       {lens && (
         <div ref={lensRef} className="ge-lens" aria-hidden="true">
-          <span>Under the clouds · NISAR radar</span>
+          <span>Under the clouds · cloud-free mosaic</span>
         </div>
       )}
       {perfOn && <div ref={perfRef} className="ge-perf" aria-hidden="true" />}

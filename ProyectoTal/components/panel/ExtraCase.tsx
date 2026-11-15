@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { SeriesChart } from "@/components/panel/SeriesChart";
 import { Drivers } from "@/components/panel/Drivers";
+import { Impact } from "@/components/panel/Impact";
 import type {
   ChangeExtra,
   ChangeOrbit,
@@ -591,6 +592,7 @@ export function ExtraBody({ detail }: { detail: EventDetail }) {
       <div className="rounded-2xl border border-line bg-white/[0.03] p-4">
         <Drivers detail={detail} />
       </div>
+      <Impact detail={detail} />
     </div>
   );
 }

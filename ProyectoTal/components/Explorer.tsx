@@ -10,6 +10,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { PassDance } from "@/components/PassDance";
 import { Story } from "@/components/Story";
 import { Welcome } from "@/components/Welcome";
+import { Community } from "@/components/Community";
 import { CasePanel } from "@/components/panel/CasePanel";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -89,6 +90,7 @@ export function Explorer() {
       <PassDance />
       <Story />
       <Welcome />
+      <Community />
       <CasePanel />
       <ChatPanel />
 

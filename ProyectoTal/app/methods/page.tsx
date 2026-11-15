@@ -68,6 +68,7 @@ const SOURCES: readonly { name: string; body: string }[] = [
   { name: "Base map and radar layers", body: "Satellite base map: Sentinel-2 cloudless by EOX (contains modified Copernicus Sentinel data 2021). Radar overlays and the same-day camera view of the radar lens (NOAA-20 VIIRS true colour): NASA GIBS." },
   { name: "Land cover", body: "ESA WorldCover 2021 v200 at 10 m (© ESA WorldCover project, contains modified Copernicus Sentinel data), used to say what kind of ground the flagged pixels sit on." },
   { name: "Weather records", body: "Daily rain, maximum temperature and wind gusts from the ERA5 reanalysis through the Open-Meteo historical weather API (CC BY 4.0), at the centre of each area. They support the \u201cWhy it happened\u201d chain; they do not prove a cause pixel by pixel." },
+  { name: "Population", body: "People per 1 km square from the GHSL population grid (GHS-POP R2023A, epoch 2025, European Commission JRC, CC BY 4.0). We add up the people living on the pixels our analysis flagged; each 20 m pixel takes the density of its square, so the result is an estimate, not a census." },
   { name: "Earthquake catalogue", body: "Magnitude, depth, time and place of earthquakes from the USGS catalogue (public domain). For Venezuela (M7.5, 24 June 2026) and Mexico (M7.3, 17 July 2026) it independently confirms the events our radar analysis was built around." },
   { name: "NISAR scene footprints", body: "The 12-day dance draws the footprints of every NISAR L2 GCOV scene of one cycle, as listed in the public NASA CMR catalogue." },
 ];
