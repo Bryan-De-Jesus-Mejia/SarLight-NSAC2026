@@ -66,8 +66,8 @@ export const tour: Record<string, string> = {
   "Ask in your own words": "Pregunta con tus palabras",
   "This button opens the AI assistant. Ask about a place, a kind of change or how the radar works, in Spanish or English: its answers come from our analyses. Press it again, or Esc, to close it.":
     "Este botón abre el asistente con IA. Pregunta por un lugar, un tipo de cambio o cómo funciona el radar, en español o en inglés: sus respuestas salen de nuestros análisis. Púlsalo otra vez, o Esc, para cerrarlo.",
-  "The next NISAR pass over a place, the satellite’s 12-day dance, cases for offline use, study mode, the methods, the language and this tour.":
-    "La próxima pasada de NISAR sobre un lugar, el baile de 12 días del satélite, casos para usar sin conexión, el modo estudio, los métodos, el idioma y este recorrido.",
+  "The satellite’s 12-day dance, cases for offline use, study mode, the methods, the language and this tour.":
+    "El baile de 12 días del satélite, casos para usar sin conexión, el modo estudio, los métodos, el idioma y este recorrido.",
 
   // Voice in the chat (components/chat/ChatPanel.tsx, hooks/useVoice.ts)
   "Ask by voice": "Preguntar por voz",

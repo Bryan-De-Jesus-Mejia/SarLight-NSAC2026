@@ -6,6 +6,7 @@ import { GlobeIcon } from "@/components/LanguageSelect";
 import { ViewIcon, useViewOptions } from "@/components/ViewSelect";
 import { LANGS, useLang, useLangStore, useT, type Lang } from "@/i18n/core";
 import { globeApi } from "@/lib/globeApi";
+import { FEATURES } from "@/lib/features";
 import { useAppStore } from "@/store/useAppStore";
 import { MAX_SAVED, useClassroomStore } from "@/store/useClassroomStore";
 import { useMenuStore } from "@/store/useMenuStore";
@@ -106,7 +107,7 @@ function useCommands(): Command[] {
       active: community,
       run: () => setCommunity(!community),
     });
-    list.push({
+    if (FEATURES.nextPass) list.push({
       id: "passes",
       group: "explore",
       label: t("Next NISAR pass"),

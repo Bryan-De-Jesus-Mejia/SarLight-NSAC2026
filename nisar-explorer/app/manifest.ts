@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { FEATURES } from "@/lib/features";
 import { SITE_DESCRIPTION } from "@/lib/site";
 
 /** Lets the site be installed on a phone or desktop, with the right icon for each. */
@@ -18,7 +19,7 @@ export default function manifest(): MetadataRoute.Manifest {
     shortcuts: [
       { name: "Is my community at risk?", short_name: "My community", url: "/?go=community", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
       { name: "Study mode and classroom", short_name: "Study", url: "/?go=study", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
-      { name: "When does NISAR pass over me?", short_name: "Next pass", url: "/?go=passes", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
+      ...(FEATURES.nextPass ? [{ name: "When does NISAR pass over me?", short_name: "Next pass", url: "/?go=passes", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] }] : []),
       { name: "How to use SarLight", short_name: "Tour", url: "/?demo", icons: [{ src: "/icons/icon-96.png", sizes: "96x96", type: "image/png" }] },
     ],
     icons: [

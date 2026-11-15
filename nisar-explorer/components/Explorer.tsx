@@ -19,6 +19,7 @@ import { CasePanel } from "@/components/panel/CasePanel";
 import { useT } from "@/i18n/core";
 import { useExclusivePanels } from "@/lib/panels";
 import { useEscapeClosesAll } from "@/hooks/useEscapeClosesAll";
+import { FEATURES } from "@/lib/features";
 import { useAppStore } from "@/store/useAppStore";
 import { useClassroomStore } from "@/store/useClassroomStore";
 import { usePassesStore } from "@/store/usePassesStore";
@@ -67,7 +68,7 @@ export function Explorer() {
     const timer = setTimeout(() => {
       const app = useAppStore.getState();
       if (go === "community") app.setCommunity(true);
-      if (go === "passes") usePassesStore.getState().setOpen(true);
+      if (go === "passes" && FEATURES.nextPass) usePassesStore.getState().setOpen(true);
       if (go === "study") {
         app.setAudience("student");
         useClassroomStore.getState().setOpen(true);

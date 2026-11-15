@@ -141,7 +141,7 @@ export const TUTORIAL_STEPS: readonly TutorialStep[] = [
   {
     kicker: msg("The menu"),
     title: msg("Everything else lives here"),
-    body: msg("The next NISAR pass over a place, the satellite’s 12-day dance, cases for offline use, study mode, the methods, the language and this tour."),
+    body: msg("The satellite’s 12-day dance, cases for offline use, study mode, the methods, the language and this tour."),
     target: "menu",
     enter: () => clear(),
   },
