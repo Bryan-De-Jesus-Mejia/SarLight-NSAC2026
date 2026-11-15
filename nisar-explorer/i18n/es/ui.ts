@@ -98,4 +98,5 @@ export const ui: Record<string, string> = {
   Copied: "Copiado",
   Copy: "Copiar",
   "The assistant is thinking": "El asistente está pensando",
+  "Source code on GitHub": "Código fuente en GitHub",
 };
