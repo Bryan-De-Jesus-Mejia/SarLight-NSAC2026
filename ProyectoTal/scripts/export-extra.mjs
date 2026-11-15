@@ -1,6 +1,7 @@
 /**
- * Exports the DataAnalytics results that are not radar change maps (agriculture,
- * glaciers, earthquakes and landslides) as light files for the app.
+ * Exports the DataAnalytics results that are not radar change maps (agriculture, floods over
+ * time, dated events, reservoirs and lakes, glaciers, earthquakes and landslides) as light
+ * files for the app.
  *
  *   node scripts/export-extra.mjs
  *   node scripts/export-extra.mjs --only agricola_arroz_mekong
@@ -54,20 +55,74 @@ const DISPLACEMENT = {
   "deslizamientos/colapso_langtang": { id: "langtang-collapse", type: "landslide", name: "Langtang Lirung collapse", region: "Langtang, Rasuwa", country: "Nepal" },
 };
 
-/* Dominican Republic: floods analysed against a dry baseline of earlier passes. */
-const DR_FLOODS = {
+/* Floods analysed against a dry baseline of earlier passes. `setting` says where the water was. */
+const FLOODS = {
   inundacion_ozama_sdn: { id: "ozama-flood", name: "Ozama riverside flooding", region: "Santo Domingo Norte", country: "Dominican Republic", setting: "river" },
   inundacion_urbana_capotillo: { id: "capotillo-flood", name: "Capotillo urban flooding", region: "Capotillo, Santo Domingo", country: "Dominican Republic", setting: "town" },
   inundacion_san_pedro_macoris: { id: "san-pedro-flood", name: "San Pedro de Macorís flooding", region: "San Pedro de Macorís", country: "Dominican Republic", setting: "coast" },
   inundacion_san_jose_ocoa: { id: "ocoa-flood", name: "San José de Ocoa flooding", region: "San José de Ocoa", country: "Dominican Republic", setting: "valley" },
+  inundacion_puerto_plata: { id: "puerto-plata-flood", name: "Puerto Plata flooding", region: "Puerto Plata and Sosúa", country: "Dominican Republic", setting: "town" },
+  inundacion_santiago_hoya_caimito: { id: "hoya-caimito-flood", name: "Hoya de Caimito urban flooding", region: "Hoya de Caimito, Santiago", country: "Dominican Republic", setting: "town" },
+  inundacion_tamayo_bahoruco: { id: "tamayo-flood", name: "Tamayo urban flooding", region: "Tamayo, Bahoruco", country: "Dominican Republic", setting: "town" },
+  inundacion_matanzas_peravia: { id: "matanzas-flood", name: "Matanzas flooding", region: "Matanzas, Baní, Peravia", country: "Dominican Republic", setting: "rural" },
+  inundacion_cambita_san_cristobal: { id: "cambita-flood", name: "Cambita Garabitos flooding", region: "Cambita Garabitos, San Cristóbal", country: "Dominican Republic", setting: "rural" },
+  inundacion_haiti_sud: { id: "les-cayes-flood", name: "Les Cayes plain flooding", region: "Les Cayes, Sud", country: "Haiti", setting: "rural" },
+  inundacion_haiti_nippes_baraderes: { id: "baraderes-flood", name: "Baradères flooding", region: "Baradères, Nippes", country: "Haiti", setting: "rural" },
+  inundacion_haiti_grand_anse_corail: { id: "corail-flood", name: "Corail flooding", region: "Corail, Grand'Anse", country: "Haiti", setting: "rural" },
+  inundacion_honduras_valle_sula: { id: "sula-flood", name: "Sula Valley flooding", region: "Sula Valley, Cortés", country: "Honduras", setting: "river" },
+  inundacion_honduras_santa_barbara: { id: "santa-barbara-flood", name: "Santa Bárbara flooding", region: "Santa Bárbara", country: "Honduras", setting: "town" },
+  inundacion_panama_tocumen: { id: "tocumen-flood", name: "Tocumen urban flooding", region: "Tocumen, Panama City", country: "Panama", setting: "town" },
+  inundacion_colombia_cartagena: { id: "cartagena-flood", name: "Cartagena urban flooding", region: "Cartagena, Bolívar", country: "Colombia", setting: "town" },
+  inundacion_colombia_santa_marta: { id: "santa-marta-flood", name: "Santa Marta flooding", region: "Santa Marta, Magdalena", country: "Colombia", setting: "town" },
+  inundacion_colombia_cordoba: { id: "cordoba-flood", name: "Lower Sinú flooding", region: "Lorica, Córdoba", country: "Colombia", setting: "river" },
+  inundacion_ecuador_muisne: { id: "muisne-flood", name: "Muisne river flooding", region: "Muisne, Esmeraldas", country: "Ecuador", setting: "river" },
+  inundacion_ecuador_balao: { id: "balao-flood", name: "Balao river flooding", region: "Balao, Guayas", country: "Ecuador", setting: "river" },
+  inundacion_ecuador_babahoyo: { id: "babahoyo-flood", name: "Babahoyo river flooding", region: "Babahoyo, Los Ríos", country: "Ecuador", setting: "river" },
+  inundacion_ecuador_guayaquil: { id: "guayaquil-flood", name: "Guayaquil urban flooding", region: "Guayaquil, Guayas", country: "Ecuador", setting: "town" },
+  inundacion_ecuador_el_guabo: { id: "el-guabo-flood", name: "El Guabo flooding", region: "El Guabo, El Oro", country: "Ecuador", setting: "river" },
+  inundacion_ecuador_machala: { id: "machala-flood", name: "Machala urban flooding", region: "Machala, El Oro", country: "Ecuador", setting: "town" },
+  inundacion_ecuador_portoviejo: { id: "portoviejo-flood", name: "Portoviejo urban flooding", region: "Portoviejo, Manabí", country: "Ecuador", setting: "town" },
+  inundacion_ecuador_quito: { id: "quito-flood", name: "Quito urban flooding", region: "Quito, Pichincha", country: "Ecuador", setting: "town" },
+  inundacion_ecuador_galapagos_santa_cruz: { id: "galapagos-flood", name: "Santa Cruz Island flooding", region: "Santa Cruz, Galápagos", country: "Ecuador", setting: "town" },
+  inundacion_argentina_chaco: { id: "chaco-flood", name: "Resistencia river flooding", region: "Resistencia and Barranqueras, Chaco", country: "Argentina", setting: "river" },
+  inundacion_argentina_paso_patria: { id: "paso-patria-flood", name: "Paso de la Patria flooding", region: "Paso de la Patria, Corrientes", country: "Argentina", setting: "river" },
+  inundacion_argentina_itati: { id: "itati-flood", name: "Itatí river flooding", region: "Itatí, Corrientes", country: "Argentina", setting: "river" },
+  inundacion_paraguay_ayolas: { id: "ayolas-flood", name: "Ayolas river flooding", region: "Ayolas, Misiones", country: "Paraguay", setting: "river" },
+  inundacion_mexico_guaymas: { id: "guaymas-flood", name: "Guaymas flooding", region: "Guaymas, Sonora", country: "Mexico", setting: "town" },
+  inundacion_mexico_navojoa: { id: "navojoa-flood", name: "Navojoa flooding", region: "Navojoa, Sonora", country: "Mexico", setting: "town" },
+  inundacion_mexico_cajeme: { id: "cajeme-flood", name: "Cajeme flooding", region: "Ciudad Obregón, Sonora", country: "Mexico", setting: "town" },
+  inundacion_mexico_ensenada: { id: "ensenada-flood", name: "Ensenada flooding", region: "Ensenada, Baja California", country: "Mexico", setting: "town" },
+  inundacion_mexico_la_paz: { id: "la-paz-flood", name: "La Paz flooding", region: "La Paz, Baja California Sur", country: "Mexico", setting: "town" },
+  inundacion_mexico_los_cabos: { id: "los-cabos-flood", name: "Los Cabos flooding", region: "Los Cabos, Baja California Sur", country: "Mexico", setting: "town" },
+  inundacion_eeuu_pagosa_springs: { id: "pagosa-flood", name: "Pagosa Springs river flooding", region: "Pagosa Springs, Colorado", country: "United States", setting: "river" },
+  inundacion_india_jammu: { id: "jammu-flood", name: "Jammu flash flooding", region: "Jammu, Jammu and Kashmir", country: "India", setting: "town" },
+  inundacion_nepal_gorkha: { id: "gorkha-flood", name: "Budhi Gandaki flash flood", region: "Chumnubri, Gorkha", country: "Nepal", setting: "valley" },
 };
-/* Dominican Republic: the ground before and after a dated event (date chosen by the team). */
-const DR_EVENTS = {
+/* The ground before and after a dated event (date chosen by the team from public reports). */
+const EVENTS = {
   "deslizamientos/deslizamiento_los_cacaos": { id: "los-cacaos-landslide", type: "landslide", cause: "landslide", name: "Los Cacaos landslide watch", region: "Los Cacaos, San Cristóbal", country: "Dominican Republic" },
   "deslizamientos/deslizamiento_miches_el_seibo": { id: "miches-landslide", type: "landslide", cause: "landslide", name: "Miches landslide watch", region: "Miches, El Seibo", country: "Dominican Republic" },
   "vientos/viento_cibao": { id: "cibao-wind", type: "storm", cause: "wind", name: "Cibao wind damage", region: "Cibao Valley", country: "Dominican Republic" },
   "vientos/viento_valverde": { id: "valverde-wind", type: "storm", cause: "wind", name: "Valverde wind damage", region: "Valverde", country: "Dominican Republic" },
   "calor_extremo/calor_linea_noroeste": { id: "noroeste-heat", type: "drought", cause: "heat", name: "Northwest Line heat and drought", region: "Línea Noroeste", country: "Dominican Republic" },
+  "sequias/sequia_valle_san_juan": { id: "san-juan-drought", type: "drought", cause: "drought", name: "San Juan Valley drought", region: "San Juan Valley", country: "Dominican Republic" },
+  "deslizamientos/deslizamiento_guatemala_san_miguel_petapa": { id: "petapa-landslide", type: "landslide", cause: "landslide", name: "San Miguel Petapa landslide watch", region: "Villa Hermosa, San Miguel Petapa", country: "Guatemala" },
+  "deslizamientos/deslizamiento_honduras_santa_cruz_yojoa": { id: "yojoa-landslide", type: "landslide", cause: "landslide", name: "Santa Cruz de Yojoa landslide watch", region: "Santa Cruz de Yojoa, Cortés", country: "Honduras" },
+  "vientos/viento_brasil_santa_maria": { id: "santa-maria-wind", type: "storm", cause: "wind", name: "Santa Maria windstorm", region: "Santa Maria, Rio Grande do Sul", country: "Brazil" },
+};
+/* Reservoirs and lakes: calm open water counted on every pass. */
+const WATER = {
+  embalse_sabana_yegua: { id: "sabana-yegua-reservoir", body: "reservoir", name: "Sabana Yegua reservoir", region: "Azua and San Juan", country: "Dominican Republic" },
+  embalse_monte_grande: { id: "monte-grande-reservoir", body: "reservoir", name: "Monte Grande reservoir", region: "Yaque del Sur River, Azua", country: "Dominican Republic" },
+  embalse_jiguey: { id: "jiguey-reservoir", body: "reservoir", name: "Jigüey reservoir", region: "Nizao River, San José de Ocoa", country: "Dominican Republic" },
+  embalse_sabaneta: { id: "sabaneta-reservoir", body: "reservoir", name: "Sabaneta reservoir", region: "San Juan", country: "Dominican Republic" },
+  lago_enriquillo: { id: "enriquillo-lake", body: "lake", name: "Lake Enriquillo", region: "Enriquillo basin, Independencia and Bahoruco", country: "Dominican Republic" },
+  embalse_mexico_la_boquilla: { id: "la-boquilla-reservoir", body: "reservoir", name: "La Boquilla reservoir", region: "Chihuahua", country: "Mexico" },
+  embalse_ecuador_mazar: { id: "mazar-reservoir", body: "reservoir", name: "Mazar reservoir", region: "Azuay", country: "Ecuador" },
+  embalse_colombia_tomine: { id: "tomine-reservoir", body: "reservoir", name: "Tominé reservoir", region: "Cundinamarca", country: "Colombia" },
+  embalse_el_salvador_cerron_grande: { id: "cerron-grande-reservoir", body: "reservoir", name: "Cerrón Grande reservoir", region: "Chalatenango and Cuscatlán", country: "El Salvador" },
+  embalse_el_salvador_el_chaparral: { id: "el-chaparral-reservoir", body: "reservoir", name: "El Chaparral reservoir", region: "San Luis de la Reina, San Miguel", country: "El Salvador" },
+  lago_el_salvador_guija: { id: "guija-lake", body: "lake", name: "Lake Güija", region: "Metapán, Santa Ana", country: "El Salvador" },
 };
 
 /* ------------------------------ helpers ---------------------------------- */
@@ -376,11 +431,63 @@ async function exportEvent(rel0, meta, bbox) {
   };
 }
 
+/* ------------------------- reservoirs and lakes (water mode) -------------- */
+
+async function exportWater(name, meta, bbox) {
+  const base = path.join(ANALYSIS, "embalses_y_lagos", name);
+  const orbits = [];
+  for (const dir of await dirs(base)) {
+    const folder = path.join(base, dir);
+    if (!existsSync(path.join(folder, "resumen.json"))) continue;
+    const s = await readJson(path.join(folder, "resumen.json"));
+    const rows = await readCsv(path.join(folder, "serie_temporal.csv"));
+    const key = dir.replace(/^nisar_/, "");
+    const map = await figure(path.join(folder, "mapa_agua.png"), path.join(PUBLIC, meta.id, `${key}_map.webp`), {
+      width: 1000, crop: { top: 0.04 }, trim: true,
+    });
+    const frameFiles = spread((await readdir(path.join(folder, "frames"))).filter((f) => f.endsWith(".png")).sort(), 6);
+    const frames = [];
+    for (const f of frameFiles) {
+      const date = f.replace(".png", "");
+      await figure(path.join(folder, "frames", f), path.join(PUBLIC, meta.id, `${key}_${date}.webp`), { width: 640, quality: 62 });
+      frames.push({ date, src: rel(meta.id, `${key}_${date}.webp`) });
+    }
+    orbits.push({
+      key, label: groupLabel(key), ...parseGroup(key), pixelM: s.pixel_size_m, crs: s.crs,
+      coPol: s.co_pol, crossPol: s.cross_pol, waterMaxDb: s.params?.water_max ?? null,
+      medianFilterPx: s.params?.median ?? null, dates: s.dates.map(day),
+      map: rel(meta.id, `${key}_map.webp`), mapSize: [map.w, map.h], frames,
+      firstDate: day(s.first_date), firstWaterKm2: round(s.first_water_km2), lastDate: day(s.last_date), lastWaterKm2: round(s.last_water_km2),
+      changeKm2: round(s.change_km2), changePct: s.change_pct ?? null,
+      minDate: day(s.min_date), minWaterKm2: round(s.min_water_km2), maxDate: day(s.max_date), maxWaterKm2: round(s.max_water_km2),
+      rangePctOfMax: s.range_pct_of_max ?? null,
+      series: rows.map((r) => ({
+        date: day(r.date), coDb: num(r.co_median_db), crossDb: num(r.cross_median_db), validPct: num(r.valid_pct), waterKm2: num(r.water_km2),
+      })),
+    });
+  }
+  if (!orbits.length) return null;
+  // Main orbit: the most passes, then the most water seen (the fullest view of the water body).
+  orbits.sort((a, b) => b.dates.length - a.dates.length || b.maxWaterKm2 - a.maxWaterKm2);
+  const main = orbits[0];
+  const allDates = orbits.flatMap((o) => o.dates).sort();
+  const thumbFrame = main.frames[main.frames.length - 1];
+  await figure(path.join(base, `nisar_${main.key}`, "frames", `${thumbFrame.date}.png`), path.join(PUBLIC, meta.id, "thumb.webp"), { width: 360, quality: 70 });
+  return {
+    id: meta.id, type: "wetland", name: meta.name, region: meta.region, country: meta.country,
+    ...centreOf(bbox), startDate: allDates[0], endDate: allDates[allDates.length - 1],
+    footprint: polygonOf(bbox), thumb: rel(meta.id, "thumb.webp"), changedAreaKm2: main.maxWaterKm2, changedPct: 0,
+    extra: { kind: "water", body: meta.body, orbits },
+  };
+}
+
 /* -------------------------------- main ----------------------------------- */
 
 const cases = [];
 const boxes = await agricultureBoxes();
 const want = (name) => !only || only === name;
+/** The scheduled job list can name analyses that have not run yet: skip them quietly. */
+const done = (folder, name) => existsSync(path.join(ANALYSIS, folder, name));
 
 for (const [name, meta] of Object.entries(AGRICULTURE)) {
   if (!want(name) || !boxes[name]) continue;
@@ -389,19 +496,26 @@ for (const [name, meta] of Object.entries(AGRICULTURE)) {
   const c = await exportAgriculture(name, meta, boxes[name]);
   if (c) cases.push(c);
 }
-for (const [name, meta] of Object.entries(DR_FLOODS)) {
-  if (!want(name) || !boxes[name]) continue;
+for (const [name, meta] of Object.entries(FLOODS)) {
+  if (!want(name) || !boxes[name] || !done("inundaciones", name)) continue;
   log(`flood · ${name}`);
   await rm(path.join(PUBLIC, meta.id), { recursive: true, force: true });
   const c = await exportAgriculture(name, { ...meta, activity: "flood" }, boxes[name], "inundaciones", "flood");
   if (c) cases.push(c);
 }
-for (const [rel0, meta] of Object.entries(DR_EVENTS)) {
+for (const [rel0, meta] of Object.entries(EVENTS)) {
   const name = path.basename(rel0);
-  if (!want(name) || !boxes[name]) continue;
+  if (!want(name) || !boxes[name] || !done(path.dirname(rel0), name)) continue;
   log(`event · ${rel0}`);
   await rm(path.join(PUBLIC, meta.id), { recursive: true, force: true });
   const c = await exportEvent(rel0, meta, boxes[name]);
+  if (c) cases.push(c);
+}
+for (const [name, meta] of Object.entries(WATER)) {
+  if (!want(name) || !boxes[name] || !done("embalses_y_lagos", name)) continue;
+  log(`water · ${name}`);
+  await rm(path.join(PUBLIC, meta.id), { recursive: true, force: true });
+  const c = await exportWater(name, meta, boxes[name]);
   if (c) cases.push(c);
 }
 for (const [name, meta] of Object.entries(GLACIERS)) {
@@ -424,6 +538,19 @@ if (only) {
   cases.push(...old.filter((c) => !ids.has(c.id)));
 }
 cases.sort((a, b) => a.startDate.localeCompare(b.startDate));
+
+// Analyses with no entry above never reach the app: name them, so a new case is not lost silently.
+// Fires and the two oldest floods are change maps, exported by pipeline/export_web.py.
+const CHANGE_MAPS = ["incendio_pelempito", "incendio_sierra_bahoruco", "inundacion_azua", "inundacion_monte_plata"];
+const known = new Set([
+  ...Object.keys(AGRICULTURE), ...Object.keys(FLOODS), ...Object.keys(WATER), ...Object.keys(GLACIERS),
+  ...[...Object.keys(EVENTS), ...Object.keys(DISPLACEMENT)].map((k) => path.basename(k)), ...CHANGE_MAPS,
+]);
+for (const type of await dirs(ANALYSIS)) {
+  for (const name of await dirs(path.join(ANALYSIS, type))) {
+    if (!known.has(name)) log(`not in the app yet (add it to the tables at the top): ${type}/${name}`);
+  }
+}
 await mkdir(path.dirname(OUT_JSON), { recursive: true });
 await writeFile(OUT_JSON, JSON.stringify({ generatedAt: new Date().toISOString(), cases }, null, 1));
 log(`${cases.length} cases written to data/analysis/extra.json`);

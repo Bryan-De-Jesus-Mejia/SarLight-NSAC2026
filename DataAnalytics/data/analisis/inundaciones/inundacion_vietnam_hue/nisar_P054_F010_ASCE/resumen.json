@@ -1,0 +1,38 @@
+{
+  "collection": "inundacion_vietnam_hue",
+  "source": "nisar",
+  "orbit": "P054_F010_ASCE",
+  "mode": "inundacion",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-09-09T22:21:01Z",
+    "2026-09-21T22:21:01Z",
+    "2026-10-03T22:21:01Z",
+    "2026-10-15T22:21:02Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32648",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": "2026-10-08",
+    "event_date": null
+  },
+  "baseline_dates": [
+    "2026-09-09T22:21:01Z",
+    "2026-09-21T22:21:01Z",
+    "2026-10-03T22:21:01Z"
+  ],
+  "peak_date": "2026-10-15T22:21:02Z",
+  "peak_flood_km2": 10.514,
+  "peak_new_water_km2": 9.577,
+  "peak_flooded_veg_km2": 0.937,
+  "max_extent_km2": 10.514,
+  "max_extent_open_water_km2": 9.577,
+  "max_extent_flooded_veg_km2": 0.937,
+  "permanent_water_km2": 6.462
+}

@@ -1,0 +1,42 @@
+{
+  "collection": "embalse_puerto_rico_la_plata",
+  "source": "nisar",
+  "orbit": "P054_F079_DESC",
+  "mode": "agua",
+  "co_pol": "HH",
+  "cross_pol": "HV",
+  "dates": [
+    "2026-06-29T23:00:38Z",
+    "2026-07-11T23:00:37Z",
+    "2026-07-23T23:00:37Z",
+    "2026-08-16T23:00:36Z",
+    "2026-08-28T23:00:36Z",
+    "2026-09-09T23:00:35Z",
+    "2026-09-21T23:00:35Z",
+    "2026-10-03T23:00:36Z",
+    "2026-10-15T23:00:36Z",
+    "2026-10-27T23:00:36Z"
+  ],
+  "pixel_size_m": 20.0,
+  "crs": "EPSG:32619",
+  "params": {
+    "downsample": 2,
+    "median": 3,
+    "threshold": 3.0,
+    "veg_min": -22.0,
+    "water_max": -18.0,
+    "baseline_end": null,
+    "event_date": null
+  },
+  "first_date": "2026-06-29T23:00:38Z",
+  "first_water_km2": 0.004,
+  "last_date": "2026-10-27T23:00:36Z",
+  "last_water_km2": 0.046,
+  "change_km2": 0.042,
+  "change_pct": 1050.0,
+  "min_date": "2026-07-11T23:00:37Z",
+  "min_water_km2": 0.002,
+  "max_date": "2026-10-27T23:00:36Z",
+  "max_water_km2": 0.046,
+  "range_pct_of_max": 95.7
+}

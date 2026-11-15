@@ -85,6 +85,10 @@ function createMarker(e: EventSummary): HTMLElement {
   label.textContent = t(e.name);
   button.appendChild(label);
 
+  // The globe counts a click from pointerdown + pointerup anywhere in its container and picks the
+  // disc under the pointer, which sits right below this marker: the same click would open the case
+  // and then reach the disc too. Keeping pointerdown here leaves the click to the marker alone.
+  button.addEventListener("pointerdown", (domEvent) => domEvent.stopPropagation());
   button.addEventListener("click", (domEvent) => {
     domEvent.stopPropagation();
     markerHandlers.current?.activate(e);
@@ -153,6 +157,7 @@ const METRIC_NOTE = {
   glacier: msg("ice moving fast"),
   displacement: msg("ground moved over 5 cm"),
   change: msg("land that changed after the event"),
+  water: msg("calm water at most"),
 } as const;
 
 export const htmlElement = (d: object): HTMLElement =>
